@@ -21,102 +21,11 @@ Dim tmr10000 As Long
         ElapsedTime = Tick - FrameTime                 ' Set the time difference for time-based movement
         FrameTime = Tick                               ' Set the time second loop time to the first.
 
-        ' * Check surface timers *
-        ' Sprites
         If tmr10000 < Tick Then
-
-            ' characters
-            If NumCharacters > 0 Then
-                For i = 1 To NumCharacters    'Check to unload surfaces
-                    If CharacterTimer(i) > 0 Then 'Only update surfaces in use
-                        If CharacterTimer(i) < Tick Then   'Unload the surface
-                            Call ZeroMemory(ByVal VarPtr(DDSD_Character(i)), LenB(DDSD_Character(i)))
-                            Set DDS_Character(i) = Nothing
-                            CharacterTimer(i) = 0
-                        End If
-                    End If
-                Next
-            End If
-            
-            ' Paperdolls
-            If NumPaperdolls > 0 Then
-                For i = 1 To NumPaperdolls    'Check to unload surfaces
-                    If PaperdollTimer(i) > 0 Then 'Only update surfaces in use
-                        If PaperdollTimer(i) < Tick Then   'Unload the surface
-                            Call ZeroMemory(ByVal VarPtr(DDSD_Paperdoll(i)), LenB(DDSD_Paperdoll(i)))
-                            Set DDS_Paperdoll(i) = Nothing
-                            PaperdollTimer(i) = 0
-                        End If
-                    End If
-                Next
-            End If
-
-            ' animations
-            If NumAnimations > 0 Then
-                For i = 1 To NumAnimations    'Check to unload surfaces
-                    If AnimationTimer(i) > 0 Then 'Only update surfaces in use
-                        If AnimationTimer(i) < Tick Then   'Unload the surface
-                            Call ZeroMemory(ByVal VarPtr(DDSD_Animation(i)), LenB(DDSD_Animation(i)))
-                            Set DDS_Animation(i) = Nothing
-                            AnimationTimer(i) = 0
-                        End If
-                    End If
-                Next
-            End If
-
-            ' Items
-            If NumItems > 0 Then
-                For i = 1 To NumItems    'Check to unload surfaces
-                    If ItemTimer(i) > 0 Then 'Only update surfaces in use
-                        If ItemTimer(i) < Tick Then   'Unload the surface
-                            Call ZeroMemory(ByVal VarPtr(DDSD_Item(i)), LenB(DDSD_Item(i)))
-                            Set DDS_Item(i) = Nothing
-                            ItemTimer(i) = 0
-                        End If
-                    End If
-                Next
-            End If
-
-            ' Resources
-            If NumResources > 0 Then
-                For i = 1 To NumResources    'Check to unload surfaces
-                    If ResourceTimer(i) > 0 Then 'Only update surfaces in use
-                        If ResourceTimer(i) < Tick Then   'Unload the surface
-                            Call ZeroMemory(ByVal VarPtr(DDSD_Resource(i)), LenB(DDSD_Resource(i)))
-                            Set DDS_Resource(i) = Nothing
-                            ResourceTimer(i) = 0
-                        End If
-                    End If
-                Next
-            End If
-            
-            ' spell icons
-            If NumSpellIcons > 0 Then
-                For i = 1 To NumSpellIcons    'Check to unload surfaces
-                    If SpellIconTimer(i) > 0 Then 'Only update surfaces in use
-                        If SpellIconTimer(i) < Tick Then   'Unload the surface
-                            Call ZeroMemory(ByVal VarPtr(DDSD_SpellIcon(i)), LenB(DDSD_SpellIcon(i)))
-                            Set DDS_SpellIcon(i) = Nothing
-                            SpellIconTimer(i) = 0
-                        End If
-                    End If
-                Next
-            End If
-            
-            ' faces
-            If NumFaces > 0 Then
-                For i = 1 To NumFaces    'Check to unload surfaces
-                    If FaceTimer(i) > 0 Then 'Only update surfaces in use
-                        If FaceTimer(i) < Tick Then   'Unload the surface
-                            Call ZeroMemory(ByVal VarPtr(DDSD_Face(i)), LenB(DDSD_Face(i)))
-                            Set DDS_Face(i) = Nothing
-                            FaceTimer(i) = 0
-                        End If
-                    End If
-                Next
-            End If
-            
-            ' check ping
+            ' Unload textures that haven't been used for a while.
+            Call UnloadTextures
+        
+            ' Check the Ping
             Call GetPing
             Call DrawPing
             tmr10000 = Tick + 10000
@@ -201,7 +110,8 @@ Dim tmr10000 As Long
         ' *********************
         ' ** Render Graphics **
         ' *********************
-        Call Render_Graphics
+        ' Call Render_Graphics - Old DD7 component
+        Call Render_Game
         DoEvents
 
         ' Lock fps
@@ -247,52 +157,52 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub ProcessMovement(ByVal index As Long)
+Sub ProcessMovement(ByVal Index As Long)
 Dim MovementSpeed As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' Check if player is walking, and if so process moving them over
-    Select Case Player(index).Moving
+    Select Case Player(Index).Moving
         Case MOVING_WALKING: MovementSpeed = ((ElapsedTime / 1000) * (RUN_SPEED * SIZE_X))
         Case MOVING_RUNNING: MovementSpeed = ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
         Case Else: Exit Sub
     End Select
     
-    Select Case GetPlayerDir(index)
+    Select Case GetPlayerDir(Index)
         Case DIR_UP
-            Player(index).YOffset = Player(index).YOffset - MovementSpeed
-            If Player(index).YOffset < 0 Then Player(index).YOffset = 0
+            Player(Index).yOffset = Player(Index).yOffset - MovementSpeed
+            If Player(Index).yOffset < 0 Then Player(Index).yOffset = 0
         Case DIR_DOWN
-            Player(index).YOffset = Player(index).YOffset + MovementSpeed
-            If Player(index).YOffset > 0 Then Player(index).YOffset = 0
+            Player(Index).yOffset = Player(Index).yOffset + MovementSpeed
+            If Player(Index).yOffset > 0 Then Player(Index).yOffset = 0
         Case DIR_LEFT
-            Player(index).XOffset = Player(index).XOffset - MovementSpeed
-            If Player(index).XOffset < 0 Then Player(index).XOffset = 0
+            Player(Index).XOffset = Player(Index).XOffset - MovementSpeed
+            If Player(Index).XOffset < 0 Then Player(Index).XOffset = 0
         Case DIR_RIGHT
-            Player(index).XOffset = Player(index).XOffset + MovementSpeed
-            If Player(index).XOffset > 0 Then Player(index).XOffset = 0
+            Player(Index).XOffset = Player(Index).XOffset + MovementSpeed
+            If Player(Index).XOffset > 0 Then Player(Index).XOffset = 0
     End Select
 
     ' Check if completed walking over to the next tile
-    If Player(index).Moving > 0 Then
-        If GetPlayerDir(index) = DIR_RIGHT Or GetPlayerDir(index) = DIR_DOWN Then
-            If (Player(index).XOffset >= 0) And (Player(index).YOffset >= 0) Then
-                Player(index).Moving = 0
-                If Player(index).Step = 1 Then
-                    Player(index).Step = 3
+    If Player(Index).Moving > 0 Then
+        If GetPlayerDir(Index) = DIR_RIGHT Or GetPlayerDir(Index) = DIR_DOWN Then
+            If (Player(Index).XOffset >= 0) And (Player(Index).yOffset >= 0) Then
+                Player(Index).Moving = 0
+                If Player(Index).Step = 1 Then
+                    Player(Index).Step = 3
                 Else
-                    Player(index).Step = 1
+                    Player(Index).Step = 1
                 End If
             End If
         Else
-            If (Player(index).XOffset <= 0) And (Player(index).YOffset <= 0) Then
-                Player(index).Moving = 0
-                If Player(index).Step = 1 Then
-                    Player(index).Step = 3
+            If (Player(Index).XOffset <= 0) And (Player(Index).yOffset <= 0) Then
+                Player(Index).Moving = 0
+                If Player(Index).Step = 1 Then
+                    Player(Index).Step = 3
                 Else
-                    Player(index).Step = 1
+                    Player(Index).Step = 1
                 End If
             End If
         End If
@@ -316,12 +226,12 @@ Sub ProcessNpcMovement(ByVal MapNpcNum As Long)
         
         Select Case MapNpc(MapNpcNum).Dir
             Case DIR_UP
-                MapNpc(MapNpcNum).YOffset = MapNpc(MapNpcNum).YOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
-                If MapNpc(MapNpcNum).YOffset < 0 Then MapNpc(MapNpcNum).YOffset = 0
+                MapNpc(MapNpcNum).yOffset = MapNpc(MapNpcNum).yOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
+                If MapNpc(MapNpcNum).yOffset < 0 Then MapNpc(MapNpcNum).yOffset = 0
                 
             Case DIR_DOWN
-                MapNpc(MapNpcNum).YOffset = MapNpc(MapNpcNum).YOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
-                If MapNpc(MapNpcNum).YOffset > 0 Then MapNpc(MapNpcNum).YOffset = 0
+                MapNpc(MapNpcNum).yOffset = MapNpc(MapNpcNum).yOffset + ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
+                If MapNpc(MapNpcNum).yOffset > 0 Then MapNpc(MapNpcNum).yOffset = 0
                 
             Case DIR_LEFT
                 MapNpc(MapNpcNum).XOffset = MapNpc(MapNpcNum).XOffset - ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
@@ -336,7 +246,7 @@ Sub ProcessNpcMovement(ByVal MapNpcNum As Long)
         ' Check if completed walking over to the next tile
         If MapNpc(MapNpcNum).Moving > 0 Then
             If MapNpc(MapNpcNum).Dir = DIR_RIGHT Or MapNpc(MapNpcNum).Dir = DIR_DOWN Then
-                If (MapNpc(MapNpcNum).XOffset >= 0) And (MapNpc(MapNpcNum).YOffset >= 0) Then
+                If (MapNpc(MapNpcNum).XOffset >= 0) And (MapNpc(MapNpcNum).yOffset >= 0) Then
                     MapNpc(MapNpcNum).Moving = 0
                     If MapNpc(MapNpcNum).Step = 1 Then
                         MapNpc(MapNpcNum).Step = 3
@@ -345,7 +255,7 @@ Sub ProcessNpcMovement(ByVal MapNpcNum As Long)
                     End If
                 End If
             Else
-                If (MapNpc(MapNpcNum).XOffset <= 0) And (MapNpc(MapNpcNum).YOffset <= 0) Then
+                If (MapNpc(MapNpcNum).XOffset <= 0) And (MapNpc(MapNpcNum).yOffset <= 0) Then
                     MapNpc(MapNpcNum).Moving = 0
                     If MapNpc(MapNpcNum).Step = 1 Then
                         MapNpc(MapNpcNum).Step = 3
@@ -626,8 +536,8 @@ errorhandler:
 End Function
 
 Function CheckDirection(ByVal Direction As Byte) As Boolean
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim i As Long
 
     ' If debug mode, handle error then exit out
@@ -643,36 +553,36 @@ Dim i As Long
 
     Select Case Direction
         Case DIR_UP
-            x = GetPlayerX(MyIndex)
-            y = GetPlayerY(MyIndex) - 1
+            X = GetPlayerX(MyIndex)
+            Y = GetPlayerY(MyIndex) - 1
         Case DIR_DOWN
-            x = GetPlayerX(MyIndex)
-            y = GetPlayerY(MyIndex) + 1
+            X = GetPlayerX(MyIndex)
+            Y = GetPlayerY(MyIndex) + 1
         Case DIR_LEFT
-            x = GetPlayerX(MyIndex) - 1
-            y = GetPlayerY(MyIndex)
+            X = GetPlayerX(MyIndex) - 1
+            Y = GetPlayerY(MyIndex)
         Case DIR_RIGHT
-            x = GetPlayerX(MyIndex) + 1
-            y = GetPlayerY(MyIndex)
+            X = GetPlayerX(MyIndex) + 1
+            Y = GetPlayerY(MyIndex)
     End Select
 
     ' Check to see if the map tile is blocked or not
-    If Map.Tile(x, y).Type = TILE_TYPE_BLOCKED Then
+    If Map.Tile(X, Y).Type = TILE_TYPE_BLOCKED Then
         CheckDirection = True
         Exit Function
     End If
 
     ' Check to see if the map tile is tree or not
-    If Map.Tile(x, y).Type = TILE_TYPE_RESOURCE Then
+    If Map.Tile(X, Y).Type = TILE_TYPE_RESOURCE Then
         CheckDirection = True
         Exit Function
     End If
 
     ' Check to see if the key door is open or not
-    If Map.Tile(x, y).Type = TILE_TYPE_KEY Then
+    If Map.Tile(X, Y).Type = TILE_TYPE_KEY Then
 
         ' This actually checks if its open or not
-        If TempTile(x, y).DoorOpen = NO Then
+        If TempTile(X, Y).DoorOpen = NO Then
             CheckDirection = True
             Exit Function
         End If
@@ -681,8 +591,8 @@ Dim i As Long
     ' Check to see if a player is already on that tile
     For i = 1 To Player_HighIndex
         If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
-            If GetPlayerX(i) = x Then
-                If GetPlayerY(i) = y Then
+            If GetPlayerX(i) = X Then
+                If GetPlayerY(i) = Y Then
                     CheckDirection = True
                     Exit Function
                 End If
@@ -693,8 +603,8 @@ Dim i As Long
     ' Check to see if a npc is already on that tile
     For i = 1 To Npc_HighIndex
         If MapNpc(i).num > 0 Then
-            If MapNpc(i).x = x Then
-                If MapNpc(i).y = y Then
+            If MapNpc(i).X = X Then
+                If MapNpc(i).Y = Y Then
                     CheckDirection = True
                     Exit Function
                 End If
@@ -727,11 +637,11 @@ Sub CheckMovement()
             Select Case GetPlayerDir(MyIndex)
                 Case DIR_UP
                     Call SendPlayerMove
-                    Player(MyIndex).YOffset = PIC_Y
+                    Player(MyIndex).yOffset = PIC_Y
                     Call SetPlayerY(MyIndex, GetPlayerY(MyIndex) - 1)
                 Case DIR_DOWN
                     Call SendPlayerMove
-                    Player(MyIndex).YOffset = PIC_Y * -1
+                    Player(MyIndex).yOffset = PIC_Y * -1
                     Call SetPlayerY(MyIndex, GetPlayerY(MyIndex) + 1)
                 Case DIR_LEFT
                     Call SendPlayerMove
@@ -744,7 +654,7 @@ Sub CheckMovement()
             End Select
 
             If Player(MyIndex).XOffset = 0 Then
-                If Player(MyIndex).YOffset = 0 Then
+                If Player(MyIndex).yOffset = 0 Then
                     If Map.Tile(GetPlayerX(MyIndex), GetPlayerY(MyIndex)).Type = TILE_TYPE_WARP Then
                         GettingMap = True
                     End If
@@ -918,17 +828,17 @@ errorhandler:
 End Sub
 
 Sub ClearTempTile()
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ReDim TempTile(0 To Map.MaxX, 0 To Map.MaxY)
 
-    For x = 0 To Map.MaxX
-        For y = 0 To Map.MaxY
-            TempTile(x, y).DoorOpen = NO
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
+            TempTile(X, Y).DoorOpen = NO
         Next
     Next
 
@@ -1043,20 +953,20 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub UpdateSpellWindow(ByVal spellnum As Long, ByVal x As Long, ByVal y As Long)
+Public Sub UpdateSpellWindow(ByVal spellnum As Long, ByVal X As Long, ByVal Y As Long)
 Dim i As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' check for off-screen
-    If y + frmMain.picSpellDesc.height > frmMain.ScaleHeight Then
-        y = frmMain.ScaleHeight - frmMain.picSpellDesc.height
+    If Y + frmMain.picSpellDesc.Height > frmMain.ScaleHeight Then
+        Y = frmMain.ScaleHeight - frmMain.picSpellDesc.Height
     End If
     
     With frmMain
-        .picSpellDesc.top = y
-        .picSpellDesc.Left = x
+        .picSpellDesc.top = Y
+        .picSpellDesc.Left = X
         .picSpellDesc.Visible = True
         
         If LastSpellDesc = spellnum Then Exit Sub
@@ -1074,7 +984,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub UpdateDescWindow(ByVal itemnum As Long, ByVal x As Long, ByVal y As Long)
+Public Sub UpdateDescWindow(ByVal itemnum As Long, ByVal X As Long, ByVal Y As Long)
 Dim i As Long
 Dim FirstLetter As String * 1
 Dim Name As String
@@ -1091,16 +1001,16 @@ Dim Name As String
     End If
     
     ' check for off-screen
-    If y + frmMain.picItemDesc.height > frmMain.ScaleHeight Then
-        y = frmMain.ScaleHeight - frmMain.picItemDesc.height
+    If Y + frmMain.picItemDesc.Height > frmMain.ScaleHeight Then
+        Y = frmMain.ScaleHeight - frmMain.picItemDesc.Height
     End If
     
     ' set z-order
     frmMain.picItemDesc.ZOrder (0)
 
     With frmMain
-        .picItemDesc.top = y
-        .picItemDesc.Left = x
+        .picItemDesc.top = Y
+        .picItemDesc.Left = X
         .picItemDesc.Visible = True
 
         If LastItemDesc = itemnum Then Exit Sub ' exit out after setting x + y so we don't reset values
@@ -1138,20 +1048,20 @@ errorhandler:
 End Sub
 
 Public Sub CacheResources()
-Dim x As Long, y As Long, Resource_Count As Long
+Dim X As Long, Y As Long, Resource_Count As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     Resource_Count = 0
 
-    For x = 0 To Map.MaxX
-        For y = 0 To Map.MaxY
-            If Map.Tile(x, y).Type = TILE_TYPE_RESOURCE Then
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
+            If Map.Tile(X, Y).Type = TILE_TYPE_RESOURCE Then
                 Resource_Count = Resource_Count + 1
                 ReDim Preserve MapResource(0 To Resource_Count)
-                MapResource(Resource_Count).x = x
-                MapResource(Resource_Count).y = y
+                MapResource(Resource_Count).X = X
+                MapResource(Resource_Count).Y = Y
             End If
         Next
     Next
@@ -1166,7 +1076,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub CreateActionMsg(ByVal message As String, ByVal color As Integer, ByVal MsgType As Byte, ByVal x As Long, ByVal y As Long)
+Public Sub CreateActionMsg(ByVal message As String, ByVal color As Integer, ByVal MsgType As Byte, ByVal X As Long, ByVal Y As Long)
 Dim i As Long
 
     ' If debug mode, handle error then exit out
@@ -1181,13 +1091,13 @@ Dim i As Long
         .Type = MsgType
         .Created = GetTickCount
         .Scroll = 1
-        .x = x
-        .y = y
+        .X = X
+        .Y = Y
     End With
 
     If ActionMsg(ActionMsgIndex).Type = ACTIONMSG_SCROLL Then
-        ActionMsg(ActionMsgIndex).y = ActionMsg(ActionMsgIndex).y + Rand(-2, 6)
-        ActionMsg(ActionMsgIndex).x = ActionMsg(ActionMsgIndex).x + Rand(-8, 8)
+        ActionMsg(ActionMsgIndex).Y = ActionMsg(ActionMsgIndex).Y + Rand(-2, 6)
+        ActionMsg(ActionMsgIndex).X = ActionMsg(ActionMsgIndex).X + Rand(-8, 8)
     End If
     
     ' find the new high index
@@ -1208,19 +1118,19 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub ClearActionMsg(ByVal index As Byte)
+Public Sub ClearActionMsg(ByVal Index As Byte)
 Dim i As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    ActionMsg(index).message = vbNullString
-    ActionMsg(index).Created = 0
-    ActionMsg(index).Type = 0
-    ActionMsg(index).color = 0
-    ActionMsg(index).Scroll = 0
-    ActionMsg(index).x = 0
-    ActionMsg(index).y = 0
+    ActionMsg(Index).message = vbNullString
+    ActionMsg(Index).Created = 0
+    ActionMsg(Index).Type = 0
+    ActionMsg(Index).color = 0
+    ActionMsg(Index).Scroll = 0
+    ActionMsg(Index).X = 0
+    ActionMsg(Index).Y = 0
     
     ' find the new high index
     For i = MAX_BYTE To 1 Step -1
@@ -1240,7 +1150,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub CheckAnimInstance(ByVal index As Long)
+Public Sub CheckAnimInstance(ByVal Index As Long)
 Dim looptime As Long
 Dim Layer As Long
 Dim FrameCount As Long
@@ -1250,38 +1160,38 @@ Dim lockindex As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' if doesn't exist then exit sub
-    If AnimInstance(index).Animation <= 0 Then Exit Sub
-    If AnimInstance(index).Animation >= MAX_ANIMATIONS Then Exit Sub
+    If AnimInstance(Index).Animation <= 0 Then Exit Sub
+    If AnimInstance(Index).Animation >= MAX_ANIMATIONS Then Exit Sub
     
     For Layer = 0 To 1
-        If AnimInstance(index).Used(Layer) Then
-            looptime = Animation(AnimInstance(index).Animation).looptime(Layer)
-            FrameCount = Animation(AnimInstance(index).Animation).Frames(Layer)
+        If AnimInstance(Index).Used(Layer) Then
+            looptime = Animation(AnimInstance(Index).Animation).looptime(Layer)
+            FrameCount = Animation(AnimInstance(Index).Animation).Frames(Layer)
             
             ' if zero'd then set so we don't have extra loop and/or frame
-            If AnimInstance(index).FrameIndex(Layer) = 0 Then AnimInstance(index).FrameIndex(Layer) = 1
-            If AnimInstance(index).LoopIndex(Layer) = 0 Then AnimInstance(index).LoopIndex(Layer) = 1
+            If AnimInstance(Index).FrameIndex(Layer) = 0 Then AnimInstance(Index).FrameIndex(Layer) = 1
+            If AnimInstance(Index).LoopIndex(Layer) = 0 Then AnimInstance(Index).LoopIndex(Layer) = 1
             
             ' check if frame timer is set, and needs to have a frame change
-            If AnimInstance(index).Timer(Layer) + looptime <= GetTickCount Then
+            If AnimInstance(Index).Timer(Layer) + looptime <= GetTickCount Then
                 ' check if out of range
-                If AnimInstance(index).FrameIndex(Layer) >= FrameCount Then
-                    AnimInstance(index).LoopIndex(Layer) = AnimInstance(index).LoopIndex(Layer) + 1
-                    If AnimInstance(index).LoopIndex(Layer) > Animation(AnimInstance(index).Animation).LoopCount(Layer) Then
-                        AnimInstance(index).Used(Layer) = False
+                If AnimInstance(Index).FrameIndex(Layer) >= FrameCount Then
+                    AnimInstance(Index).LoopIndex(Layer) = AnimInstance(Index).LoopIndex(Layer) + 1
+                    If AnimInstance(Index).LoopIndex(Layer) > Animation(AnimInstance(Index).Animation).LoopCount(Layer) Then
+                        AnimInstance(Index).Used(Layer) = False
                     Else
-                        AnimInstance(index).FrameIndex(Layer) = 1
+                        AnimInstance(Index).FrameIndex(Layer) = 1
                     End If
                 Else
-                    AnimInstance(index).FrameIndex(Layer) = AnimInstance(index).FrameIndex(Layer) + 1
+                    AnimInstance(Index).FrameIndex(Layer) = AnimInstance(Index).FrameIndex(Layer) + 1
                 End If
-                AnimInstance(index).Timer(Layer) = GetTickCount
+                AnimInstance(Index).Timer(Layer) = GetTickCount
             End If
         End If
     Next
     
     ' if neither layer is used, clear
-    If AnimInstance(index).Used(0) = False And AnimInstance(index).Used(1) = False Then ClearAnimInstance (index)
+    If AnimInstance(Index).Used(0) = False And AnimInstance(Index).Used(1) = False Then ClearAnimInstance (Index)
     
     ' Error handler
     Exit Sub
@@ -1412,7 +1322,7 @@ errorhandler:
     Exit Function
 End Function
 
-Public Function IsHotbarSlot(ByVal x As Single, ByVal y As Single) As Long
+Public Function IsHotbarSlot(ByVal X As Single, ByVal Y As Single) As Long
 Dim top As Long, Left As Long
 Dim i As Long
 
@@ -1424,8 +1334,8 @@ Dim i As Long
     For i = 1 To MAX_HOTBAR
         top = HotbarTop
         Left = HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
-        If x >= Left And x <= Left + PIC_X Then
-            If y >= top And y <= top + PIC_Y Then
+        If X >= Left And X <= Left + PIC_X Then
+            If Y >= top And Y <= top + PIC_Y Then
                 IsHotbarSlot = i
                 Exit Function
             End If
@@ -1440,7 +1350,7 @@ errorhandler:
     Exit Function
 End Function
 
-Public Sub PlayMapSound(ByVal x As Long, ByVal y As Long, ByVal entityType As Long, ByVal entityNum As Long)
+Public Sub PlayMapSound(ByVal X As Long, ByVal Y As Long, ByVal entityType As Long, ByVal entityNum As Long)
 Dim soundName As String
 
     ' If debug mode, handle error then exit out
@@ -1529,14 +1439,14 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub dialogueHandler(ByVal index As Long)
+Public Sub dialogueHandler(ByVal Index As Long)
     ' find out which button
-    If index = 1 Then ' okay button
+    If Index = 1 Then ' okay button
         ' dialogue index
         Select Case dialogueIndex
         
         End Select
-    ElseIf index = 2 Then ' yes button
+    ElseIf Index = 2 Then ' yes button
         ' dialogue index
         Select Case dialogueIndex
             Case DIALOGUE_TYPE_TRADE
@@ -1546,7 +1456,7 @@ Public Sub dialogueHandler(ByVal index As Long)
             Case DIALOGUE_TYPE_PARTY
                 SendAcceptParty
         End Select
-    ElseIf index = 3 Then ' no button
+    ElseIf Index = 3 Then ' no button
         ' dialogue index
         Select Case dialogueIndex
             Case DIALOGUE_TYPE_TRADE

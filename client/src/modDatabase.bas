@@ -117,6 +117,7 @@ Dim fileName As String
     Call PutVar(fileName, "Options", "Music", Str(Options.Music))
     Call PutVar(fileName, "Options", "Sound", Str(Options.Sound))
     Call PutVar(fileName, "Options", "Debug", Str(Options.Debug))
+    Call PutVar(fileName, "Options", "Device", Str(Options.Device))
     
     ' Error handler
     Exit Sub
@@ -145,6 +146,7 @@ Dim fileName As String
         Options.Music = 1
         Options.Sound = 1
         Options.Debug = 0
+        Options.Device = 2
         SaveOptions
     Else
         Options.Game_Name = GetVar(fileName, "Options", "Game_Name")
@@ -157,6 +159,7 @@ Dim fileName As String
         Options.Music = GetVar(fileName, "Options", "Music")
         Options.Sound = GetVar(fileName, "Options", "Sound")
         Options.Debug = GetVar(fileName, "Options", "Debug")
+        Options.Device = GetVar(fileName, "Options", "Device")
     End If
     
     ' show in GUI
@@ -182,44 +185,44 @@ End Sub
 
 Public Sub SaveMap(ByVal MapNum As Long)
 Dim fileName As String
-Dim f As Long
-Dim x As Long
-Dim y As Long
+Dim F As Long
+Dim X As Long
+Dim Y As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     fileName = App.Path & MAP_PATH & "map" & MapNum & MAP_EXT
 
-    f = FreeFile
-    Open fileName For Binary As #f
-    Put #f, , Map.Name
-    Put #f, , Map.Music
-    Put #f, , Map.Revision
-    Put #f, , Map.Moral
-    Put #f, , Map.Up
-    Put #f, , Map.Down
-    Put #f, , Map.Left
-    Put #f, , Map.Right
-    Put #f, , Map.BootMap
-    Put #f, , Map.BootX
-    Put #f, , Map.BootY
-    Put #f, , Map.MaxX
-    Put #f, , Map.MaxY
+    F = FreeFile
+    Open fileName For Binary As #F
+    Put #F, , Map.Name
+    Put #F, , Map.Music
+    Put #F, , Map.Revision
+    Put #F, , Map.Moral
+    Put #F, , Map.Up
+    Put #F, , Map.Down
+    Put #F, , Map.Left
+    Put #F, , Map.Right
+    Put #F, , Map.BootMap
+    Put #F, , Map.BootX
+    Put #F, , Map.BootY
+    Put #F, , Map.MaxX
+    Put #F, , Map.MaxY
 
-    For x = 0 To Map.MaxX
-        For y = 0 To Map.MaxY
-            Put #f, , Map.Tile(x, y)
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
+            Put #F, , Map.Tile(X, Y)
         Next
 
         DoEvents
     Next
 
-    For x = 1 To MAX_MAP_NPCS
-        Put #f, , Map.Npc(x)
+    For X = 1 To MAX_MAP_NPCS
+        Put #F, , Map.Npc(X)
     Next
 
-    Close #f
+    Close #F
     
     ' Error handler
     Exit Sub
@@ -231,44 +234,44 @@ End Sub
 
 Public Sub LoadMap(ByVal MapNum As Long)
 Dim fileName As String
-Dim f As Long
-Dim x As Long
-Dim y As Long
+Dim F As Long
+Dim X As Long
+Dim Y As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     fileName = App.Path & MAP_PATH & "map" & MapNum & MAP_EXT
     ClearMap
-    f = FreeFile
-    Open fileName For Binary As #f
-    Get #f, , Map.Name
-    Get #f, , Map.Music
-    Get #f, , Map.Revision
-    Get #f, , Map.Moral
-    Get #f, , Map.Up
-    Get #f, , Map.Down
-    Get #f, , Map.Left
-    Get #f, , Map.Right
-    Get #f, , Map.BootMap
-    Get #f, , Map.BootX
-    Get #f, , Map.BootY
-    Get #f, , Map.MaxX
-    Get #f, , Map.MaxY
+    F = FreeFile
+    Open fileName For Binary As #F
+    Get #F, , Map.Name
+    Get #F, , Map.Music
+    Get #F, , Map.Revision
+    Get #F, , Map.Moral
+    Get #F, , Map.Up
+    Get #F, , Map.Down
+    Get #F, , Map.Left
+    Get #F, , Map.Right
+    Get #F, , Map.BootMap
+    Get #F, , Map.BootX
+    Get #F, , Map.BootY
+    Get #F, , Map.MaxX
+    Get #F, , Map.MaxY
     ' have to set the tile()
     ReDim Map.Tile(0 To Map.MaxX, 0 To Map.MaxY)
 
-    For x = 0 To Map.MaxX
-        For y = 0 To Map.MaxY
-            Get #f, , Map.Tile(x, y)
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
+            Get #F, , Map.Tile(X, Y)
         Next
     Next
 
-    For x = 1 To MAX_MAP_NPCS
-        Get #f, , Map.Npc(x)
+    For X = 1 To MAX_MAP_NPCS
+        Get #F, , Map.Npc(X)
     Next
 
-    Close #f
+    Close #F
     ClearTempTile
     
     ' Error handler
@@ -286,7 +289,7 @@ Dim i As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     i = 1
-
+    NumTileSets = 1
     While FileExist(GFX_PATH & "\tilesets\" & i & GFX_EXT)
         NumTileSets = NumTileSets + 1
         i = i + 1
@@ -1173,7 +1176,7 @@ Function GetPlayerX(ByVal Index As Long) As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If Index > MAX_PLAYERS Then Exit Function
-    GetPlayerX = Player(Index).x
+    GetPlayerX = Player(Index).X
     
     ' Error handler
     Exit Function
@@ -1183,12 +1186,12 @@ errorhandler:
     Exit Function
 End Function
 
-Sub SetPlayerX(ByVal Index As Long, ByVal x As Long)
+Sub SetPlayerX(ByVal Index As Long, ByVal X As Long)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If Index > MAX_PLAYERS Then Exit Sub
-    Player(Index).x = x
+    Player(Index).X = X
     
     ' Error handler
     Exit Sub
@@ -1203,7 +1206,7 @@ Function GetPlayerY(ByVal Index As Long) As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If Index > MAX_PLAYERS Then Exit Function
-    GetPlayerY = Player(Index).y
+    GetPlayerY = Player(Index).Y
     
     ' Error handler
     Exit Function
@@ -1213,12 +1216,12 @@ errorhandler:
     Exit Function
 End Function
 
-Sub SetPlayerY(ByVal Index As Long, ByVal y As Long)
+Sub SetPlayerY(ByVal Index As Long, ByVal Y As Long)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If Index > MAX_PLAYERS Then Exit Sub
-    Player(Index).y = y
+    Player(Index).Y = Y
     
     ' Error handler
     Exit Sub

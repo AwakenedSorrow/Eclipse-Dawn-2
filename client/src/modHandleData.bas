@@ -212,7 +212,7 @@ End Sub
 Sub HandleNewCharClasses(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim i As Long
-Dim z As Long, x As Long
+Dim z As Long, X As Long
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -238,8 +238,8 @@ Dim Buffer As clsBuffer
             ' redim array
             ReDim .MaleSprite(0 To z)
             ' loop-receive data
-            For x = 0 To z
-                .MaleSprite(x) = Buffer.ReadLong
+            For X = 0 To z
+                .MaleSprite(X) = Buffer.ReadLong
             Next
             
             ' get array size
@@ -247,12 +247,12 @@ Dim Buffer As clsBuffer
             ' redim array
             ReDim .FemaleSprite(0 To z)
             ' loop-receive data
-            For x = 0 To z
-                .FemaleSprite(x) = Buffer.ReadLong
+            For X = 0 To z
+                .FemaleSprite(X) = Buffer.ReadLong
             Next
             
-            For x = 1 To Stats.Stat_Count - 1
-                .Stat(x) = Buffer.ReadLong
+            For X = 1 To Stats.Stat_Count - 1
+                .Stat(X) = Buffer.ReadLong
             Next
         End With
 
@@ -290,7 +290,7 @@ End Sub
 Sub HandleClassesData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim i As Long
-Dim z As Long, x As Long
+Dim z As Long, X As Long
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -316,8 +316,8 @@ Dim Buffer As clsBuffer
             ' redim array
             ReDim .MaleSprite(0 To z)
             ' loop-receive data
-            For x = 0 To z
-                .MaleSprite(x) = Buffer.ReadLong
+            For X = 0 To z
+                .MaleSprite(X) = Buffer.ReadLong
             Next
             
             ' get array size
@@ -325,12 +325,12 @@ Dim Buffer As clsBuffer
             ' redim array
             ReDim .FemaleSprite(0 To z)
             ' loop-receive data
-            For x = 0 To z
-                .FemaleSprite(x) = Buffer.ReadLong
+            For X = 0 To z
+                .FemaleSprite(X) = Buffer.ReadLong
             Next
                             
-            For x = 1 To Stats.Stat_Count - 1
-                .Stat(x) = Buffer.ReadLong
+            For X = 1 To Stats.Stat_Count - 1
+                .Stat(X) = Buffer.ReadLong
             Next
         End With
 
@@ -388,7 +388,7 @@ Dim Buffer As clsBuffer
     CurrencyMenu = 0 ' clear
 
     Set Buffer = Nothing
-    BltInventory
+    'BltInventory
     
     ' Error handler
     Exit Sub
@@ -416,7 +416,7 @@ Dim Buffer As clsBuffer
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
-    BltInventory
+    'BltInventory
     Set Buffer = Nothing
     
     ' Error handler
@@ -446,8 +446,8 @@ Dim Buffer As clsBuffer
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
-    BltInventory
-    BltEquipment
+    'BltInventory
+    'BltEquipment
     
     Set Buffer = Nothing
     
@@ -501,7 +501,7 @@ Dim Buffer As clsBuffer
         'frmMain.lblHP.Caption = Int(GetPlayerVital(MyIndex, Vitals.HP) / GetPlayerMaxVital(MyIndex, Vitals.HP) * 100) & "%"
         frmMain.lblHP.Caption = GetPlayerVital(MyIndex, Vitals.HP) & "/" & GetPlayerMaxVital(MyIndex, Vitals.HP)
         ' hp bar
-        frmMain.imgHPBar.width = ((GetPlayerVital(MyIndex, Vitals.HP) / HPBar_Width) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / HPBar_Width)) * HPBar_Width
+        frmMain.imgHPBar.Width = ((GetPlayerVital(MyIndex, Vitals.HP) / HPBar_Width) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / HPBar_Width)) * HPBar_Width
     End If
 
     ' Error handler
@@ -527,7 +527,7 @@ Dim Buffer As clsBuffer
         'frmMain.lblMP.Caption = Int(GetPlayerVital(MyIndex, Vitals.MP) / GetPlayerMaxVital(MyIndex, Vitals.MP) * 100) & "%"
         frmMain.lblMP.Caption = GetPlayerVital(MyIndex, Vitals.MP) & "/" & GetPlayerMaxVital(MyIndex, Vitals.MP)
         ' mp bar
-        frmMain.imgMPBar.width = ((GetPlayerVital(MyIndex, Vitals.MP) / SPRBar_Width) / (GetPlayerMaxVital(MyIndex, Vitals.MP) / SPRBar_Width)) * SPRBar_Width
+        frmMain.imgMPBar.Width = ((GetPlayerVital(MyIndex, Vitals.MP) / SPRBar_Width) / (GetPlayerMaxVital(MyIndex, Vitals.MP) / SPRBar_Width)) * SPRBar_Width
     End If
 
     ' Error handler
@@ -576,7 +576,7 @@ Dim TNL As Long
     TNL = Buffer.ReadLong
     frmMain.lblEXP.Caption = GetPlayerExp(Index) & "/" & TNL
     ' mp bar
-    frmMain.imgEXPBar.width = ((GetPlayerExp(MyIndex) / EXPBar_Width) / (TNL / EXPBar_Width)) * EXPBar_Width
+    frmMain.imgEXPBar.Width = ((GetPlayerExp(MyIndex) / EXPBar_Width) / (TNL / EXPBar_Width)) * EXPBar_Width
     
     ' Error handler
     Exit Sub
@@ -587,7 +587,7 @@ errorhandler:
 End Sub
 
 Private Sub HandlePlayerData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim i As Long, x As Long
+Dim i As Long, X As Long
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -607,8 +607,8 @@ Dim Buffer As clsBuffer
     Call SetPlayerAccess(i, Buffer.ReadLong)
     Call SetPlayerPK(i, Buffer.ReadLong)
     
-    For x = 1 To Stats.Stat_Count - 1
-        SetPlayerStat i, x, Buffer.ReadLong
+    For X = 1 To Stats.Stat_Count - 1
+        SetPlayerStat i, X, Buffer.ReadLong
     Next
 
     ' Check if the player is the client player
@@ -622,23 +622,23 @@ Dim Buffer As clsBuffer
         ' Set the character windows
         frmMain.lblCharName = GetPlayerName(MyIndex) & " - Level " & GetPlayerLevel(MyIndex)
         
-        For x = 1 To Stats.Stat_Count - 1
-            frmMain.lblCharStat(x).Caption = GetPlayerStat(MyIndex, x)
+        For X = 1 To Stats.Stat_Count - 1
+            frmMain.lblCharStat(X).Caption = GetPlayerStat(MyIndex, X)
         Next
         
         ' Set training label visiblity depending on points
         frmMain.lblPoints.Caption = GetPlayerPOINTS(MyIndex)
         If GetPlayerPOINTS(MyIndex) > 0 Then
-            For x = 1 To Stats.Stat_Count - 1
-                If GetPlayerStat(Index, x) < 255 Then
-                    frmMain.lblTrainStat(x).Visible = True
+            For X = 1 To Stats.Stat_Count - 1
+                If GetPlayerStat(Index, X) < 255 Then
+                    frmMain.lblTrainStat(X).Visible = True
                 Else
-                    frmMain.lblTrainStat(x).Visible = False
+                    frmMain.lblTrainStat(X).Visible = False
                 End If
             Next
         Else
-            For x = 1 To Stats.Stat_Count - 1
-                frmMain.lblTrainStat(x).Visible = False
+            For X = 1 To Stats.Stat_Count - 1
+                frmMain.lblTrainStat(X).Visible = False
             Next
         End If
         
@@ -648,7 +648,7 @@ Dim Buffer As clsBuffer
     ' Make sure they aren't walking
     Player(i).Moving = 0
     Player(i).XOffset = 0
-    Player(i).YOffset = 0
+    Player(i).yOffset = 0
     
     ' Error handler
     Exit Sub
@@ -660,8 +660,8 @@ End Sub
 
 Private Sub HandlePlayerMove(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim i As Long
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim Dir As Long
 Dim n As Byte
 Dim Buffer As clsBuffer
@@ -672,22 +672,22 @@ Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
     i = Buffer.ReadLong
-    x = Buffer.ReadLong
-    y = Buffer.ReadLong
+    X = Buffer.ReadLong
+    Y = Buffer.ReadLong
     Dir = Buffer.ReadLong
     n = Buffer.ReadLong
-    Call SetPlayerX(i, x)
-    Call SetPlayerY(i, y)
+    Call SetPlayerX(i, X)
+    Call SetPlayerY(i, Y)
     Call SetPlayerDir(i, Dir)
     Player(i).XOffset = 0
-    Player(i).YOffset = 0
+    Player(i).yOffset = 0
     Player(i).Moving = n
 
     Select Case GetPlayerDir(i)
         Case DIR_UP
-            Player(i).YOffset = PIC_Y
+            Player(i).yOffset = PIC_Y
         Case DIR_DOWN
-            Player(i).YOffset = PIC_Y * -1
+            Player(i).yOffset = PIC_Y * -1
         Case DIR_LEFT
             Player(i).XOffset = PIC_X
         Case DIR_RIGHT
@@ -704,8 +704,8 @@ End Sub
 
 Private Sub HandleNpcMove(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim MapNpcNum As Long
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim Dir As Long
 Dim Movement As Long
 Dim Buffer As clsBuffer
@@ -716,24 +716,24 @@ Dim Buffer As clsBuffer
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
     MapNpcNum = Buffer.ReadLong
-    x = Buffer.ReadLong
-    y = Buffer.ReadLong
+    X = Buffer.ReadLong
+    Y = Buffer.ReadLong
     Dir = Buffer.ReadLong
     Movement = Buffer.ReadLong
 
     With MapNpc(MapNpcNum)
-        .x = x
-        .y = y
+        .X = X
+        .Y = Y
         .Dir = Dir
         .XOffset = 0
-        .YOffset = 0
+        .yOffset = 0
         .Moving = Movement
 
         Select Case .Dir
             Case DIR_UP
-                .YOffset = PIC_Y
+                .yOffset = PIC_Y
             Case DIR_DOWN
-                .YOffset = PIC_Y * -1
+                .yOffset = PIC_Y * -1
             Case DIR_LEFT
                 .XOffset = PIC_X
             Case DIR_RIGHT
@@ -766,7 +766,7 @@ Dim Buffer As clsBuffer
 
     With Player(i)
         .XOffset = 0
-        .YOffset = 0
+        .yOffset = 0
         .Moving = 0
     End With
 
@@ -794,7 +794,7 @@ Dim Buffer As clsBuffer
     With MapNpc(i)
         .Dir = Dir
         .XOffset = 0
-        .YOffset = 0
+        .yOffset = 0
         .Moving = 0
     End With
 
@@ -807,8 +807,8 @@ errorhandler:
 End Sub
 
 Private Sub HandlePlayerXY(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim Dir As Long
 Dim Buffer As clsBuffer
 
@@ -817,16 +817,16 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
-    x = Buffer.ReadLong
-    y = Buffer.ReadLong
+    X = Buffer.ReadLong
+    Y = Buffer.ReadLong
     Dir = Buffer.ReadLong
-    Call SetPlayerX(MyIndex, x)
-    Call SetPlayerY(MyIndex, y)
+    Call SetPlayerX(MyIndex, X)
+    Call SetPlayerY(MyIndex, Y)
     Call SetPlayerDir(MyIndex, Dir)
     ' Make sure they aren't walking
     Player(MyIndex).Moving = 0
     Player(MyIndex).XOffset = 0
-    Player(MyIndex).YOffset = 0
+    Player(MyIndex).yOffset = 0
     
     ' Error handler
     Exit Sub
@@ -837,8 +837,8 @@ errorhandler:
 End Sub
 
 Private Sub HandlePlayerXYMap(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim Dir As Long
 Dim Buffer As clsBuffer
 Dim thePlayer As Long
@@ -849,16 +849,16 @@ Dim thePlayer As Long
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
     thePlayer = Buffer.ReadLong
-    x = Buffer.ReadLong
-    y = Buffer.ReadLong
+    X = Buffer.ReadLong
+    Y = Buffer.ReadLong
     Dir = Buffer.ReadLong
-    Call SetPlayerX(thePlayer, x)
-    Call SetPlayerY(thePlayer, y)
+    Call SetPlayerX(thePlayer, X)
+    Call SetPlayerY(thePlayer, Y)
     Call SetPlayerDir(thePlayer, Dir)
     ' Make sure they aren't walking
     Player(thePlayer).Moving = 0
     Player(thePlayer).XOffset = 0
-    Player(thePlayer).YOffset = 0
+    Player(thePlayer).yOffset = 0
     
     ' Error handler
     Exit Sub
@@ -913,8 +913,8 @@ errorhandler:
 End Sub
 
 Private Sub HandleCheckForMap(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim i As Long
 Dim NeedMap As Byte
 Dim Buffer As clsBuffer
@@ -940,23 +940,23 @@ Dim Buffer As clsBuffer
     
     ' clear the blood
     For i = 1 To MAX_BYTE
-        Blood(i).x = 0
-        Blood(i).y = 0
+        Blood(i).X = 0
+        Blood(i).Y = 0
         Blood(i).Sprite = 0
         Blood(i).Timer = 0
     Next
     
     ' Get map num
-    x = Buffer.ReadLong
+    X = Buffer.ReadLong
     ' Get revision
-    y = Buffer.ReadLong
+    Y = Buffer.ReadLong
 
-    If FileExist(MAP_PATH & "map" & x & MAP_EXT, False) Then
-        Call LoadMap(x)
+    If FileExist(MAP_PATH & "map" & X & MAP_EXT, False) Then
+        Call LoadMap(X)
         ' Check to see if the revisions match
         NeedMap = 1
 
-        If Map.Revision = y Then
+        If Map.Revision = Y Then
             ' We do so we dont need the map
             'Call SendData(CNeedMap & SEP_CHAR & "n" & END_CHAR)
             NeedMap = 0
@@ -995,8 +995,8 @@ End Sub
 
 Sub HandleMapData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim i As Long
 Dim Buffer As clsBuffer
 Dim MapNum As Long
@@ -1025,23 +1025,23 @@ Dim MapNum As Long
     
     ReDim Map.Tile(0 To Map.MaxX, 0 To Map.MaxY)
 
-    For x = 0 To Map.MaxX
-        For y = 0 To Map.MaxY
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
             For i = 1 To MapLayer.Layer_Count - 1
-                Map.Tile(x, y).Layer(i).x = Buffer.ReadLong
-                Map.Tile(x, y).Layer(i).y = Buffer.ReadLong
-                Map.Tile(x, y).Layer(i).Tileset = Buffer.ReadLong
+                Map.Tile(X, Y).Layer(i).X = Buffer.ReadLong
+                Map.Tile(X, Y).Layer(i).Y = Buffer.ReadLong
+                Map.Tile(X, Y).Layer(i).Tileset = Buffer.ReadLong
             Next
-            Map.Tile(x, y).Type = Buffer.ReadByte
-            Map.Tile(x, y).Data1 = Buffer.ReadLong
-            Map.Tile(x, y).Data2 = Buffer.ReadLong
-            Map.Tile(x, y).Data3 = Buffer.ReadLong
-            Map.Tile(x, y).DirBlock = Buffer.ReadByte
+            Map.Tile(X, Y).Type = Buffer.ReadByte
+            Map.Tile(X, Y).Data1 = Buffer.ReadLong
+            Map.Tile(X, Y).Data2 = Buffer.ReadLong
+            Map.Tile(X, Y).Data3 = Buffer.ReadLong
+            Map.Tile(X, Y).DirBlock = Buffer.ReadByte
         Next
     Next
 
-    For x = 1 To MAX_MAP_NPCS
-        Map.Npc(x) = Buffer.ReadLong
+    For X = 1 To MAX_MAP_NPCS
+        Map.Npc(X) = Buffer.ReadLong
         n = n + 1
     Next
 
@@ -1087,8 +1087,8 @@ Dim Buffer As clsBuffer
             .playerName = Buffer.ReadString
             .num = Buffer.ReadLong
             .Value = Buffer.ReadLong
-            .x = Buffer.ReadLong
-            .y = Buffer.ReadLong
+            .X = Buffer.ReadLong
+            .Y = Buffer.ReadLong
         End With
     Next
     
@@ -1113,8 +1113,8 @@ Dim Buffer As clsBuffer
     For i = 1 To MAX_MAP_NPCS
         With MapNpc(i)
             .num = Buffer.ReadLong
-            .x = Buffer.ReadLong
-            .y = Buffer.ReadLong
+            .X = Buffer.ReadLong
+            .Y = Buffer.ReadLong
             .Dir = Buffer.ReadLong
             .Vital(HP) = Buffer.ReadLong
         End With
@@ -1300,8 +1300,8 @@ Dim Buffer As clsBuffer
         .playerName = Buffer.ReadString
         .num = Buffer.ReadLong
         .Value = Buffer.ReadLong
-        .x = Buffer.ReadLong
-        .y = Buffer.ReadLong
+        .X = Buffer.ReadLong
+        .Y = Buffer.ReadLong
     End With
 
     ' Error handler
@@ -1392,7 +1392,7 @@ Dim ItemData() As Byte
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
-    BltInventory
+    'BltInventory
     
     ' Error handler
     Exit Sub
@@ -1442,12 +1442,12 @@ Dim Buffer As clsBuffer
 
     With MapNpc(n)
         .num = Buffer.ReadLong
-        .x = Buffer.ReadLong
-        .y = Buffer.ReadLong
+        .X = Buffer.ReadLong
+        .Y = Buffer.ReadLong
         .Dir = Buffer.ReadLong
         ' Client use only
         .XOffset = 0
-        .YOffset = 0
+        .yOffset = 0
         .Moving = 0
     End With
 
@@ -1598,8 +1598,8 @@ End Sub
 
 Private Sub HandleMapKey(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -1607,10 +1607,10 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
-    x = Buffer.ReadLong
-    y = Buffer.ReadLong
+    X = Buffer.ReadLong
+    Y = Buffer.ReadLong
     n = Buffer.ReadByte
-    TempTile(x, y).DoorOpen = n
+    TempTile(X, Y).DoorOpen = n
     
     ' Error handler
     Exit Sub
@@ -1810,8 +1810,8 @@ Dim i As Long
 
         For i = 0 To Resource_Index
             MapResource(i).ResourceState = Buffer.ReadByte
-            MapResource(i).x = Buffer.ReadLong
-            MapResource(i).y = Buffer.ReadLong
+            MapResource(i).X = Buffer.ReadLong
+            MapResource(i).Y = Buffer.ReadLong
         Next
 
         Resources_Init = True
@@ -1847,16 +1847,16 @@ End Sub
 
 Private Sub HandleDoorAnimation(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
-Dim x As Long, y As Long
+Dim X As Long, Y As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
-    x = Buffer.ReadLong
-    y = Buffer.ReadLong
-    With TempTile(x, y)
+    X = Buffer.ReadLong
+    Y = Buffer.ReadLong
+    With TempTile(X, Y)
         .DoorFrame = 1
         .DoorAnimate = 1 ' 0 = nothing| 1 = opening | 2 = closing
         .DoorTimer = GetTickCount
@@ -1873,7 +1873,7 @@ End Sub
 
 Private Sub HandleActionMsg(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
-Dim x As Long, y As Long, message As String, color As Long, tmpType As Long
+Dim X As Long, Y As Long, message As String, color As Long, tmpType As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -1884,12 +1884,12 @@ Dim x As Long, y As Long, message As String, color As Long, tmpType As Long
     message = Buffer.ReadString
     color = Buffer.ReadLong
     tmpType = Buffer.ReadLong
-    x = Buffer.ReadLong
-    y = Buffer.ReadLong
+    X = Buffer.ReadLong
+    Y = Buffer.ReadLong
 
     Set Buffer = Nothing
     
-    CreateActionMsg message, color, tmpType, x, y
+    CreateActionMsg message, color, tmpType, X, Y
     
     ' Error handler
     Exit Sub
@@ -1901,7 +1901,7 @@ End Sub
 
 Private Sub HandleBlood(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
-Dim x As Long, y As Long, Sprite As Long, i As Long
+Dim X As Long, Y As Long, Sprite As Long, i As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -1910,8 +1910,8 @@ Dim x As Long, y As Long, Sprite As Long, i As Long
     
     Buffer.WriteBytes Data()
     
-    x = Buffer.ReadLong
-    y = Buffer.ReadLong
+    X = Buffer.ReadLong
+    Y = Buffer.ReadLong
 
     Set Buffer = Nothing
     
@@ -1920,7 +1920,7 @@ Dim x As Long, y As Long, Sprite As Long, i As Long
     
     ' make sure tile doesn't already have blood
     For i = 1 To MAX_BYTE
-        If Blood(i).x = x And Blood(i).y = y Then
+        If Blood(i).X = X And Blood(i).Y = Y Then
             ' already have blood :(
             Exit Sub
         End If
@@ -1931,8 +1931,8 @@ Dim x As Long, y As Long, Sprite As Long, i As Long
     If BloodIndex >= MAX_BYTE Then BloodIndex = 1
     
     With Blood(BloodIndex)
-        .x = x
-        .y = y
+        .X = X
+        .Y = Y
         .Sprite = Sprite
         .Timer = GetTickCount
     End With
@@ -1960,8 +1960,8 @@ Dim Buffer As clsBuffer
     
     With AnimInstance(AnimationIndex)
         .Animation = Buffer.ReadLong
-        .x = Buffer.ReadLong
-        .y = Buffer.ReadLong
+        .X = Buffer.ReadLong
+        .Y = Buffer.ReadLong
         .LockType = Buffer.ReadByte
         .lockindex = Buffer.ReadLong
         .Used(0) = True
@@ -1969,7 +1969,7 @@ Dim Buffer As clsBuffer
     End With
     
     ' play the sound if we've got one
-    PlayMapSound AnimInstance(AnimationIndex).x, AnimInstance(AnimationIndex).y, SoundEntity.seAnimation, AnimInstance(AnimationIndex).Animation
+    PlayMapSound AnimInstance(AnimationIndex).X, AnimInstance(AnimationIndex).Y, SoundEntity.seAnimation, AnimInstance(AnimationIndex).Animation
 
     Set Buffer = Nothing
     
@@ -2228,7 +2228,7 @@ Private Sub HandleCloseTrade(ByVal Index As Long, ByRef Data() As Byte, ByVal St
     frmMain.picTrade.Visible = False
     frmMain.lblTradeStatus.Caption = vbNullString
     ' re-blt any items we were offering
-    BltInventory
+    'BltInventory
     
     ' Error handler
     Exit Sub
@@ -2258,7 +2258,7 @@ Dim i As Long
         Next
         frmMain.lblYourWorth.Caption = Buffer.ReadLong & "g"
         ' remove any items we're offering
-        BltInventory
+        'BltInventory
     ElseIf dataType = 1 Then 'theirs
         For i = 1 To MAX_INV
             TradeTheirOffer(i).num = Buffer.ReadLong
@@ -2377,7 +2377,7 @@ End Sub
 
 Private Sub HandleSound(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
-Dim x As Long, y As Long, entityType As Long, entityNum As Long
+Dim X As Long, Y As Long, entityType As Long, entityNum As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -2385,12 +2385,12 @@ Dim x As Long, y As Long, entityType As Long, entityNum As Long
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
     
-    x = Buffer.ReadLong
-    y = Buffer.ReadLong
+    X = Buffer.ReadLong
+    Y = Buffer.ReadLong
     entityType = Buffer.ReadLong
     entityNum = Buffer.ReadLong
     
-    PlayMapSound x, y, entityType, entityNum
+    PlayMapSound X, Y, entityType, entityNum
     
     ' Error handler
     Exit Sub
@@ -2521,9 +2521,9 @@ Dim Buffer As clsBuffer, i As Long
     If partyIndex <= 0 Or partyIndex > MAX_PARTY_MEMBERS Then Exit Sub
     
     ' hp bar
-    frmMain.imgPartyHealth(partyIndex).width = ((GetPlayerVital(playerNum, Vitals.HP) / Party_HPWidth) / (GetPlayerMaxVital(playerNum, Vitals.HP) / Party_HPWidth)) * Party_HPWidth
+    frmMain.imgPartyHealth(partyIndex).Width = ((GetPlayerVital(playerNum, Vitals.HP) / Party_HPWidth) / (GetPlayerMaxVital(playerNum, Vitals.HP) / Party_HPWidth)) * Party_HPWidth
     ' spr bar
-    frmMain.imgPartySpirit(partyIndex).width = ((GetPlayerVital(playerNum, Vitals.MP) / Party_SPRWidth) / (GetPlayerMaxVital(playerNum, Vitals.MP) / Party_SPRWidth)) * Party_SPRWidth
+    frmMain.imgPartySpirit(partyIndex).Width = ((GetPlayerVital(playerNum, Vitals.MP) / Party_SPRWidth) / (GetPlayerMaxVital(playerNum, Vitals.MP) / Party_SPRWidth)) * Party_SPRWidth
     
     ' Error handler
     Exit Sub

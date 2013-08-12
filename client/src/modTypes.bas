@@ -29,16 +29,21 @@ Public Options As OptionsRec
 
 ' Type recs
 Private Type OptionsRec
+    ' Game Related
     Game_Name As String
+    IP As String
+    Port As Long
+    ' User Related
     SavePass As Byte
     Password As String * NAME_LENGTH
     Username As String * ACCOUNT_LENGTH
-    IP As String
-    Port As Long
+    ' Sound Related
     MenuMusic As String
     Music As Byte
     Sound As Byte
+    ' Advanced Stuff
     Debug As Byte
+    Device As Byte
 End Type
 
 Public Type PartyRec
@@ -81,12 +86,12 @@ Private Type PlayerRec
     Equipment(1 To Equipment.Equipment_Count - 1) As Long
     ' Position
     Map As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     Dir As Byte
     ' Client use only
     XOffset As Integer
-    YOffset As Integer
+    yOffset As Integer
     Moving As Byte
     Attacking As Byte
     AttackTimer As Long
@@ -95,8 +100,8 @@ Private Type PlayerRec
 End Type
 
 Private Type TileDataRec
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Tileset As Long
 End Type
 
@@ -177,8 +182,8 @@ Private Type MapItemRec
     num As Long
     Value As Long
     Frame As Byte
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
 End Type
 
 Private Type NpcRec
@@ -207,12 +212,12 @@ Private Type MapNpcRec
     TargetType As Byte
     Vital(1 To Vitals.Vital_Count - 1) As Long
     Map As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     Dir As Byte
     ' Client use only
     XOffset As Long
-    YOffset As Long
+    yOffset As Long
     Moving As Byte
     Attacking As Byte
     AttackTimer As Long
@@ -246,8 +251,8 @@ Private Type SpellRec
     CDTime As Long
     Icon As Long
     Map As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Dir As Byte
     Vital As Long
     Duration As Long
@@ -268,8 +273,8 @@ Private Type TempTileRec
 End Type
 
 Public Type MapResourceRec
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     ResourceState As Byte
 End Type
 
@@ -296,16 +301,16 @@ Private Type ActionMsgRec
     Type As Long
     color As Long
     Scroll As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Timer As Long
 End Type
 
 Private Type BloodRec
     Sprite As Long
     Timer As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
 End Type
 
 Private Type AnimationRec
@@ -320,8 +325,8 @@ End Type
 
 Private Type AnimInstanceRec
     Animation As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     ' used for locking to players/npcs
     lockindex As Long
     LockType As Byte

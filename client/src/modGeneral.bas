@@ -15,23 +15,26 @@ Public Sub Main()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    ' set loading screen
+    ' Make sure the loading screen is visible so the user knows we're doing something(or at least trying to).
     loadGUI True
     frmLoad.Visible = True
 
-    ' load options
+    ' Load the game options, note that this needs to be done fairly early on or it may throw a few errors here and there.
     Call SetStatus("Loading Options...")
     LoadOptions
 
-    ' load main menu
+    ' Load the Main Menu, fairly simple operation since it's a form and all. Not much we have to do for it.
     Call SetStatus("Loading Menu...")
     Load frmMenu
     
-    ' load gui
+    ' Load the images the Interface uses and apply them to the forms before we ever get to see them.
     Call SetStatus("Loading interface...")
     loadGUI
     
-    ' Check if the directory is there, if its not make it
+    ' Check if the directories are there, if not make them. This is a failsafe so that if you, or anyone else ever decides to
+    ' start deleting these folders the game won't throw any errors about the locations not existing, worst that could happen
+    ' now is that it just throws File not Found errors, which is just as silly. But hey, at least the file structure is there
+    ' right?
     ChkDir App.Path & "\data files\", "graphics"
     ChkDir App.Path & "\data files\graphics\", "animations"
     ChkDir App.Path & "\data files\graphics\", "characters"
@@ -52,25 +55,26 @@ Public Sub Main()
     ChkDir App.Path & "\data files\", "music"
     ChkDir App.Path & "\data files\", "sound"
     
-    ' load the main game (and by extension, pre-load DD7)
+    ' Time to set two globals that we need to have set before we do much of anything.
+    ' Arguably we could set these two elsewhere though? May do that in the future.
     GettingMap = True
     vbQuote = ChrW$(34) ' "
     
-    ' Update the form with the game's name before it's loaded
+    ' Update the form's caption with our Game's name we loaded from the options file earlier.
     frmMain.Caption = Options.Game_Name
     
-    ' initialize DirectX
-    If Not InitDirectDraw Then
-        MsgBox "Error Initializing DirectX7 - DirectDraw."
-        DestroyGame
-    End If
+    ' Initialize the DirectX8 Rendering Engine.
+    Call SetStatus("Initializing Rendering Engine...")
+    Call InitDirect3D8
     
     ' randomize rnd's seed
     Randomize
     Call SetStatus("Initializing TCP settings...")
     Call TcpInit
     Call InitMessages
-    Call SetStatus("Initializing DirectX...")
+    
+    
+    'Call SetStatus("Initializing DirectX...")
     
     ' DX7 Master Object is already created, early binding
     Call CheckTilesets
@@ -81,6 +85,9 @@ Public Sub Main()
     Call CheckResources
     Call CheckSpellIcons
     Call CheckFaces
+    
+    ' Old but required for now.
+    Call InitDirectDraw
     
     ' temp set music/sound vars
     Music_On = True
@@ -187,12 +194,12 @@ Dim i As Long
     Next
     
     ' store the bar widths for calculations
-    HPBar_Width = frmMain.imgHPBar.width
-    SPRBar_Width = frmMain.imgMPBar.width
-    EXPBar_Width = frmMain.imgEXPBar.width
+    HPBar_Width = frmMain.imgHPBar.Width
+    SPRBar_Width = frmMain.imgMPBar.Width
+    EXPBar_Width = frmMain.imgEXPBar.Width
     ' party
-    Party_HPWidth = frmMain.imgPartyHealth(1).width
-    Party_SPRWidth = frmMain.imgPartySpirit(1).width
+    Party_HPWidth = frmMain.imgPartyHealth(1).Width
+    Party_SPRWidth = frmMain.imgPartySpirit(1).Width
     
     Exit Sub
     
@@ -362,7 +369,7 @@ Sub GameInit()
     frmMain.picScreen.Visible = True
     
     ' Blt inv
-    BltInventory
+    'BltInventory
     
     ' blt hotbar
     BltHotbar
@@ -488,7 +495,7 @@ errorhandler:
     Exit Function
 End Function
 
-Public Sub MovePicture(PB As PictureBox, Button As Integer, Shift As Integer, x As Single, y As Single)
+Public Sub MovePicture(PB As PictureBox, Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim GlobalX As Long
 Dim GlobalY As Long
 
@@ -499,8 +506,8 @@ Dim GlobalY As Long
     GlobalY = PB.top
 
     If Button = 1 Then
-        PB.Left = GlobalX + x - SOffsetX
-        PB.top = GlobalY + y - SOffsetY
+        PB.Left = GlobalX + X - SOffsetX
+        PB.top = GlobalY + Y - SOffsetY
     End If
 
     ' Error handler
