@@ -18,10 +18,10 @@ Public Sub Render_Game()
     
     ' Render the tiles that will be under the player, in this case Ground, Mask1 and Mask2.
     If NumTileSets > 0 Then
-        For X = TileView.Left To TileView.Right
-            For Y = TileView.top To TileView.bottom
-                If IsValidMapPoint(X, Y) Then
-                    Call RenderMapTile(X, Y)
+        For x = TileView.Left To TileView.Right
+            For y = TileView.top To TileView.bottom
+                If IsValidMapPoint(x, y) Then
+                    Call RenderMapTile(x, y)
                 End If
             Next
         Next
@@ -30,58 +30,61 @@ Public Sub Render_Game()
     ' Y-Based Rendering time! Stuff that's "further" away from the front of the screen
     ' (Y-0 being the furthest and the highest being whatever)
     ' Will be rendered first, so it's behind everything else regardless of what it is.
-    For Y = 0 To Map.MaxY
+    For y = 0 To Map.MaxY
         
         ' Player Characters
         For i = 1 To Player_HighIndex
-                If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
-                    If Player(i).Y = Y Then
-                        Call RenderPlayer(i)
-                    End If
+            If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
+                If Player(i).y = y Then
+                    Call RenderPlayer(i)
                 End If
-            Next
+            End If
+        Next
         
     Next
     
     ' Render the tiles that will be above the player, in this case Fringe1 and Fringe 2.
     If NumTileSets > 0 Then
-        For X = TileView.Left To TileView.Right
-            For Y = TileView.top To TileView.bottom
-                If IsValidMapPoint(X, Y) Then
-                    Call RenderUpperMapTile(X, Y)
+        For x = TileView.Left To TileView.Right
+            For y = TileView.top To TileView.bottom
+                If IsValidMapPoint(x, y) Then
+                    Call RenderUpperMapTile(x, y)
                 End If
             Next
         Next
     End If
     
     ' End the rendering scene and present it to the player.
+    ' This makes sure we can actually SEE what we rendered onto the device above.
     Call D3DDevice8.EndScene
     Call D3DDevice8.Present(ByVal 0, ByVal 0, 0, ByVal 0)
     
 End Sub
 
-Sub RenderMapTile(ByVal X As Long, ByVal Y As Long)
+Sub RenderMapTile(ByVal x As Long, ByVal y As Long)
 Dim i As Long
     
-    With Map.Tile(X, Y)
+    With Map.Tile(x, y)
+        ' Time to loop through our layers for this tile.
         For i = MapLayer.Ground To MapLayer.Mask2
             ' Should we skip the tile?
-            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).X > 0 Or .Layer(i).Y > 0) Then
-                Call RenderGraphic(Tex_TileSet(.Layer(i).Tileset), ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), PIC_X, PIC_Y, 0, 0, .Layer(i).X * PIC_X, .Layer(i).Y * PIC_Y)
+            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
+                Call RenderGraphic(Tex_TileSet(.Layer(i).Tileset), ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), PIC_X, PIC_Y, 0, 0, .Layer(i).x * PIC_X, .Layer(i).y * PIC_Y)
             End If
         Next
     End With
     
 End Sub
 
-Sub RenderUpperMapTile(ByVal X As Long, ByVal Y As Long)
+Sub RenderUpperMapTile(ByVal x As Long, ByVal y As Long)
 Dim i As Long
     
-    With Map.Tile(X, Y)
+    With Map.Tile(x, y)
+        ' Time to loop through our layers for this tile.
         For i = MapLayer.Fringe To MapLayer.Fringe2
             ' Should we skip the tile?
-            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).X > 0 Or .Layer(i).Y > 0) Then
-                Call RenderGraphic(Tex_TileSet(.Layer(i).Tileset), ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), PIC_X, PIC_Y, 0, 0, .Layer(i).X * PIC_X, .Layer(i).Y * PIC_Y)
+            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
+                Call RenderGraphic(Tex_TileSet(.Layer(i).Tileset), ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), PIC_X, PIC_Y, 0, 0, .Layer(i).x * PIC_X, .Layer(i).y * PIC_Y)
             End If
         Next
     End With
@@ -89,40 +92,44 @@ Dim i As Long
 End Sub
 
 Sub RenderPlayer(ByVal Index As Long)
-Dim SpriteFrame As Byte, i As Long, X As Long, Y As Long
+Dim SpriteFrame As Byte, i As Long, x As Long, y As Long
 Dim Sprite As Long, SpriteDir As Long
 Dim rec As DxVBLib.RECT
 Dim attackspeed As Long
     
+    ' Get the sprite we're using for this player.
     Sprite = GetPlayerSprite(Index)
-
+    
+    ' Check if the sprite's valid, if not exit the sub so we don't cause any issues.
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
 
+    ' Check if the texture for the sprite is loaded, if not load it.
+    ' We need it loaded for later, since we're using the height/width to calculate certain things.
     If D3DT_TEXTURE(Tex_Character(Sprite)).Loaded = False Then
         LoadTexture Tex_Character(Sprite)
     End If
 
-    ' speed from weapon
+    ' Retrieve the weapon speed if the player has one equipped.
     If GetPlayerEquipment(Index, Weapon) > 0 Then
         attackspeed = Item(GetPlayerEquipment(Index, Weapon)).Speed
     Else
         attackspeed = 1000
     End If
 
-    ' Reset frame
+    ' Reset the movement frame if the player;s at the end of beginning of a movement.
     If Player(Index).Step = 3 Then
         SpriteFrame = 0
     ElseIf Player(Index).Step = 1 Then
         SpriteFrame = 2
     End If
     
-    ' Check for attacking animation
+    ' Check if we should be using the attack Frame
     If Player(Index).AttackTimer + (attackspeed / 2) > GetTickCount Then
         If Player(Index).Attacking = 1 Then
             SpriteFrame = 3
         End If
     Else
-        ' If not attacking, walk normally
+        ' Apparently not, so we'll be using the regular movement animations!
         Select Case GetPlayerDir(Index)
             Case DIR_UP
                 If (Player(Index).yOffset > 8) Then SpriteFrame = Player(Index).Step
@@ -135,7 +142,7 @@ Dim attackspeed As Long
         End Select
     End If
 
-    ' Check to see if we want to stop making him attack
+    ' Are we allowed to still attack the next frame? Probably not!
     With Player(Index)
         If .AttackTimer + attackspeed < GetTickCount Then
             .Attacking = 0
@@ -143,7 +150,9 @@ Dim attackspeed As Long
         End If
     End With
 
-    ' Set the left
+    ' Decide which direction our little sprite should be facing, 0 being the top row and 3 being the bottom
+    ' On your spritesheet. Please change these if your spritesheet's in a different order from the standard
+    ' RMXP format.
     Select Case GetPlayerDir(Index)
         Case DIR_UP
             SpriteDir = 3
@@ -155,20 +164,21 @@ Dim attackspeed As Long
             SpriteDir = 1
     End Select
 
-    ' Calculate the X
-    X = GetPlayerX(Index) * PIC_X + Player(Index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
+    ' Calculate the X position to render the player sprite at. Along with offset, of course!
+    x = GetPlayerX(Index) * PIC_X + Player(Index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
 
-    ' Is the player's height more than 32..?
+    ' Time to work on the Y position.
+    ' But first, let's check if the sprite is more than 32 pixels high.
     If (D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) > 32 Then
         ' Create a 32 pixel offset for larger sprites
-        Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
+        y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
     Else
         ' Proceed as normal
-        Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset
+        y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset
     End If
 
-    ' render the actual sprite
-    Call RenderSprite(Sprite, X, Y, SpriteFrame, SpriteDir)
+    ' We're done here, let's render the sprite!
+    Call RenderSprite(Sprite, x, y, SpriteFrame, SpriteDir)
     
     ' Let's not do paperdolling just yet shall we? Would like to get the rest to work first.
     'For i = 1 To UBound(PaperdollOrder)
@@ -181,18 +191,23 @@ Dim attackspeed As Long
 End Sub
 
 Private Sub RenderSprite(ByVal Sprite As Long, ByVal x2 As Long, y2 As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
-Dim X As Long
-Dim Y As Long
+Dim x As Long
+Dim y As Long
 Dim Width As Long
 Dim Height As Long
 
+    ' Is the sprite valid? If not, exit the sub to prevent issues from occuring.
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
-    X = ConvertMapX(x2)
-    Y = ConvertMapY(y2)
     
+    ' Convert the provided values to values we can use on the map.
+    x = ConvertMapX(x2)
+    y = ConvertMapY(y2)
+    
+    ' Pre-Calculate these values, it makes the render line look a lot cleaner.
     Width = D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4
     Height = D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4
     
-    Call RenderGraphic(Tex_Character(Sprite), X, Y, Width, Height, 0, 0, SpriteFrame * Width, SpriteDir * Height)
+    ' Render the sprite itself! Please do -NOT- touch this line unless you know what you're doing.
+    Call RenderGraphic(Tex_Character(Sprite), x, y, Width, Height, 0, 0, SpriteFrame * Width, SpriteDir * Height)
     
 End Sub

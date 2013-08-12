@@ -35,6 +35,7 @@ Public Sub Main()
     ' start deleting these folders the game won't throw any errors about the locations not existing, worst that could happen
     ' now is that it just throws File not Found errors, which is just as silly. But hey, at least the file structure is there
     ' right?
+    Call SetStatus("Checking directories...")
     ChkDir App.Path & "\data files\", "graphics"
     ChkDir App.Path & "\data files\graphics\", "animations"
     ChkDir App.Path & "\data files\graphics\", "characters"
@@ -55,28 +56,11 @@ Public Sub Main()
     ChkDir App.Path & "\data files\", "music"
     ChkDir App.Path & "\data files\", "sound"
     
-    ' Time to set two globals that we need to have set before we do much of anything.
-    ' Arguably we could set these two elsewhere though? May do that in the future.
-    GettingMap = True
-    vbQuote = ChrW$(34) ' "
-    
-    ' Update the form's caption with our Game's name we loaded from the options file earlier.
-    frmMain.Caption = Options.Game_Name
-    
     ' Initialize the DirectX8 Rendering Engine.
-    Call SetStatus("Initializing Rendering Engine...")
+    Call SetStatus("Initializing rendering rngine...")
     Call InitDirect3D8
     
-    ' randomize rnd's seed
-    Randomize
-    Call SetStatus("Initializing TCP settings...")
-    Call TcpInit
-    Call InitMessages
-    
-    
-    'Call SetStatus("Initializing DirectX...")
-    
-    ' DX7 Master Object is already created, early binding
+    ' Old icky DD7 stuff. It's here for compatibility reasons for now.
     Call CheckTilesets
     Call CheckCharacters
     Call CheckPaperdolls
@@ -85,20 +69,34 @@ Public Sub Main()
     Call CheckResources
     Call CheckSpellIcons
     Call CheckFaces
-    
-    ' Old but required for now.
     Call InitDirectDraw
     
-    ' temp set music/sound vars
+    ' Randomize the seed value used for RND commands.
+    Call SetStatus("Initializing randomization...")
+    Randomize
+    
+    ' Initialize TCP Settings and Messages.
+    Call SetStatus("Initializing TCP settings...")
+    Call TcpInit
+    Call InitMessages
+    
+    ' Initialize the sound system.
+    Call SetStatus("Initializing sound system...")
     Music_On = True
     Sound_On = True
-    
-    ' load music/sound engine
     InitSound
     InitMusic
     
-    ' check if we have main-menu music
+    ' check if we have main-menu music, if so play it.
     If Len(Trim$(Options.MenuMusic)) > 0 Then PlayMidi Trim$(Options.MenuMusic)
+    
+    ' Cache the buttons then reset & render them
+    Call SetStatus("Loading buttons...")
+    cacheButtons
+    resetButtons_Menu
+    
+    ' Initialize misc stuff.
+    Call SetStatus("Initialize miscellaneous...")
     
     ' Reset values
     Ping = -1
@@ -106,10 +104,13 @@ Public Sub Main()
     'Load frmMainMenu
     Load frmMenu
     
-    ' cache the buttons then reset & render them
-    Call SetStatus("Loading buttons...")
-    cacheButtons
-    resetButtons_Menu
+    ' Time to set two globals that we need to have set before we do much of anything.
+    ' Arguably we could set these two elsewhere though? May do that in the future.
+    GettingMap = True
+    vbQuote = ChrW$(34) ' "
+    
+    ' Update the form's caption with our Game's name we loaded from the options file earlier.
+    frmMain.Caption = Options.Game_Name
     
     ' we can now see it
     frmMenu.Visible = True
@@ -495,7 +496,7 @@ errorhandler:
     Exit Function
 End Function
 
-Public Sub MovePicture(PB As PictureBox, Button As Integer, Shift As Integer, X As Single, Y As Single)
+Public Sub MovePicture(PB As PictureBox, Button As Integer, Shift As Integer, x As Single, y As Single)
 Dim GlobalX As Long
 Dim GlobalY As Long
 
@@ -506,8 +507,8 @@ Dim GlobalY As Long
     GlobalY = PB.top
 
     If Button = 1 Then
-        PB.Left = GlobalX + X - SOffsetX
-        PB.top = GlobalY + Y - SOffsetY
+        PB.Left = GlobalX + x - SOffsetX
+        PB.top = GlobalY + y - SOffsetY
     End If
 
     ' Error handler
