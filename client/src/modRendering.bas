@@ -131,6 +131,9 @@ Dim x As Long, y As Long, i As Long
         Call RenderTileOutline
     End If
     
+    ' Render Health, Mana and Cast Bars.
+    Call RenderBars
+    
     ' End the rendering scene and present it to the player.
     ' This makes sure we can actually SEE what we rendered onto the device above.
     Call D3DDevice8.EndScene
@@ -344,7 +347,11 @@ Sub RenderBlood(ByVal Index As Long)
             ' Right, a little addition of my own. The longer blood's been on the map the less visible it will become.
             ' It will fade a bit every 1.5 seconds. It's nothing fancy but I prefer it this way. :)
             If .LastTimer + 1500 < GetTickCount Then
-                .Alpha = .Alpha - 7
+                If .Alpha >= 7 Then
+                    .Alpha = .Alpha - 7
+                Else
+                    .Alpha = 0
+                End If
                 .LastTimer = .LastTimer + 1500
             End If
             
@@ -720,6 +727,117 @@ Sub RenderTileOutline()
     Exit Sub
 errorhandler:
     HandleError "RenderTileOutline", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub RenderBars()
+Dim tmpY As Long, tmpX As Long
+Dim sWidth As Long, sHeight As Long
+Dim Top As Long, Right As Long
+Dim barWidth As Long
+Dim i As Long, npcNum As Long, partyIndex As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' dynamic bar calculations
+    sWidth = D3DT_TEXTURE(Tex_Bars).Width
+    sHeight = D3DT_TEXTURE(Tex_Bars).Height / 4
+    
+    ' render health bars
+    For i = 1 To MAX_MAP_NPCS
+        npcNum = MapNpc(i).num
+        ' exists?
+        If npcNum > 0 Then
+            ' alive?
+            If MapNpc(i).Vital(Vitals.HP) > 0 And MapNpc(i).Vital(Vitals.HP) < Npc(npcNum).HP Then
+                ' lock to npc
+                tmpX = MapNpc(i).x * PIC_X + MapNpc(i).XOffset + 16 - (sWidth / 2)
+                tmpY = MapNpc(i).y * PIC_Y + MapNpc(i).yOffset + 35
+                
+                ' calculate the width to fill
+                barWidth = ((MapNpc(i).Vital(Vitals.HP) / sWidth) / (Npc(npcNum).HP / sWidth)) * sWidth
+                
+                ' draw bar background
+                Top = sHeight * 1 ' HP bar background
+                Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, Top)
+                
+                ' draw the content of the bar.
+                Top = 0 ' HP bar
+                Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, Top)
+            End If
+        End If
+    Next
+    
+    ' check for casting time bar
+    If SpellBuffer > 0 Then
+        If Spell(PlayerSpells(SpellBuffer)).CastTime > 0 Then
+            ' lock to player
+            tmpX = GetPlayerX(MyIndex) * PIC_X + Player(MyIndex).XOffset + 16 - (sWidth / 2)
+            tmpY = GetPlayerY(MyIndex) * PIC_Y + Player(MyIndex).yOffset + 35 + sHeight + 1
+            
+            ' calculate the width to fill
+            barWidth = (GetTickCount - SpellBufferTimer) / ((Spell(PlayerSpells(SpellBuffer)).CastTime * 1000)) * sWidth
+            
+            ' draw bar background
+            Top = sHeight * 3 ' Spell bar background
+            Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, Top)
+            
+            ' draw the bar proper
+            Top = sHeight * 2 ' Spell bar
+            Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, Top)
+        End If
+    End If
+    
+    ' draw own health bar
+    If GetPlayerVital(MyIndex, Vitals.HP) > 0 And GetPlayerVital(MyIndex, Vitals.HP) < GetPlayerMaxVital(MyIndex, Vitals.HP) Then
+        ' lock to Player
+        tmpX = GetPlayerX(MyIndex) * PIC_X + Player(MyIndex).XOffset + 16 - (sWidth / 2)
+        tmpY = GetPlayerY(MyIndex) * PIC_X + Player(MyIndex).yOffset + 35
+       
+        ' calculate the width to fill
+        barWidth = ((GetPlayerVital(MyIndex, Vitals.HP) / sWidth) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / sWidth)) * sWidth
+       
+        ' draw bar background
+        Top = sHeight * 1 ' HP bar background
+        Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, Top)
+       
+        ' draw the bar proper
+        Top = 0 ' HP bar
+        Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, Top)
+    End If
+    
+    ' draw party health bars
+    If Party.Leader > 0 Then
+        For i = 1 To MAX_PARTY_MEMBERS
+            partyIndex = Party.Member(i)
+            If (partyIndex > 0) And (partyIndex <> MyIndex) And (GetPlayerMap(partyIndex) = GetPlayerMap(MyIndex)) Then
+                ' player exists
+                If GetPlayerVital(partyIndex, Vitals.HP) > 0 And GetPlayerVital(partyIndex, Vitals.HP) < GetPlayerMaxVital(partyIndex, Vitals.HP) Then
+                    ' lock to Player
+                    tmpX = GetPlayerX(partyIndex) * PIC_X + Player(partyIndex).XOffset + 16 - (sWidth / 2)
+                    tmpY = GetPlayerY(partyIndex) * PIC_X + Player(partyIndex).yOffset + 35
+                    
+                    ' calculate the width to fill
+                    barWidth = ((GetPlayerVital(partyIndex, Vitals.HP) / sWidth) / (GetPlayerMaxVital(partyIndex, Vitals.HP) / sWidth)) * sWidth
+                    
+                    ' draw bar background
+                    Top = sHeight * 1 ' HP bar background
+                    Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, Top)
+                    
+                    ' draw the bar's content.
+                    Top = 0 ' HP bar
+                    Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, Top)
+                End If
+            End If
+        Next
+    End If
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderBars", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
