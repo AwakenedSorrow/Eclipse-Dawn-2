@@ -1,6 +1,12 @@
 Attribute VB_Name = "modDirectX8"
 Option Explicit
 
+' ********************
+' Credit goes to Sekaru for this Module.
+' www.sleepystudios.com
+' Original file(s) can be found at: http://www.eclipseorigins.com/community/index.php?/topic/130272-clean-optimised-dx8/
+' ********************
+
 '*********************
 '* DX8 Functionality *
 '*********************
@@ -16,8 +22,8 @@ Public DisplayMode As D3DDISPLAYMODE
 Public D3DWindow As D3DPRESENT_PARAMETERS
 
 Public Type TLVERTEX
-    X As Single
-    Y As Single
+    x As Single
+    y As Single
     z As Single
     RHW As Single
     color As Long
@@ -50,6 +56,7 @@ Public Tex_Resource() As Long
 Public Tex_Animation() As Long
 Public Tex_SpellIcon() As Long
 Public Tex_Face() As Long
+Public Tex_Blood As Long
 
 ' Texture counts
 Public NumTileSets As Long
@@ -223,7 +230,7 @@ Dim i As Long
     
     For i = 0 To Count
         With D3DT_TEXTURE(i)
-            If .Loaded = True Then
+            If .Loaded = True Then ' <--- Missing from the actual base. Seemed too important to leave out.
                 If .UnloadTimer > GetTickCount + 60000 Then
             
                     ' Clear it from the memory
@@ -333,9 +340,16 @@ Dim i As Long
     Loop
     NumFaces = NumFaces - 1
     
+    ' Now this is where we'll start caching and pre-loading some of the "required" textures, such as the blood and target ones.
+    ' Nothing too complicated, just making sure they exist and are loaded without any fuss.
+    Tex_Blood = SetTexturePath(App.Path & GFX_PATH & "blood" & GFX_EXT)
+    Call LoadTexture(Tex_Blood)
+    ' A little special touch for the blood, we need to know how many blood textures we have! So let's calculate it.
+    BloodCount = D3DT_TEXTURE(Tex_Blood).Width / PIC_X
+    
 End Sub
 
-Public Sub RenderGraphic(ByVal Texture As Long, X As Long, Y As Long, DW As Long, DH As Long, Optional TW As Long, Optional TH As Long, _
+Public Sub RenderGraphic(ByVal Texture As Long, x As Long, y As Long, DW As Long, DH As Long, Optional TW As Long, Optional TH As Long, _
 Optional OX As Long, Optional OY As Long, Optional R As Byte = 255, Optional G As Byte = 255, Optional B As Byte = 255, Optional A As Byte = 255)
 Dim Box(0 To 3) As TLVERTEX, i As Long, TextureWidth As Long, TextureHeight As Long
     
@@ -357,28 +371,26 @@ Dim Box(0 To 3) As TLVERTEX, i As Long, TextureWidth As Long, TextureHeight As L
         Box(i).color = D3DColorRGBA(R, G, B, A)
     Next
 
-    Box(0).X = X
-    Box(0).Y = Y
+    Box(0).x = x
+    Box(0).y = y
     Box(0).tu = (OX / TextureWidth)
     Box(0).tv = (OY / TextureHeight)
-    Box(1).X = X + DW
+    Box(1).x = x + DW
     Box(1).tu = (OX + TW + 1) / TextureWidth
-    Box(2).X = Box(0).X
-    Box(3).X = Box(1).X
+    Box(2).x = Box(0).x
+    Box(3).x = Box(1).x
 
-    Box(2).Y = Y + DH
+    Box(2).y = y + DH
     Box(2).tv = (OY + TH + 1) / TextureHeight
 
-    Box(1).Y = Box(0).Y
+    Box(1).y = Box(0).y
     Box(1).tv = Box(0).tv
     Box(2).tu = Box(0).tu
-    Box(3).Y = Box(2).Y
+    Box(3).y = Box(2).y
     Box(3).tu = Box(1).tu
     Box(3).tv = Box(2).tv
     
     Call D3DDevice8.DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, Box(0), FVF_Size)
     D3DT_TEXTURE(Texture).UnloadTimer = GetTickCount
 End Sub
-
-
 

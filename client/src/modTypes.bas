@@ -86,8 +86,8 @@ Private Type PlayerRec
     Equipment(1 To Equipment.Equipment_Count - 1) As Long
     ' Position
     Map As Long
-    X As Byte
-    Y As Byte
+    x As Byte
+    y As Byte
     Dir As Byte
     ' Client use only
     XOffset As Integer
@@ -100,8 +100,8 @@ Private Type PlayerRec
 End Type
 
 Private Type TileDataRec
-    X As Long
-    Y As Long
+    x As Long
+    y As Long
     Tileset As Long
 End Type
 
@@ -182,8 +182,8 @@ Private Type MapItemRec
     num As Long
     Value As Long
     Frame As Byte
-    X As Byte
-    Y As Byte
+    x As Byte
+    y As Byte
 End Type
 
 Private Type NpcRec
@@ -212,8 +212,8 @@ Private Type MapNpcRec
     TargetType As Byte
     Vital(1 To Vitals.Vital_Count - 1) As Long
     Map As Long
-    X As Byte
-    Y As Byte
+    x As Byte
+    y As Byte
     Dir As Byte
     ' Client use only
     XOffset As Long
@@ -251,8 +251,8 @@ Private Type SpellRec
     CDTime As Long
     Icon As Long
     Map As Long
-    X As Long
-    Y As Long
+    x As Long
+    y As Long
     Dir As Byte
     Vital As Long
     Duration As Long
@@ -273,8 +273,8 @@ Private Type TempTileRec
 End Type
 
 Public Type MapResourceRec
-    X As Long
-    Y As Long
+    x As Long
+    y As Long
     ResourceState As Byte
 End Type
 
@@ -301,16 +301,18 @@ Private Type ActionMsgRec
     Type As Long
     color As Long
     Scroll As Long
-    X As Long
-    Y As Long
+    x As Long
+    y As Long
     Timer As Long
 End Type
 
 Private Type BloodRec
     Sprite As Long
+    Alpha As Byte
+    LastTimer As Long
     Timer As Long
-    X As Long
-    Y As Long
+    x As Long
+    y As Long
 End Type
 
 Private Type AnimationRec
@@ -325,8 +327,8 @@ End Type
 
 Private Type AnimInstanceRec
     Animation As Long
-    X As Long
-    Y As Long
+    x As Long
+    y As Long
     ' used for locking to players/npcs
     lockindex As Long
     LockType As Byte
