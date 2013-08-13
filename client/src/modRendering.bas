@@ -173,10 +173,8 @@ Dim rec_pos As RECT, srcRect As D3DRECT
         End If
     Next
     
-    
-    
     ' Draw map name
-    RenderText MainFont, Map.name, DrawMapNameX, 5, Yellow
+    RenderText MainFont, Map.Name, DrawMapNameX, DrawMapNameY, Yellow
             
     ' If we're in the map editor, draw the attributes.
     If InMapEditor Then Call DrawMapAttributes
@@ -1010,3 +1008,31 @@ errorhandler:
     Err.Clear
     Exit Sub
 End Sub
+
+Public Function ConvertMapX(ByVal x As Long) As Long
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+ 
+    ConvertMapX = x - (TileView.Left * PIC_X) - Camera.Left
+   
+    ' Error handler
+    Exit Function
+errorhandler:
+    HandleError "ConvertMapX", "modDirectDraw7", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Function
+End Function
+ 
+Public Function ConvertMapY(ByVal y As Long) As Long
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+ 
+    ConvertMapY = y - (TileView.Top * PIC_Y) - Camera.Top
+   
+    ' Error handler
+    Exit Function
+errorhandler:
+    HandleError "ConvertMapY", "modDirectDraw7", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Function
+End Function

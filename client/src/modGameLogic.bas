@@ -697,7 +697,8 @@ Public Sub UpdateDrawMapName()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    DrawMapNameX = Camera.Left + ((MAX_MAPX + 1) * PIC_X / 2) - GetTextWidth(MainFont, Trim$(Map.name))
+    DrawMapNameX = (ScreenX + 64) / 2 - GetTextWidth(MainFont, Trim$(Map.Name))
+    DrawMapNameY = 1
 
     Select Case Map.Moral
         Case MAP_MORAL_NONE
@@ -796,7 +797,7 @@ Dim Buffer As clsBuffer
 
     ' Check if player has enough MP
     If GetPlayerVital(MyIndex, Vitals.MP) < Spell(PlayerSpells(spellslot)).MPCost Then
-        Call AddText("Not enough MP to cast " & Trim$(Spell(PlayerSpells(spellslot)).name) & ".", BrightRed)
+        Call AddText("Not enough MP to cast " & Trim$(Spell(PlayerSpells(spellslot)).Name) & ".", BrightRed)
         Exit Sub
     End If
 
@@ -970,7 +971,7 @@ Dim i As Long
         
         If LastSpellDesc = spellnum Then Exit Sub
         
-        .lblSpellName.Caption = Trim$(Spell(spellnum).name)
+        .lblSpellName.Caption = Trim$(Spell(spellnum).Name)
         .lblSpellDesc.Caption = Trim$(Spell(spellnum).Desc)
         BltSpellDesc spellnum
     End With
@@ -986,17 +987,17 @@ End Sub
 Public Sub UpdateDescWindow(ByVal itemnum As Long, ByVal x As Long, ByVal y As Long)
 Dim i As Long
 Dim FirstLetter As String * 1
-Dim name As String
+Dim Name As String
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    FirstLetter = LCase$(Left$(Trim$(Item(itemnum).name), 1))
+    FirstLetter = LCase$(Left$(Trim$(Item(itemnum).Name), 1))
    
     If FirstLetter = "$" Then
-        name = (Mid$(Trim$(Item(itemnum).name), 2, Len(Trim$(Item(itemnum).name)) - 1))
+        Name = (Mid$(Trim$(Item(itemnum).Name), 2, Len(Trim$(Item(itemnum).Name)) - 1))
     Else
-        name = Trim$(Item(itemnum).name)
+        Name = Trim$(Item(itemnum).Name)
     End If
     
     ' check for off-screen
@@ -1031,7 +1032,7 @@ Dim name As String
         End Select
         
         ' set captions
-        .lblItemName.Caption = name
+        .lblItemName.Caption = Name
         .lblItemDesc.Caption = Trim$(Item(itemnum).Desc)
         
         ' render the item

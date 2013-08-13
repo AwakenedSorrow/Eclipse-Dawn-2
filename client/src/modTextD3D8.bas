@@ -356,7 +356,7 @@ errorhandler:
 End Function
 
 Sub DrawActionMsg(ByVal Index As Long)
-    Dim x As Long, y As Long, i As Long, Time As Long
+    Dim x As Long, y As Long, i As Long, Time As Long, color As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -411,7 +411,8 @@ Sub DrawActionMsg(ByVal Index As Long)
     y = ConvertMapY(y)
 
     If GetTickCount < ActionMsg(Index).Created + Time Then
-        RenderText MainFont, ActionMsg(Index).message, x, y, ActionMsg(Index).color
+        color = ActionMsg(Index).color
+        RenderText MainFont, ActionMsg(Index).message, x, y, color
     Else
         ClearActionMsg Index
     End If
@@ -428,7 +429,7 @@ Public Sub DrawPlayerName(ByVal Index As Long)
 Dim TextX As Long
 Dim TextY As Long
 Dim color As Long
-Dim name As String
+Dim Name As String
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -453,9 +454,9 @@ Dim name As String
         color = BrightRed
     End If
 
-    name = Trim$(Player(Index).name)
+    Name = Trim$(Player(Index).Name)
     ' calc pos
-    TextX = ConvertMapX(GetPlayerX(Index) * PIC_X) + Player(Index).XOffset + (PIC_X \ 2) - (GetTextWidth(MainFont, (Trim$(name))) / 2)
+    TextX = ConvertMapX(GetPlayerX(Index) * PIC_X) + Player(Index).XOffset + (PIC_X \ 2) - (GetTextWidth(MainFont, (Trim$(Name))) / 2)
     If GetPlayerSprite(Index) < 1 Or GetPlayerSprite(Index) > NumCharacters Then
         TextY = ConvertMapY(GetPlayerY(Index) * PIC_Y) + Player(Index).yOffset - 16
     Else
@@ -464,7 +465,7 @@ Dim name As String
     End If
 
     ' Draw name
-    RenderText MainFont, name, TextX, TextY, color
+    RenderText MainFont, Name, TextX, TextY, color
     
     ' Error handler
     Exit Sub
@@ -478,7 +479,7 @@ Public Sub DrawNpcName(ByVal Index As Long)
 Dim TextX As Long
 Dim TextY As Long
 Dim color As Long
-Dim name As String
+Dim Name As String
 Dim npcNum As Long
 
     ' If debug mode, handle error then exit out
@@ -497,8 +498,8 @@ Dim npcNum As Long
             color = BrightGreen
     End Select
 
-    name = Trim$(Npc(npcNum).name)
-    TextX = ConvertMapX(MapNpc(Index).x * PIC_X) + MapNpc(Index).XOffset + (PIC_X \ 2) - (GetTextWidth(MainFont, (Trim$(name))) / 2)
+    Name = Trim$(Npc(npcNum).Name)
+    TextX = ConvertMapX(MapNpc(Index).x * PIC_X) + MapNpc(Index).XOffset + (PIC_X \ 2) - (GetTextWidth(MainFont, (Trim$(Name))) / 2)
     If Npc(npcNum).Sprite < 1 Or Npc(npcNum).Sprite > NumCharacters Then
         TextY = ConvertMapY(MapNpc(Index).y * PIC_Y) + MapNpc(Index).yOffset - 16
     Else
@@ -507,7 +508,7 @@ Dim npcNum As Long
     End If
 
     ' Draw name
-    RenderText MainFont, name, TextX, TextY, color
+    RenderText MainFont, Name, TextX, TextY, color
     
     ' Error handler
     Exit Sub

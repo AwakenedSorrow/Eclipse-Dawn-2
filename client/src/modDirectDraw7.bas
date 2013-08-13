@@ -1297,7 +1297,7 @@ Dim sRECT As RECT, dRECT As RECT, i As Long, num As String, n As Long
         
         Select Case Hotbar(i).sType
             Case 1 ' inventory
-                If Len(Item(Hotbar(i).Slot).name) > 0 Then
+                If Len(Item(Hotbar(i).Slot).Name) > 0 Then
                     If Item(Hotbar(i).Slot).Pic > 0 Then
                         If DDS_Item(Item(Hotbar(i).Slot).Pic) Is Nothing Then
                             Call InitDDSurf("Items\" & Item(Hotbar(i).Slot).Pic, DDSD_Item(Item(Hotbar(i).Slot).Pic), DDS_Item(Item(Hotbar(i).Slot).Pic))
@@ -1312,7 +1312,7 @@ Dim sRECT As RECT, dRECT As RECT, i As Long, num As String, n As Long
                     .bottom = 32
                     .Right = 32
                 End With
-                If Len(Spell(Hotbar(i).Slot).name) > 0 Then
+                If Len(Spell(Hotbar(i).Slot).Name) > 0 Then
                     If Spell(Hotbar(i).Slot).Icon > 0 Then
                         If DDS_SpellIcon(Spell(Hotbar(i).Slot).Icon) Is Nothing Then
                             Call InitDDSurf("Spellicons\" & Spell(Hotbar(i).Slot).Icon, DDSD_SpellIcon(Spell(Hotbar(i).Slot).Icon), DDS_SpellIcon(Spell(Hotbar(i).Slot).Icon))
@@ -3130,7 +3130,7 @@ Dim rec_pos As DxVBLib.RECT
     End If
 
     ' Draw map name
-    Call DrawText(TexthDC, DrawMapNameX, DrawMapNameY, Map.name, DrawMapNameColor)
+    Call DrawText(TexthDC, DrawMapNameX, DrawMapNameY, Map.Name, DrawMapNameColor)
 
     ' Release DC
     DDS_BackBuffer.ReleaseDC TexthDC
@@ -3244,33 +3244,6 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Function ConvertMapX(ByVal x As Long) As Long
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-
-    ConvertMapX = x - (TileView.Left * PIC_X)
-    
-    ' Error handler
-    Exit Function
-errorhandler:
-    HandleError "ConvertMapX", "modDirectDraw7", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Function
-End Function
-
-Public Function ConvertMapY(ByVal y As Long) As Long
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-
-    ConvertMapY = y - (TileView.Top * PIC_Y)
-    
-    ' Error handler
-    Exit Function
-errorhandler:
-    HandleError "ConvertMapY", "modDirectDraw7", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Function
-End Function
 
 Public Function InViewPort(ByVal x As Long, ByVal y As Long) As Boolean
     ' If debug mode, handle error then exit out
