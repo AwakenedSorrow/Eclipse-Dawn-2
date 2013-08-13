@@ -23,7 +23,7 @@ Dim x As Long, y As Long, i As Long
     ' Render the tiles that will be under the player, in this case Ground, Mask1 and Mask2.
     If NumTileSets > 0 Then
         For x = TileView.Left To TileView.Right
-            For y = TileView.top To TileView.bottom
+            For y = TileView.Top To TileView.bottom
                 If IsValidMapPoint(x, y) Then
                     Call RenderMapTile(x, y)
                 End If
@@ -106,12 +106,29 @@ Dim x As Long, y As Long, i As Long
     ' Render the tiles that will be above the player, in this case Fringe1 and Fringe 2.
     If NumTileSets > 0 Then
         For x = TileView.Left To TileView.Right
-            For y = TileView.top To TileView.bottom
+            For y = TileView.Top To TileView.bottom
                 If IsValidMapPoint(x, y) Then
                     Call RenderUpperMapTile(x, y)
                 End If
             Next
         Next
+    End If
+    
+    ' Some Map Editor specific stuff, such as Directional Blocking and the Mouse Tile Outline.
+    ' Fairly important stuff if you want to get it all to work. :)
+    If InMapEditor Then
+        ' Directional Blocking
+        If frmEditor_Map.optBlock.Value = True Then
+            For x = TileView.Left To TileView.Right
+                For y = TileView.Top To TileView.bottom
+                    If IsValidMapPoint(x, y) Then
+                        Call RenderDirBlock(x, y)
+                    End If
+                Next
+            Next
+        End If
+        ' Mouse Cursor Tile Outline.
+        Call RenderTileOutline
     End If
     
     ' End the rendering scene and present it to the player.
@@ -654,6 +671,55 @@ Dim y As Long
     Exit Sub
 errorhandler:
     HandleError "RenderResource", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub RenderDirBlock(ByVal x As Long, ByVal y As Long)
+Dim i As Long, Left As Long, Top As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' Render the Grid Texture.
+    Call RenderGraphic(Tex_DirBlock, ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), PIC_X, PIC_Y, 0, 0, 0, 24)
+    
+    ' render dir blobs
+    For i = 1 To 4
+        Left = (i - 1) * 8
+        ' find out whether render blocked or not
+        If Not isDirBlocked(Map.Tile(x, y).DirBlock, CByte(i)) Then
+            Top = 8
+        Else
+            Top = 16
+        End If
+        'render the actual thing!
+        Call RenderGraphic(Tex_DirBlock, ConvertMapX(x * PIC_X) + DirArrowX(i), ConvertMapY(y * PIC_Y) + DirArrowY(i), 8, 8, 0, 0, Left, Top)
+        
+    Next
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderDirBlock", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+Sub RenderTileOutline()
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' If we're editing Directional Blocks, disable this outline. It just looks silly.
+    If frmEditor_Map.optBlock.Value Then Exit Sub
+    
+    ' Render the outline to the screen!
+    Call RenderGraphic(Tex_Outline, ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y), PIC_X, PIC_Y, 0, 0, 0, 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderTileOutline", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub

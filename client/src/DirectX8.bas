@@ -57,6 +57,8 @@ Public Tex_Animation() As Long
 Public Tex_SpellIcon() As Long
 Public Tex_Face() As Long
 Public Tex_Blood As Long
+Public Tex_DirBlock As Long
+Public Tex_Outline As Long
 
 ' Texture counts
 Public NumTileSets As Long
@@ -420,6 +422,12 @@ Dim i As Long
     Call LoadTexture(Tex_Blood)
     ' A little special touch for the blood, we need to know how many blood textures we have! So let's calculate it.
     BloodCount = D3DT_TEXTURE(Tex_Blood).Width / PIC_X
+    
+    Tex_DirBlock = SetTexturePath(App.Path & GFX_PATH & "direction" & GFX_EXT)
+    Call LoadTexture(Tex_DirBlock)
+    
+    Tex_Outline = SetTexturePath(App.Path & GFX_PATH & "outline" & GFX_EXT)
+    Call LoadTexture(Tex_Outline)
     
 ' Do not put any code beyond this line, this is the error handler.
     Exit Sub
