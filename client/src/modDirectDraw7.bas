@@ -163,7 +163,7 @@ Dim TmpColorKey As DDCOLORKEY
 
     With TmpR
         .Left = x
-        .top = y
+        .Top = y
         .Right = x
         .bottom = y
     End With
@@ -346,13 +346,13 @@ End Sub
 ' **************
 ' ** Blitting **
 ' **************
-Public Sub Engine_BltFast(ByVal DX As Long, ByVal DY As Long, ByRef ddS As DirectDrawSurface7, srcRECT As RECT, trans As CONST_DDBLTFASTFLAGS)
+Public Sub Engine_BltFast(ByVal DX As Long, ByVal DY As Long, ByRef ddS As DirectDrawSurface7, srcRect As RECT, trans As CONST_DDBLTFASTFLAGS)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
 
     If Not ddS Is Nothing Then
-        Call DDS_BackBuffer.BltFast(DX, DY, ddS, srcRECT, trans)
+        Call DDS_BackBuffer.BltFast(DX, DY, ddS, srcRect, trans)
     End If
 
     ' Error handler
@@ -391,10 +391,10 @@ Dim i As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' render grid
-    rec.top = 24
+    rec.Top = 24
     rec.Left = 0
     rec.Right = rec.Left + 32
-    rec.bottom = rec.top + 32
+    rec.bottom = rec.Top + 32
     Call Engine_BltFast(ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), DDS_Direction, rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     
     ' render dir blobs
@@ -403,11 +403,11 @@ Dim i As Long
         rec.Right = rec.Left + 8
         ' find out whether render blocked or not
         If Not isDirBlocked(Map.Tile(x, y).DirBlock, CByte(i)) Then
-            rec.top = 8
+            rec.Top = 8
         Else
-            rec.top = 16
+            rec.Top = 16
         End If
-        rec.bottom = rec.top + 8
+        rec.bottom = rec.Top + 8
         'render!
         Call Engine_BltFast(ConvertMapX(x * PIC_X) + DirArrowX(i), ConvertMapY(y * PIC_Y) + DirArrowY(i), DDS_Direction, rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     Next
@@ -433,7 +433,7 @@ Dim Width As Long, Height As Long
     Height = DDSD_Target.lHeight
 
     With sRECT
-        .top = 0
+        .Top = 0
         .bottom = Height
         .Left = 0
         .Right = Width
@@ -448,7 +448,7 @@ Dim Width As Long, Height As Long
     ' clipping
     If y < 0 Then
         With sRECT
-            .top = .top - y
+            .Top = .Top - y
         End With
         y = 0
     End If
@@ -492,7 +492,7 @@ Dim Width As Long, Height As Long
     Height = DDSD_Target.lHeight
 
     With sRECT
-        .top = 0
+        .Top = 0
         .bottom = Height
         .Left = Width
         .Right = .Left + Width
@@ -507,7 +507,7 @@ Dim Width As Long, Height As Long
     ' clipping
     If y < 0 Then
         With sRECT
-            .top = .top - y
+            .Top = .Top - y
         End With
         y = 0
     End If
@@ -550,8 +550,8 @@ Dim i As Long
             ' skip tile?
             If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
                 ' sort out rec
-                rec.top = .Layer(i).y * PIC_Y
-                rec.bottom = rec.top + PIC_Y
+                rec.Top = .Layer(i).y * PIC_Y
+                rec.bottom = rec.Top + PIC_Y
                 rec.Left = .Layer(i).x * PIC_X
                 rec.Right = rec.Left + PIC_X
                 ' render
@@ -581,8 +581,8 @@ Dim i As Long
             ' skip tile if tileset isn't set
             If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
                 ' sort out rec
-                rec.top = .Layer(i).y * PIC_Y
-                rec.bottom = rec.top + PIC_Y
+                rec.Top = .Layer(i).y * PIC_Y
+                rec.bottom = rec.Top + PIC_Y
                 rec.Left = .Layer(i).x * PIC_X
                 rec.Right = rec.Left + PIC_X
                 ' render
@@ -632,7 +632,7 @@ Dim x2 As Long, y2 As Long
     End With
 
     With rec
-        .top = 0
+        .Top = 0
         .bottom = DDSD_Door.lHeight
         .Left = ((TempTile(x, y).DoorFrame - 1) * (DDSD_Door.lWidth / 4))
         .Right = .Left + (DDSD_Door.lWidth / 4)
@@ -658,9 +658,9 @@ Dim rec As DxVBLib.RECT
 
     With Blood(Index)
         ' check if we should be seeing it
-        If .Timer + 20000 < GetTickCount Then Exit Sub
+        If .timer + 20000 < GetTickCount Then Exit Sub
         
-        rec.top = 0
+        rec.Top = 0
         rec.bottom = PIC_Y
         rec.Left = (.Sprite - 1) * PIC_X
         rec.Right = rec.Left + PIC_X
@@ -711,7 +711,7 @@ Dim lockindex As Long
     Width = DDSD_Animation(Sprite).lWidth / FrameCount
     Height = DDSD_Animation(Sprite).lHeight
     
-    sRECT.top = 0
+    sRECT.Top = 0
     sRECT.bottom = Height
     sRECT.Left = (AnimInstance(Index).FrameIndex(Layer) - 1) * Width
     sRECT.Right = sRECT.Left + Width
@@ -765,7 +765,7 @@ Dim lockindex As Long
     If y < 0 Then
 
         With sRECT
-            .top = .top - y
+            .Top = .Top - y
         End With
 
         y = 0
@@ -823,14 +823,14 @@ Dim MaxFrames As Byte
 
     If DDSD_Item(PicNum).lWidth > 64 Then ' has more than 1 frame
         With rec
-            .top = 0
+            .Top = 0
             .bottom = 32
             .Left = (MapItem(itemnum).Frame * 32)
             .Right = .Left + 32
         End With
     Else
         With rec
-            .top = 0
+            .Top = 0
             .bottom = PIC_Y
             .Left = 0
             .Right = PIC_X
@@ -873,8 +873,8 @@ Dim x As Long, y As Long, i As Long, rec As RECT
                     ' skip tile?
                     If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
                         ' sort out rec
-                        rec.top = .Layer(i).y * PIC_Y
-                        rec.bottom = rec.top + PIC_Y
+                        rec.Top = .Layer(i).y * PIC_Y
+                        rec.bottom = rec.Top + PIC_Y
                         rec.Left = .Layer(i).x * PIC_X
                         rec.Right = rec.Left + PIC_X
                         ' render
@@ -908,8 +908,8 @@ Dim x As Long, y As Long, i As Long, rec As RECT
                     ' skip tile?
                     If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
                         ' sort out rec
-                        rec.top = .Layer(i).y * PIC_Y
-                        rec.bottom = rec.top + PIC_Y
+                        rec.Top = .Layer(i).y * PIC_Y
+                        rec.bottom = rec.Top + PIC_Y
                         rec.Left = .Layer(i).x * PIC_X
                         rec.Right = rec.Left + PIC_X
                         ' render
@@ -923,7 +923,7 @@ Dim x As Long, y As Long, i As Long, rec As RECT
     ' dump and save
     frmMain.picSSMap.Width = DDSD_Map.lWidth
     frmMain.picSSMap.Height = DDSD_Map.lHeight
-    rec.top = 0
+    rec.Top = 0
     rec.Left = 0
     rec.bottom = DDSD_Map.lHeight
     rec.Right = DDSD_Map.lWidth
@@ -986,7 +986,7 @@ Dim x As Long, y As Long
 
     ' src rect
     With rec
-        .top = 0
+        .Top = 0
         .bottom = DDSD_Resource(Resource_sprite).lHeight
         .Left = 0
         .Right = DDSD_Resource(Resource_sprite).lWidth
@@ -1033,11 +1033,11 @@ Dim destRECT As DxVBLib.RECT
     y = ConvertMapY(DY)
     
     Width = (rec.Right - rec.Left)
-    Height = (rec.bottom - rec.top)
+    Height = (rec.bottom - rec.Top)
 
     If y < 0 Then
         With rec
-            .top = .top - y
+            .Top = .Top - y
         End With
         y = 0
     End If
@@ -1085,11 +1085,11 @@ Dim destRECT As DxVBLib.RECT
     End If
     
     Width = (rec.Right - rec.Left)
-    Height = (rec.bottom - rec.top)
+    Height = (rec.bottom - rec.Top)
 
     If y < 0 Then
         With rec
-            .top = .top - y
+            .Top = .Top - y
         End With
         y = 0
     End If
@@ -1151,19 +1151,19 @@ Dim i As Long, npcNum As Long, partyIndex As Long
                 
                 ' draw bar background
                 With sRECT
-                    .top = sHeight * 1 ' HP bar background
+                    .Top = sHeight * 1 ' HP bar background
                     .Left = 0
                     .Right = .Left + sWidth
-                    .bottom = .top + sHeight
+                    .bottom = .Top + sHeight
                 End With
                 Engine_BltFast ConvertMapX(tmpX), ConvertMapY(tmpY), DDS_Bars, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
                 
                 ' draw the bar proper
                 With sRECT
-                    .top = 0 ' HP bar
+                    .Top = 0 ' HP bar
                     .Left = 0
                     .Right = .Left + barWidth
-                    .bottom = .top + sHeight
+                    .bottom = .Top + sHeight
                 End With
                 Engine_BltFast ConvertMapX(tmpX), ConvertMapY(tmpY), DDS_Bars, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
             End If
@@ -1182,19 +1182,19 @@ Dim i As Long, npcNum As Long, partyIndex As Long
             
             ' draw bar background
             With sRECT
-                .top = sHeight * 3 ' cooldown bar background
+                .Top = sHeight * 3 ' cooldown bar background
                 .Left = 0
                 .Right = sWidth
-                .bottom = .top + sHeight
+                .bottom = .Top + sHeight
             End With
             Engine_BltFast ConvertMapX(tmpX), ConvertMapY(tmpY), DDS_Bars, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
             
             ' draw the bar proper
             With sRECT
-                .top = sHeight * 2 ' cooldown bar
+                .Top = sHeight * 2 ' cooldown bar
                 .Left = 0
                 .Right = barWidth
-                .bottom = .top + sHeight
+                .bottom = .Top + sHeight
             End With
             Engine_BltFast ConvertMapX(tmpX), ConvertMapY(tmpY), DDS_Bars, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
         End If
@@ -1211,19 +1211,19 @@ Dim i As Long, npcNum As Long, partyIndex As Long
        
         ' draw bar background
         With sRECT
-            .top = sHeight * 1 ' HP bar background
+            .Top = sHeight * 1 ' HP bar background
             .Left = 0
             .Right = .Left + sWidth
-            .bottom = .top + sHeight
+            .bottom = .Top + sHeight
         End With
         Engine_BltFast ConvertMapX(tmpX), ConvertMapY(tmpY), DDS_Bars, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
        
         ' draw the bar proper
         With sRECT
-            .top = 0 ' HP bar
+            .Top = 0 ' HP bar
             .Left = 0
             .Right = .Left + barWidth
-            .bottom = .top + sHeight
+            .bottom = .Top + sHeight
         End With
         Engine_BltFast ConvertMapX(tmpX), ConvertMapY(tmpY), DDS_Bars, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
     End If
@@ -1244,19 +1244,19 @@ Dim i As Long, npcNum As Long, partyIndex As Long
                     
                     ' draw bar background
                     With sRECT
-                        .top = sHeight * 1 ' HP bar background
+                        .Top = sHeight * 1 ' HP bar background
                         .Left = 0
                         .Right = .Left + sWidth
-                        .bottom = .top + sHeight
+                        .bottom = .Top + sHeight
                     End With
                     Engine_BltFast ConvertMapX(tmpX), ConvertMapY(tmpY), DDS_Bars, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
                     
                     ' draw the bar proper
                     With sRECT
-                        .top = 0 ' HP bar
+                        .Top = 0 ' HP bar
                         .Left = 0
                         .Right = .Left + barWidth
-                        .bottom = .top + sHeight
+                        .bottom = .Top + sHeight
                     End With
                     Engine_BltFast ConvertMapX(tmpX), ConvertMapY(tmpY), DDS_Bars, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
                 End If
@@ -1282,14 +1282,14 @@ Dim sRECT As RECT, dRECT As RECT, i As Long, num As String, n As Long
     frmMain.picHotbar.Cls
     For i = 1 To MAX_HOTBAR
         With dRECT
-            .top = HotbarTop
+            .Top = HotbarTop
             .Left = HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
-            .bottom = .top + 32
+            .bottom = .Top + 32
             .Right = .Left + 32
         End With
         
         With sRECT
-            .top = 0
+            .Top = 0
             .Left = 32
             .bottom = 32
             .Right = 64
@@ -1297,7 +1297,7 @@ Dim sRECT As RECT, dRECT As RECT, i As Long, num As String, n As Long
         
         Select Case Hotbar(i).sType
             Case 1 ' inventory
-                If Len(Item(Hotbar(i).Slot).Name) > 0 Then
+                If Len(Item(Hotbar(i).Slot).name) > 0 Then
                     If Item(Hotbar(i).Slot).Pic > 0 Then
                         If DDS_Item(Item(Hotbar(i).Slot).Pic) Is Nothing Then
                             Call InitDDSurf("Items\" & Item(Hotbar(i).Slot).Pic, DDSD_Item(Item(Hotbar(i).Slot).Pic), DDS_Item(Item(Hotbar(i).Slot).Pic))
@@ -1307,12 +1307,12 @@ Dim sRECT As RECT, dRECT As RECT, i As Long, num As String, n As Long
                 End If
             Case 2 ' spell
                 With sRECT
-                    .top = 0
+                    .Top = 0
                     .Left = 0
                     .bottom = 32
                     .Right = 32
                 End With
-                If Len(Spell(Hotbar(i).Slot).Name) > 0 Then
+                If Len(Spell(Hotbar(i).Slot).name) > 0 Then
                     If Spell(Hotbar(i).Slot).Icon > 0 Then
                         If DDS_SpellIcon(Spell(Hotbar(i).Slot).Icon) Is Nothing Then
                             Call InitDDSurf("Spellicons\" & Spell(Hotbar(i).Slot).Icon, DDSD_SpellIcon(Spell(Hotbar(i).Slot).Icon), DDS_SpellIcon(Spell(Hotbar(i).Slot).Icon))
@@ -1334,7 +1334,7 @@ Dim sRECT As RECT, dRECT As RECT, i As Long, num As String, n As Long
         
         ' render the letters
         num = "F" & Str(i)
-        DrawText frmMain.picHotbar.hDC, dRECT.Left + 2, dRECT.top + 16, num, QBColor(White)
+        ' DrawText frmMain.picHotbar.hDC, dRECT.Left + 2, dRECT.Top + 16, num, QBColor(White)
     Next
     frmMain.picHotbar.Refresh
     
@@ -1419,8 +1419,8 @@ Dim attackspeed As Long
     End Select
 
     With rec
-        .top = SpriteTop * (DDSD_Character(Sprite).lHeight / 4)
-        .bottom = .top + (DDSD_Character(Sprite).lHeight / 4)
+        .Top = SpriteTop * (DDSD_Character(Sprite).lHeight / 4)
+        .bottom = .Top + (DDSD_Character(Sprite).lHeight / 4)
         .Left = Anim * (DDSD_Character(Sprite).lWidth / 4)
         .Right = .Left + (DDSD_Character(Sprite).lWidth / 4)
     End With
@@ -1521,8 +1521,8 @@ Dim attackspeed As Long
     End Select
 
     With rec
-        .top = (DDSD_Character(Sprite).lHeight / 4) * SpriteTop
-        .bottom = .top + DDSD_Character(Sprite).lHeight / 4
+        .Top = (DDSD_Character(Sprite).lHeight / 4) * SpriteTop
+        .bottom = .Top + DDSD_Character(Sprite).lHeight / 4
         .Left = Anim * (DDSD_Character(Sprite).lWidth / 4)
         .Right = .Left + (DDSD_Character(Sprite).lWidth / 4)
     End With
@@ -1564,8 +1564,8 @@ Dim Width As Long, Height As Long
     End If
     
     With rec
-        .top = SpriteTop * (DDSD_Paperdoll(Sprite).lHeight / 4)
-        .bottom = .top + (DDSD_Paperdoll(Sprite).lHeight / 4)
+        .Top = SpriteTop * (DDSD_Paperdoll(Sprite).lHeight / 4)
+        .bottom = .Top + (DDSD_Paperdoll(Sprite).lHeight / 4)
         .Left = Anim * (DDSD_Paperdoll(Sprite).lWidth / 4)
         .Right = .Left + (DDSD_Paperdoll(Sprite).lWidth / 4)
     End With
@@ -1574,12 +1574,12 @@ Dim Width As Long, Height As Long
     x = ConvertMapX(x2)
     y = ConvertMapY(y2)
     Width = (rec.Right - rec.Left)
-    Height = (rec.bottom - rec.top)
+    Height = (rec.bottom - rec.Top)
 
     ' Clip to screen
     If y < 0 Then
         With rec
-            .top = .top - y
+            .Top = .Top - y
         End With
         y = 0
     End If
@@ -1623,12 +1623,12 @@ Dim Height As Long
     x = ConvertMapX(x2)
     y = ConvertMapY(y2)
     Width = (rec.Right - rec.Left)
-    Height = (rec.bottom - rec.top)
+    Height = (rec.bottom - rec.Top)
 
     ' clipping
     If y < 0 Then
         With rec
-            .top = .top - y
+            .Top = .Top - y
         End With
         y = 0
     End If
@@ -1707,15 +1707,15 @@ Dim rec As RECT, rec_pos As RECT
                     End If
 
                     With rec
-                        .top = 0
+                        .Top = 0
                         .bottom = 32
                         .Left = (DDSD_Item(itempic).lWidth / 2) + (InvItemFrame(i) * 32) ' middle to get the start of inv gfx, then +32 for each frame
                         .Right = .Left + 32
                     End With
 
                     With rec_pos
-                        .top = InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                        .bottom = .top + PIC_Y
+                        .Top = InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                        .bottom = .Top + PIC_Y
                         .Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
                         .Right = .Left + PIC_X
                     End With
@@ -1732,11 +1732,11 @@ Dim rec As RECT, rec_pos As RECT
 
                     ' If item is a stack - draw the amount you have
                     If GetPlayerInvItemValue(MyIndex, i) > 1 Then
-                        y = rec_pos.top + 22
+                        y = rec_pos.Top + 22
                         x = rec_pos.Left - 4
                         Amount = CStr(GetPlayerInvItemValue(MyIndex, i))
                         ' Draw currency but with k, m, b etc. using a convertion function
-                        DrawText frmMain.picInventory.hDC, x, y, ConvertCurrency(Amount), QBColor(Yellow)
+                        ' DrawText frmMain.picInventory.hDC, x, y, ConvertCurrency(Amount), QBColor(Yellow)
 
                         ' Check if it's gold, and update the label
                         If GetPlayerInvItemNum(MyIndex, i) = 1 Then '1 = gold :P
@@ -1774,14 +1774,14 @@ Dim rec As RECT, rec_pos As RECT, faceNum As Long
     If faceNum <= 0 Or faceNum > NumFaces Then Exit Sub
 
     With rec
-        .top = 0
+        .Top = 0
         .bottom = 100
         .Left = 0
         .Right = 100
     End With
 
     With rec_pos
-        .top = 0
+        .Top = 0
         .bottom = 100
         .Left = 0
         .Right = 100
@@ -1822,15 +1822,15 @@ Dim rec As RECT, rec_pos As RECT
             itempic = Item(itemnum).Pic
 
             With rec
-                .top = 0
+                .Top = 0
                 .bottom = 32
                 .Left = 32
                 .Right = 64
             End With
 
             With rec_pos
-                .top = EqTop
-                .bottom = .top + PIC_Y
+                .Top = EqTop
+                .bottom = .Top + PIC_Y
                 .Left = EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
                 .Right = .Left + PIC_X
             End With
@@ -1904,15 +1904,15 @@ Dim tmpItem As Long, amountModifier As Long
                 If DDSD_Item(itempic).lWidth <= 64 Then ' more than 1 frame is handled by anim sub
 
                     With rec
-                        .top = 0
+                        .Top = 0
                         .bottom = 32
                         .Left = 32
                         .Right = 64
                     End With
 
                     With rec_pos
-                        .top = InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                        .bottom = .top + PIC_Y
+                        .Top = InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                        .bottom = .Top + PIC_Y
                         .Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
                         .Right = .Left + PIC_X
                     End With
@@ -1928,7 +1928,7 @@ Dim tmpItem As Long, amountModifier As Long
 
                     ' If item is a stack - draw the amount you have
                     If GetPlayerInvItemValue(MyIndex, i) > 1 Then
-                        y = rec_pos.top + 22
+                        y = rec_pos.Top + 22
                         x = rec_pos.Left - 4
                         
                         Amount = GetPlayerInvItemValue(MyIndex, i) - amountModifier
@@ -1989,15 +1989,15 @@ Dim colour As Long
 
             If itempic > 0 And itempic <= NumItems Then
                 With rec
-                    .top = 0
+                    .Top = 0
                     .bottom = 32
                     .Left = 32
                     .Right = 64
                 End With
 
                 With rec_pos
-                    .top = InvTop - 24 + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                    .bottom = .top + PIC_Y
+                    .Top = InvTop - 24 + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                    .bottom = .Top + PIC_Y
                     .Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
                     .Right = .Left + PIC_X
                 End With
@@ -2013,7 +2013,7 @@ Dim colour As Long
 
                 ' If item is a stack - draw the amount you have
                 If TradeYourOffer(i).Value > 1 Then
-                    y = rec_pos.top + 22
+                    y = rec_pos.Top + 22
                     x = rec_pos.Left - 4
                     
                     Amount = TradeYourOffer(i).Value
@@ -2040,15 +2040,15 @@ Dim colour As Long
 
             If itempic > 0 And itempic <= NumItems Then
                 With rec
-                    .top = 0
+                    .Top = 0
                     .bottom = 32
                     .Left = 32
                     .Right = 64
                 End With
 
                 With rec_pos
-                    .top = InvTop - 24 + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                    .bottom = .top + PIC_Y
+                    .Top = InvTop - 24 + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                    .bottom = .Top + PIC_Y
                     .Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
                     .Right = .Left + PIC_X
                 End With
@@ -2064,7 +2064,7 @@ Dim colour As Long
 
                 ' If item is a stack - draw the amount you have
                 If TradeTheirOffer(i).Value > 1 Then
-                    y = rec_pos.top + 22
+                    y = rec_pos.Top + 22
                     x = rec_pos.Left - 4
                     
                     Amount = TradeTheirOffer(i).Value
@@ -2115,7 +2115,7 @@ Dim colour As Long
             If spellicon > 0 And spellicon <= NumSpellIcons Then
             
                 With rec
-                    .top = 0
+                    .Top = 0
                     .bottom = 32
                     .Left = 0
                     .Right = 32
@@ -2127,8 +2127,8 @@ Dim colour As Long
                 End If
 
                 With rec_pos
-                    .top = SpellTop + ((SpellOffsetY + 32) * ((i - 1) \ SpellColumns))
-                    .bottom = .top + PIC_Y
+                    .Top = SpellTop + ((SpellOffsetY + 32) * ((i - 1) \ SpellColumns))
+                    .bottom = .Top + PIC_Y
                     .Left = SpellLeft + ((SpellOffsetX + 32) * (((i - 1) Mod SpellColumns)))
                     .Right = .Left + PIC_X
                 End With
@@ -2173,15 +2173,15 @@ Dim colour As Long
             If itempic > 0 And itempic <= NumItems Then
             
                 With rec
-                    .top = 0
+                    .Top = 0
                     .bottom = 32
                     .Left = 32
                     .Right = 64
                 End With
                 
                 With rec_pos
-                    .top = ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
-                    .bottom = .top + PIC_Y
+                    .Top = ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
+                    .bottom = .Top + PIC_Y
                     .Left = ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
                     .Right = .Left + PIC_X
                 End With
@@ -2197,7 +2197,7 @@ Dim colour As Long
                 
                 ' If item is a stack - draw the amount you have
                 If Shop(InShop).TradeItem(i).ItemValue > 1 Then
-                    y = rec_pos.top + 22
+                    y = rec_pos.Top + 22
                     x = rec_pos.Left - 4
                     Amount = CStr(Shop(InShop).TradeItem(i).ItemValue)
                     
@@ -2239,15 +2239,15 @@ Dim itemnum As Long, itempic As Long
         If itempic = 0 Then Exit Sub
 
         With rec
-            .top = 0
-            .bottom = .top + PIC_Y
+            .Top = 0
+            .bottom = .Top + PIC_Y
             .Left = DDSD_Item(itempic).lWidth / 2
             .Right = .Left + PIC_X
         End With
 
         With rec_pos
-            .top = 2
-            .bottom = .top + PIC_Y
+            .Top = 2
+            .bottom = .Top + PIC_Y
             .Left = 2
             .Right = .Left + PIC_X
         End With
@@ -2262,7 +2262,7 @@ Dim itemnum As Long, itempic As Long
         Engine_BltToDC DDS_Item(itempic), rec, rec_pos, frmMain.picTempInv, False
 
         With frmMain.picTempInv
-            .top = y
+            .Top = y
             .Left = x
             .Visible = True
             .ZOrder (0)
@@ -2292,15 +2292,15 @@ Dim spellnum As Long, spellpic As Long
         If spellpic = 0 Then Exit Sub
 
         With rec
-            .top = 0
-            .bottom = .top + PIC_Y
+            .Top = 0
+            .bottom = .Top + PIC_Y
             .Left = 0
             .Right = .Left + PIC_X
         End With
 
         With rec_pos
-            .top = 2
-            .bottom = .top + PIC_Y
+            .Top = 2
+            .bottom = .Top + PIC_Y
             .Left = 2
             .Right = .Left + PIC_X
         End With
@@ -2315,7 +2315,7 @@ Dim spellnum As Long, spellpic As Long
         'Engine_BltToDC DDS_SpellIcon(spellpic), rec, rec_pos, frmMain.picTempSpell, False
 
         With frmMain.picTempSpell
-            .top = y
+            .Top = y
             .Left = x
             .Visible = True
             .ZOrder (0)
@@ -2352,14 +2352,14 @@ Dim itempic As Long
         End If
 
         With rec
-            .top = 0
-            .bottom = .top + PIC_Y
+            .Top = 0
+            .bottom = .Top + PIC_Y
             .Left = DDSD_Item(itempic).lWidth / 2
             .Right = .Left + PIC_X
         End With
 
         With rec_pos
-            .top = 0
+            .Top = 0
             .bottom = 64
             .Left = 0
             .Right = 64
@@ -2397,14 +2397,14 @@ Dim spellpic As Long
         End If
 
         With rec
-            .top = 0
-            .bottom = .top + PIC_Y
+            .Top = 0
+            .bottom = .Top + PIC_Y
             .Left = 0
             .Right = .Left + PIC_X
         End With
 
         With rec_pos
-            .top = 0
+            .Top = 0
             .bottom = 64
             .Left = 0
             .Right = 64
@@ -2447,7 +2447,7 @@ Dim dRECT As DxVBLib.RECT
     Height = DDSD_Tileset(Tileset).lHeight
     Width = DDSD_Tileset(Tileset).lWidth
     
-    dRECT.top = 0
+    dRECT.Top = 0
     dRECT.bottom = Height
     dRECT.Left = 0
     dRECT.Right = Width
@@ -2474,8 +2474,8 @@ Dim rec As DxVBLib.RECT
     If frmEditor_Map.optBlock.Value Then Exit Sub
 
     With rec
-        .top = 0
-        .bottom = .top + PIC_Y
+        .Top = 0
+        .bottom = .Top + PIC_Y
         .Left = 0
         .Right = .Left + PIC_X
     End With
@@ -2524,12 +2524,12 @@ Dim Width As Long, Height As Long
     frmMenu.picSprite.Width = Width
     frmMenu.picSprite.Height = Height
     
-    sRECT.top = 0
-    sRECT.bottom = sRECT.top + Height
+    sRECT.Top = 0
+    sRECT.bottom = sRECT.Top + Height
     sRECT.Left = 0
     sRECT.Right = sRECT.Left + Width
     
-    dRECT.top = 0
+    dRECT.Top = 0
     dRECT.bottom = Height
     dRECT.Left = 0
     dRECT.Right = Width
@@ -2565,11 +2565,11 @@ Dim dRECT As DxVBLib.RECT
         Call InitDDSurf("Items\" & itemnum, DDSD_Item(itemnum), DDS_Item(itemnum))
     End If
 
-    sRECT.top = 0
+    sRECT.Top = 0
     sRECT.bottom = PIC_Y
     sRECT.Left = 0
     sRECT.Right = PIC_X
-    dRECT.top = 0
+    dRECT.Top = 0
     dRECT.bottom = PIC_Y
     dRECT.Left = 0
     dRECT.Right = PIC_X
@@ -2604,11 +2604,11 @@ Dim dRECT As DxVBLib.RECT
         Call InitDDSurf("Items\" & itemnum, DDSD_Item(itemnum), DDS_Item(itemnum))
     End If
 
-    sRECT.top = 0
+    sRECT.Top = 0
     sRECT.bottom = PIC_Y
     sRECT.Left = 0
     sRECT.Right = PIC_X
-    dRECT.top = 0
+    dRECT.Top = 0
     dRECT.bottom = PIC_Y
     dRECT.Left = 0
     dRECT.Right = PIC_X
@@ -2644,7 +2644,7 @@ Dim dRECT As DxVBLib.RECT
     End If
 
     ' rect for source
-    sRECT.top = 0
+    sRECT.Top = 0
     sRECT.bottom = PIC_Y
     sRECT.Left = 0
     sRECT.Right = PIC_X
@@ -2685,7 +2685,7 @@ Dim dRECT As DxVBLib.RECT
     End If
 
     ' rect for source
-    sRECT.top = 0
+    sRECT.Top = 0
     sRECT.bottom = DDSD_Paperdoll(Sprite).lHeight
     sRECT.Left = 0
     sRECT.Right = DDSD_Paperdoll(Sprite).lWidth
@@ -2723,11 +2723,11 @@ Dim dRECT As DxVBLib.RECT
         Call InitDDSurf("SpellIcons\" & iconnum, DDSD_SpellIcon(iconnum), DDS_SpellIcon(iconnum))
     End If
     
-    sRECT.top = 0
+    sRECT.Top = 0
     sRECT.bottom = PIC_Y
     sRECT.Left = 0
     sRECT.Right = PIC_X
-    dRECT.top = 0
+    dRECT.Top = 0
     dRECT.bottom = PIC_Y
     dRECT.Left = 0
     dRECT.Right = PIC_X
@@ -2792,12 +2792,12 @@ Dim ShouldRender As Boolean
                     Width = DDSD_Animation(Animationnum).lWidth / frmEditor_Animation.scrlFrameCount(i).Value
                     Height = DDSD_Animation(Animationnum).lHeight
                     
-                    sRECT.top = 0
+                    sRECT.Top = 0
                     sRECT.bottom = Height
                     sRECT.Left = (AnimEditorFrame(i) - 1) * Width
                     sRECT.Right = sRECT.Left + Width
                     
-                    dRECT.top = 0
+                    dRECT.Top = 0
                     dRECT.bottom = Height
                     dRECT.Left = 0
                     dRECT.Right = Width
@@ -2837,11 +2837,11 @@ Dim dRECT As DxVBLib.RECT
         Call InitDDSurf("characters\" & Sprite, DDSD_Character(Sprite), DDS_Character(Sprite))
     End If
 
-    sRECT.top = 0
+    sRECT.Top = 0
     sRECT.bottom = SIZE_Y
     sRECT.Left = PIC_X * 3 ' facing down
     sRECT.Right = sRECT.Left + SIZE_X
-    dRECT.top = 0
+    dRECT.Top = 0
     dRECT.bottom = SIZE_Y
     dRECT.Left = 0
     dRECT.Right = SIZE_X
@@ -2873,11 +2873,11 @@ Dim dRECT As DxVBLib.RECT
         If DDS_Resource(Sprite) Is Nothing Then
             Call InitDDSurf("Resources\" & Sprite, DDSD_Resource(Sprite), DDS_Resource(Sprite))
         End If
-        sRECT.top = 0
+        sRECT.Top = 0
         sRECT.bottom = DDSD_Resource(Sprite).lHeight
         sRECT.Left = 0
         sRECT.Right = DDSD_Resource(Sprite).lWidth
-        dRECT.top = 0
+        dRECT.Top = 0
         dRECT.bottom = DDSD_Resource(Sprite).lHeight
         dRECT.Left = 0
         dRECT.Right = DDSD_Resource(Sprite).lWidth
@@ -2894,11 +2894,11 @@ Dim dRECT As DxVBLib.RECT
         If DDS_Resource(Sprite) Is Nothing Then
             Call InitDDSurf("Resources\" & Sprite, DDSD_Resource(Sprite), DDS_Resource(Sprite))
         End If
-        sRECT.top = 0
+        sRECT.Top = 0
         sRECT.bottom = DDSD_Resource(Sprite).lHeight
         sRECT.Left = 0
         sRECT.Right = DDSD_Resource(Sprite).lWidth
-        dRECT.top = 0
+        dRECT.Top = 0
         dRECT.bottom = DDSD_Resource(Sprite).lHeight
         dRECT.Left = 0
         dRECT.Right = DDSD_Resource(Sprite).lWidth
@@ -2954,7 +2954,7 @@ Dim rec_pos As DxVBLib.RECT
     ' blit lower tiles
     If NumTileSets > 0 Then
         For x = TileView.Left To TileView.Right
-            For y = TileView.top To TileView.bottom
+            For y = TileView.Top To TileView.bottom
                 If IsValidMapPoint(x, y) Then
                     Call BltMapTile(x, y)
                 End If
@@ -3031,7 +3031,7 @@ Dim rec_pos As DxVBLib.RECT
     ' blit out upper tiles
     If NumTileSets > 0 Then
         For x = TileView.Left To TileView.Right
-            For y = TileView.top To TileView.bottom
+            For y = TileView.Top To TileView.bottom
                 If IsValidMapPoint(x, y) Then
                     Call BltMapFringeTile(x, y)
                 End If
@@ -3043,7 +3043,7 @@ Dim rec_pos As DxVBLib.RECT
     If InMapEditor Then
         If frmEditor_Map.optBlock.Value = True Then
             For x = TileView.Left To TileView.Right
-                For y = TileView.top To TileView.bottom
+                For y = TileView.Top To TileView.bottom
                     If IsValidMapPoint(x, y) Then
                         Call BltDirection(x, y)
                     End If
@@ -3096,14 +3096,14 @@ Dim rec_pos As DxVBLib.RECT
 
     ' draw FPS
     If BFPS Then
-        Call DrawText(TexthDC, Camera.Right - (Len("FPS: " & GameFPS) * 8), Camera.top + 1, Trim$("FPS: " & GameFPS), QBColor(Yellow))
+        Call DrawText(TexthDC, Camera.Right - (Len("FPS: " & GameFPS) * 8), Camera.Top + 1, Trim$("FPS: " & GameFPS), QBColor(Yellow))
     End If
 
     ' draw cursor, player X and Y locations
     If BLoc Then
-        Call DrawText(TexthDC, Camera.Left, Camera.top + 1, Trim$("cur x: " & CurX & " y: " & CurY), QBColor(Yellow))
-        Call DrawText(TexthDC, Camera.Left, Camera.top + 15, Trim$("loc x: " & GetPlayerX(MyIndex) & " y: " & GetPlayerY(MyIndex)), QBColor(Yellow))
-        Call DrawText(TexthDC, Camera.Left, Camera.top + 27, Trim$(" (map #" & GetPlayerMap(MyIndex) & ")"), QBColor(Yellow))
+        Call DrawText(TexthDC, Camera.Left, Camera.Top + 1, Trim$("cur x: " & CurX & " y: " & CurY), QBColor(Yellow))
+        Call DrawText(TexthDC, Camera.Left, Camera.Top + 15, Trim$("loc x: " & GetPlayerX(MyIndex) & " y: " & GetPlayerY(MyIndex)), QBColor(Yellow))
+        Call DrawText(TexthDC, Camera.Left, Camera.Top + 27, Trim$(" (map #" & GetPlayerMap(MyIndex) & ")"), QBColor(Yellow))
     End If
 
     ' draw player names
@@ -3130,15 +3130,15 @@ Dim rec_pos As DxVBLib.RECT
     End If
 
     ' Draw map name
-    Call DrawText(TexthDC, DrawMapNameX, DrawMapNameY, Map.Name, DrawMapNameColor)
+    Call DrawText(TexthDC, DrawMapNameX, DrawMapNameY, Map.name, DrawMapNameColor)
 
     ' Release DC
     DDS_BackBuffer.ReleaseDC TexthDC
     
     ' Get rec
     With rec
-        .top = Camera.top
-        .bottom = .top + ScreenY
+        .Top = Camera.Top
+        .bottom = .Top + ScreenY
         .Left = Camera.Left
         .Right = .Left + ScreenX
     End With
@@ -3207,7 +3207,7 @@ Dim EndY As Long
             End If
         End If
         EndX = Map.MaxX
-        StartX = EndX - MAX_MAPX
+        StartX = EndX - MAX_MAPX - 1
     End If
     If EndY > Map.MaxY Then
         offsetY = 32
@@ -3217,19 +3217,19 @@ Dim EndY As Long
             End If
         End If
         EndY = Map.MaxY
-        StartY = EndY - MAX_MAPY
+        StartY = EndY - MAX_MAPY - 1
     End If
 
     With TileView
-        .top = StartY
+        .Top = StartY
         .bottom = EndY
         .Left = StartX
         .Right = EndX
     End With
 
     With Camera
-        .top = offsetY
-        .bottom = .top + ScreenY
+        .Top = offsetY
+        .bottom = .Top + ScreenY
         .Left = offsetX
         .Right = .Left + ScreenX
     End With
@@ -3239,7 +3239,7 @@ Dim EndY As Long
     ' Error handler
     Exit Sub
 errorhandler:
-    HandleError "UpdateCamera", "modDirectDraw7", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    HandleError "UpdateCamera", "modGraphics", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
@@ -3262,7 +3262,7 @@ Public Function ConvertMapY(ByVal y As Long) As Long
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    ConvertMapY = y - (TileView.top * PIC_Y)
+    ConvertMapY = y - (TileView.Top * PIC_Y)
     
     ' Error handler
     Exit Function
@@ -3279,7 +3279,7 @@ Public Function InViewPort(ByVal x As Long, ByVal y As Long) As Boolean
     InViewPort = False
 
     If x < TileView.Left Then Exit Function
-    If y < TileView.top Then Exit Function
+    If y < TileView.Top Then Exit Function
     If x > TileView.Right Then Exit Function
     If y > TileView.bottom Then Exit Function
     InViewPort = True
@@ -3380,15 +3380,15 @@ Dim Sprite As Long, colour As Long
                 End If
             
                 With sRECT
-                    .top = 0
-                    .bottom = .top + PIC_Y
+                    .Top = 0
+                    .bottom = .Top + PIC_Y
                     .Left = DDSD_Item(Sprite).lWidth / 2
                     .Right = .Left + PIC_X
                 End With
                 
                 With dRECT
-                    .top = BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
-                    .bottom = .top + PIC_Y
+                    .Top = BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
+                    .bottom = .Top + PIC_Y
                     .Left = BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
                     .Right = .Left + PIC_X
                 End With
@@ -3397,7 +3397,7 @@ Dim Sprite As Long, colour As Long
 
                 ' If item is a stack - draw the amount you have
                 If GetBankItemValue(i) > 1 Then
-                    y = dRECT.top + 22
+                    y = dRECT.Top + 22
                     x = dRECT.Left - 4
                 
                     Amount = CStr(GetBankItemValue(i))
@@ -3443,8 +3443,8 @@ Dim Sprite As Long
     If itemnum > 0 Then
         If itemnum <= MAX_ITEMS Then
             With sRECT
-                .top = 0
-                .bottom = .top + PIC_Y
+                .Top = 0
+                .bottom = .Top + PIC_Y
                 .Left = DDSD_Item(Sprite).lWidth / 2
                 .Right = .Left + PIC_X
             End With
@@ -3452,8 +3452,8 @@ Dim Sprite As Long
     End If
     
     With dRECT
-        .top = 2
-        .bottom = .top + PIC_Y
+        .Top = 2
+        .bottom = .Top + PIC_Y
         .Left = 2
         .Right = .Left + PIC_X
     End With
@@ -3461,7 +3461,7 @@ Dim Sprite As Long
     Engine_BltToDC DDS_Item(Sprite), sRECT, dRECT, frmMain.picTempBank
     
     With frmMain.picTempBank
-        .top = y
+        .Top = y
         .Left = x
         .Visible = True
         .ZOrder (0)

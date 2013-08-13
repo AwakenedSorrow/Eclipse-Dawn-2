@@ -1,4 +1,4 @@
-Attribute VB_Name = "modTextD3D8"
+Attribute VB_Name = "modText"
 Option Explicit
 
 ' Text color pointers
@@ -36,8 +36,8 @@ Private Type VFH
 End Type
 
 Public Type POINTAPI
-    X As Long
-    Y As Long
+    x As Long
+    y As Long
 End Type
 
 Private Type CustomFont
@@ -50,9 +50,9 @@ Private Type CustomFont
     TextureSize As POINTAPI
 End Type
 
-Public Silkscreen As CustomFont
+Public MainFont As CustomFont
 
-Public Sub RenderText(ByRef UseFont As CustomFont, text As String, X As Long, Y As Long, color As Long, Optional Alpha As Byte = 255)
+Public Sub RenderText(ByRef UseFont As CustomFont, text As String, x As Long, y As Long, color As Long, Optional Alpha As Byte = 255)
 Dim TempVA(0 To 3) As TLVERTEX
 Dim TempStr() As String
 Dim Count As Integer
@@ -61,7 +61,7 @@ Dim i As Long, j As Long
 Dim KeyPhrase As Byte
 Dim TempColor As Long
 Dim ResetColor As Byte
-Dim srcRECT As RECT
+Dim srcRect As RECT
 Dim v2 As D3DVECTOR2
 Dim v3 As D3DVECTOR2
 Dim yOffset As Single
@@ -96,14 +96,14 @@ Dim yOffset As Single
                 Call CopyMemory(TempVA(0), UseFont.HeaderInfo.CharVA(Ascii(j - 1)).Vertex(0), FVF_Size * 4)
                 
                 ' Set up the verticies
-                TempVA(0).X = X + Count
-                TempVA(0).Y = Y + yOffset
-                TempVA(1).X = TempVA(1).X + X + Count
-                TempVA(1).Y = TempVA(0).Y
-                TempVA(2).X = TempVA(0).X
-                TempVA(2).Y = TempVA(2).Y + TempVA(0).Y
-                TempVA(3).X = TempVA(1).X
-                TempVA(3).Y = TempVA(2).Y
+                TempVA(0).x = x + Count
+                TempVA(0).y = y + yOffset
+                TempVA(1).x = TempVA(1).x + x + Count
+                TempVA(1).y = TempVA(0).y
+                TempVA(2).x = TempVA(0).x
+                TempVA(2).y = TempVA(2).y + TempVA(0).y
+                TempVA(3).x = TempVA(1).x
+                TempVA(3).y = TempVA(2).y
                 
                 ' Set the colors
                 TempVA(0).color = TempColor
@@ -133,11 +133,11 @@ Public Sub EngineInitFontTextures()
     If D3DDevice8.TestCooperativeLevel <> D3D_OK Then Exit Sub
     
     ' silkscreen
-    Set Silkscreen.Texture = D3DX8.CreateTextureFromFileEx(D3DDevice8, App.Path & GFX_PATH & "fonts\silkscreen.png", 512, 512, 0, 0, _
+    Set MainFont.Texture = D3DX8.CreateTextureFromFileEx(D3DDevice8, App.Path & GFX_PATH & "fonts\" & FONT_NAME & ".png", 512, 512, 0, 0, _
     D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_FILTER_POINT, D3DX_FILTER_POINT, RGB(255, 0, 255), ByVal 0, ByVal 0)
     
-    Silkscreen.TextureSize.X = 512
-    Silkscreen.TextureSize.Y = 512
+    MainFont.TextureSize.x = 512
+    MainFont.TextureSize.y = 512
     
     ' Init the fonts
     InitFonts
@@ -172,36 +172,36 @@ Dim Row As Single, u As Single, v As Single
             .Vertex(0).RHW = 1
             .Vertex(0).tu = u
             .Vertex(0).tv = v
-            .Vertex(0).X = 0
-            .Vertex(0).Y = 0
+            .Vertex(0).x = 0
+            .Vertex(0).y = 0
             .Vertex(0).z = 0
             .Vertex(1).color = D3DColorARGB(255, 0, 0, 0)
             .Vertex(1).RHW = 1
             .Vertex(1).tu = u + UseFont.ColFactor
             .Vertex(1).tv = v
-            .Vertex(1).X = UseFont.HeaderInfo.CellWidth
-            .Vertex(1).Y = 0
+            .Vertex(1).x = UseFont.HeaderInfo.CellWidth
+            .Vertex(1).y = 0
             .Vertex(1).z = 0
             .Vertex(2).color = D3DColorARGB(255, 0, 0, 0)
             .Vertex(2).RHW = 1
             .Vertex(2).tu = u
             .Vertex(2).tv = v + UseFont.RowFactor
-            .Vertex(2).X = 0
-            .Vertex(2).Y = UseFont.HeaderInfo.CellHeight
+            .Vertex(2).x = 0
+            .Vertex(2).y = UseFont.HeaderInfo.CellHeight
             .Vertex(2).z = 0
             .Vertex(3).color = D3DColorARGB(255, 0, 0, 0)
             .Vertex(3).RHW = 1
             .Vertex(3).tu = u + UseFont.ColFactor
             .Vertex(3).tv = v + UseFont.RowFactor
-            .Vertex(3).X = UseFont.HeaderInfo.CellWidth
-            .Vertex(3).Y = UseFont.HeaderInfo.CellHeight
+            .Vertex(3).x = UseFont.HeaderInfo.CellWidth
+            .Vertex(3).y = UseFont.HeaderInfo.CellHeight
             .Vertex(3).z = 0
         End With
     Next
 End Sub
 
 Public Sub InitFonts()
-    LoadFontHeader Silkscreen, "silkscreen.dat"
+    LoadFontHeader MainFont, FONT_NAME & ".dat"
 End Sub
 
 Public Function DX8Colour(ByVal ColourNum As Long, ByVal Alpha As Long) As Long
@@ -275,6 +275,244 @@ Dim i As Long
     Next
 End Function
 
+Public Sub AddText(ByVal Msg As String, ByVal color As Integer)
+Dim S As String
 
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    S = vbNewLine & Msg
+    frmMain.txtChat.SelStart = Len(frmMain.txtChat.text)
+    frmMain.txtChat.SelColor = QBColor(color)
+    frmMain.txtChat.SelText = S
+    frmMain.txtChat.SelStart = Len(frmMain.txtChat.text) - 1
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "AddText", "modText", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
 
+Public Function DrawMapAttributes()
+    Dim x As Long
+    Dim y As Long
+    Dim tx As Long
+    Dim ty As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
 
+    If frmEditor_Map.optAttribs.Value Then
+        For x = TileView.Left To TileView.Right
+            For y = TileView.Top To TileView.bottom
+                If IsValidMapPoint(x, y) Then
+                    With Map.Tile(x, y)
+                        tx = ((ConvertMapX(x * PIC_X)) - 4) + (PIC_X * 0.5)
+                        ty = ((ConvertMapY(y * PIC_Y)) - 7) + (PIC_Y * 0.5)
+                        Select Case .Type
+                            Case TILE_TYPE_BLOCKED
+                                RenderText MainFont, "B", tx, ty, BrightRed, 200
+                            Case TILE_TYPE_WARP
+                                RenderText MainFont, "W", tx, ty, BrightBlue, 200
+                            Case TILE_TYPE_ITEM
+                                RenderText MainFont, "I", tx, ty, White, 200
+                            Case TILE_TYPE_NPCAVOID
+                                RenderText MainFont, "Na", tx, ty, White, 200
+                            Case TILE_TYPE_KEY
+                                RenderText MainFont, "K", tx, ty, White, 200
+                            Case TILE_TYPE_KEYOPEN
+                                RenderText MainFont, "O", tx, ty, White, 200
+                            Case TILE_TYPE_RESOURCE
+                                RenderText MainFont, "R", tx, ty, Green, 200
+                            Case TILE_TYPE_DOOR
+                                RenderText MainFont, "D", tx, ty, Brown, 200
+                            Case TILE_TYPE_NPCSPAWN
+                                RenderText MainFont, "Ns", tx, ty, Yellow, 200
+                            Case TILE_TYPE_SHOP
+                                RenderText MainFont, "Sh", tx, ty, BrightBlue, 200
+                            Case TILE_TYPE_BANK
+                                RenderText MainFont, "Ba", tx, ty, Blue, 200
+                            Case TILE_TYPE_HEAL
+                                RenderText MainFont, "H", tx, ty, BrightGreen, 200
+                            Case TILE_TYPE_TRAP
+                                RenderText MainFont, "T", tx, ty, BrightRed, 200
+                            Case TILE_TYPE_SLIDE
+                                RenderText MainFont, "Sl", tx, ty, BrightCyan, 200
+                        End Select
+                    End With
+                End If
+            Next
+        Next
+    End If
+
+    ' Error handler
+    Exit Function
+errorhandler:
+    HandleError "DrawMapAttributes", "modText", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Function
+End Function
+
+Sub DrawActionMsg(ByVal Index As Long)
+    Dim x As Long, y As Long, i As Long, Time As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' does it exist
+    If ActionMsg(Index).Created = 0 Then Exit Sub
+
+    ' how long we want each message to appear
+    Select Case ActionMsg(Index).Type
+        Case ACTIONMSG_STATIC
+            Time = 1500
+
+            If ActionMsg(Index).y > 0 Then
+                x = ActionMsg(Index).x + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
+                y = ActionMsg(Index).y - Int(PIC_Y \ 2) - 2
+            Else
+                x = ActionMsg(Index).x + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
+                y = ActionMsg(Index).y - Int(PIC_Y \ 2) + 18
+            End If
+
+        Case ACTIONMSG_SCROLL
+            Time = 1500
+        
+            If ActionMsg(Index).y > 0 Then
+                x = ActionMsg(Index).x + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
+                y = ActionMsg(Index).y - Int(PIC_Y \ 2) - 2 - (ActionMsg(Index).Scroll * 0.6)
+                ActionMsg(Index).Scroll = ActionMsg(Index).Scroll + 1
+            Else
+                x = ActionMsg(Index).x + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
+                y = ActionMsg(Index).y - Int(PIC_Y \ 2) + 18 + (ActionMsg(Index).Scroll * 0.6)
+                ActionMsg(Index).Scroll = ActionMsg(Index).Scroll + 1
+            End If
+
+        Case ACTIONMSG_SCREEN
+            Time = 3000
+
+            ' This will kill any action screen messages that there in the system
+            For i = MAX_BYTE To 1 Step -1
+                If ActionMsg(i).Type = ACTIONMSG_SCREEN Then
+                    If i <> Index Then
+                        ClearActionMsg Index
+                        Index = i
+                    End If
+                End If
+            Next
+            x = (frmMain.picScreen.Width \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
+            y = 425
+
+    End Select
+    
+    x = ConvertMapX(x)
+    y = ConvertMapY(y)
+
+    If GetTickCount < ActionMsg(Index).Created + Time Then
+        RenderText MainFont, ActionMsg(Index).message, x, y, ActionMsg(Index).color
+    Else
+        ClearActionMsg Index
+    End If
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawActionMsg", "modText", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub DrawPlayerName(ByVal Index As Long)
+Dim TextX As Long
+Dim TextY As Long
+Dim color As Long
+Dim name As String
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' Check access level
+    If GetPlayerPK(Index) = NO Then
+
+        Select Case GetPlayerAccess(Index)
+            Case 0
+                color = Orange
+            Case 1
+                color = White
+            Case 2
+                color = Cyan
+            Case 3
+                color = BrightGreen
+            Case 4
+                color = Yellow
+        End Select
+
+    Else
+        color = BrightRed
+    End If
+
+    name = Trim$(Player(Index).name)
+    ' calc pos
+    TextX = ConvertMapX(GetPlayerX(Index) * PIC_X) + Player(Index).XOffset + (PIC_X \ 2) - (GetTextWidth(MainFont, (Trim$(name))) / 2)
+    If GetPlayerSprite(Index) < 1 Or GetPlayerSprite(Index) > NumCharacters Then
+        TextY = ConvertMapY(GetPlayerY(Index) * PIC_Y) + Player(Index).yOffset - 16
+    Else
+        ' Determine location for text
+        TextY = ConvertMapY(GetPlayerY(Index) * PIC_Y) + Player(Index).yOffset - (D3DT_TEXTURE(Tex_Character(GetPlayerSprite(Index))).Height / 4) + 16
+    End If
+
+    ' Draw name
+    RenderText MainFont, name, TextX, TextY, color
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawPlayerName", "modText", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub DrawNpcName(ByVal Index As Long)
+Dim TextX As Long
+Dim TextY As Long
+Dim color As Long
+Dim name As String
+Dim npcNum As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    npcNum = MapNpc(Index).num
+
+    Select Case Npc(npcNum).Behaviour
+        Case NPC_BEHAVIOUR_ATTACKONSIGHT
+            color = BrightRed
+        Case NPC_BEHAVIOUR_ATTACKWHENATTACKED
+            color = Yellow
+        Case NPC_BEHAVIOUR_GUARD
+            color = Grey
+        Case Else
+            color = BrightGreen
+    End Select
+
+    name = Trim$(Npc(npcNum).name)
+    TextX = ConvertMapX(MapNpc(Index).x * PIC_X) + MapNpc(Index).XOffset + (PIC_X \ 2) - (GetTextWidth(MainFont, (Trim$(name))) / 2)
+    If Npc(npcNum).Sprite < 1 Or Npc(npcNum).Sprite > NumCharacters Then
+        TextY = ConvertMapY(MapNpc(Index).y * PIC_Y) + MapNpc(Index).yOffset - 16
+    Else
+        ' Determine location for text
+        TextY = ConvertMapY(MapNpc(Index).y * PIC_Y) + MapNpc(Index).yOffset - (D3DT_TEXTURE(Tex_Character(Npc(npcNum).Sprite)).Height / 4) + 16
+    End If
+
+    ' Draw name
+    RenderText MainFont, name, TextX, TextY, color
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawNpcName", "modText", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub

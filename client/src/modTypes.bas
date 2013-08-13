@@ -63,13 +63,13 @@ End Type
 
 Private Type SpellAnim
     spellnum As Long
-    Timer As Long
+    timer As Long
     FramePointer As Long
 End Type
 
 Private Type PlayerRec
     ' General
-    Name As String
+    name As String
     Class As Long
     Sprite As Long
     Level As Byte
@@ -115,7 +115,7 @@ Public Type TileRec
 End Type
 
 Private Type MapRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     Music As String * NAME_LENGTH
     
     Revision As Long
@@ -138,7 +138,7 @@ Private Type MapRec
 End Type
 
 Private Type ClassRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     Stat(1 To Stats.Stat_Count - 1) As Byte
     MaleSprite() As Long
     FemaleSprite() As Long
@@ -147,7 +147,7 @@ Private Type ClassRec
 End Type
 
 Private Type ItemRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     Desc As String * 255
     Sound As String * NAME_LENGTH
     
@@ -187,7 +187,7 @@ Private Type MapItemRec
 End Type
 
 Private Type NpcRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     AttackSay As String * 100
     Sound As String * NAME_LENGTH
     
@@ -232,13 +232,13 @@ Private Type TradeItemRec
 End Type
 
 Private Type ShopRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     BuyRate As Long
     TradeItem(1 To MAX_TRADES) As TradeItemRec
 End Type
 
 Private Type SpellRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     Desc As String * 255
     Sound As String * NAME_LENGTH
     
@@ -279,7 +279,7 @@ Public Type MapResourceRec
 End Type
 
 Private Type ResourceRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     SuccessMessage As String * NAME_LENGTH
     EmptyMessage As String * NAME_LENGTH
     Sound As String * NAME_LENGTH
@@ -303,20 +303,20 @@ Private Type ActionMsgRec
     Scroll As Long
     x As Long
     y As Long
-    Timer As Long
+    timer As Long
 End Type
 
 Private Type BloodRec
     Sprite As Long
     Alpha As Byte
     LastTimer As Long
-    Timer As Long
+    timer As Long
     x As Long
     y As Long
 End Type
 
 Private Type AnimationRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     Sound As String * NAME_LENGTH
     
     Sprite(0 To 1) As Long
@@ -333,7 +333,7 @@ Private Type AnimInstanceRec
     lockindex As Long
     LockType As Byte
     ' timing
-    Timer(0 To 1) As Long
+    timer(0 To 1) As Long
     ' rendering check
     Used(0 To 1) As Boolean
     ' counting the loop

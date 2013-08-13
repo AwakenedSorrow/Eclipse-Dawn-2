@@ -61,8 +61,7 @@ Public Const SOUND_PATH As String = "\Data Files\sound\"
 Public Const MUSIC_PATH As String = "\Data Files\music\"
 
 ' Font variables
-Public Const FONT_NAME As String = "Georgia"
-Public Const FONT_SIZE As Byte = 14
+Public Const FONT_NAME As String = "texdefault"
 
 ' Log Path and variables
 Public Const LOG_DEBUG As String = "debug.txt"

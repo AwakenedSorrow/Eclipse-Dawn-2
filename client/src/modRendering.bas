@@ -1,6 +1,8 @@
 Attribute VB_Name = "modRendering"
 Public Sub Render_Game()
 Dim x As Long, y As Long, i As Long
+Dim rec As RECT
+Dim rec_pos As RECT, srcRect As D3DRECT
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -136,6 +138,48 @@ Dim x As Long, y As Long, i As Long
     
     ' Render all the hover and target textures.
     Call RenderHoverAndTarget
+    
+    ' We've got all the graphics we need rendered, but no test to understand what's going on yet!
+    ' Should probably get that sorted out below.
+            
+    ' Displays the FPS.
+    If BFPS Then
+        RenderText MainFont, "FPS: " & CStr(GameFPS), 2, 39, Yellow
+    End If
+            
+    ' draw cursor, player X and Y locations
+    If BLoc Then
+        RenderText MainFont, Trim$("cur x: " & CurX & " y: " & CurY), 2, 1, Yellow
+        RenderText MainFont, Trim$("loc x: " & GetPlayerX(MyIndex) & " y: " & GetPlayerY(MyIndex)), 2, 15, Yellow
+        RenderText MainFont, Trim$(" (map #" & GetPlayerMap(MyIndex) & ")"), 2, 27, Yellow
+    End If
+    
+    ' Draw the on-screen action messages.
+    For i = 1 To Action_HighIndex
+        Call DrawActionMsg(i)
+    Next i
+    
+    ' Render Player Names
+    For i = 1 To Player_HighIndex
+        If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
+            Call DrawPlayerName(i)
+        End If
+    Next
+    
+    ' Render NPC Names
+    For i = 1 To Npc_HighIndex
+        If MapNpc(i).num > 0 Then
+            Call DrawNpcName(i)
+        End If
+    Next
+    
+    
+    
+    ' Draw map name
+    RenderText MainFont, Map.name, DrawMapNameX, 5, Yellow
+            
+    ' If we're in the map editor, draw the attributes.
+    If InMapEditor Then Call DrawMapAttributes
     
     ' End the rendering scene and present it to the player.
     ' This makes sure we can actually SEE what we rendered onto the device above.
@@ -345,7 +389,7 @@ Sub RenderBlood(ByVal Index As Long)
     With Blood(Index)
         ' Before we continue, we may want to see if the Blood Decal is still "valid".
         ' If not, we just exit the sub and continue on to the next one.
-        If .Timer + 60000 < GetTickCount Then Exit Sub
+        If .timer + 60000 < GetTickCount Then Exit Sub
         
             ' Right, a little addition of my own. The longer blood's been on the map the less visible it will become.
             ' It will fade a bit every 1.5 seconds. It's nothing fancy but I prefer it this way. :)

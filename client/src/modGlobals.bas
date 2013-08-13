@@ -114,8 +114,8 @@ Public TexthDC As Long
 Public GameFont As Long
 
 ' Draw map name location
-Public DrawMapNameX As Single
-Public DrawMapNameY As Single
+Public DrawMapNameX As Long
+Public DrawMapNameY As Long
 Public DrawMapNameColor As Long
 
 ' Game direction vars
