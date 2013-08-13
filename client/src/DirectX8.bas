@@ -85,6 +85,9 @@ Private Type D3DXIMAGE_INFO_A
 End Type
 
 Public Sub InitDirect3D8()
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
     ' Create the DirectX
     Set DX = New DirectX8
     Set Direct3D8 = DX.Direct3DCreate()
@@ -103,9 +106,19 @@ Public Sub InitDirect3D8()
     ' Begin initialising the full engine
     Call InitRenderStates
     Call EngineInitFontTextures
+    
+' Do not put any code beyond this line, this is the error handler.
+    Exit Sub
+errorhandler:
+    HandleError "InitDirect3D8", "modDirectX8", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
 End Sub
 
 Public Sub InitRenderStates()
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
     With D3DDevice8
         ' Set the shader to be used
         .SetVertexShader FVF
@@ -129,6 +142,13 @@ Public Sub InitRenderStates()
         .SetTextureStageState 0, D3DTSS_MAGFILTER, D3DTEXF_POINT
         .SetTextureStageState 0, D3DTSS_MINFILTER, D3DTEXF_POINT
     End With
+
+' Do not put any code beyond this line, this is the error handler.
+    Exit Sub
+errorhandler:
+    HandleError "InitRenderStates", "modDirectX8", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
 End Sub
 
 Public Function InitD3DDevice8() As Boolean
@@ -172,6 +192,9 @@ End Function
 Public Sub UnloadDirectX()
 Dim i As Long
 
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
     ' Clear the objects
     If Not D3DDevice8 Is Nothing Then Set D3DDevice8 = Nothing
     If Not Direct3D8 Is Nothing Then Set Direct3D8 = Nothing
@@ -183,20 +206,41 @@ Dim i As Long
     
     ' Clear the master object
     If Not DX Is Nothing Then Set DX = Nothing
+
+' Do not put any code beyond this line, this is the error handler.
+    Exit Sub
+errorhandler:
+    HandleError "UnloadDirectX", "modDirectX8", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
 End Sub
 
 Public Function SetTexturePath(ByVal Path As String) As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
     TextureNum = TextureNum + 1
     ReDim Preserve D3DT_TEXTURE(0 To TextureNum) As TextureRec
     
     D3DT_TEXTURE(TextureNum).Path = Path
     SetTexturePath = TextureNum
     D3DT_TEXTURE(TextureNum).Loaded = False
+    
+' Do not put any code beyond this line, this is the error handler.
+    Exit Function
+errorhandler:
+    HandleError "SetTexturePath", "modDirectX8", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Function
 End Function
 
 Public Sub LoadTexture(ByVal TextureNum As Long)
 Dim Tex_Info As D3DXIMAGE_INFO_A
 Dim Path As String
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' Find the texture's path
     Path = D3DT_TEXTURE(TextureNum).Path
@@ -219,12 +263,22 @@ Dim Path As String
     ' Re-set the texture unloading timer
     D3DT_TEXTURE(TextureNum).UnloadTimer = GetTickCount
     D3DT_TEXTURE(TextureNum).Loaded = True
+    
+' Do not put any code beyond this line, this is the error handler.
+    Exit Sub
+errorhandler:
+    HandleError "LoadTexture", "modDirectX8", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
 End Sub
 
 Public Sub UnloadTextures()
 Dim Count As Long
 Dim i As Long
-
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
     Count = UBound(D3DT_TEXTURE)
     If Count <= 0 Then Exit Sub
     
@@ -244,9 +298,19 @@ Dim i As Long
             End If
         End With
     Next
+    
+' Do not put any code beyond this line, this is the error handler.
+    Exit Sub
+errorhandler:
+    HandleError "UnloadTextures", "modDirectX8", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
 End Sub
 
 Public Sub SetTexture(ByVal Texture As Long)
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If Texture <> CurrentTexture Then
         ' Find the texture and make sure ti exists
@@ -263,10 +327,20 @@ Public Sub SetTexture(ByVal Texture As Long)
         Call D3DDevice8.SetTexture(0, D3DT_TEXTURE(Texture).Texture)
         CurrentTexture = Texture
     End If
+    
+' Do not put any code beyond this line, this is the error handler.
+    Exit Sub
+errorhandler:
+    HandleError "SetTexture", "modDirectX8", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
 End Sub
 
 Public Sub CacheTextures()
 Dim i As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' Cache the Tilesets
     NumTileSets = 1
@@ -347,11 +421,20 @@ Dim i As Long
     ' A little special touch for the blood, we need to know how many blood textures we have! So let's calculate it.
     BloodCount = D3DT_TEXTURE(Tex_Blood).Width / PIC_X
     
+' Do not put any code beyond this line, this is the error handler.
+    Exit Sub
+errorhandler:
+    HandleError "CacheTextures", "modDirectX8", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
 End Sub
 
 Public Sub RenderGraphic(ByVal Texture As Long, x As Long, y As Long, DW As Long, DH As Long, Optional TW As Long, Optional TH As Long, _
 Optional OX As Long, Optional OY As Long, Optional R As Byte = 255, Optional G As Byte = 255, Optional B As Byte = 255, Optional A As Byte = 255)
 Dim Box(0 To 3) As TLVERTEX, i As Long, TextureWidth As Long, TextureHeight As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' set the texture
     Call SetTexture(Texture)
@@ -392,5 +475,12 @@ Dim Box(0 To 3) As TLVERTEX, i As Long, TextureWidth As Long, TextureHeight As L
     
     Call D3DDevice8.DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, Box(0), FVF_Size)
     D3DT_TEXTURE(Texture).UnloadTimer = GetTickCount
+    
+' Do not put any code beyond this line, this is the error handler.
+    Exit Sub
+errorhandler:
+    HandleError "RenderGraphic", "modDirectX8", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
 End Sub
 
