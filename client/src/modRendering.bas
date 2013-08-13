@@ -72,6 +72,14 @@ Dim x As Long, y As Long, i As Long
                     End If
                 End If
             Next
+            
+            
+            ' Non-Player Characters
+            For i = 1 To Npc_HighIndex
+                If MapNpc(i).y = y Then
+                    Call RenderNPC(i)
+                End If
+            Next
         End If
         
     ' The end of the Y-Based rendering loop!
@@ -470,6 +478,92 @@ Dim AnimFrame As Long
     Exit Sub
 errorhandler:
     HandleError "RenderAnimation", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub RenderNPC(ByVal Index As Long)
+Dim SpriteAnim As Byte, i As Long, x As Long, y As Long, Sprite As Long, SpriteDir As Long
+Dim attackspeed As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Check if we actually set an NPC here, if not exit the sub and carry on to the next one.
+    If MapNpc(Index).num = 0 Then Exit Sub
+    
+    ' Retrieve the sprite we'll be using, and check if it is valid.
+    ' If not, exit the sub and carry on.
+    Sprite = Npc(MapNpc(Index).num).Sprite
+    If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
+    
+    ' Check if the texture for the sprite is loaded, if not load it.
+    ' We need it loaded for later, since we're using the height/width to calculate certain things.
+    If D3DT_TEXTURE(Tex_Character(Sprite)).Loaded = False Then
+        LoadTexture Tex_Character(Sprite)
+    End If
+
+    attackspeed = 1000
+
+    ' Reset the animation frame
+    SpriteAnim = 0
+    ' Check for attacking animation
+    If MapNpc(Index).AttackTimer + (attackspeed / 2) > GetTickCount Then
+        If MapNpc(Index).Attacking = 1 Then
+            SpriteAnim = 3
+        End If
+    Else
+        ' If not attacking, walk normally
+        Select Case MapNpc(Index).Dir
+            Case DIR_UP
+                If (MapNpc(Index).yOffset > 8) Then SpriteAnim = MapNpc(Index).Step
+            Case DIR_DOWN
+                If (MapNpc(Index).yOffset < -8) Then SpriteAnim = MapNpc(Index).Step
+            Case DIR_LEFT
+                If (MapNpc(Index).XOffset > 8) Then SpriteAnim = MapNpc(Index).Step
+            Case DIR_RIGHT
+                If (MapNpc(Index).XOffset < -8) Then SpriteAnim = MapNpc(Index).Step
+        End Select
+    End If
+
+    ' Check to see if we want to stop making him attack
+    With MapNpc(Index)
+        If .AttackTimer + attackspeed < GetTickCount Then
+            .Attacking = 0
+            .AttackTimer = 0
+        End If
+    End With
+
+    ' Set the Sprite Direction
+    Select Case MapNpc(Index).Dir
+        Case DIR_UP
+            SpriteDir = 3
+        Case DIR_RIGHT
+            SpriteDir = 2
+        Case DIR_DOWN
+            SpriteDir = 0
+        Case DIR_LEFT
+            SpriteDir = 1
+    End Select
+
+    ' Calculate the X
+    x = MapNpc(Index).x * PIC_X + MapNpc(Index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
+
+    ' Is the player's height more than 32..?
+    If (D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) > 32 Then
+        ' Create a 32 pixel offset for larger sprites
+        y = MapNpc(Index).y * PIC_Y + MapNpc(Index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
+    Else
+        ' Proceed as normal
+        y = MapNpc(Index).y * PIC_Y + MapNpc(Index).yOffset
+    End If
+
+    Call RenderSprite(Sprite, x, y, SpriteAnim, SpriteDir)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderNpc", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
