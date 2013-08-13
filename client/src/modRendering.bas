@@ -134,6 +134,9 @@ Dim x As Long, y As Long, i As Long
     ' Render Health, Mana and Cast Bars.
     Call RenderBars
     
+    ' Render all the hover and target textures.
+    Call RenderHoverAndTarget
+    
     ' End the rendering scene and present it to the player.
     ' This makes sure we can actually SEE what we rendered onto the device above.
     Call D3DDevice8.EndScene
@@ -741,6 +744,11 @@ Dim i As Long, npcNum As Long, partyIndex As Long
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
+    ' Let's make sure we have the texture loaded, we'll be using it to calculate a few things.
+    If D3DT_TEXTURE(Tex_Bars).Loaded = False Then
+        LoadTexture Tex_Bars
+    End If
+    
     ' dynamic bar calculations
     sWidth = D3DT_TEXTURE(Tex_Bars).Width
     sHeight = D3DT_TEXTURE(Tex_Bars).Height / 4
@@ -838,6 +846,123 @@ Dim i As Long, npcNum As Long, partyIndex As Long
     Exit Sub
 errorhandler:
     HandleError "RenderBars", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub RenderHoverAndTarget()
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' Handle the rendering of the target texture if one exists.
+    If myTarget > 0 Then
+        If myTargetType = TARGET_TYPE_PLAYER Then ' If the target is a player.
+            Call RenderTarget((Player(myTarget).x * 32) + Player(myTarget).XOffset, (Player(myTarget).y * 32) + Player(myTarget).yOffset)
+        ElseIf myTargetType = TARGET_TYPE_NPC Then ' If the target is an NPC.
+            Call RenderTarget((MapNpc(myTarget).x * 32) + MapNpc(myTarget).XOffset, (MapNpc(myTarget).y * 32) + MapNpc(myTarget).yOffset)
+        End If
+    End If
+    
+    ' Now it's time to figure out if we're mousing over a Player or NPC on the map.
+    ' If we are, we'll render a hover texture over their characters so we know it's a valid character we can target to cast spells on.
+    For i = 1 To Player_HighIndex ' Players
+        If IsPlaying(i) Then
+            If Player(i).Map = Player(MyIndex).Map Then
+                If CurX = Player(i).x And CurY = Player(i).y Then ' Is our cursor over something?
+                    If myTargetType = TARGET_TYPE_PLAYER And myTarget = i Then
+                        'We're already targetting this player, so no point in rendering this as well.
+                    Else
+                        Call RenderHover(TARGET_TYPE_PLAYER, i, (Player(i).x * 32) + Player(i).XOffset, (Player(i).y * 32) + Player(i).yOffset)
+                    End If
+                End If
+            End If
+        End If
+    Next
+    For i = 1 To Npc_HighIndex 'NPCs
+        If MapNpc(i).num > 0 Then
+            If CurX = MapNpc(i).x And CurY = MapNpc(i).y Then ' Is our cursor over something?
+                If myTargetType = TARGET_TYPE_NPC And myTarget = i Then
+                    'We're already targetting this NPC, so no point in rendering this as well.
+                Else
+                    Call RenderHover(TARGET_TYPE_NPC, i, (MapNpc(i).x * 32) + MapNpc(i).XOffset, (MapNpc(i).y * 32) + MapNpc(i).yOffset)
+                End If
+            End If
+        End If
+    Next
+    
+' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderHoverAndTarget", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub RenderTarget(ByVal x As Long, ByVal y As Long)
+Dim Width As Long, Height As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' Let's make sure that the texture is loaded, since we need it to calculate the location.
+    If D3DT_TEXTURE(Tex_Target).Loaded = False Then
+        LoadTexture Tex_Target
+    End If
+    
+    ' Let's do some magic and figure out where we'll need to render this texture!
+    Width = D3DT_TEXTURE(Tex_Target).Width / 2
+    Height = D3DT_TEXTURE(Tex_Target).Height
+    
+    ' Center it on the Target.
+    x = x - ((Width - 32) / 2)
+    y = y - (Height / 2)
+    
+    ' And convert it to be useful on our map!
+    x = ConvertMapX(x)
+    y = ConvertMapY(y)
+    
+    ' Now render the texture to the screen.
+    Call RenderGraphic(Tex_Target, x, y, Width, Height, 0, 0, 0, 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderTarget", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub RenderHover(ByVal tType As Long, ByVal target As Long, ByVal x As Long, ByVal y As Long)
+Dim Width As Long, Height As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' Let's make sure that the texture is loaded, since we need it to calculate the location.
+    If D3DT_TEXTURE(Tex_Target).Loaded = False Then
+        LoadTexture Tex_Target
+    End If
+    
+    ' Let's do some magic and figure out where we'll need to render this texture!
+    Width = D3DT_TEXTURE(Tex_Target).Width / 2
+    Height = D3DT_TEXTURE(Tex_Target).Height
+    
+    ' Center it on the Target.
+    x = x - ((Width - 32) / 2)
+    y = y - (Height / 2)
+    
+    ' And convert it to be useful on our map!
+    x = ConvertMapX(x)
+    y = ConvertMapY(y)
+    
+    ' Now render the texture to the screen.
+    Call RenderGraphic(Tex_Target, x, y, Width, Height, 0, 0, Width, 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderHover", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub

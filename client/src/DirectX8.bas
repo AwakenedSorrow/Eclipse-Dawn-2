@@ -60,6 +60,7 @@ Public Tex_Blood As Long
 Public Tex_DirBlock As Long
 Public Tex_Outline As Long
 Public Tex_Bars As Long
+Public Tex_Target As Long
 
 ' Texture counts
 Public NumTileSets As Long
@@ -432,6 +433,9 @@ Dim i As Long
     
     Tex_Bars = SetTexturePath(App.Path & GFX_PATH & "bars" & GFX_EXT)
     Call LoadTexture(Tex_Bars)
+    
+    Tex_Target = SetTexturePath(App.Path & GFX_PATH & "target" & GFX_EXT)
+    Call LoadTexture(Tex_Target)
     
 ' Do not put any code beyond this line, this is the error handler.
     Exit Sub
