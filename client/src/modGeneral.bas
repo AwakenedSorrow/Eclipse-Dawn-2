@@ -369,9 +369,6 @@ Sub GameInit()
     Call SetFocusOnChat
     frmMain.picScreen.Visible = True
     
-    ' Blt inv
-    'BltInventory
-    
     ' blt hotbar
     BltHotbar
     
@@ -504,11 +501,11 @@ Dim GlobalY As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     GlobalX = PB.Left
-    GlobalY = PB.top
+    GlobalY = PB.Top
 
     If Button = 1 Then
         PB.Left = GlobalX + x - SOffsetX
-        PB.top = GlobalY + y - SOffsetY
+        PB.Top = GlobalY + y - SOffsetY
     End If
 
     ' Error handler

@@ -1016,7 +1016,7 @@ Dim x As Long
 Dim y As Long
 Dim Width As Long
 Dim Height As Long
-Dim destRECT As DxVBLib.RECT
+Dim destRect As DxVBLib.RECT
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -1071,7 +1071,7 @@ End Sub
 Private Sub ScreenshotResource(ByVal Resource As Long, ByVal x As Long, y As Long, rec As DxVBLib.RECT)
 Dim Width As Long
 Dim Height As Long
-Dim destRECT As DxVBLib.RECT
+Dim destRect As DxVBLib.RECT
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -1748,8 +1748,6 @@ Dim rec As RECT, rec_pos As RECT
         End If
 
     Next
-
-    frmMain.picInventory.Refresh
     
     ' Error handler
     Exit Sub
@@ -1869,8 +1867,6 @@ Dim tmpItem As Long, amountModifier As Long
     ' reset gold label
     frmMain.lblGold.Caption = "0g"
     
-    frmMain.picInventory.Cls
-
     For i = 1 To MAX_INV
         itemnum = GetPlayerInvItemNum(MyIndex, i)
 

@@ -2,7 +2,7 @@ Attribute VB_Name = "modRendering"
 Public Sub Render_Game()
 Dim x As Long, y As Long, i As Long
 Dim rec As RECT
-Dim rec_pos As RECT, srcRect As D3DRECT
+Dim srcRect As D3DRECT
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -181,8 +181,18 @@ Dim rec_pos As RECT, srcRect As D3DRECT
     
     ' End the rendering scene and present it to the player.
     ' This makes sure we can actually SEE what we rendered onto the device above.
+    With srcRect
+        .X1 = 0
+        .x2 = frmMain.picScreen.ScaleWidth
+        .Y1 = 0
+        .y2 = frmMain.picScreen.ScaleHeight
+    End With
+    
     Call D3DDevice8.EndScene
-    Call D3DDevice8.Present(ByVal 0, ByVal 0, 0, ByVal 0)
+    Call D3DDevice8.Present(srcRect, ByVal 0, 0, ByVal 0)
+    
+    ' Now that we've done all the gamescreen stuff, we can start rendering the graphics on our GDI components!
+    Call DrawGDI
     
 ' Do not put any code beyond this line, this is the error handler.
     Exit Sub
@@ -1036,3 +1046,263 @@ errorhandler:
     Err.Clear
     Exit Function
 End Function
+
+Public Sub DrawInventory()
+Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
+Dim Amount As Long
+Dim Top As Long, Left As Long
+Dim colour As Long
+Dim tmpItem As Long, amountModifier As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' If we're not in-game we should probably not be here to begin with.
+    ' So let's exit out before things go awry!
+    If Not InGame Then Exit Sub
+    
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+
+    For i = 1 To MAX_INV
+        itemnum = GetPlayerInvItemNum(MyIndex, i)
+
+        If itemnum > 0 And itemnum <= MAX_ITEMS Then
+            itempic = Item(itemnum).Pic
+            
+            amountModifier = 0
+            ' exit out if we're offering item in a trade.
+            If InTrade > 0 Then
+                For x = 1 To MAX_INV
+                    tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(x).num)
+                    If TradeYourOffer(x).num = i Then
+                        ' check if currency
+                        If Not Item(tmpItem).Type = ITEM_TYPE_CURRENCY Then
+                            ' normal item, exit out
+                            GoTo NextLoop
+                        Else
+                            ' if amount = all currency, remove from inventory
+                            If TradeYourOffer(x).Value = GetPlayerInvItemValue(MyIndex, i) Then
+                                GoTo NextLoop
+                            Else
+                                ' not all, change modifier to show change in currency count
+                                amountModifier = TradeYourOffer(x).Value
+                            End If
+                        End If
+                    End If
+                Next
+            End If
+
+            If itempic > 0 And itempic <= NumItems Then
+                If D3DT_TEXTURE(Tex_Item(itempic)).Width <= 64 Then ' This checks if it's an animated item, if it is we'll need to render it elsewhere.
+                    
+                    ' Calculate where we need to render the item.
+                    Top = InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                    Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
+                    
+                    ' Render the item Icon.
+                    Call RenderGraphic(Tex_Item(itempic), Left, Top, PIC_X, PIC_Y, 0, 0, 32, 0)
+                    
+                    ' If item is a stack - draw the amount you have
+                    If GetPlayerInvItemValue(MyIndex, i) > 1 Then
+                        y = Top + 22
+                        x = Left - 4
+                        
+                        Amount = GetPlayerInvItemValue(MyIndex, i) - amountModifier
+                        
+                        ' Draw currency but with k, m, b etc. using a convertion function
+                        If Amount < 1000000 Then
+                            colour = White
+                        ElseIf Amount > 1000000 And Amount < 10000000 Then
+                            colour = Yellow
+                        ElseIf Amount > 10000000 Then
+                            colour = BrightGreen
+                        End If
+                        
+                        Call RenderText(MainFont, Format$(ConvertCurrency(Str(Amount)), "#,###,###,###"), x, y, colour)
+
+                        ' Check if it's gold, and update the label
+                        If GetPlayerInvItemNum(MyIndex, i) = 1 Then '1 = gold :P
+                            frmMain.lblGold.Caption = Format$(Amount, "#,###,###,###") & "g"
+                        End If
+                    End If
+                End If
+            End If
+        End If
+NextLoop:
+    Next
+    
+    'update animated items
+    DrawAnimatedInvItems
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .x2 = frmMain.picInventory.Width
+        .Y1 = 28
+        .y2 = frmMain.picInventory.Height + .Y1
+    End With
+    
+    With destRect
+        .X1 = 0
+        .x2 = frmMain.picInventory.Width
+        .Y1 = 32
+        .y2 = frmMain.picInventory.Height + .Y1
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmMain.picInventory.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawInventory", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub DrawGDI()
+    'Cycle Through in-game stuff before cycling through editors
+    If frmMenu.Visible Then
+        'If frmMenu.picCharacter.Visible Then NewCharacterDrawSprite
+    End If
+    
+    If frmMain.Visible Then
+        'If frmMain.picTempInv.Visible Then DrawInventoryItem frmMain.picTempInv.Left, frmMain.picTempInv.Top
+        'If frmMain.picTempSpell.Visible Then DrawDraggedSpell frmMain.picTempSpell.Left, frmMain.picTempSpell.Top
+        'If frmMain.picSpellDesc.Visible Then DrawSpellDesc LastSpellDesc
+        'If frmMain.picItemDesc.Visible Then DrawItemDesc LastItemDesc
+        'If frmMain.picHotbar.Visible Then DrawHotbar
+        If frmMain.picInventory.Visible Then DrawInventory
+        'If frmMain.picItemDesc.Visible Then DrawItemDesc LastItemDesc
+        'If frmMain.picCharacter.Visible Then DrawFace: DrawEquipment
+        'If frmMain.picSpells.Visible Then DrawPlayerSpells
+        'If frmMain.picShop.Visible Then DrawShop
+        'If frmMain.picTempBank.Visible Then DrawBankItem frmMain.picTempBank.Left, frmMain.picTempBank.Top
+        'If frmMain.picBank.Visible Then DrawBank
+        'If frmMain.picTrade.Visible Then DrawTrade
+    End If
+    
+    
+    If frmEditor_Animation.Visible Then
+        'EditorAnim_DrawAnim
+    End If
+    
+    If frmEditor_Item.Visible Then
+        'EditorItem_DrawItem
+        'EditorItem_DrawPaperdoll
+    End If
+    
+    If frmEditor_Map.Visible Then
+        'EditorMap_DrawTileset
+        'If frmEditor_Map.fraMapItem.Visible Then EditorMap_DrawMapItem
+        'If frmEditor_Map.fraMapKey.Visible Then EditorMap_DrawKey
+    End If
+    
+    If frmEditor_NPC.Visible Then
+        'EditorNpc_DrawSprite
+    End If
+    
+    If frmEditor_Resource.Visible Then
+        'EditorResource_DrawSprite
+    End If
+    
+    If frmEditor_Spell.Visible Then
+        'EditorSpell_DrawIcon
+    End If
+
+End Sub
+
+Public Sub DrawAnimatedInvItems()
+Dim i As Long, colour As Long
+Dim itemnum As Long, itempic As Long
+Dim x As Long, y As Long
+Dim MaxFrames As Byte
+Dim Amount As Long, AnimLeft As Long, Top As Long, Left As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Check if we're in the game or not, if we aren't we really shouldn't be here.
+    If Not InGame Then Exit Sub
+    
+    ' check for map animation changes#
+    For i = 1 To MAX_MAP_ITEMS
+
+        If MapItem(i).num > 0 Then
+            itempic = Item(MapItem(i).num).Pic
+
+            If itempic < 1 Or itempic > NumItems Then Exit Sub
+            MaxFrames = (D3DT_TEXTURE(Tex_Item(itempic)).Width / 2) / 32 ' Work out how many frames there are. /2 because of inventory icons as well as ingame
+
+            If MapItem(i).Frame < MaxFrames - 1 Then
+                MapItem(i).Frame = MapItem(i).Frame + 1
+            Else
+                MapItem(i).Frame = 1
+            End If
+        End If
+
+    Next
+
+    For i = 1 To MAX_INV
+        itemnum = GetPlayerInvItemNum(MyIndex, i)
+
+        If itemnum > 0 And itemnum <= MAX_ITEMS Then
+            itempic = Item(itemnum).Pic
+
+            If itempic > 0 And itempic <= NumItems Then
+                If DDSD_Item(itempic).lWidth > 64 Then
+                    MaxFrames = (D3DT_TEXTURE(Tex_Item(itempic)).Width / 2) / 32 ' Work out how many frames there are. /2 because of inventory icons as well as ingame
+
+                    If InvItemFrame(i) < MaxFrames - 1 Then
+                        InvItemFrame(i) = InvItemFrame(i) + 1
+                    Else
+                        InvItemFrame(i) = 1
+                    End If
+
+                    
+                    AnimLeft = (D3DT_TEXTURE(Tex_Item(itempic)).Width / 2) + (InvItemFrame(i) * 32) ' middle to get the start of inv gfx, then +32 for each frame
+                        
+                    Top = InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                    Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
+
+                    ' We'll now re-blt the item, and place the currency value over it again :P
+                    Call RenderGraphic(Tex_Item(itempic), Left, Top, PIC_X, PIC_Y, 0, 0, AnimLeft, 0)
+
+                    ' If item is a stack - draw the amount you have
+                    If GetPlayerInvItemValue(MyIndex, i) > 1 Then
+                        y = Top + 22
+                        x = Left - 4
+                        Amount = CStr(GetPlayerInvItemValue(MyIndex, i))
+                        ' Draw currency but with k, m, b etc. using a convertion function
+                        If Amount < 1000000 Then
+                            colour = White
+                        ElseIf Amount > 1000000 And Amount < 10000000 Then
+                            colour = Yellow
+                        ElseIf Amount > 10000000 Then
+                            colour = BrightGreen
+                        End If
+                        
+                        Call RenderText(MainFont, Format$(ConvertCurrency(Str(Amount)), "#,###,###,###"), x, y, colour)
+
+                        ' Check if it's gold, and update the label
+                        If GetPlayerInvItemNum(MyIndex, i) = 1 Then '1 = gold :P
+                            frmMain.lblGold.Caption = Format$(Amount, "#,###,###,###") & "g"
+                        End If
+                    End If
+                End If
+            End If
+        End If
+
+    Next
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawAnimatedInvItems", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub

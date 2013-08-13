@@ -388,7 +388,6 @@ Dim Buffer As clsBuffer
     CurrencyMenu = 0 ' clear
 
     Set Buffer = Nothing
-    'BltInventory
     
     ' Error handler
     Exit Sub
@@ -416,7 +415,6 @@ Dim Buffer As clsBuffer
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
-    'BltInventory
     Set Buffer = Nothing
     
     ' Error handler
@@ -446,7 +444,6 @@ Dim Buffer As clsBuffer
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
-    'BltInventory
     'BltEquipment
     
     Set Buffer = Nothing
@@ -943,7 +940,7 @@ Dim Buffer As clsBuffer
         Blood(i).x = 0
         Blood(i).y = 0
         Blood(i).Sprite = 0
-        Blood(i).Timer = 0
+        Blood(i).timer = 0
     Next
     
     ' Get map num
@@ -1391,8 +1388,6 @@ Dim ItemData() As Byte
     frmMain.txtCurrency.text = vbNullString
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
-    
-    'BltInventory
     
     ' Error handler
     Exit Sub
@@ -1934,7 +1929,7 @@ Dim x As Long, y As Long, Sprite As Long, i As Long
         .x = x
         .y = y
         .Sprite = Sprite
-        .Timer = GetTickCount
+        .timer = GetTickCount
         .Alpha = 255
         .LastTimer = GetTickCount + 1500
     End With
@@ -2229,8 +2224,6 @@ Private Sub HandleCloseTrade(ByVal Index As Long, ByRef Data() As Byte, ByVal St
     frmMain.picCover.Visible = False
     frmMain.picTrade.Visible = False
     frmMain.lblTradeStatus.Caption = vbNullString
-    ' re-blt any items we were offering
-    'BltInventory
     
     ' Error handler
     Exit Sub
@@ -2259,8 +2252,7 @@ Dim i As Long
             TradeYourOffer(i).Value = Buffer.ReadLong
         Next
         frmMain.lblYourWorth.Caption = Buffer.ReadLong & "g"
-        ' remove any items we're offering
-        'BltInventory
+
     ElseIf dataType = 1 Then 'theirs
         For i = 1 To MAX_INV
             TradeTheirOffer(i).num = Buffer.ReadLong

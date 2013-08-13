@@ -1215,6 +1215,7 @@ Begin VB.Form frmMain
       _Version        =   393217
       BackColor       =   790032
       BorderStyle     =   0
+      Enabled         =   -1  'True
       ScrollBars      =   2
       Appearance      =   0
       TextRTF         =   $"frmMain.frx":3332
@@ -2189,7 +2190,6 @@ Dim i As Long
                 picSpells.Visible = False
                 picOptions.Visible = False
                 picParty.Visible = False
-                'BltInventory
                 ' play sound
                 PlaySound Sound_ButtonClick
             End If
