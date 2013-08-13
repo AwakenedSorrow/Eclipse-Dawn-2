@@ -1,0 +1,19 @@
+Eclipse Dawn 2 Credits
+
+Lead Programmer: Sil van Harberden (The Doctor / Stein)
+
+
+
+***
+Used Resources
+***
+
+DirectX8 Base:
+	Original File(s): http://www.eclipseorigins.com/community/index.php?/topic/131274-base-d3d8/
+	Creator: Tudor Sandulescu (Sekaru)
+	Website: www.sleepystudios.com
+
+Base Engine:
+	Name: Eclipse Origins 2.0
+	Creator: Robin Perris
+	Website: www.crystalshire.com

@@ -2,9 +2,9 @@ Attribute VB_Name = "modDirectX8"
 Option Explicit
 
 ' ********************
-' Credit goes to Sekaru for this Module.
+' Credit goes to Sekaru (Tudor Sandulescu) for this Module.
 ' www.sleepystudios.com
-' Original file(s) can be found at: http://www.eclipseorigins.com/community/index.php?/topic/130272-clean-optimised-dx8/
+' Original file(s) can be found at: http://www.eclipseorigins.com/community/index.php?/topic/131274-base-d3d8/
 ' ********************
 
 '*********************
