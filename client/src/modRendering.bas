@@ -47,22 +47,45 @@ Dim x As Long, y As Long, i As Long
         Next
     End If
     
+    ' Render the BOTTOM layers of animations, this is to make sure that the lower part is always below
+    ' the player, your target or whatever really.
+    If NumAnimations > 0 Then
+        For i = 1 To MAX_BYTE
+            If AnimInstance(i).Used(0) Then
+                RenderAnimation i, 0
+            End If
+        Next
+    End If
+    
     ' Y-Based Rendering time! Stuff that's "further" away from the front of the screen
     ' (Y-0 being the furthest and the highest being whatever)
     ' Will be rendered first, so it's behind everything else regardless of what it is.
     For y = 0 To Map.MaxY
         
-        ' Player Characters
-        For i = 1 To Player_HighIndex
-            If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
-                If Player(i).y = y Then
-                    Call RenderPlayer(i)
+        ' Check if we have any sprites loaded, if so we can start rendering players and NPCs!
+        If NumCharacters > 0 Then
+            ' Player Characters
+            For i = 1 To Player_HighIndex
+                If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
+                    If Player(i).y = y Then
+                        Call RenderPlayer(i)
+                    End If
                 End If
-            End If
-        Next
+            Next
+        End If
         
     ' The end of the Y-Based rendering loop!
     Next
+    
+    ' Render the TOP layers of animations, this is to make sure that the upper part is always above
+    ' the player, your target or whatever really.
+    If NumAnimations > 0 Then
+        For i = 1 To MAX_BYTE
+            If AnimInstance(i).Used(1) Then
+                RenderAnimation i, 1
+            End If
+        Next
+    End If
     
     ' Render the tiles that will be above the player, in this case Fringe1 and Fringe 2.
     If NumTileSets > 0 Then
@@ -344,6 +367,109 @@ Dim AnimFrame
     Exit Sub
 errorhandler:
     HandleError "RenderMapItem", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub RenderAnimation(ByVal Index As Long, ByVal Layer As Byte)
+Dim Sprite As Long
+Dim i As Long
+Dim Width As Long, Height As Long
+Dim looptime As Long
+Dim FrameCount As Long
+Dim x As Long, y As Long
+Dim lockindex As Long
+Dim AnimFrame As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' If the animation instance doesn't hold anything for whatever reason, clear it and exit the sub.
+    If AnimInstance(Index).Animation = 0 Then
+        ClearAnimInstance Index
+        Exit Sub
+    End If
+    
+    ' Retrieve the texture we're using for this Animation and check if it is a valid number.
+    ' If it isn't, exit out of this sub and continue on to the next.
+    Sprite = Animation(AnimInstance(Index).Animation).Sprite(Layer)
+    If Sprite < 1 Or Sprite > NumAnimations Then Exit Sub
+    
+    ' Retrieve the framecount set in the editor.
+    FrameCount = Animation(AnimInstance(Index).Animation).Frames(Layer)
+    
+    ' Set the timer.
+    AnimationTimer(Sprite) = GetTickCount + SurfaceTimerMax
+    
+    ' Check if the animation is loaded, if not load it.
+    ' We need this to check the width and whatnot further on.
+    If D3DT_TEXTURE(Tex_Animation(Sprite)).Loaded = False Then
+        Call LoadTexture(Tex_Animation(Sprite))
+    End If
+    
+    ' Get and set the Height and Width of the sprite frame we'll be using.
+    Width = D3DT_TEXTURE(Tex_Animation(Sprite)).Width / FrameCount
+    Height = D3DT_TEXTURE(Tex_Animation(Sprite)).Height
+    
+    ' Set the Animation Frame we'll be using.
+    ' Note that unlike most other render subs, this frame already includes the full location of the texture.
+    ' This does not need to be multiplied again further on to get the proper frame texture.
+    AnimFrame = (AnimInstance(Index).FrameIndex(Layer) - 1) * Width
+
+    ' Let's change the X/Y offset if the Animation is locked onto a target so it actually displays on
+    ' top of it.
+    If AnimInstance(Index).LockType > TARGET_TYPE_NONE Then ' if <> none
+        ' Locked On to a Player.
+        If AnimInstance(Index).LockType = TARGET_TYPE_PLAYER Then
+            ' quick save the index
+            lockindex = AnimInstance(Index).lockindex
+            ' check if is ingame
+            If IsPlaying(lockindex) Then
+                ' check if on same map
+                If GetPlayerMap(lockindex) = GetPlayerMap(MyIndex) Then
+                    ' is on map, is playing, set x & y
+                    x = (GetPlayerX(lockindex) * PIC_X) + 16 - (Width / 2) + Player(lockindex).XOffset
+                    y = (GetPlayerY(lockindex) * PIC_Y) + 16 - (Height / 2) + Player(lockindex).yOffset
+                End If
+            End If
+        ElseIf AnimInstance(Index).LockType = TARGET_TYPE_NPC Then
+            ' quick save the index
+            lockindex = AnimInstance(Index).lockindex
+            ' check if NPC exists
+            If MapNpc(lockindex).num > 0 Then
+                ' check if alive
+                If MapNpc(lockindex).Vital(Vitals.HP) > 0 Then
+                    ' exists, is alive, set x & y
+                    x = (MapNpc(lockindex).x * PIC_X) + 16 - (Width / 2) + MapNpc(lockindex).XOffset
+                    y = (MapNpc(lockindex).y * PIC_Y) + 16 - (Height / 2) + MapNpc(lockindex).yOffset
+                Else
+                    ' The NPC isn't alive anymore, sadly with the way the system works this means we need to destroy the animation as well.
+                    ClearAnimInstance Index
+                    Exit Sub
+                End If
+            Else
+                ' The NPC isn't alive anymore, sadly with the way the system works this means we need to destroy the animation as well.
+                ClearAnimInstance Index
+                Exit Sub
+            End If
+        End If
+    Else
+        ' no lock, default x + y
+        x = (AnimInstance(Index).x * 32) + 16 - (Width / 2)
+        y = (AnimInstance(Index).y * 32) + 16 - (Height / 2)
+    End If
+    
+    ' Convert these values beforehand. Saves some space down there.
+    x = ConvertMapX(x)
+    y = ConvertMapY(y)
+    
+    ' Render the actual texture. Should be some fancy animation now!
+    Call RenderGraphic(Tex_Animation(Sprite), x, y, Width, Height, 0, 0, AnimFrame, 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderAnimation", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub

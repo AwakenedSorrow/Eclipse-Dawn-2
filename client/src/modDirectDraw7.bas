@@ -153,7 +153,7 @@ errorhandler:
 End Sub
 
 ' This sub gets the mask color from the surface loaded from a bitmap image
-Public Sub SetMaskColorFromPixel(ByRef TheSurface As DirectDrawSurface7, ByVal X As Long, ByVal Y As Long)
+Public Sub SetMaskColorFromPixel(ByRef TheSurface As DirectDrawSurface7, ByVal x As Long, ByVal y As Long)
 Dim TmpR As RECT
 Dim TmpDDSD As DDSURFACEDESC2
 Dim TmpColorKey As DDCOLORKEY
@@ -162,16 +162,16 @@ Dim TmpColorKey As DDCOLORKEY
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     With TmpR
-        .Left = X
-        .top = Y
-        .Right = X
-        .bottom = Y
+        .Left = x
+        .top = y
+        .Right = x
+        .bottom = y
     End With
 
     TheSurface.Lock TmpR, TmpDDSD, DDLOCK_WAIT Or DDLOCK_READONLY, 0
 
     With TmpColorKey
-        .Low = TheSurface.GetLockedPixel(X, Y)
+        .Low = TheSurface.GetLockedPixel(x, y)
         .High = .Low
     End With
 
@@ -383,7 +383,7 @@ errorhandler:
     Exit Function
 End Function
 
-Public Sub BltDirection(ByVal X As Long, ByVal Y As Long)
+Public Sub BltDirection(ByVal x As Long, ByVal y As Long)
 Dim rec As DxVBLib.RECT
 Dim i As Long
     
@@ -395,21 +395,21 @@ Dim i As Long
     rec.Left = 0
     rec.Right = rec.Left + 32
     rec.bottom = rec.top + 32
-    Call Engine_BltFast(ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), DDS_Direction, rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+    Call Engine_BltFast(ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), DDS_Direction, rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     
     ' render dir blobs
     For i = 1 To 4
         rec.Left = (i - 1) * 8
         rec.Right = rec.Left + 8
         ' find out whether render blocked or not
-        If Not isDirBlocked(Map.Tile(X, Y).DirBlock, CByte(i)) Then
+        If Not isDirBlocked(Map.Tile(x, y).DirBlock, CByte(i)) Then
             rec.top = 8
         Else
             rec.top = 16
         End If
         rec.bottom = rec.top + 8
         'render!
-        Call Engine_BltFast(ConvertMapX(X * PIC_X) + DirArrowX(i), ConvertMapY(Y * PIC_Y) + DirArrowY(i), DDS_Direction, rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+        Call Engine_BltFast(ConvertMapX(x * PIC_X) + DirArrowX(i), ConvertMapY(y * PIC_Y) + DirArrowY(i), DDS_Direction, rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     Next
     
     ' Error handler
@@ -420,7 +420,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub BltTarget(ByVal X As Long, ByVal Y As Long)
+Public Sub BltTarget(ByVal x As Long, ByVal y As Long)
 Dim sRECT As DxVBLib.RECT
 Dim Width As Long, Height As Long
     
@@ -439,37 +439,37 @@ Dim Width As Long, Height As Long
         .Right = Width
     End With
     
-    X = X - ((Width - 32) / 2)
-    Y = Y - (Height / 2)
+    x = x - ((Width - 32) / 2)
+    y = y - (Height / 2)
     
-    X = ConvertMapX(X)
-    Y = ConvertMapY(Y)
+    x = ConvertMapX(x)
+    y = ConvertMapY(y)
     
     ' clipping
-    If Y < 0 Then
+    If y < 0 Then
         With sRECT
-            .top = .top - Y
+            .top = .top - y
         End With
-        Y = 0
+        y = 0
     End If
 
-    If X < 0 Then
+    If x < 0 Then
         With sRECT
-            .Left = .Left - X
+            .Left = .Left - x
         End With
-        X = 0
+        x = 0
     End If
 
-    If Y + Height > DDSD_BackBuffer.lHeight Then
-        sRECT.bottom = sRECT.bottom - (Y + Height - DDSD_BackBuffer.lHeight)
+    If y + Height > DDSD_BackBuffer.lHeight Then
+        sRECT.bottom = sRECT.bottom - (y + Height - DDSD_BackBuffer.lHeight)
     End If
 
-    If X + Width > DDSD_BackBuffer.lWidth Then
-        sRECT.Right = sRECT.Right - (X + Width - DDSD_BackBuffer.lWidth)
+    If x + Width > DDSD_BackBuffer.lWidth Then
+        sRECT.Right = sRECT.Right - (x + Width - DDSD_BackBuffer.lWidth)
     End If
     ' /clipping
     
-    Call Engine_BltFast(X, Y, DDS_Target, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+    Call Engine_BltFast(x, y, DDS_Target, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     
     ' Error handler
     Exit Sub
@@ -479,7 +479,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub BltHover(ByVal tType As Long, ByVal target As Long, ByVal X As Long, ByVal Y As Long)
+Public Sub BltHover(ByVal tType As Long, ByVal target As Long, ByVal x As Long, ByVal y As Long)
 Dim sRECT As DxVBLib.RECT
 Dim Width As Long, Height As Long
     
@@ -498,37 +498,37 @@ Dim Width As Long, Height As Long
         .Right = .Left + Width
     End With
     
-    X = X - ((Width - 32) / 2)
-    Y = Y - (Height / 2)
+    x = x - ((Width - 32) / 2)
+    y = y - (Height / 2)
 
-    X = ConvertMapX(X)
-    Y = ConvertMapY(Y)
+    x = ConvertMapX(x)
+    y = ConvertMapY(y)
     
     ' clipping
-    If Y < 0 Then
+    If y < 0 Then
         With sRECT
-            .top = .top - Y
+            .top = .top - y
         End With
-        Y = 0
+        y = 0
     End If
 
-    If X < 0 Then
+    If x < 0 Then
         With sRECT
-            .Left = .Left - X
+            .Left = .Left - x
         End With
-        X = 0
+        x = 0
     End If
 
-    If Y + Height > DDSD_BackBuffer.lHeight Then
-        sRECT.bottom = sRECT.bottom - (Y + Height - DDSD_BackBuffer.lHeight)
+    If y + Height > DDSD_BackBuffer.lHeight Then
+        sRECT.bottom = sRECT.bottom - (y + Height - DDSD_BackBuffer.lHeight)
     End If
 
-    If X + Width > DDSD_BackBuffer.lWidth Then
-        sRECT.Right = sRECT.Right - (X + Width - DDSD_BackBuffer.lWidth)
+    If x + Width > DDSD_BackBuffer.lWidth Then
+        sRECT.Right = sRECT.Right - (x + Width - DDSD_BackBuffer.lWidth)
     End If
     ' /clipping
     
-    Call Engine_BltFast(X, Y, DDS_Target, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+    Call Engine_BltFast(x, y, DDS_Target, sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     
     ' Error handler
     Exit Sub
@@ -538,24 +538,24 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub BltMapTile(ByVal X As Long, ByVal Y As Long)
+Public Sub BltMapTile(ByVal x As Long, ByVal y As Long)
 Dim rec As DxVBLib.RECT
 Dim i As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    With Map.Tile(X, Y)
+    With Map.Tile(x, y)
         For i = MapLayer.Ground To MapLayer.Mask2
             ' skip tile?
-            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).X > 0 Or .Layer(i).Y > 0) Then
+            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
                 ' sort out rec
-                rec.top = .Layer(i).Y * PIC_Y
+                rec.top = .Layer(i).y * PIC_Y
                 rec.bottom = rec.top + PIC_Y
-                rec.Left = .Layer(i).X * PIC_X
+                rec.Left = .Layer(i).x * PIC_X
                 rec.Right = rec.Left + PIC_X
                 ' render
-                Call Engine_BltFast(ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), DDS_Tileset(.Layer(i).Tileset), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+                Call Engine_BltFast(ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), DDS_Tileset(.Layer(i).Tileset), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
             End If
         Next
     End With
@@ -569,24 +569,24 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub BltMapFringeTile(ByVal X As Long, ByVal Y As Long)
+Public Sub BltMapFringeTile(ByVal x As Long, ByVal y As Long)
 Dim rec As DxVBLib.RECT
 Dim i As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    With Map.Tile(X, Y)
+    With Map.Tile(x, y)
         For i = MapLayer.Fringe To MapLayer.Fringe2
             ' skip tile if tileset isn't set
-            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).X > 0 Or .Layer(i).Y > 0) Then
+            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
                 ' sort out rec
-                rec.top = .Layer(i).Y * PIC_Y
+                rec.top = .Layer(i).y * PIC_Y
                 rec.bottom = rec.top + PIC_Y
-                rec.Left = .Layer(i).X * PIC_X
+                rec.Left = .Layer(i).x * PIC_X
                 rec.Right = rec.Left + PIC_X
                 ' render
-                Call Engine_BltFast(ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), DDS_Tileset(.Layer(i).Tileset), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+                Call Engine_BltFast(ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), DDS_Tileset(.Layer(i).Tileset), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
             End If
         Next
     End With
@@ -599,7 +599,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub BltDoor(ByVal X As Long, ByVal Y As Long)
+Public Sub BltDoor(ByVal x As Long, ByVal y As Long)
 Dim rec As DxVBLib.RECT
 Dim x2 As Long, y2 As Long
     
@@ -607,7 +607,7 @@ Dim x2 As Long, y2 As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' sort out animation
-    With TempTile(X, Y)
+    With TempTile(x, y)
         If .DoorAnimate = 1 Then ' opening
             If .DoorTimer + 100 < GetTickCount Then
                 If .DoorFrame < 4 Then
@@ -634,12 +634,12 @@ Dim x2 As Long, y2 As Long
     With rec
         .top = 0
         .bottom = DDSD_Door.lHeight
-        .Left = ((TempTile(X, Y).DoorFrame - 1) * (DDSD_Door.lWidth / 4))
+        .Left = ((TempTile(x, y).DoorFrame - 1) * (DDSD_Door.lWidth / 4))
         .Right = .Left + (DDSD_Door.lWidth / 4)
     End With
 
-    x2 = (X * PIC_X)
-    y2 = (Y * PIC_Y) - (DDSD_Door.lHeight / 2) + 4
+    x2 = (x * PIC_X)
+    y2 = (y * PIC_Y) - (DDSD_Door.lHeight / 2) + 4
     Call DDS_BackBuffer.BltFast(ConvertMapX(x2), ConvertMapY(y2), DDS_Door, rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     
     ' Error handler
@@ -665,7 +665,7 @@ Dim rec As DxVBLib.RECT
         rec.Left = (.Sprite - 1) * PIC_X
         rec.Right = rec.Left + PIC_X
         
-        Engine_BltFast ConvertMapX(.X * PIC_X), ConvertMapY(.Y * PIC_Y), DDS_Blood, rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
+        Engine_BltFast ConvertMapX(.x * PIC_X), ConvertMapY(.y * PIC_Y), DDS_Blood, rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
     End With
     
     ' Error handler
@@ -684,7 +684,7 @@ Dim i As Long
 Dim Width As Long, Height As Long
 Dim looptime As Long
 Dim FrameCount As Long
-Dim X As Long, Y As Long
+Dim x As Long, y As Long
 Dim lockindex As Long
     
     ' If debug mode, handle error then exit out
@@ -727,8 +727,8 @@ Dim lockindex As Long
                 ' check if on same map
                 If GetPlayerMap(lockindex) = GetPlayerMap(MyIndex) Then
                     ' is on map, is playing, set x & y
-                    X = (GetPlayerX(lockindex) * PIC_X) + 16 - (Width / 2) + Player(lockindex).XOffset
-                    Y = (GetPlayerY(lockindex) * PIC_Y) + 16 - (Height / 2) + Player(lockindex).yOffset
+                    x = (GetPlayerX(lockindex) * PIC_X) + 16 - (Width / 2) + Player(lockindex).XOffset
+                    y = (GetPlayerY(lockindex) * PIC_Y) + 16 - (Height / 2) + Player(lockindex).yOffset
                 End If
             End If
         ElseIf AnimInstance(Index).LockType = TARGET_TYPE_NPC Then
@@ -739,8 +739,8 @@ Dim lockindex As Long
                 ' check if alive
                 If MapNpc(lockindex).Vital(Vitals.HP) > 0 Then
                     ' exists, is alive, set x & y
-                    X = (MapNpc(lockindex).X * PIC_X) + 16 - (Width / 2) + MapNpc(lockindex).XOffset
-                    Y = (MapNpc(lockindex).Y * PIC_Y) + 16 - (Height / 2) + MapNpc(lockindex).yOffset
+                    x = (MapNpc(lockindex).x * PIC_X) + 16 - (Width / 2) + MapNpc(lockindex).XOffset
+                    y = (MapNpc(lockindex).y * PIC_Y) + 16 - (Height / 2) + MapNpc(lockindex).yOffset
                 Else
                     ' npc not alive anymore, kill the animation
                     ClearAnimInstance Index
@@ -754,41 +754,41 @@ Dim lockindex As Long
         End If
     Else
         ' no lock, default x + y
-        X = (AnimInstance(Index).X * 32) + 16 - (Width / 2)
-        Y = (AnimInstance(Index).Y * 32) + 16 - (Height / 2)
+        x = (AnimInstance(Index).x * 32) + 16 - (Width / 2)
+        y = (AnimInstance(Index).y * 32) + 16 - (Height / 2)
     End If
     
-    X = ConvertMapX(X)
-    Y = ConvertMapY(Y)
+    x = ConvertMapX(x)
+    y = ConvertMapY(y)
 
     ' Clip to screen
-    If Y < 0 Then
+    If y < 0 Then
 
         With sRECT
-            .top = .top - Y
+            .top = .top - y
         End With
 
-        Y = 0
+        y = 0
     End If
 
-    If X < 0 Then
+    If x < 0 Then
 
         With sRECT
-            .Left = .Left - X
+            .Left = .Left - x
         End With
 
-        X = 0
+        x = 0
     End If
 
-    If Y + Height > DDSD_BackBuffer.lHeight Then
-        sRECT.bottom = sRECT.bottom - (Y + Height - DDSD_BackBuffer.lHeight)
+    If y + Height > DDSD_BackBuffer.lHeight Then
+        sRECT.bottom = sRECT.bottom - (y + Height - DDSD_BackBuffer.lHeight)
     End If
 
-    If X + Width > DDSD_BackBuffer.lWidth Then
-        sRECT.Right = sRECT.Right - (X + Width - DDSD_BackBuffer.lWidth)
+    If x + Width > DDSD_BackBuffer.lWidth Then
+        sRECT.Right = sRECT.Right - (x + Width - DDSD_BackBuffer.lWidth)
     End If
     
-    Call Engine_BltFast(X, Y, DDS_Animation(Sprite), sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+    Call Engine_BltFast(x, y, DDS_Animation(Sprite), sRECT, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     
     ' Error handler
     Exit Sub
@@ -837,7 +837,7 @@ Dim MaxFrames As Byte
         End With
     End If
 
-    Call Engine_BltFast(ConvertMapX(MapItem(itemnum).X * PIC_X), ConvertMapY(MapItem(itemnum).Y * PIC_Y), DDS_Item(PicNum), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+    Call Engine_BltFast(ConvertMapX(MapItem(itemnum).x * PIC_X), ConvertMapY(MapItem(itemnum).y * PIC_Y), DDS_Item(PicNum), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     
     ' Error handler
     Exit Sub
@@ -848,7 +848,7 @@ errorhandler:
 End Sub
 
 Public Sub ScreenshotMap()
-Dim X As Long, Y As Long, i As Long, rec As RECT
+Dim x As Long, y As Long, i As Long, rec As RECT
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -866,19 +866,19 @@ Dim X As Long, Y As Long, i As Long, rec As RECT
     Set DDS_Map = DD.CreateSurface(DDSD_Map)
     
     ' render the tiles
-    For X = 0 To Map.MaxX
-        For Y = 0 To Map.MaxY
-            With Map.Tile(X, Y)
+    For x = 0 To Map.MaxX
+        For y = 0 To Map.MaxY
+            With Map.Tile(x, y)
                 For i = MapLayer.Ground To MapLayer.Mask2
                     ' skip tile?
-                    If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).X > 0 Or .Layer(i).Y > 0) Then
+                    If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
                         ' sort out rec
-                        rec.top = .Layer(i).Y * PIC_Y
+                        rec.top = .Layer(i).y * PIC_Y
                         rec.bottom = rec.top + PIC_Y
-                        rec.Left = .Layer(i).X * PIC_X
+                        rec.Left = .Layer(i).x * PIC_X
                         rec.Right = rec.Left + PIC_X
                         ' render
-                        DDS_Map.BltFast X * PIC_X, Y * PIC_Y, DDS_Tileset(.Layer(i).Tileset), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
+                        DDS_Map.BltFast x * PIC_X, y * PIC_Y, DDS_Tileset(.Layer(i).Tileset), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
                     End If
                 Next
             End With
@@ -886,12 +886,12 @@ Dim X As Long, Y As Long, i As Long, rec As RECT
     Next
     
     ' render the resources
-    For Y = 0 To Map.MaxY
+    For y = 0 To Map.MaxY
         If NumResources > 0 Then
             If Resources_Init Then
                 If Resource_Index > 0 Then
                     For i = 1 To Resource_Index
-                        If MapResource(i).Y = Y Then
+                        If MapResource(i).y = y Then
                             Call BltMapResource(i, True)
                         End If
                     Next
@@ -901,19 +901,19 @@ Dim X As Long, Y As Long, i As Long, rec As RECT
     Next
     
     ' render the tiles
-    For X = 0 To Map.MaxX
-        For Y = 0 To Map.MaxY
-            With Map.Tile(X, Y)
+    For x = 0 To Map.MaxX
+        For y = 0 To Map.MaxY
+            With Map.Tile(x, y)
                 For i = MapLayer.Fringe To MapLayer.Fringe2
                     ' skip tile?
-                    If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).X > 0 Or .Layer(i).Y > 0) Then
+                    If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
                         ' sort out rec
-                        rec.top = .Layer(i).Y * PIC_Y
+                        rec.top = .Layer(i).y * PIC_Y
                         rec.bottom = rec.top + PIC_Y
-                        rec.Left = .Layer(i).X * PIC_X
+                        rec.Left = .Layer(i).x * PIC_X
                         rec.Right = rec.Left + PIC_X
                         ' render
-                        DDS_Map.BltFast X * PIC_X, Y * PIC_Y, DDS_Tileset(.Layer(i).Tileset), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
+                        DDS_Map.BltFast x * PIC_X, y * PIC_Y, DDS_Tileset(.Layer(i).Tileset), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
                     End If
                 Next
             End With
@@ -946,17 +946,17 @@ Dim Resource_master As Long
 Dim Resource_state As Long
 Dim Resource_sprite As Long
 Dim rec As DxVBLib.RECT
-Dim X As Long, Y As Long
+Dim x As Long, y As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' make sure it's not out of map
-    If MapResource(Resource_num).X > Map.MaxX Then Exit Sub
-    If MapResource(Resource_num).Y > Map.MaxY Then Exit Sub
+    If MapResource(Resource_num).x > Map.MaxX Then Exit Sub
+    If MapResource(Resource_num).y > Map.MaxY Then Exit Sub
     
     ' Get the Resource type
-    Resource_master = Map.Tile(MapResource(Resource_num).X, MapResource(Resource_num).Y).Data1
+    Resource_master = Map.Tile(MapResource(Resource_num).x, MapResource(Resource_num).y).Data1
     
     If Resource_master = 0 Then Exit Sub
 
@@ -989,14 +989,14 @@ Dim X As Long, Y As Long
     End With
 
     ' Set base x + y, then the offset due to size
-    X = (MapResource(Resource_num).X * PIC_X) - (DDSD_Resource(Resource_sprite).lWidth / 2) + 16
-    Y = (MapResource(Resource_num).Y * PIC_Y) - DDSD_Resource(Resource_sprite).lHeight + 32
+    x = (MapResource(Resource_num).x * PIC_X) - (DDSD_Resource(Resource_sprite).lWidth / 2) + 16
+    y = (MapResource(Resource_num).y * PIC_Y) - DDSD_Resource(Resource_sprite).lHeight + 32
     
     ' render it
     If Not screenShot Then
-        Call BltResource(Resource_sprite, X, Y, rec)
+        Call BltResource(Resource_sprite, x, y, rec)
     Else
-        Call ScreenshotResource(Resource_sprite, X, Y, rec)
+        Call ScreenshotResource(Resource_sprite, x, y, rec)
     End If
     
     ' Error handler
@@ -1008,8 +1008,8 @@ errorhandler:
 End Sub
 
 Private Sub BltResource(ByVal Resource As Long, ByVal DX As Long, dy As Long, rec As DxVBLib.RECT)
-Dim X As Long
-Dim Y As Long
+Dim x As Long
+Dim y As Long
 Dim Width As Long
 Dim Height As Long
 Dim destRECT As DxVBLib.RECT
@@ -1025,36 +1025,36 @@ Dim destRECT As DxVBLib.RECT
         Call InitDDSurf("Resources\" & Resource, DDSD_Resource(Resource), DDS_Resource(Resource))
     End If
 
-    X = ConvertMapX(DX)
-    Y = ConvertMapY(dy)
+    x = ConvertMapX(DX)
+    y = ConvertMapY(dy)
     
     Width = (rec.Right - rec.Left)
     Height = (rec.bottom - rec.top)
 
-    If Y < 0 Then
+    If y < 0 Then
         With rec
-            .top = .top - Y
+            .top = .top - y
         End With
-        Y = 0
+        y = 0
     End If
 
-    If X < 0 Then
+    If x < 0 Then
         With rec
-            .Left = .Left - X
+            .Left = .Left - x
         End With
-        X = 0
+        x = 0
     End If
 
-    If Y + Height > DDSD_BackBuffer.lHeight Then
-        rec.bottom = rec.bottom - (Y + Height - DDSD_BackBuffer.lHeight)
+    If y + Height > DDSD_BackBuffer.lHeight Then
+        rec.bottom = rec.bottom - (y + Height - DDSD_BackBuffer.lHeight)
     End If
 
-    If X + Width > DDSD_BackBuffer.lWidth Then
-        rec.Right = rec.Right - (X + Width - DDSD_BackBuffer.lWidth)
+    If x + Width > DDSD_BackBuffer.lWidth Then
+        rec.Right = rec.Right - (x + Width - DDSD_BackBuffer.lWidth)
     End If
 
     ' End clipping
-    Call Engine_BltFast(X, Y, DDS_Resource(Resource), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+    Call Engine_BltFast(x, y, DDS_Resource(Resource), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     
     ' Error handler
     Exit Sub
@@ -1064,7 +1064,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub ScreenshotResource(ByVal Resource As Long, ByVal X As Long, Y As Long, rec As DxVBLib.RECT)
+Private Sub ScreenshotResource(ByVal Resource As Long, ByVal x As Long, y As Long, rec As DxVBLib.RECT)
 Dim Width As Long
 Dim Height As Long
 Dim destRECT As DxVBLib.RECT
@@ -1083,31 +1083,31 @@ Dim destRECT As DxVBLib.RECT
     Width = (rec.Right - rec.Left)
     Height = (rec.bottom - rec.top)
 
-    If Y < 0 Then
+    If y < 0 Then
         With rec
-            .top = .top - Y
+            .top = .top - y
         End With
-        Y = 0
+        y = 0
     End If
 
-    If X < 0 Then
+    If x < 0 Then
         With rec
-            .Left = .Left - X
+            .Left = .Left - x
         End With
-        X = 0
+        x = 0
     End If
 
-    If Y + Height > DDSD_Map.lHeight Then
-        rec.bottom = rec.bottom - (Y + Height - DDSD_Map.lHeight)
+    If y + Height > DDSD_Map.lHeight Then
+        rec.bottom = rec.bottom - (y + Height - DDSD_Map.lHeight)
     End If
 
-    If X + Width > DDSD_Map.lWidth Then
-        rec.Right = rec.Right - (X + Width - DDSD_Map.lWidth)
+    If x + Width > DDSD_Map.lWidth Then
+        rec.Right = rec.Right - (x + Width - DDSD_Map.lWidth)
     End If
 
     ' End clipping
     'Call Engine_BltFast(x, y, DDS_Resource(Resource), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
-    DDS_Map.BltFast X, Y, DDS_Resource(Resource), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
+    DDS_Map.BltFast x, y, DDS_Resource(Resource), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY
     
     ' Error handler
     Exit Sub
@@ -1139,8 +1139,8 @@ Dim i As Long, npcNum As Long, partyIndex As Long
             ' alive?
             If MapNpc(i).Vital(Vitals.HP) > 0 And MapNpc(i).Vital(Vitals.HP) < Npc(npcNum).HP Then
                 ' lock to npc
-                tmpX = MapNpc(i).X * PIC_X + MapNpc(i).XOffset + 16 - (sWidth / 2)
-                tmpY = MapNpc(i).Y * PIC_Y + MapNpc(i).yOffset + 35
+                tmpX = MapNpc(i).x * PIC_X + MapNpc(i).XOffset + 16 - (sWidth / 2)
+                tmpY = MapNpc(i).y * PIC_Y + MapNpc(i).yOffset + 35
                 
                 ' calculate the width to fill
                 barWidth = ((MapNpc(i).Vital(Vitals.HP) / sWidth) / (Npc(npcNum).HP / sWidth)) * sWidth
@@ -1343,7 +1343,7 @@ errorhandler:
 End Sub
 
 Public Sub BltPlayer(ByVal Index As Long)
-Dim Anim As Byte, i As Long, X As Long, Y As Long
+Dim Anim As Byte, i As Long, x As Long, y As Long
 Dim Sprite As Long, SpriteTop As Long
 Dim rec As DxVBLib.RECT
 Dim attackspeed As Long
@@ -1422,25 +1422,25 @@ Dim attackspeed As Long
     End With
 
     ' Calculate the X
-    X = GetPlayerX(Index) * PIC_X + Player(Index).XOffset - ((DDSD_Character(Sprite).lWidth / 4 - 32) / 2)
+    x = GetPlayerX(Index) * PIC_X + Player(Index).XOffset - ((DDSD_Character(Sprite).lWidth / 4 - 32) / 2)
 
     ' Is the player's height more than 32..?
     If (DDSD_Character(Sprite).lHeight) > 32 Then
         ' Create a 32 pixel offset for larger sprites
-        Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - ((DDSD_Character(Sprite).lHeight / 4) - 32)
+        y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - ((DDSD_Character(Sprite).lHeight / 4) - 32)
     Else
         ' Proceed as normal
-        Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset
+        y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset
     End If
 
     ' render the actual sprite
-    Call BltSprite(Sprite, X, Y, rec)
+    Call BltSprite(Sprite, x, y, rec)
     
     ' check for paperdolling
     For i = 1 To UBound(PaperdollOrder)
         If GetPlayerEquipment(Index, PaperdollOrder(i)) > 0 Then
             If Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll > 0 Then
-                Call BltPaperdoll(X, Y, Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll, Anim, SpriteTop)
+                Call BltPaperdoll(x, y, Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll, Anim, SpriteTop)
             End If
         End If
     Next
@@ -1454,7 +1454,7 @@ errorhandler:
 End Sub
 
 Public Sub BltNpc(ByVal MapNpcNum As Long)
-Dim Anim As Byte, i As Long, X As Long, Y As Long, Sprite As Long, SpriteTop As Long
+Dim Anim As Byte, i As Long, x As Long, y As Long, Sprite As Long, SpriteTop As Long
 Dim rec As DxVBLib.RECT
 Dim attackspeed As Long
     
@@ -1524,18 +1524,18 @@ Dim attackspeed As Long
     End With
 
     ' Calculate the X
-    X = MapNpc(MapNpcNum).X * PIC_X + MapNpc(MapNpcNum).XOffset - ((DDSD_Character(Sprite).lWidth / 4 - 32) / 2)
+    x = MapNpc(MapNpcNum).x * PIC_X + MapNpc(MapNpcNum).XOffset - ((DDSD_Character(Sprite).lWidth / 4 - 32) / 2)
 
     ' Is the player's height more than 32..?
     If (DDSD_Character(Sprite).lHeight / 4) > 32 Then
         ' Create a 32 pixel offset for larger sprites
-        Y = MapNpc(MapNpcNum).Y * PIC_Y + MapNpc(MapNpcNum).yOffset - ((DDSD_Character(Sprite).lHeight / 4) - 32)
+        y = MapNpc(MapNpcNum).y * PIC_Y + MapNpc(MapNpcNum).yOffset - ((DDSD_Character(Sprite).lHeight / 4) - 32)
     Else
         ' Proceed as normal
-        Y = MapNpc(MapNpcNum).Y * PIC_Y + MapNpc(MapNpcNum).yOffset
+        y = MapNpc(MapNpcNum).y * PIC_Y + MapNpc(MapNpcNum).yOffset
     End If
 
-    Call BltSprite(Sprite, X, Y, rec)
+    Call BltSprite(Sprite, x, y, rec)
     
     ' Error handler
     Exit Sub
@@ -1547,7 +1547,7 @@ End Sub
 
 Public Sub BltPaperdoll(ByVal x2 As Long, ByVal y2 As Long, ByVal Sprite As Long, ByVal Anim As Long, ByVal SpriteTop As Long)
 Dim rec As DxVBLib.RECT
-Dim X As Long, Y As Long
+Dim x As Long, y As Long
 Dim Width As Long, Height As Long
     
     ' If debug mode, handle error then exit out
@@ -1567,36 +1567,36 @@ Dim Width As Long, Height As Long
     End With
     
     ' clipping
-    X = ConvertMapX(x2)
-    Y = ConvertMapY(y2)
+    x = ConvertMapX(x2)
+    y = ConvertMapY(y2)
     Width = (rec.Right - rec.Left)
     Height = (rec.bottom - rec.top)
 
     ' Clip to screen
-    If Y < 0 Then
+    If y < 0 Then
         With rec
-            .top = .top - Y
+            .top = .top - y
         End With
-        Y = 0
+        y = 0
     End If
 
-    If X < 0 Then
+    If x < 0 Then
         With rec
-            .Left = .Left - X
+            .Left = .Left - x
         End With
-        X = 0
+        x = 0
     End If
 
-    If Y + Height > DDSD_BackBuffer.lHeight Then
-        rec.bottom = rec.bottom - (Y + Height - DDSD_BackBuffer.lHeight)
+    If y + Height > DDSD_BackBuffer.lHeight Then
+        rec.bottom = rec.bottom - (y + Height - DDSD_BackBuffer.lHeight)
     End If
 
-    If X + Width > DDSD_BackBuffer.lWidth Then
-        rec.Right = rec.Right - (X + Width - DDSD_BackBuffer.lWidth)
+    If x + Width > DDSD_BackBuffer.lWidth Then
+        rec.Right = rec.Right - (x + Width - DDSD_BackBuffer.lWidth)
     End If
     ' /clipping
     
-    Call Engine_BltFast(X, Y, DDS_Paperdoll(Sprite), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+    Call Engine_BltFast(x, y, DDS_Paperdoll(Sprite), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     
     ' Error handler
     Exit Sub
@@ -1607,8 +1607,8 @@ errorhandler:
 End Sub
 
 Private Sub BltSprite(ByVal Sprite As Long, ByVal x2 As Long, y2 As Long, rec As DxVBLib.RECT)
-Dim X As Long
-Dim Y As Long
+Dim x As Long
+Dim y As Long
 Dim Width As Long
 Dim Height As Long
 
@@ -1616,36 +1616,36 @@ Dim Height As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
-    X = ConvertMapX(x2)
-    Y = ConvertMapY(y2)
+    x = ConvertMapX(x2)
+    y = ConvertMapY(y2)
     Width = (rec.Right - rec.Left)
     Height = (rec.bottom - rec.top)
 
     ' clipping
-    If Y < 0 Then
+    If y < 0 Then
         With rec
-            .top = .top - Y
+            .top = .top - y
         End With
-        Y = 0
+        y = 0
     End If
 
-    If X < 0 Then
+    If x < 0 Then
         With rec
-            .Left = .Left - X
+            .Left = .Left - x
         End With
-        X = 0
+        x = 0
     End If
 
-    If Y + Height > DDSD_BackBuffer.lHeight Then
-        rec.bottom = rec.bottom - (Y + Height - DDSD_BackBuffer.lHeight)
+    If y + Height > DDSD_BackBuffer.lHeight Then
+        rec.bottom = rec.bottom - (y + Height - DDSD_BackBuffer.lHeight)
     End If
 
-    If X + Width > DDSD_BackBuffer.lWidth Then
-        rec.Right = rec.Right - (X + Width - DDSD_BackBuffer.lWidth)
+    If x + Width > DDSD_BackBuffer.lWidth Then
+        rec.Right = rec.Right - (x + Width - DDSD_BackBuffer.lWidth)
     End If
     ' /clipping
     
-    Call Engine_BltFast(X, Y, DDS_Character(Sprite), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
+    Call Engine_BltFast(x, y, DDS_Character(Sprite), rec, DDBLTFAST_WAIT Or DDBLTFAST_SRCCOLORKEY)
     
     ' Error handler
     Exit Sub
@@ -1658,7 +1658,7 @@ End Sub
 Sub BltAnimatedInvItems()
 Dim i As Long
 Dim itemnum As Long, itempic As Long
-Dim X As Long, Y As Long
+Dim x As Long, y As Long
 Dim MaxFrames As Byte
 Dim Amount As Long
 Dim rec As RECT, rec_pos As RECT
@@ -1728,11 +1728,11 @@ Dim rec As RECT, rec_pos As RECT
 
                     ' If item is a stack - draw the amount you have
                     If GetPlayerInvItemValue(MyIndex, i) > 1 Then
-                        Y = rec_pos.top + 22
-                        X = rec_pos.Left - 4
+                        y = rec_pos.top + 22
+                        x = rec_pos.Left - 4
                         Amount = CStr(GetPlayerInvItemValue(MyIndex, i))
                         ' Draw currency but with k, m, b etc. using a convertion function
-                        DrawText frmMain.picInventory.hDC, X, Y, ConvertCurrency(Amount), QBColor(Yellow)
+                        DrawText frmMain.picInventory.hDC, x, y, ConvertCurrency(Amount), QBColor(Yellow)
 
                         ' Check if it's gold, and update the label
                         If GetPlayerInvItemNum(MyIndex, i) = 1 Then '1 = gold :P
@@ -1851,7 +1851,7 @@ errorhandler:
 End Sub
 
 Sub BltInventory()
-Dim i As Long, X As Long, Y As Long, itemnum As Long, itempic As Long
+Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
 Dim Amount As Long
 Dim rec As RECT, rec_pos As RECT
 Dim colour As Long
@@ -1876,20 +1876,20 @@ Dim tmpItem As Long, amountModifier As Long
             amountModifier = 0
             ' exit out if we're offering item in a trade.
             If InTrade > 0 Then
-                For X = 1 To MAX_INV
-                    tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(X).num)
-                    If TradeYourOffer(X).num = i Then
+                For x = 1 To MAX_INV
+                    tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(x).num)
+                    If TradeYourOffer(x).num = i Then
                         ' check if currency
                         If Not Item(tmpItem).Type = ITEM_TYPE_CURRENCY Then
                             ' normal item, exit out
                             GoTo NextLoop
                         Else
                             ' if amount = all currency, remove from inventory
-                            If TradeYourOffer(X).Value = GetPlayerInvItemValue(MyIndex, i) Then
+                            If TradeYourOffer(x).Value = GetPlayerInvItemValue(MyIndex, i) Then
                                 GoTo NextLoop
                             Else
                                 ' not all, change modifier to show change in currency count
-                                amountModifier = TradeYourOffer(X).Value
+                                amountModifier = TradeYourOffer(x).Value
                             End If
                         End If
                     End If
@@ -1924,8 +1924,8 @@ Dim tmpItem As Long, amountModifier As Long
 
                     ' If item is a stack - draw the amount you have
                     If GetPlayerInvItemValue(MyIndex, i) > 1 Then
-                        Y = rec_pos.top + 22
-                        X = rec_pos.Left - 4
+                        y = rec_pos.top + 22
+                        x = rec_pos.Left - 4
                         
                         Amount = GetPlayerInvItemValue(MyIndex, i) - amountModifier
                         
@@ -1938,7 +1938,7 @@ Dim tmpItem As Long, amountModifier As Long
                             colour = QBColor(BrightGreen)
                         End If
                         
-                        DrawText frmMain.picInventory.hDC, X, Y, Format$(ConvertCurrency(Str(Amount)), "#,###,###,###"), colour
+                        DrawText frmMain.picInventory.hDC, x, y, Format$(ConvertCurrency(Str(Amount)), "#,###,###,###"), colour
 
                         ' Check if it's gold, and update the label
                         If GetPlayerInvItemNum(MyIndex, i) = 1 Then '1 = gold :P
@@ -1964,7 +1964,7 @@ errorhandler:
 End Sub
 
 Sub BltTrade()
-Dim i As Long, X As Long, Y As Long, itemnum As Long, itempic As Long
+Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
 Dim Amount As Long
 Dim rec As RECT, rec_pos As RECT
 Dim colour As Long
@@ -2009,8 +2009,8 @@ Dim colour As Long
 
                 ' If item is a stack - draw the amount you have
                 If TradeYourOffer(i).Value > 1 Then
-                    Y = rec_pos.top + 22
-                    X = rec_pos.Left - 4
+                    y = rec_pos.top + 22
+                    x = rec_pos.Left - 4
                     
                     Amount = TradeYourOffer(i).Value
                     
@@ -2023,7 +2023,7 @@ Dim colour As Long
                         colour = QBColor(BrightGreen)
                     End If
                     
-                    DrawText frmMain.picYourTrade.hDC, X, Y, ConvertCurrency(Str(Amount)), colour
+                    DrawText frmMain.picYourTrade.hDC, x, y, ConvertCurrency(Str(Amount)), colour
                 End If
             End If
         End If
@@ -2060,8 +2060,8 @@ Dim colour As Long
 
                 ' If item is a stack - draw the amount you have
                 If TradeTheirOffer(i).Value > 1 Then
-                    Y = rec_pos.top + 22
-                    X = rec_pos.Left - 4
+                    y = rec_pos.top + 22
+                    x = rec_pos.Left - 4
                     
                     Amount = TradeTheirOffer(i).Value
                     ' Draw currency but with k, m, b etc. using a convertion function
@@ -2073,7 +2073,7 @@ Dim colour As Long
                         colour = QBColor(BrightGreen)
                     End If
                     
-                    DrawText frmMain.picTheirTrade.hDC, X, Y, ConvertCurrency(Str(Amount)), colour
+                    DrawText frmMain.picTheirTrade.hDC, x, y, ConvertCurrency(Str(Amount)), colour
                 End If
             End If
         End If
@@ -2091,7 +2091,7 @@ errorhandler:
 End Sub
 
 Sub BltPlayerSpells()
-Dim i As Long, X As Long, Y As Long, spellnum As Long, spellicon As Long
+Dim i As Long, x As Long, y As Long, spellnum As Long, spellicon As Long
 Dim Amount As String
 Dim rec As RECT, rec_pos As RECT
 Dim colour As Long
@@ -2150,7 +2150,7 @@ errorhandler:
 End Sub
 
 Sub BltShop()
-Dim i As Long, X As Long, Y As Long, itemnum As Long, itempic As Long
+Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
 Dim Amount As String
 Dim rec As RECT, rec_pos As RECT
 Dim colour As Long
@@ -2193,8 +2193,8 @@ Dim colour As Long
                 
                 ' If item is a stack - draw the amount you have
                 If Shop(InShop).TradeItem(i).ItemValue > 1 Then
-                    Y = rec_pos.top + 22
-                    X = rec_pos.Left - 4
+                    y = rec_pos.top + 22
+                    x = rec_pos.Left - 4
                     Amount = CStr(Shop(InShop).TradeItem(i).ItemValue)
                     
                     ' Draw currency but with k, m, b etc. using a convertion function
@@ -2206,7 +2206,7 @@ Dim colour As Long
                         colour = QBColor(BrightGreen)
                     End If
                     
-                    DrawText frmMain.picShopItems.hDC, X, Y, ConvertCurrency(Amount), colour
+                    DrawText frmMain.picShopItems.hDC, x, y, ConvertCurrency(Amount), colour
                 End If
             End If
         End If
@@ -2220,7 +2220,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub BltInventoryItem(ByVal X As Long, ByVal Y As Long)
+Public Sub BltInventoryItem(ByVal x As Long, ByVal y As Long)
 Dim rec As RECT, rec_pos As RECT
 Dim itemnum As Long, itempic As Long
 
@@ -2258,8 +2258,8 @@ Dim itemnum As Long, itempic As Long
         Engine_BltToDC DDS_Item(itempic), rec, rec_pos, frmMain.picTempInv, False
 
         With frmMain.picTempInv
-            .top = Y
-            .Left = X
+            .top = y
+            .Left = x
             .Visible = True
             .ZOrder (0)
         End With
@@ -2273,7 +2273,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub BltDraggedSpell(ByVal X As Long, ByVal Y As Long)
+Public Sub BltDraggedSpell(ByVal x As Long, ByVal y As Long)
 Dim rec As RECT, rec_pos As RECT
 Dim spellnum As Long, spellpic As Long
 
@@ -2308,11 +2308,11 @@ Dim spellnum As Long, spellpic As Long
             Call InitDDSurf("Spellicons\" & spellpic, DDSD_SpellIcon(spellpic), DDS_SpellIcon(spellpic))
         End If
 
-        Engine_BltToDC DDS_SpellIcon(spellpic), rec, rec_pos, frmMain.picTempSpell, False
+        'Engine_BltToDC DDS_SpellIcon(spellpic), rec, rec_pos, frmMain.picTempSpell, False
 
         With frmMain.picTempSpell
-            .top = Y
-            .Left = X
+            .top = y
+            .Left = x
             .Visible = True
             .ZOrder (0)
         End With
@@ -2405,7 +2405,7 @@ Dim spellpic As Long
             .Left = 0
             .Right = 64
         End With
-        Engine_BltToDC DDS_SpellIcon(spellpic), rec, rec_pos, frmMain.picSpellDescPic, False
+        'Engine_BltToDC DDS_SpellIcon(spellpic), rec, rec_pos, frmMain.picSpellDescPic, False
     End If
 
     ' Error handler
@@ -2910,8 +2910,8 @@ errorhandler:
 End Sub
 
 Public Sub Render_Graphics()
-Dim X As Long
-Dim Y As Long
+Dim x As Long
+Dim y As Long
 Dim i As Long
 Dim rec As DxVBLib.RECT
 Dim rec_pos As DxVBLib.RECT
@@ -2949,10 +2949,10 @@ Dim rec_pos As DxVBLib.RECT
     
     ' blit lower tiles
     If NumTileSets > 0 Then
-        For X = TileView.Left To TileView.Right
-            For Y = TileView.top To TileView.bottom
-                If IsValidMapPoint(X, Y) Then
-                    Call BltMapTile(X, Y)
+        For x = TileView.Left To TileView.Right
+            For y = TileView.top To TileView.bottom
+                If IsValidMapPoint(x, y) Then
+                    Call BltMapTile(x, y)
                 End If
             Next
         Next
@@ -2982,12 +2982,12 @@ Dim rec_pos As DxVBLib.RECT
     End If
 
     ' Y-based render. Renders Players, Npcs and Resources based on Y-axis.
-    For Y = 0 To Map.MaxY
+    For y = 0 To Map.MaxY
         If NumCharacters > 0 Then
             ' Players
             For i = 1 To Player_HighIndex
                 If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
-                    If Player(i).Y = Y Then
+                    If Player(i).y = y Then
                         Call BltPlayer(i)
                     End If
                 End If
@@ -2995,7 +2995,7 @@ Dim rec_pos As DxVBLib.RECT
         
             ' Npcs
             For i = 1 To Npc_HighIndex
-                If MapNpc(i).Y = Y Then
+                If MapNpc(i).y = y Then
                     Call BltNpc(i)
                 End If
             Next
@@ -3006,7 +3006,7 @@ Dim rec_pos As DxVBLib.RECT
             If Resources_Init Then
                 If Resource_Index > 0 Then
                     For i = 1 To Resource_Index
-                        If MapResource(i).Y = Y Then
+                        If MapResource(i).y = y Then
                             Call BltMapResource(i)
                         End If
                     Next
@@ -3026,10 +3026,10 @@ Dim rec_pos As DxVBLib.RECT
 
     ' blit out upper tiles
     If NumTileSets > 0 Then
-        For X = TileView.Left To TileView.Right
-            For Y = TileView.top To TileView.bottom
-                If IsValidMapPoint(X, Y) Then
-                    Call BltMapFringeTile(X, Y)
+        For x = TileView.Left To TileView.Right
+            For y = TileView.top To TileView.bottom
+                If IsValidMapPoint(x, y) Then
+                    Call BltMapFringeTile(x, y)
                 End If
             Next
         Next
@@ -3038,10 +3038,10 @@ Dim rec_pos As DxVBLib.RECT
     ' blit out a square at mouse cursor
     If InMapEditor Then
         If frmEditor_Map.optBlock.Value = True Then
-            For X = TileView.Left To TileView.Right
-                For Y = TileView.top To TileView.bottom
-                    If IsValidMapPoint(X, Y) Then
-                        Call BltDirection(X, Y)
+            For x = TileView.Left To TileView.Right
+                For y = TileView.top To TileView.bottom
+                    If IsValidMapPoint(x, y) Then
+                        Call BltDirection(x, y)
                     End If
                 Next
             Next
@@ -3055,9 +3055,9 @@ Dim rec_pos As DxVBLib.RECT
     ' Blt the target icon
     If myTarget > 0 Then
         If myTargetType = TARGET_TYPE_PLAYER Then
-            BltTarget (Player(myTarget).X * 32) + Player(myTarget).XOffset, (Player(myTarget).Y * 32) + Player(myTarget).yOffset
+            BltTarget (Player(myTarget).x * 32) + Player(myTarget).XOffset, (Player(myTarget).y * 32) + Player(myTarget).yOffset
         ElseIf myTargetType = TARGET_TYPE_NPC Then
-            BltTarget (MapNpc(myTarget).X * 32) + MapNpc(myTarget).XOffset, (MapNpc(myTarget).Y * 32) + MapNpc(myTarget).yOffset
+            BltTarget (MapNpc(myTarget).x * 32) + MapNpc(myTarget).XOffset, (MapNpc(myTarget).y * 32) + MapNpc(myTarget).yOffset
         End If
     End If
     
@@ -3065,11 +3065,11 @@ Dim rec_pos As DxVBLib.RECT
     For i = 1 To Player_HighIndex
         If IsPlaying(i) Then
             If Player(i).Map = Player(MyIndex).Map Then
-                If CurX = Player(i).X And CurY = Player(i).Y Then
+                If CurX = Player(i).x And CurY = Player(i).y Then
                     If myTargetType = TARGET_TYPE_PLAYER And myTarget = i Then
                         ' dont render lol
                     Else
-                        BltHover TARGET_TYPE_PLAYER, i, (Player(i).X * 32) + Player(i).XOffset, (Player(i).Y * 32) + Player(i).yOffset
+                        BltHover TARGET_TYPE_PLAYER, i, (Player(i).x * 32) + Player(i).XOffset, (Player(i).y * 32) + Player(i).yOffset
                     End If
                 End If
             End If
@@ -3077,11 +3077,11 @@ Dim rec_pos As DxVBLib.RECT
     Next
     For i = 1 To Npc_HighIndex
         If MapNpc(i).num > 0 Then
-            If CurX = MapNpc(i).X And CurY = MapNpc(i).Y Then
+            If CurX = MapNpc(i).x And CurY = MapNpc(i).y Then
                 If myTargetType = TARGET_TYPE_NPC And myTarget = i Then
                     ' dont render lol
                 Else
-                    BltHover TARGET_TYPE_NPC, i, (MapNpc(i).X * 32) + MapNpc(i).XOffset, (MapNpc(i).Y * 32) + MapNpc(i).yOffset
+                    BltHover TARGET_TYPE_NPC, i, (MapNpc(i).x * 32) + MapNpc(i).XOffset, (MapNpc(i).y * 32) + MapNpc(i).yOffset
                 End If
             End If
         End If
@@ -3240,11 +3240,11 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Function ConvertMapX(ByVal X As Long) As Long
+Public Function ConvertMapX(ByVal x As Long) As Long
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    ConvertMapX = X - (TileView.Left * PIC_X)
+    ConvertMapX = x - (TileView.Left * PIC_X)
     
     ' Error handler
     Exit Function
@@ -3254,11 +3254,11 @@ errorhandler:
     Exit Function
 End Function
 
-Public Function ConvertMapY(ByVal Y As Long) As Long
+Public Function ConvertMapY(ByVal y As Long) As Long
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    ConvertMapY = Y - (TileView.top * PIC_Y)
+    ConvertMapY = y - (TileView.top * PIC_Y)
     
     ' Error handler
     Exit Function
@@ -3268,16 +3268,16 @@ errorhandler:
     Exit Function
 End Function
 
-Public Function InViewPort(ByVal X As Long, ByVal Y As Long) As Boolean
+Public Function InViewPort(ByVal x As Long, ByVal y As Long) As Boolean
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     InViewPort = False
 
-    If X < TileView.Left Then Exit Function
-    If Y < TileView.top Then Exit Function
-    If X > TileView.Right Then Exit Function
-    If Y > TileView.bottom Then Exit Function
+    If x < TileView.Left Then Exit Function
+    If y < TileView.top Then Exit Function
+    If x > TileView.Right Then Exit Function
+    If y > TileView.bottom Then Exit Function
     InViewPort = True
     
     ' Error handler
@@ -3288,16 +3288,16 @@ errorhandler:
     Exit Function
 End Function
 
-Public Function IsValidMapPoint(ByVal X As Long, ByVal Y As Long) As Boolean
+Public Function IsValidMapPoint(ByVal x As Long, ByVal y As Long) As Boolean
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     IsValidMapPoint = False
 
-    If X < 0 Then Exit Function
-    If Y < 0 Then Exit Function
-    If X > Map.MaxX Then Exit Function
-    If Y > Map.MaxY Then Exit Function
+    If x < 0 Then Exit Function
+    If y < 0 Then Exit Function
+    If x > Map.MaxX Then Exit Function
+    If y > Map.MaxY Then Exit Function
     IsValidMapPoint = True
         
     ' Error handler
@@ -3309,8 +3309,8 @@ errorhandler:
 End Function
 
 Public Sub LoadTilesets()
-Dim X As Long
-Dim Y As Long
+Dim x As Long
+Dim y As Long
 Dim i As Long
 Dim tilesetInUse() As Boolean
     
@@ -3319,12 +3319,12 @@ Dim tilesetInUse() As Boolean
 
     ReDim tilesetInUse(0 To NumTileSets)
     
-    For X = 0 To Map.MaxX
-        For Y = 0 To Map.MaxY
+    For x = 0 To Map.MaxX
+        For y = 0 To Map.MaxY
             For i = 1 To MapLayer.Layer_Count - 1
                 ' check exists
-                If Map.Tile(X, Y).Layer(i).Tileset > 0 And Map.Tile(X, Y).Layer(i).Tileset <= NumTileSets Then
-                    tilesetInUse(Map.Tile(X, Y).Layer(i).Tileset) = True
+                If Map.Tile(x, y).Layer(i).Tileset > 0 And Map.Tile(x, y).Layer(i).Tileset <= NumTileSets Then
+                    tilesetInUse(Map.Tile(x, y).Layer(i).Tileset) = True
                 End If
             Next
         Next
@@ -3352,7 +3352,7 @@ errorhandler:
 End Sub
 
 Sub BltBank()
-Dim i As Long, X As Long, Y As Long, itemnum As Long
+Dim i As Long, x As Long, y As Long, itemnum As Long
 Dim Amount As String
 Dim sRECT As RECT, dRECT As RECT
 Dim Sprite As Long, colour As Long
@@ -3393,8 +3393,8 @@ Dim Sprite As Long, colour As Long
 
                 ' If item is a stack - draw the amount you have
                 If GetBankItemValue(i) > 1 Then
-                    Y = dRECT.top + 22
-                    X = dRECT.Left - 4
+                    y = dRECT.top + 22
+                    x = dRECT.Left - 4
                 
                     Amount = CStr(GetBankItemValue(i))
                     ' Draw currency but with k, m, b etc. using a convertion function
@@ -3405,7 +3405,7 @@ Dim Sprite As Long, colour As Long
                     ElseIf CLng(Amount) > 10000000 Then
                         colour = QBColor(BrightGreen)
                     End If
-                    DrawText frmMain.picBank.hDC, X, Y, ConvertCurrency(Amount), colour
+                    DrawText frmMain.picBank.hDC, x, y, ConvertCurrency(Amount), colour
                 End If
             End If
         Next
@@ -3421,7 +3421,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub BltBankItem(ByVal X As Long, ByVal Y As Long)
+Public Sub BltBankItem(ByVal x As Long, ByVal y As Long)
 Dim sRECT As RECT, dRECT As RECT
 Dim itemnum As Long
 Dim Sprite As Long
@@ -3457,8 +3457,8 @@ Dim Sprite As Long
     Engine_BltToDC DDS_Item(Sprite), sRECT, dRECT, frmMain.picTempBank
     
     With frmMain.picTempBank
-        .top = Y
-        .Left = X
+        .top = y
+        .Left = x
         .Visible = True
         .ZOrder (0)
     End With
