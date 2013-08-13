@@ -314,17 +314,17 @@ Sub RenderBlood(ByVal Index As Long)
     With Blood(Index)
         ' Before we continue, we may want to see if the Blood Decal is still "valid".
         ' If not, we just exit the sub and continue on to the next one.
-        If .Timer + 20000 < GetTickCount Then Exit Sub
+        If .Timer + 60000 < GetTickCount Then Exit Sub
         
             ' Right, a little addition of my own. The longer blood's been on the map the less visible it will become.
-            ' It will fade a bit every two seconds. It's nothing fancy but I prefer it this way. :)
-            If .LastTimer + 2000 < GetTickCount Then
-                .Alpha = .Alpha - 25
-                .LastTimer = .LastTimer + 2000
+            ' It will fade a bit every 1.5 seconds. It's nothing fancy but I prefer it this way. :)
+            If .LastTimer + 1500 < GetTickCount Then
+                .Alpha = .Alpha - 7
+                .LastTimer = .LastTimer + 1500
             End If
             
             ' Now that we've got all that sorted, let's get to rendering this bugger!
-            Call RenderGraphic(Tex_Blood, ConvertMapX(.x * PIC_X), ConvertMapY(.y * PIC_Y), PIC_X, PIC_Y, 0, 0, (.Sprite - 1) * PIC_X, 0, 0, 0, 0, .Alpha)
+            Call RenderGraphic(Tex_Blood, ConvertMapX(.x * PIC_X), ConvertMapY(.y * PIC_Y), PIC_X, PIC_Y, 0, 0, (.Sprite - 1) * PIC_X, 0, 255, 255, 255, .Alpha)
    
     End With
 ' Do not put any code beyond this line, this is the error handler.
