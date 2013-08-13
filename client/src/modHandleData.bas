@@ -1936,7 +1936,7 @@ Dim x As Long, y As Long, Sprite As Long, i As Long
         .Sprite = Sprite
         .Timer = GetTickCount
         .Alpha = 255
-        .LastTimer = GetTickCount + 2000
+        .LastTimer = GetTickCount + 1500
     End With
     
     ' Error handler

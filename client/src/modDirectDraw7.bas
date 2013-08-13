@@ -346,13 +346,13 @@ End Sub
 ' **************
 ' ** Blitting **
 ' **************
-Public Sub Engine_BltFast(ByVal DX As Long, ByVal dy As Long, ByRef ddS As DirectDrawSurface7, srcRECT As RECT, trans As CONST_DDBLTFASTFLAGS)
+Public Sub Engine_BltFast(ByVal DX As Long, ByVal DY As Long, ByRef ddS As DirectDrawSurface7, srcRECT As RECT, trans As CONST_DDBLTFASTFLAGS)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
 
     If Not ddS Is Nothing Then
-        Call DDS_BackBuffer.BltFast(DX, dy, ddS, srcRECT, trans)
+        Call DDS_BackBuffer.BltFast(DX, DY, ddS, srcRECT, trans)
     End If
 
     ' Error handler
@@ -954,28 +954,32 @@ Dim x As Long, y As Long
     ' make sure it's not out of map
     If MapResource(Resource_num).x > Map.MaxX Then Exit Sub
     If MapResource(Resource_num).y > Map.MaxY Then Exit Sub
-    
-    ' Get the Resource type
+        
+    ' Get the Original Resource.
     Resource_master = Map.Tile(MapResource(Resource_num).x, MapResource(Resource_num).y).Data1
     
-    If Resource_master = 0 Then Exit Sub
-
+    ' Check if it's a valid resource, if it is not then we skip rendering it and carry on.
+    ' Same thing with the image.
+    If Resource_master < 0 Or Resource_master > MAX_RESOURCES Then Exit Sub
     If Resource(Resource_master).ResourceImage = 0 Then Exit Sub
-    ' Get the Resource state
-    Resource_state = MapResource(Resource_num).ResourceState
-
-    If Resource_state = 0 Then ' normal
-        Resource_sprite = Resource(Resource_master).ResourceImage
-    ElseIf Resource_state = 1 Then ' used
-        Resource_sprite = Resource(Resource_master).ExhaustedImage
-    End If
     
-    ' cut down everything if we're editing
+    ' Get the Resource state (e.g. Full or Empty)
+    Resource_state = MapResource(Resource_num).ResourceState
+    
+    ' If we're in the map editor we're reverting all Resources to their Empty state to make it easier to see the entire map.
+    ' If this is now the case however, we'll need to use the image that represents the current state of it.
     If InMapEditor Then
         Resource_sprite = Resource(Resource_master).ExhaustedImage
+    Else
+        If Resource_state = 0 Then ' Full
+            Resource_sprite = Resource(Resource_master).ResourceImage
+        ElseIf Resource_state = 1 Then ' Empty
+            Resource_sprite = Resource(Resource_master).ExhaustedImage
+        End If
     End If
-
-    ' Load early
+    
+    ' Let's check if the Resource is loaded or not, if it isn't make sure we load it to prevent issues from popping up.
+    ' After all we need to know the Width and Height of the texture.
     If DDS_Resource(Resource_sprite) Is Nothing Then
         Call InitDDSurf("Resources\" & Resource_sprite, DDSD_Resource(Resource_sprite), DDS_Resource(Resource_sprite))
     End If
@@ -1007,7 +1011,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub BltResource(ByVal Resource As Long, ByVal DX As Long, dy As Long, rec As DxVBLib.RECT)
+Private Sub BltResource(ByVal Resource As Long, ByVal DX As Long, DY As Long, rec As DxVBLib.RECT)
 Dim x As Long
 Dim y As Long
 Dim Width As Long
@@ -1026,7 +1030,7 @@ Dim destRECT As DxVBLib.RECT
     End If
 
     x = ConvertMapX(DX)
-    y = ConvertMapY(dy)
+    y = ConvertMapY(DY)
     
     Width = (rec.Right - rec.Left)
     Height = (rec.bottom - rec.top)

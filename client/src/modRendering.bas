@@ -73,11 +73,19 @@ Dim x As Long, y As Long, i As Long
                 End If
             Next
             
-            
             ' Non-Player Characters
             For i = 1 To Npc_HighIndex
                 If MapNpc(i).y = y Then
                     Call RenderNPC(i)
+                End If
+            Next
+        End If
+        
+        ' Time to start cracking on rendering Resources!
+        If NumResources > 0 And Resources_Init And Resource_Index > 0 Then
+            For i = 1 To Resource_Index
+                If MapResource(i).y = y Then
+                    Call RenderMapResource(i)
                 End If
             Next
         End If
@@ -564,6 +572,88 @@ Dim attackspeed As Long
     Exit Sub
 errorhandler:
     HandleError "RenderNpc", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub RenderMapResource(ByVal Resource_num As Long)
+Dim Resource_master As Long
+Dim Resource_state As Long
+Dim Resource_sprite As Long
+Dim x As Long, y As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' make sure it's not out of map
+    If MapResource(Resource_num).x > Map.MaxX Then Exit Sub
+    If MapResource(Resource_num).y > Map.MaxY Then Exit Sub
+        
+    ' Get the Original Resource.
+    Resource_master = Map.Tile(MapResource(Resource_num).x, MapResource(Resource_num).y).Data1
+    
+    ' Check if it's a valid resource, if it is not then we skip rendering it and carry on.
+    ' Same thing with the image.
+    If Resource_master < 1 Or Resource_master > MAX_RESOURCES Then Exit Sub
+    If Resource(Resource_master).ResourceImage = 0 Then Exit Sub
+    
+    ' Get the Resource state (e.g. Full or Empty)
+    Resource_state = MapResource(Resource_num).ResourceState
+    
+    ' If we're in the map editor we're reverting all Resources to their Empty state to make it easier to see the entire map.
+    ' If this is now the case however, we'll need to use the image that represents the current state of it.
+    If InMapEditor Then
+        Resource_sprite = Resource(Resource_master).ExhaustedImage
+    Else
+        If Resource_state = 0 Then ' Full
+            Resource_sprite = Resource(Resource_master).ResourceImage
+        ElseIf Resource_state = 1 Then ' Empty
+            Resource_sprite = Resource(Resource_master).ExhaustedImage
+        End If
+    End If
+    
+    ' Let's check if the Resource is loaded or not, if it isn't make sure we load it to prevent issues from popping up.
+    ' After all we need to know the Width and Height of the texture.
+    If D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Loaded = False Then
+        LoadTexture Tex_Resource(Resource_sprite)
+    End If
+
+    ' Set base x + y, then the offset due to size
+    x = (MapResource(Resource_num).x * PIC_X) - (D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Width / 2) + 16
+    y = (MapResource(Resource_num).y * PIC_Y) - D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Height + 32
+    
+    ' render it
+    Call RenderResource(Resource_sprite, x, y, D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Width, D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Height)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderMapResource", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub RenderResource(ByVal Resource As Long, ByVal DX As Long, ByVal DY As Long, ByVal Width As Long, ByVal Height As Long)
+Dim x As Long
+Dim y As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Check if the resource is a valid number. If not, exit out.
+    If Resource < 1 Or Resource > NumResources Then Exit Sub
+    
+    ' Convert the provided values to something we can use on the map.
+    x = ConvertMapX(DX)
+    y = ConvertMapY(DY)
+    
+    ' Render the actual resource on the map!
+    Call RenderGraphic(Tex_Resource(Resource), x, y, Width, Height, 0, 0, 0, 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderResource", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
