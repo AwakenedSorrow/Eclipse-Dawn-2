@@ -53,7 +53,7 @@ Public Sub DrawGDI()
 End Sub
 
 Public Sub DrawHotbar()
-Dim i As Long, num As Long, n As Long, Text As String
+Dim i As Long, num As Long, n As Long, text As String
 Dim IconTop As Long, IconLeft As Long, Top As Long, Left As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
         
@@ -87,7 +87,7 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
                     If Item(num).Pic >= 1 And Item(num).Pic <= NumItems Then
                         ' Everything checks out, we can render it!
                         ' Of course we need to know what item image to render there as well.
-                        IconLeft = D3DT_TEXTURE(Tex_Item(Item(num).Pic)).Width / 2
+                        IconLeft = ItemAnimFrame(num) * 32
                         
                         ' Now let's actually render it. :)
                         Call RenderGraphic(Tex_Item(Item(num).Pic), Left, Top, PIC_X, PIC_Y, 0, 0, IconLeft, IconTop)
@@ -118,8 +118,8 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
         End Select
         
         ' Render the hotbar letters on top of the icons.
-        Text = "F" & Str(i)
-        Call RenderText(MainFont, Text, Left + 2, Top + 16, White)
+        text = "F" & Str(i)
+        Call RenderText(MainFont, text, Left + 2, Top + 16, White)
     Next
     
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
@@ -235,7 +235,15 @@ Dim AnimLeft As Long
     ' If we're not in-game we should probably not be here to begin with.
     ' So let's exit out before things go awry!
     If Not InGame Then Exit Sub
-
+    
+    ' Reset the gold label every ~0.5 seconds.
+    ' Not doing this every frame as it spazzes out pretty badly if you do.
+    ' But not doing this means the counter never resets to 0 if you drop or lose all your gold.
+    If GoldTimer + 500 <= GetTickCount Then
+        frmMain.lblGold.Caption = "0g"
+        GoldTimer = GetTickCount + 500
+    End If
+    
     ' Let's open clear ourselves a nice clean slate to render on shall we?
     Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
     Call D3DDevice8.BeginScene

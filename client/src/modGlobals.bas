@@ -225,3 +225,6 @@ Public Action_HighIndex As Long
 ' Item Animation
 Public ItemAnimFrame(1 To MAX_ITEMS)
 Public ItemAnimTimer As Long
+
+' Gold Global
+Public GoldTimer As Long

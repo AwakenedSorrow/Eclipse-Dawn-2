@@ -400,6 +400,7 @@ Dim i As Long
         NumAnimations = NumAnimations + 1
     Loop
     NumAnimations = NumAnimations - 1
+    ReDim AnimationTimer(1 To NumAnimations)
     
     ' Cache the SpellIcons
     NumSpellIcons = 1
