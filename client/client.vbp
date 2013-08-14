@@ -31,6 +31,7 @@ Module=modSound; Src\modSound.bas
 Module=modDirectX8; src\DirectX8.bas
 Module=modText; src\modTextD3D8.bas
 Module=modRendering; src\modRendering.bas
+Module=modGUI; src\modGUI.bas
 IconForm="frmMain"
 Startup="Sub Main"
 HelpFile=""

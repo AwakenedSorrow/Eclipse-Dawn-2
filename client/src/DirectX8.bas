@@ -61,7 +61,7 @@ Public Tex_DirBlock As Long
 Public Tex_Outline As Long
 Public Tex_Bars As Long
 Public Tex_Target As Long
-Public Tex_Hotbar As Long
+Public Tex_GUI() As Long
 
 ' Texture counts
 Public NumTileSets As Long
@@ -438,8 +438,26 @@ Dim i As Long
     Tex_Target = SetTexturePath(App.Path & GFX_PATH & "target" & GFX_EXT)
     Call LoadTexture(Tex_Target)
     
-    Tex_Hotbar = SetTexturePath(App.Path & GFX_PATH & "\gui\main\hotbar.jpg")
-    Call LoadTexture(Tex_Hotbar)
+    ' Load all the UI elements.
+    ' Some of this is for the future, but I reckon some of it will be useful already.
+    ReDim Tex_GUI(0 To UIElements.UIElements_Count - 1)
+    Tex_GUI(MainE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\main.jpg")
+    Tex_GUI(HotBarE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\hotbar.jpg")
+    Tex_GUI(InventoryE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\inventory.jpg")
+    Tex_GUI(CharacterE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\character.jpg")
+    Tex_GUI(SpellsE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\skills.jpg")
+    Tex_GUI(OptionsE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\options.jpg")
+    Tex_GUI(PartyE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\party.jpg")
+    Tex_GUI(ItemDescE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\description_item.jpg")
+    Tex_GUI(SpellDescE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\description_spell.jpg")
+    Tex_GUI(DragBoxE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\dragbox.jpg")
+    Tex_GUI(BankE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\bank.jpg")
+    Tex_GUI(ShopE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\shop.jpg")
+    Tex_GUI(TradeE) = SetTexturePath(App.Path & GFX_PATH & "\gui\main\trade.jpg")
+    
+    For i = 1 To UIElements.UIElements_Count
+        Call LoadTexture(i)
+    Next
     
 ' Do not put any code beyond this line, this is the error handler.
     Exit Sub

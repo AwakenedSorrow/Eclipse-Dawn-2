@@ -130,10 +130,6 @@ Public ControlDown As Boolean
 Public SOffsetX As Long
 Public SOffsetY As Long
 
-' Map animation #, used to keep track of what map animation is currently on
-Public MapAnim As Byte
-Public MapAnimTimer As Long
-
 ' Used to freeze controls when getting a new map
 Public GettingMap As Boolean
 
@@ -226,5 +222,6 @@ Public Player_HighIndex As Long
 Public Npc_HighIndex As Long
 Public Action_HighIndex As Long
 
-' automation problems
-Public ReInitSurfaces As Boolean
+' Item Animation
+Public ItemAnimFrame(1 To MAX_ITEMS)
+Public ItemAnimTimer As Long

@@ -73,7 +73,7 @@ Public Const MAP_EXT As String = ".map"
 
 ' Gfx Path and variables
 Public Const GFX_PATH As String = "\Data Files\graphics\"
-Public Const GFX_EXT As String = ".bmp"
+Public Const GFX_EXT As String = ".png"
 
 ' Key constants
 Public Const VK_UP As Long = &H26

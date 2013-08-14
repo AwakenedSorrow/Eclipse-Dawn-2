@@ -11,6 +11,7 @@ Dim WalkTimer As Long
 Dim tmr25 As Long
 Dim tmr100 As Long
 Dim tmr10000 As Long
+Dim MaxFrames As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -65,18 +66,28 @@ Dim tmr10000 As Long
                 Call CheckAttack   ' Check to see if player is trying to attack
             End If
 
-            ' Change map animation every 250 milliseconds
-            If MapAnimTimer < Tick Then
-                MapAnim = Not MapAnim
-                MapAnimTimer = Tick + 250
-            End If
-            
-            ' Update inv animation
-            If NumItems > 0 Then
-                If tmr100 < Tick Then
-                    BltAnimatedInvItems
-                    tmr100 = Tick + 100
-                End If
+            ' We're using this to change and swap animation frames for items now.
+            ' Apparently that system never worked properly, if at all. Wonder what happened to it?
+            If ItemAnimTimer < Tick Then
+                
+                For i = 1 To MAX_ITEMS
+                    ' See if the item has a valid image.
+                    If Item(i).Pic >= 1 And Item(i).Pic <= NumItems Then
+                        ' See if the item image is large enough to be animated.
+                        If D3DT_TEXTURE(Tex_Item(Item(i).Pic)).Width > 32 Then
+                            ' Work out how many frames there are.
+                            MaxFrames = D3DT_TEXTURE(Tex_Item(Item(i).Pic)).Width / 32
+                            ' Swap to the next frame.
+                            If ItemAnimFrame(i) < MaxFrames Then
+                                ItemAnimFrame(i) = ItemAnimFrame(i) + 1
+                            Else
+                                ItemAnimFrame(i) = 0
+                            End If
+                        End If
+                    End If
+                Next
+                
+                ItemAnimTimer = Tick + 250
             End If
             
             For i = 1 To MAX_BYTE
@@ -848,17 +859,17 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub DevMsg(ByVal text As String, ByVal color As Byte)
+Public Sub DevMsg(ByVal Text As String, ByVal color As Byte)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     If InGame Then
         If GetPlayerAccess(MyIndex) > ADMIN_DEVELOPER Then
-            Call AddText(text, color)
+            Call AddText(Text, color)
         End If
     End If
 
-    Debug.Print text
+    Debug.Print Text
     
     ' Error handler
     Exit Sub
@@ -966,12 +977,6 @@ Dim i As Long
         .picSpellDesc.Top = y
         .picSpellDesc.Left = x
         .picSpellDesc.Visible = True
-        
-        If LastSpellDesc = spellnum Then Exit Sub
-        
-        .lblSpellName.Caption = Trim$(Spell(spellnum).Name)
-        .lblSpellDesc.Caption = Trim$(Spell(spellnum).Desc)
-        BltSpellDesc spellnum
     End With
     
     ' Error handler
@@ -984,19 +989,11 @@ End Sub
 
 Public Sub UpdateDescWindow(ByVal itemnum As Long, ByVal x As Long, ByVal y As Long)
 Dim i As Long
-Dim FirstLetter As String * 1
+Dim Firstletter As String * 1
 Dim Name As String
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
-    
-    FirstLetter = LCase$(Left$(Trim$(Item(itemnum).Name), 1))
-   
-    If FirstLetter = "$" Then
-        Name = (Mid$(Trim$(Item(itemnum).Name), 2, Len(Trim$(Item(itemnum).Name)) - 1))
-    Else
-        Name = Trim$(Item(itemnum).Name)
-    End If
     
     ' check for off-screen
     If y + frmMain.picItemDesc.Height > frmMain.ScaleHeight Then
@@ -1010,29 +1007,6 @@ Dim Name As String
         .picItemDesc.Top = y
         .picItemDesc.Left = x
         .picItemDesc.Visible = True
-
-        If LastItemDesc = itemnum Then Exit Sub ' exit out after setting x + y so we don't reset values
-
-        ' set the name
-        Select Case Item(itemnum).Rarity
-            Case 0 ' white
-                .lblItemName.ForeColor = RGB(255, 255, 255)
-            Case 1 ' green
-                .lblItemName.ForeColor = RGB(117, 198, 92)
-            Case 2 ' blue
-                .lblItemName.ForeColor = RGB(103, 140, 224)
-            Case 3 ' maroon
-                .lblItemName.ForeColor = RGB(205, 34, 0)
-            Case 4 ' purple
-                .lblItemName.ForeColor = RGB(193, 104, 204)
-            Case 5 ' orange
-                .lblItemName.ForeColor = RGB(217, 150, 64)
-        End Select
-        
-        ' set captions
-        .lblItemName.Caption = Name
-        .lblItemDesc.Caption = Trim$(Item(itemnum).Desc)
-        
     End With
 
     ' Error handler

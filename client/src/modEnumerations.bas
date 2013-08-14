@@ -230,3 +230,21 @@ Public Enum SoundEntity
     ' Make sure SoundEntity_Count is below everything else
     SoundEntity_Count
 End Enum
+
+Public Enum UIElements
+    MainE = 1
+    DragBoxE
+    BankE
+    ShopE
+    TradeE
+    HotBarE
+    InventoryE
+    CharacterE
+    SpellsE
+    OptionsE
+    PartyE
+    ItemDescE
+    SpellDescE
+    ' Make sure UIElements_Count is below everything else
+    UIElements_Count
+End Enum

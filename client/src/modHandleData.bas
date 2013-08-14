@@ -181,12 +181,12 @@ Dim Buffer As clsBuffer
     
     ' save options
     Options.SavePass = frmMenu.chkPass.Value
-    Options.Username = Trim$(frmMenu.txtLUser.text)
+    Options.Username = Trim$(frmMenu.txtLUser.Text)
 
     If frmMenu.chkPass.Value = 0 Then
         Options.Password = vbNullString
     Else
-        Options.Password = Trim$(frmMenu.txtLPass.text)
+        Options.Password = Trim$(frmMenu.txtLPass.Text)
     End If
     
     SaveOptions
@@ -383,7 +383,7 @@ Dim Buffer As clsBuffer
     
     ' changes to inventory, need to clear any drop menu
     frmMain.picCurrency.Visible = False
-    frmMain.txtCurrency.text = vbNullString
+    frmMain.txtCurrency.Text = vbNullString
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
 
@@ -411,7 +411,7 @@ Dim Buffer As clsBuffer
     Call SetPlayerInvItemValue(MyIndex, n, Buffer.ReadLong) 'CLng(Parse(3)))
     ' changes, clear drop menu
     frmMain.picCurrency.Visible = False
-    frmMain.txtCurrency.text = vbNullString
+    frmMain.txtCurrency.Text = vbNullString
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
@@ -440,11 +440,9 @@ Dim Buffer As clsBuffer
     
     ' changes to inventory, need to clear any drop menu
     frmMain.picCurrency.Visible = False
-    frmMain.txtCurrency.text = vbNullString
+    frmMain.txtCurrency.Text = vbNullString
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
-    
-    'BltEquipment
     
     Set Buffer = Nothing
     
@@ -547,7 +545,6 @@ Dim i As Long
     
     For i = 1 To Stats.Stat_Count - 1
         SetPlayerStat Index, i, Buffer.ReadLong
-        frmMain.lblCharStat(i).Caption = GetPlayerStat(MyIndex, i)
     Next
     
     ' Error handler
@@ -616,15 +613,7 @@ Dim Buffer As clsBuffer
         DirLeft = False
         DirRight = False
         
-        ' Set the character windows
-        frmMain.lblCharName = GetPlayerName(MyIndex) & " - Level " & GetPlayerLevel(MyIndex)
-        
-        For x = 1 To Stats.Stat_Count - 1
-            frmMain.lblCharStat(x).Caption = GetPlayerStat(MyIndex, x)
-        Next
-        
         ' Set training label visiblity depending on points
-        frmMain.lblPoints.Caption = GetPlayerPOINTS(MyIndex)
         If GetPlayerPOINTS(MyIndex) > 0 Then
             For x = 1 To Stats.Stat_Count - 1
                 If GetPlayerStat(Index, x) < 255 Then
@@ -638,8 +627,6 @@ Dim Buffer As clsBuffer
                 frmMain.lblTrainStat(x).Visible = False
             Next
         End If
-        
-        BltFace
     End If
 
     ' Make sure they aren't walking
@@ -1137,9 +1124,6 @@ Dim MusicFile As String
         ClearActionMsg (i)
     Next i
     Action_HighIndex = 1
-    
-    ' load tilesets we need
-    LoadTilesets
             
     MusicFile = Trim$(Map.Music)
     If Not MusicFile = "None." Then
@@ -1385,7 +1369,7 @@ Dim ItemData() As Byte
     Set Buffer = Nothing
     ' changes to inventory, need to clear any drop menu
     frmMain.picCurrency.Visible = False
-    frmMain.txtCurrency.text = vbNullString
+    frmMain.txtCurrency.Text = vbNullString
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
@@ -2046,7 +2030,7 @@ Dim Buffer As clsBuffer
 Dim Access As Long
 Dim Name As String
 Dim message As String
-Dim colour As Long
+Dim Colour As Long
 Dim Header As String
 Dim PK As Long
 Dim saycolour As Long
@@ -2068,26 +2052,26 @@ Dim saycolour As Long
     If PK = NO Then
         Select Case Access
             Case 0
-                colour = RGB(255, 96, 0)
+                Colour = RGB(255, 96, 0)
             Case 1
-                colour = QBColor(DarkGrey)
+                Colour = QBColor(DarkGrey)
             Case 2
-                colour = QBColor(Cyan)
+                Colour = QBColor(Cyan)
             Case 3
-                colour = QBColor(BrightGreen)
+                Colour = QBColor(BrightGreen)
             Case 4
-                colour = QBColor(Yellow)
+                Colour = QBColor(Yellow)
         End Select
     Else
-        colour = QBColor(BrightRed)
+        Colour = QBColor(BrightRed)
     End If
     
-    frmMain.txtChat.SelStart = Len(frmMain.txtChat.text)
-    frmMain.txtChat.SelColor = colour
+    frmMain.txtChat.SelStart = Len(frmMain.txtChat.Text)
+    frmMain.txtChat.SelColor = Colour
     frmMain.txtChat.SelText = vbNewLine & Header & Name & ": "
     frmMain.txtChat.SelColor = saycolour
     frmMain.txtChat.SelText = message
-    frmMain.txtChat.SelStart = Len(frmMain.txtChat.text) - 1
+    frmMain.txtChat.SelStart = Len(frmMain.txtChat.Text) - 1
         
     Set Buffer = Nothing
     

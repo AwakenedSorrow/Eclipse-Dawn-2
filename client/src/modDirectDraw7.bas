@@ -1856,7 +1856,7 @@ Sub BltInventory()
 Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
 Dim Amount As Long
 Dim rec As RECT, rec_pos As RECT
-Dim colour As Long
+Dim Colour As Long
 Dim tmpItem As Long, amountModifier As Long
 
     ' If debug mode, handle error then exit out
@@ -1931,14 +1931,14 @@ Dim tmpItem As Long, amountModifier As Long
                         
                         ' Draw currency but with k, m, b etc. using a convertion function
                         If Amount < 1000000 Then
-                            colour = QBColor(White)
+                            Colour = QBColor(White)
                         ElseIf Amount > 1000000 And Amount < 10000000 Then
-                            colour = QBColor(Yellow)
+                            Colour = QBColor(Yellow)
                         ElseIf Amount > 10000000 Then
-                            colour = QBColor(BrightGreen)
+                            Colour = QBColor(BrightGreen)
                         End If
                         
-                        DrawText frmMain.picInventory.hDC, x, y, Format$(ConvertCurrency(Str(Amount)), "#,###,###,###"), colour
+                        DrawText frmMain.picInventory.hDC, x, y, Format$(ConvertCurrency(Str(Amount)), "#,###,###,###"), Colour
 
                         ' Check if it's gold, and update the label
                         If GetPlayerInvItemNum(MyIndex, i) = 1 Then '1 = gold :P
@@ -1953,7 +1953,6 @@ NextLoop:
     
     frmMain.picInventory.Refresh
     'update animated items
-    BltAnimatedInvItems
     
     ' Error handler
     Exit Sub
@@ -1967,7 +1966,7 @@ Sub BltTrade()
 Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
 Dim Amount As Long
 Dim rec As RECT, rec_pos As RECT
-Dim colour As Long
+Dim Colour As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -2016,14 +2015,14 @@ Dim colour As Long
                     
                     ' Draw currency but with k, m, b etc. using a convertion function
                     If Amount < 1000000 Then
-                        colour = QBColor(White)
+                        Colour = QBColor(White)
                     ElseIf Amount > 1000000 And Amount < 10000000 Then
-                        colour = QBColor(Yellow)
+                        Colour = QBColor(Yellow)
                     ElseIf Amount > 10000000 Then
-                        colour = QBColor(BrightGreen)
+                        Colour = QBColor(BrightGreen)
                     End If
                     
-                    DrawText frmMain.picYourTrade.hDC, x, y, ConvertCurrency(Str(Amount)), colour
+                    DrawText frmMain.picYourTrade.hDC, x, y, ConvertCurrency(Str(Amount)), Colour
                 End If
             End If
         End If
@@ -2066,14 +2065,14 @@ Dim colour As Long
                     Amount = TradeTheirOffer(i).Value
                     ' Draw currency but with k, m, b etc. using a convertion function
                     If Amount < 1000000 Then
-                        colour = QBColor(White)
+                        Colour = QBColor(White)
                     ElseIf Amount > 1000000 And Amount < 10000000 Then
-                        colour = QBColor(Yellow)
+                        Colour = QBColor(Yellow)
                     ElseIf Amount > 10000000 Then
-                        colour = QBColor(BrightGreen)
+                        Colour = QBColor(BrightGreen)
                     End If
                     
-                    DrawText frmMain.picTheirTrade.hDC, x, y, ConvertCurrency(Str(Amount)), colour
+                    DrawText frmMain.picTheirTrade.hDC, x, y, ConvertCurrency(Str(Amount)), Colour
                 End If
             End If
         End If
@@ -2094,7 +2093,7 @@ Sub BltPlayerSpells()
 Dim i As Long, x As Long, y As Long, spellnum As Long, spellicon As Long
 Dim Amount As String
 Dim rec As RECT, rec_pos As RECT
-Dim colour As Long
+Dim Colour As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -2153,7 +2152,7 @@ Sub BltShop()
 Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
 Dim Amount As String
 Dim rec As RECT, rec_pos As RECT
-Dim colour As Long
+Dim Colour As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -2199,14 +2198,14 @@ Dim colour As Long
                     
                     ' Draw currency but with k, m, b etc. using a convertion function
                     If CLng(Amount) < 1000000 Then
-                        colour = QBColor(White)
+                        Colour = QBColor(White)
                     ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
-                        colour = QBColor(Yellow)
+                        Colour = QBColor(Yellow)
                     ElseIf CLng(Amount) > 10000000 Then
-                        colour = QBColor(BrightGreen)
+                        Colour = QBColor(BrightGreen)
                     End If
                     
-                    DrawText frmMain.picShopItems.hDC, x, y, ConvertCurrency(Amount), colour
+                    DrawText frmMain.picShopItems.hDC, x, y, ConvertCurrency(Amount), Colour
                 End If
             End If
         End If
@@ -3240,47 +3239,6 @@ errorhandler:
     Exit Sub
 End Sub
 
-
-Public Function InViewPort(ByVal x As Long, ByVal y As Long) As Boolean
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-
-    InViewPort = False
-
-    If x < TileView.Left Then Exit Function
-    If y < TileView.Top Then Exit Function
-    If x > TileView.Right Then Exit Function
-    If y > TileView.bottom Then Exit Function
-    InViewPort = True
-    
-    ' Error handler
-    Exit Function
-errorhandler:
-    HandleError "InViewPort", "modDirectDraw7", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Function
-End Function
-
-Public Function IsValidMapPoint(ByVal x As Long, ByVal y As Long) As Boolean
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-
-    IsValidMapPoint = False
-
-    If x < 0 Then Exit Function
-    If y < 0 Then Exit Function
-    If x > Map.MaxX Then Exit Function
-    If y > Map.MaxY Then Exit Function
-    IsValidMapPoint = True
-        
-    ' Error handler
-    Exit Function
-errorhandler:
-    HandleError "IsValidMapPoint", "modDirectDraw7", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Function
-End Function
-
 Public Sub LoadTilesets()
 Dim x As Long
 Dim y As Long
@@ -3328,7 +3286,7 @@ Sub BltBank()
 Dim i As Long, x As Long, y As Long, itemnum As Long
 Dim Amount As String
 Dim sRECT As RECT, dRECT As RECT
-Dim Sprite As Long, colour As Long
+Dim Sprite As Long, Colour As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -3372,13 +3330,13 @@ Dim Sprite As Long, colour As Long
                     Amount = CStr(GetBankItemValue(i))
                     ' Draw currency but with k, m, b etc. using a convertion function
                     If CLng(Amount) < 1000000 Then
-                        colour = QBColor(White)
+                        Colour = QBColor(White)
                     ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
-                        colour = QBColor(Yellow)
+                        Colour = QBColor(Yellow)
                     ElseIf CLng(Amount) > 10000000 Then
-                        colour = QBColor(BrightGreen)
+                        Colour = QBColor(BrightGreen)
                     End If
-                    DrawText frmMain.picBank.hDC, x, y, ConvertCurrency(Amount), colour
+                    DrawText frmMain.picBank.hDC, x, y, ConvertCurrency(Amount), Colour
                 End If
             End If
         Next

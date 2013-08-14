@@ -52,7 +52,7 @@ End Type
 
 Public MainFont As CustomFont
 
-Public Sub RenderText(ByRef UseFont As CustomFont, text As String, x As Long, y As Long, color As Long, Optional Alpha As Byte = 255)
+Public Sub RenderText(ByRef UseFont As CustomFont, Text As String, x As Long, y As Long, color As Long, Optional Alpha As Byte = 255)
 Dim TempVA(0 To 3) As TLVERTEX
 Dim TempStr() As String
 Dim Count As Integer
@@ -70,10 +70,10 @@ Dim yOffset As Single
     color = DX8Colour(color, Alpha)
 
     ' Check for valid text to render
-    If LenB(text) = 0 Then Exit Sub
+    If LenB(Text) = 0 Then Exit Sub
     
     ' Get the text into arrays (split by vbCrLf)
-    TempStr = Split(text, vbCrLf)
+    TempStr = Split(Text, vbCrLf)
     
     ' Set the temp color (or else the first character has no color)
     TempColor = color
@@ -263,15 +263,15 @@ Public Function DX8Colour(ByVal ColourNum As Long, ByVal Alpha As Long) As Long
     End Select
 End Function
 
-Public Function GetTextWidth(ByRef UseFont As CustomFont, ByVal text As String) As Integer
+Public Function GetTextWidth(ByRef UseFont As CustomFont, ByVal Text As String) As Integer
 Dim i As Long
 
     ' Make sure we have text
-    If LenB(text) = 0 Then Exit Function
+    If LenB(Text) = 0 Then Exit Function
     
     ' Loop through the text
-    For i = 1 To Len(text)
-        GetTextWidth = GetTextWidth + UseFont.HeaderInfo.CharWidth(Asc(Mid$(text, i, 1)))
+    For i = 1 To Len(Text)
+        GetTextWidth = GetTextWidth + UseFont.HeaderInfo.CharWidth(Asc(Mid$(Text, i, 1)))
     Next
 End Function
 
@@ -282,10 +282,10 @@ Dim S As String
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     S = vbNewLine & Msg
-    frmMain.txtChat.SelStart = Len(frmMain.txtChat.text)
+    frmMain.txtChat.SelStart = Len(frmMain.txtChat.Text)
     frmMain.txtChat.SelColor = QBColor(color)
     frmMain.txtChat.SelText = S
-    frmMain.txtChat.SelStart = Len(frmMain.txtChat.text) - 1
+    frmMain.txtChat.SelStart = Len(frmMain.txtChat.Text) - 1
     
     ' Error handler
     Exit Sub
@@ -517,3 +517,11 @@ errorhandler:
     Err.Clear
     Exit Sub
 End Sub
+
+Function WordWrap(ByVal Text As String, Optional ByVal MaxLineLen As Integer = 70)
+Dim i As Integer
+For i = 1 To Len(Text) / MaxLineLen
+Text = Mid(Text, 1, MaxLineLen * i - 1) & Replace(Text, " ", vbCrLf, MaxLineLen * i, 1, vbTextCompare)
+Next i
+WordWrap = Text
+End Function

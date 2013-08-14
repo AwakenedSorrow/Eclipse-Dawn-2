@@ -69,7 +69,7 @@ End Type
 
 Private Type PlayerRec
     ' General
-    name As String
+    Name As String
     Class As Long
     Sprite As Long
     Level As Byte
@@ -115,7 +115,7 @@ Public Type TileRec
 End Type
 
 Private Type MapRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     Music As String * NAME_LENGTH
     
     Revision As Long
@@ -138,7 +138,7 @@ Private Type MapRec
 End Type
 
 Private Type ClassRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     Stat(1 To Stats.Stat_Count - 1) As Byte
     MaleSprite() As Long
     FemaleSprite() As Long
@@ -147,8 +147,8 @@ Private Type ClassRec
 End Type
 
 Private Type ItemRec
-    name As String * NAME_LENGTH
-    Desc As String * 255
+    Name As String * NAME_LENGTH
+    desc As String * 255
     Sound As String * NAME_LENGTH
     
     Pic As Long
@@ -181,13 +181,12 @@ Private Type MapItemRec
     playerName As String
     num As Long
     Value As Long
-    Frame As Byte
     x As Byte
     y As Byte
 End Type
 
 Private Type NpcRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     AttackSay As String * 100
     Sound As String * NAME_LENGTH
     
@@ -232,14 +231,14 @@ Private Type TradeItemRec
 End Type
 
 Private Type ShopRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     BuyRate As Long
     TradeItem(1 To MAX_TRADES) As TradeItemRec
 End Type
 
 Private Type SpellRec
-    name As String * NAME_LENGTH
-    Desc As String * 255
+    Name As String * NAME_LENGTH
+    desc As String * 255
     Sound As String * NAME_LENGTH
     
     Type As Byte
@@ -279,7 +278,7 @@ Public Type MapResourceRec
 End Type
 
 Private Type ResourceRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     SuccessMessage As String * NAME_LENGTH
     EmptyMessage As String * NAME_LENGTH
     Sound As String * NAME_LENGTH
@@ -316,7 +315,7 @@ Private Type BloodRec
 End Type
 
 Private Type AnimationRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     Sound As String * NAME_LENGTH
     
     Sprite(0 To 1) As Long

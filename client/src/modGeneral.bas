@@ -57,19 +57,8 @@ Public Sub Main()
     ChkDir App.Path & "\data files\", "sound"
     
     ' Initialize the DirectX8 Rendering Engine.
-    Call SetStatus("Initializing rendering rngine...")
+    Call SetStatus("Initializing rendering engine...")
     Call InitDirect3D8
-    
-    ' Old icky DD7 stuff. It's here for compatibility reasons for now.
-    Call CheckTilesets
-    Call CheckCharacters
-    Call CheckPaperdolls
-    Call CheckAnimations
-    Call CheckItems
-    Call CheckResources
-    Call CheckSpellIcons
-    Call CheckFaces
-    Call InitDirectDraw
     
     ' Randomize the seed value used for RND commands.
     Call SetStatus("Initializing randomization...")
@@ -244,7 +233,7 @@ Public Sub MenuState(ByVal state As Long)
 
             If ConnectToServer(1) Then
                 Call SetStatus("Connected, sending new account information...")
-                Call SendNewAccount(frmMenu.txtRUser.text, frmMenu.txtRPass.text)
+                Call SendNewAccount(frmMenu.txtRUser.Text, frmMenu.txtRPass.Text)
             End If
 
         Case MENU_STATE_LOGIN
@@ -256,7 +245,7 @@ Public Sub MenuState(ByVal state As Long)
 
             If ConnectToServer(1) Then
                 Call SetStatus("Connected, sending login information...")
-                Call SendLogin(frmMenu.txtLUser.text, frmMenu.txtLPass.text)
+                Call SendLogin(frmMenu.txtLUser.Text, frmMenu.txtLPass.Text)
                 Exit Sub
             End If
     End Select
@@ -324,8 +313,8 @@ Dim Buffer As clsBuffer, i As Long
     
     ' hide main form stuffs
     frmMenu.picMain.Visible = True
-    frmMain.txtChat.text = vbNullString
-    frmMain.txtMyChat.text = vbNullString
+    frmMain.txtChat.Text = vbNullString
+    frmMain.txtMyChat.Text = vbNullString
     frmMain.picCurrency.Visible = False
     frmMain.picDialogue.Visible = False
     frmMain.picInventory.Visible = True
@@ -397,7 +386,7 @@ Public Sub DestroyGame()
     Call DestroyTCP
     
     'destroy objects in reverse order
-    Call DestroyDirectDraw
+    Call UnloadDirectX
 
     ' destory DirectX7 master object
     If Not DX7 Is Nothing Then
@@ -454,12 +443,12 @@ Public Sub TextAdd(ByVal Txt As TextBox, Msg As String, NewLine As Boolean)
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If NewLine Then
-        Txt.text = Txt.text + Msg + vbCrLf
+        Txt.Text = Txt.Text + Msg + vbCrLf
     Else
-        Txt.text = Txt.text + Msg
+        Txt.Text = Txt.Text + Msg
     End If
 
-    Txt.SelStart = Len(Txt.text) - 1
+    Txt.SelStart = Len(Txt.Text) - 1
     
     ' Error handler
     Exit Sub
