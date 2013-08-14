@@ -1035,8 +1035,6 @@ Dim Name As String
         .lblItemName.Caption = Name
         .lblItemDesc.Caption = Trim$(Item(itemnum).Desc)
         
-        ' render the item
-        BltItemDesc itemnum
     End With
 
     ' Error handler

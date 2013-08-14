@@ -1018,7 +1018,7 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
     ' If we're not in-game we should probably not be here to begin with.
     ' So let's exit out before things go awry!
     If Not InGame Then Exit Sub
-    
+
     ' Let's open clear ourselves a nice clean slate to render on shall we?
     Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
     Call D3DDevice8.BeginScene
@@ -1128,13 +1128,12 @@ Public Sub DrawGDI()
     End If
     
     If frmMain.Visible Then
-        'If frmMain.picTempInv.Visible Then DrawInventoryItem frmMain.picTempInv.Left, frmMain.picTempInv.Top
+        If frmMain.picTempInv.Visible Then DrawDraggedItem frmMain.picTempInv.Left, frmMain.picTempInv.Top
         'If frmMain.picTempSpell.Visible Then DrawDraggedSpell frmMain.picTempSpell.Left, frmMain.picTempSpell.Top
         'If frmMain.picSpellDesc.Visible Then DrawSpellDesc LastSpellDesc
-        'If frmMain.picItemDesc.Visible Then DrawItemDesc LastItemDesc
+        If frmMain.picItemDesc.Visible Then DrawItemDesc LastItemDesc
         'If frmMain.picHotbar.Visible Then DrawHotbar
         If frmMain.picInventory.Visible Then DrawInventory
-        'If frmMain.picItemDesc.Visible Then DrawItemDesc LastItemDesc
         'If frmMain.picCharacter.Visible Then DrawFace: DrawEquipment
         'If frmMain.picSpells.Visible Then DrawPlayerSpells
         'If frmMain.picShop.Visible Then DrawShop
@@ -1295,3 +1294,123 @@ errorhandler:
     Exit Sub
 End Sub
 
+Public Sub DrawItemDesc(ByVal itemnum As Long)
+Dim itempic As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+Dim Top As Long, Left As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Make sure the item number is valid before we continue, if it isn't we'll simply skip rendering the icon.
+    If itemnum > 0 And itemnum <= MAX_ITEMS Then
+        
+        ' Retrieve the item image, and check if it is valid.
+        itempic = Item(itemnum).Pic
+        If itempic < 1 Or itempic > NumItems Then Exit Sub
+        
+        ' Let's open clear ourselves a nice clean slate to render on shall we?
+        Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+        Call D3DDevice8.BeginScene
+        
+        ' Calculate what image we need to use to render here.
+        ' Note that the tooltips do not support animations.
+        ' It simply shows the first icon of the inventory row.
+        Top = 0
+        Left = D3DT_TEXTURE(Tex_Item(itempic)).Width / 2
+        
+        ' Render it on the surface.
+        Call RenderGraphic(Tex_Item(itempic), 0, 0, PIC_X, PIC_Y, 0, 0, Left, Top)
+        
+        ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+        ' Of course, we also need to do a few calculations to make sure it appears where it should.
+        With srcRect
+            .X1 = 0
+            .x2 = PIC_X
+            .Y1 = 0
+            .y2 = PIC_Y
+        End With
+    
+        With destRect
+            .X1 = 0
+            .x2 = frmMain.picItemDescPic.Width
+            .Y1 = 0
+            .y2 = frmMain.picItemDescPic.Height
+        End With
+    
+        Call D3DDevice8.EndScene
+        Call D3DDevice8.Present(srcRect, destRect, frmMain.picItemDescPic.hWnd, ByVal 0)
+    End If
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawItemDesc", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub DrawDraggedItem(ByVal x As Long, ByVal y As Long)
+Dim Top As Long, Left As Long
+Dim itemnum As Long, itempic As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Retrieve the item number we're trying to drag around.
+    itemnum = GetPlayerInvItemNum(MyIndex, DragInvSlotNum)
+    
+    ' If the item number is valid then make sure we do something with it, wouldn't like to have an invisible icon right?
+    If itemnum > 0 And itemnum <= MAX_ITEMS Then
+    
+        ' Retrieve the item texture and make sure it is valid before we continue.
+        itempic = Item(itemnum).Pic
+        If itempic < 1 Or itempic > NumItems Then Exit Sub
+        
+        ' Let's open clear ourselves a nice clean slate to render on shall we?
+        Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+        Call D3DDevice8.BeginScene
+        
+        ' Calculate what image we need to grab from the texture.
+        Top = 0
+        Left = D3DT_TEXTURE(Tex_Item(itempic)).Width / 2
+        
+        ' Render the texture to the screen, we're using a 2pixel offset to make sure it's centered and doesn't clip
+        ' with the picturebox. It's an original design choice in Mirage4, lord knows why.
+        Call RenderGraphic(Tex_Item(itempic), 2, 2, PIC_X, PIC_Y, 0, 0, Left, Top)
+        
+        ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+        ' Of course, we also need to do a few calculations to make sure it appears where it should.
+        With srcRect
+            .X1 = 2
+            .x2 = .X1 + PIC_X
+            .Y1 = 2
+            .y2 = .Y1 + PIC_Y
+        End With
+    
+        With destRect
+            .X1 = 0
+            .x2 = frmMain.picTempInv.Width
+            .Y1 = 0
+            .y2 = frmMain.picTempInv.Height
+        End With
+    
+        Call D3DDevice8.EndScene
+        Call D3DDevice8.Present(srcRect, destRect, frmMain.picTempInv.hWnd, ByVal 0)
+
+        With frmMain.picTempInv
+            .Top = y
+            .Left = x
+            .Visible = True
+            .ZOrder (0)
+        End With
+    End If
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawDraggedItem", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub

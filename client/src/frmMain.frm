@@ -1215,7 +1215,6 @@ Begin VB.Form frmMain
       _Version        =   393217
       BackColor       =   790032
       BorderStyle     =   0
-      Enabled         =   -1  'True
       ScrollBars      =   2
       Appearance      =   0
       TextRTF         =   $"frmMain.frx":3332
@@ -3516,7 +3515,12 @@ Private Sub picInventory_MouseMove(Button As Integer, Shift As Integer, x As Sin
     If DragInvSlotNum > 0 Then
         If InTrade > 0 Then Exit Sub
         If InBank Or InShop Then Exit Sub
-        'Call BltInventoryItem(x + picInventory.Left, y + picInventory.top)
+        With frmMain.picTempInv
+            .Top = y + picInventory.Top
+            .Left = x + picInventory.Left
+            .Visible = True
+            .ZOrder (0)
+        End With
     Else
         InvNum = IsInvItem(x, y)
 
