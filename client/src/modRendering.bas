@@ -264,12 +264,6 @@ Dim attackspeed As Long
     ' Check if the sprite's valid, if not exit the sub so we don't cause any issues.
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
 
-    ' Check if the texture for the sprite is loaded, if not load it.
-    ' We need it loaded for later, since we're using the height/width to calculate certain things.
-    If D3DT_TEXTURE(Tex_Character(Sprite)).Loaded = False Then
-        LoadTexture Tex_Character(Sprite)
-    End If
-
     ' Retrieve the weapon speed if the player has one equipped.
     If GetPlayerEquipment(Index, Weapon) > 0 Then
         attackspeed = Item(GetPlayerEquipment(Index, Weapon)).Speed
@@ -341,14 +335,16 @@ Dim attackspeed As Long
     ' We're done here, let's render the sprite!
     Call RenderSprite(Sprite, x, y, SpriteFrame, SpriteDir)
     
-    ' Let's not do paperdolling just yet shall we? Would like to get the rest to work first.
-    'For i = 1 To UBound(PaperdollOrder)
-        'If GetPlayerEquipment(Index, PaperdollOrder(i)) > 0 Then
-            'If Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll > 0 Then
-                'Call BltPaperdoll(X, Y, Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll, Anim, spritetop)
-            'End If
-        'End If
-    'Next
+    ' Paperdoll time!
+    ' This will render any equipped items that the player has on which have been assigned a
+    ' paperdoll.
+    For i = 1 To UBound(PaperdollOrder)
+        If GetPlayerEquipment(Index, PaperdollOrder(i)) > 0 Then
+            If Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll > 0 Then
+                Call RenderPaperdoll(x, y, Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll, SpriteFrame, SpriteDir)
+            End If
+        End If
+    Next
     
 ' Do not put any code beyond this line, this is the error handler.
     Exit Sub
@@ -438,13 +434,7 @@ Dim AnimFrame
         
         ' Let's make sure we're using a valid picture for the item, if not we skip rendering it to avoid issues.
         If .Pic < 1 Or .Pic > NumItems Then Exit Sub
-        
-        ' Make sure the texture is loaded.
-        ' We need it to see if it is Animated.
-        If D3DT_TEXTURE(Tex_Item(.Pic)).Loaded = False Then
-            Call LoadTexture(Tex_Item(.Pic))
-        End If
-        
+                
         ' Check if the Texture has multiple frames on it for Animation.
         ' If it is, we'll need to use the current animation frame to display on the map, if it isn't then.. Well, it won't matter much then.
         If D3DT_TEXTURE(Tex_Item(.Pic)).Width > 64 Then
@@ -495,12 +485,6 @@ Dim AnimFrame As Long
     
     ' Set the timer.
     AnimationTimer(Sprite) = GetTickCount + SurfaceTimerMax
-    
-    ' Check if the animation is loaded, if not load it.
-    ' We need this to check the width and whatnot further on.
-    If D3DT_TEXTURE(Tex_Animation(Sprite)).Loaded = False Then
-        Call LoadTexture(Tex_Animation(Sprite))
-    End If
     
     ' Get and set the Height and Width of the sprite frame we'll be using.
     Width = D3DT_TEXTURE(Tex_Animation(Sprite)).Width / FrameCount
@@ -584,12 +568,6 @@ Dim attackspeed As Long
     Sprite = Npc(MapNpc(Index).num).Sprite
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
     
-    ' Check if the texture for the sprite is loaded, if not load it.
-    ' We need it loaded for later, since we're using the height/width to calculate certain things.
-    If D3DT_TEXTURE(Tex_Character(Sprite)).Loaded = False Then
-        LoadTexture Tex_Character(Sprite)
-    End If
-
     attackspeed = 1000
 
     ' Reset the animation frame
@@ -691,12 +669,6 @@ Dim x As Long, y As Long
         End If
     End If
     
-    ' Let's check if the Resource is loaded or not, if it isn't make sure we load it to prevent issues from popping up.
-    ' After all we need to know the Width and Height of the texture.
-    If D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Loaded = False Then
-        LoadTexture Tex_Resource(Resource_sprite)
-    End If
-
     ' Set base x + y, then the offset due to size
     x = (MapResource(Resource_num).x * PIC_X) - (D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Width / 2) + 16
     y = (MapResource(Resource_num).y * PIC_Y) - D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Height + 32
@@ -795,11 +767,6 @@ Dim i As Long, npcNum As Long, partyIndex As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
-    
-    ' Let's make sure we have the texture loaded, we'll be using it to calculate a few things.
-    If D3DT_TEXTURE(Tex_Bars).Loaded = False Then
-        LoadTexture Tex_Bars
-    End If
     
     ' dynamic bar calculations
     sWidth = D3DT_TEXTURE(Tex_Bars).Width
@@ -956,11 +923,6 @@ Dim Width As Long, Height As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
-
-    ' Let's make sure that the texture is loaded, since we need it to calculate the location.
-    If D3DT_TEXTURE(Tex_Target).Loaded = False Then
-        LoadTexture Tex_Target
-    End If
     
     ' Let's do some magic and figure out where we'll need to render this texture!
     Width = D3DT_TEXTURE(Tex_Target).Width / 2
@@ -990,11 +952,6 @@ Dim Width As Long, Height As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
-
-    ' Let's make sure that the texture is loaded, since we need it to calculate the location.
-    If D3DT_TEXTURE(Tex_Target).Loaded = False Then
-        LoadTexture Tex_Target
-    End If
     
     ' Let's do some magic and figure out where we'll need to render this texture!
     Width = D3DT_TEXTURE(Tex_Target).Width / 2
@@ -1306,3 +1263,35 @@ errorhandler:
     Err.Clear
     Exit Sub
 End Sub
+
+Public Sub RenderPaperdoll(ByVal x2 As Long, ByVal y2 As Long, ByVal Sprite As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
+Dim Top As Long, Left As Long
+Dim x As Long, y As Long
+Dim Width As Long, Height As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' Check if the sprite is a valid one. If it isn't then exit out of the sub.
+    If Sprite < 1 Or Sprite > NumPaperdolls Then Exit Sub
+    
+    Top = SpriteDir * (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4)
+    Left = SpriteFrame * (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width / 4)
+    
+    ' Caclculate a few things we might need.
+    x = ConvertMapX(x2)
+    y = ConvertMapY(y2)
+    Width = (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width / 4)
+    Height = (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4)
+    
+    ' Rendering time!
+    Call RenderGraphic(Tex_Paperdoll(Sprite), x, y, Width, Height, 0, 0, Left, Top)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "RenderPaperdoll", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
