@@ -1129,13 +1129,13 @@ Public Sub DrawGDI()
     
     If frmMain.Visible Then
         If frmMain.picTempInv.Visible Then DrawDraggedItem frmMain.picTempInv.Left, frmMain.picTempInv.Top
-        'If frmMain.picTempSpell.Visible Then DrawDraggedSpell frmMain.picTempSpell.Left, frmMain.picTempSpell.Top
-        'If frmMain.picSpellDesc.Visible Then DrawSpellDesc LastSpellDesc
+        If frmMain.picTempSpell.Visible Then DrawDraggedSpell frmMain.picTempSpell.Left, frmMain.picTempSpell.Top
+        If frmMain.picSpellDesc.Visible Then DrawSpellDesc LastSpellDesc
         If frmMain.picItemDesc.Visible Then DrawItemDesc LastItemDesc
-        'If frmMain.picHotbar.Visible Then DrawHotbar
+        If frmMain.picHotbar.Visible Then DrawHotbar
         If frmMain.picInventory.Visible Then DrawInventory
+        If frmMain.picSpells.Visible Then DrawPlayerSpells
         'If frmMain.picCharacter.Visible Then DrawFace: DrawEquipment
-        'If frmMain.picSpells.Visible Then DrawPlayerSpells
         'If frmMain.picShop.Visible Then DrawShop
         'If frmMain.picTempBank.Visible Then DrawBankItem frmMain.picTempBank.Left, frmMain.picTempBank.Top
         'If frmMain.picBank.Visible Then DrawBank
@@ -1411,6 +1411,292 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
     Exit Sub
 errorhandler:
     HandleError "DrawDraggedItem", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub DrawDraggedSpell(ByVal x As Long, ByVal y As Long)
+Dim Top As Long, Left As Long
+Dim spellnum As Long, spellpic As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Retrieve the item number we're trying to drag around.
+    spellnum = PlayerSpells(DragSpell)
+    
+    ' If the spell number is valid then make sure we do something with it, wouldn't like to have an invisible icon right?
+    If spellnum > 0 And spellnum <= MAX_SPELLS Then
+    
+        ' Retrieve the spell texture and make sure it is valid before we continue.
+        spellpic = Spell(spellnum).Icon
+        If spellpic < 1 Or spellpic > NumSpellIcons Then Exit Sub
+        
+        ' Let's open clear ourselves a nice clean slate to render on shall we?
+        Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+        Call D3DDevice8.BeginScene
+        
+        ' Calculate what image we need to grab from the texture.
+        Top = 0
+        Left = 0
+        
+        ' Render the texture to the screen, we're using a 2pixel offset to make sure it's centered and doesn't clip
+        ' with the picturebox. It's an original design choice in Mirage4, lord knows why.
+        Call RenderGraphic(Tex_SpellIcon(spellpic), 2, 2, PIC_X, PIC_Y, 0, 0, Left, Top)
+        
+        ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+        ' Of course, we also need to do a few calculations to make sure it appears where it should.
+        With srcRect
+            .X1 = 2
+            .x2 = .X1 + PIC_X
+            .Y1 = 2
+            .y2 = .Y1 + PIC_Y
+        End With
+    
+        With destRect
+            .X1 = 0
+            .x2 = frmMain.picTempSpell.Width
+            .Y1 = 0
+            .y2 = frmMain.picTempSpell.Height
+        End With
+    
+        Call D3DDevice8.EndScene
+        Call D3DDevice8.Present(srcRect, destRect, frmMain.picTempSpell.hWnd, ByVal 0)
+
+        With frmMain.picTempSpell
+            .Top = y
+            .Left = x
+            .Visible = True
+            .ZOrder (0)
+        End With
+    End If
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawDraggedSpell", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub DrawSpellDesc(ByVal spellnum As Long)
+Dim spellpic As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+Dim Top As Long, Left As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Make sure the spell number is valid before we continue, if it isn't we'll simply skip rendering the icon.
+    If spellnum > 0 And spellnum <= MAX_SPELLS Then
+        
+        ' Retrieve the spell image, and check if it is valid.
+        spellpic = Spell(spellnum).Icon
+        If spellpic < 1 Or spellpic > NumSpellIcons Then Exit Sub
+
+        ' Let's open clear ourselves a nice clean slate to render on shall we?
+        Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+        Call D3DDevice8.BeginScene
+        
+        ' Calculate what image we need to use to render here.
+        ' Note that the tooltips do not support animations.
+        ' It simply shows the first icon of the inventory row.
+        Top = 0
+        Left = 0
+        
+        ' Render it on the surface.
+        Call RenderGraphic(Tex_SpellIcon(spellpic), 0, 0, PIC_X, PIC_Y, 0, 0, Left, Top)
+        
+        ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+        ' Of course, we also need to do a few calculations to make sure it appears where it should.
+        With srcRect
+            .X1 = 0
+            .x2 = PIC_X
+            .Y1 = 0
+            .y2 = PIC_Y
+        End With
+    
+        With destRect
+            .X1 = 0
+            .x2 = frmMain.picSpellDescPic.Width
+            .Y1 = 0
+            .y2 = frmMain.picSpellDescPic.Height
+        End With
+    
+        Call D3DDevice8.EndScene
+        Call D3DDevice8.Present(srcRect, destRect, frmMain.picSpellDescPic.hWnd, ByVal 0)
+    End If
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawspellDesc", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub DrawHotbar()
+Dim i As Long, num As Long, n As Long, text As String
+Dim IconTop As Long, IconLeft As Long, Top As Long, Left As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+        
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    ' Draw the background of the hotbar in the screen.
+    Call RenderGraphic(Tex_Hotbar, 0, 0, D3DT_TEXTURE(Tex_Hotbar).Width, D3DT_TEXTURE(Tex_Hotbar).Height, 0, 0, 0, 0)
+    
+    ' Loop through the hotbar slots and render the appropriate items / spells.
+    For i = 1 To MAX_HOTBAR
+    
+        ' Some positioning calculations
+        Top = HotbarTop
+        Left = HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
+        
+        IconTop = 0
+        IconLeft = 0
+        
+        Select Case Hotbar(i).sType
+            Case 1 ' The hotbar slot contains an item!
+                ' Retrieve the item number we're using, and check if it is valid.
+                ' If it is not valid, we're not even going to bother rendering the icon.
+                num = Hotbar(i).Slot
+                If num >= 1 And num <= MAX_ITEMS Then
+                    ' Well then, the item is valid! Let's check if the icon is valid as well.
+                    If Item(num).Pic >= 1 And Item(num).Pic <= NumItems Then
+                        ' Everything checks out, we can render it!
+                        ' Of course we need to know what item image to render there as well.
+                        IconLeft = D3DT_TEXTURE(Tex_Item(Item(num).Pic)).Width / 2
+                        
+                        ' Now let's actually render it. :)
+                        Call RenderGraphic(Tex_Item(Item(num).Pic), Left, Top, PIC_X, PIC_Y, 0, 0, IconLeft, IconTop)
+                    End If
+                End If
+            Case 2 ' The hotbar slot contains a spell!
+                ' Let's check if the spell  we're trying to render actually exists.
+                num = Hotbar(i).Slot
+                If num >= 1 And num <= MAX_SPELLS Then
+                    ' It exists, so let's check if the icon is valid!
+                        If Spell(num).Icon > 0 Then
+                            ' Check if the spell is on a cooldown, if it is we need to make a slight adjustment to the
+                            ' position of the graphic we're grabbing to render.
+                            For n = 1 To MAX_PLAYER_SPELLS
+                                ' Is this the spell we're trying to figure out?
+                                If PlayerSpells(n) = Hotbar(i).Slot Then
+                                    ' Let's check if this spell is on a cooldown or not.
+                                    If Not SpellCD(n) = 0 Then
+                                        IconLeft = 32
+                                    End If
+                                End If
+                            Next
+                            
+                            ' Now let's actually render it. :)
+                        Call RenderGraphic(Tex_SpellIcon(Spell(num).Icon), Left, Top, PIC_X, PIC_Y, 0, 0, IconLeft, IconTop)
+                        End If
+                End If
+        End Select
+        
+        ' Render the hotbar letters on top of the icons.
+        text = "F" & Str(i)
+        Call RenderText(MainFont, text, Left + 2, Top + 16, White)
+    Next
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .x2 = frmMain.picHotbar.Width
+        .Y1 = 0
+        .y2 = frmMain.picHotbar.Height
+    End With
+    
+    With destRect
+        .X1 = 0
+        .x2 = frmMain.picHotbar.Width
+        .Y1 = 0
+        .y2 = frmMain.picHotbar.Height
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmMain.picHotbar.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawHotbar", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub DrawPlayerSpells()
+Dim i As Long, x As Long, y As Long, spellnum As Long, spellicon As Long
+Dim Amount As String
+Dim colour As Long, Left As Long, Top As Long, RenderLeft As Long, RenderTop As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' If we're not in the game, exit it. Although it should be impossible to get here without being in-game.
+    If Not InGame Then Exit Sub
+    
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    ' Time to start looping through the spells!
+    For i = 1 To MAX_PLAYER_SPELLS
+        spellnum = PlayerSpells(i)
+        
+        ' Check if the spellnumber and icon are valid.
+        If spellnum > 0 And spellnum <= MAX_SPELLS Then
+            spellicon = Spell(spellnum).Icon
+            If spellicon > 0 And spellicon <= NumSpellIcons Then
+                ' They are, let's set the location to grab the image from.
+                Top = 0
+                Left = 0
+                ' If the spell's on a cooldown we need to grab the second image.
+                If Not SpellCD(i) = 0 Then
+                    Left = 32
+                End If
+
+                RenderTop = SpellTop + ((SpellOffsetY + 32) * ((i - 1) \ SpellColumns))
+                RenderLeft = SpellLeft + ((SpellOffsetX + 32) * (((i - 1) Mod SpellColumns)))
+                
+                ' Render the icon to the display!
+                Call RenderGraphic(Tex_SpellIcon(spellicon), RenderLeft, RenderTop, PIC_X, PIC_Y, 0, 0, Left, Top)
+            End If
+        End If
+    Next
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .x2 = frmMain.picSpells.Width
+        .Y1 = 28
+        .y2 = frmMain.picSpells.Height
+    End With
+    
+    With destRect
+        .X1 = 0
+        .x2 = frmMain.picSpells.Width
+        .Y1 = 32
+        .y2 = frmMain.picSpells.Height
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmMain.picSpells.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawPlayerSpells", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub

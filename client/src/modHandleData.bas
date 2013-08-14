@@ -1756,7 +1756,6 @@ Dim Buffer As clsBuffer
         PlayerSpells(i) = Buffer.ReadLong
     Next
     
-    BltPlayerSpells
     Set Buffer = Nothing
     
     ' Error handler
@@ -2016,9 +2015,6 @@ Dim Slot As Long
     
     Slot = Buffer.ReadLong
     SpellCD(Slot) = GetTickCount
-    
-    BltPlayerSpells
-    BltHotbar
     
     Set Buffer = Nothing
     
@@ -2340,7 +2336,6 @@ Dim i As Long
         Hotbar(i).Slot = Buffer.ReadLong
         Hotbar(i).sType = Buffer.ReadByte
     Next
-    BltHotbar
     
     ' Error handler
     Exit Sub

@@ -369,9 +369,6 @@ Sub GameInit()
     Call SetFocusOnChat
     frmMain.picScreen.Visible = True
     
-    ' blt hotbar
-    BltHotbar
-    
     ' get ping
     GetPing
     DrawPing

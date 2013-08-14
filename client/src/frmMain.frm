@@ -2703,8 +2703,8 @@ Private Sub picScreen_MouseMove(Button As Integer, Shift As Integer, x As Single
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    CurX = TileView.Left + ((x + Camera.Left) \ PIC_X) - 1
-    CurY = TileView.Top + ((y + Camera.Top) \ PIC_Y) - 1
+    CurX = TileView.Left + ((x + Camera.Left) \ PIC_X)
+    CurY = TileView.Top + ((y + Camera.Top) \ PIC_Y)
 
     If InMapEditor Then
         frmEditor_Map.shpLoc.Visible = False
@@ -2905,7 +2905,12 @@ Dim x2 As Long, y2 As Long
     spellslot = IsPlayerSpell(x, y)
     
     If DragSpell > 0 Then
-        Call BltDraggedSpell(x + picSpells.Left, y + picSpells.Top)
+        With frmMain.picTempSpell
+            .Top = picSpells.Top + y
+            .Left = picSpells.Left + x
+            .Visible = True
+            .ZOrder (0)
+        End With
     Else
         If spellslot <> 0 Then
             x2 = x + picSpells.Left - picSpellDesc.Width - 1
@@ -3603,7 +3608,6 @@ Private Sub picInventory_MouseUp(Button As Integer, Shift As Integer, x As Singl
                     SendHotbarChange 1, DragInvSlotNum, i
                     DragInvSlotNum = 0
                     picTempInv.Visible = False
-                    BltHotbar
                     Exit Sub
                 End If
             End If

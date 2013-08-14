@@ -46,8 +46,6 @@ Dim tmr10000 As Long
                         If SpellCD(i) > 0 Then
                             If SpellCD(i) + (Spell(PlayerSpells(i)).CDTime * 1000) < Tick Then
                                 SpellCD(i) = 0
-                                BltPlayerSpells
-                                BltHotbar
                             End If
                         End If
                     End If

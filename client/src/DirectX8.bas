@@ -61,6 +61,7 @@ Public Tex_DirBlock As Long
 Public Tex_Outline As Long
 Public Tex_Bars As Long
 Public Tex_Target As Long
+Public Tex_Hotbar As Long
 
 ' Texture counts
 Public NumTileSets As Long
@@ -436,6 +437,9 @@ Dim i As Long
     
     Tex_Target = SetTexturePath(App.Path & GFX_PATH & "target" & GFX_EXT)
     Call LoadTexture(Tex_Target)
+    
+    Tex_Hotbar = SetTexturePath(App.Path & GFX_PATH & "\gui\main\hotbar.jpg")
+    Call LoadTexture(Tex_Hotbar)
     
 ' Do not put any code beyond this line, this is the error handler.
     Exit Sub
