@@ -24,12 +24,12 @@ Public Sub DrawGDI()
     
     
     If frmEditor_Animation.Visible Then
-        'EditorAnim_DrawAnim
+        EditorAnim_DrawAnim
     End If
     
     If frmEditor_Item.Visible Then
-        'EditorItem_DrawItem
-        'EditorItem_DrawPaperdoll
+        EditorItem_DrawItem
+        EditorItem_DrawPaperdoll
     End If
     
     If frmEditor_Map.Visible Then
@@ -901,7 +901,7 @@ Dim Width As Long, Height As Long, x As Long, y As Long
 End Sub
 
 Public Sub EditorMap_DrawMapItem()
-Dim itemnum As Long
+Dim itemnum As Long, AnimFrame As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
     
     ' If debug mode, handle error then exit out
@@ -917,8 +917,12 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
     ' Let's open clear ourselves a nice clean slate to render on shall we?
     Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
     Call D3DDevice8.BeginScene
-
-    Call RenderGraphic(Tex_Item(itemnum), 0, 0, PIC_X, PIC_Y, 0, 0, 0, 0)
+    
+    ' See what frame we need to use.
+    AnimFrame = ItemAnimFrame(frmEditor_Map.scrlMapItem.Value) * PIC_X
+    
+    ' Render the actual graphic to the screen.
+    Call RenderGraphic(Tex_Item(itemnum), 0, 0, PIC_X, PIC_Y, 0, 0, AnimFrame, 0)
     
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
     ' Of course, we also need to do a few calculations to make sure it appears where it should.
@@ -948,7 +952,7 @@ errorhandler:
 End Sub
 
 Public Sub EditorMap_DrawKey()
-Dim itempic As Long
+Dim itempic As Long, AnimFrame As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
     
     ' If debug mode, handle error then exit out
@@ -961,12 +965,16 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
     If itempic < 1 Or itempic > NumItems Then
         Exit Sub
     End If
-    
+
     ' Let's open clear ourselves a nice clean slate to render on shall we?
     Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
     Call D3DDevice8.BeginScene
     
-    Call RenderGraphic(Tex_Item(itempic), 0, 0, PIC_X, PIC_Y, 0, 0, 0, 0)
+    ' See what frame we need to use.
+    AnimFrame = ItemAnimFrame(frmEditor_Map.scrlMapKey.Value) * PIC_X
+    
+    ' Render the actual graphic to the screen.
+    Call RenderGraphic(Tex_Item(itempic), 0, 0, PIC_X, PIC_Y, 0, 0, AnimFrame, 0)
     
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
     ' Of course, we also need to do a few calculations to make sure it appears where it should.
@@ -994,3 +1002,182 @@ errorhandler:
     Err.Clear
     Exit Sub
 End Sub
+
+Public Sub EditorAnim_DrawAnim()
+Dim Animationnum As Long
+Dim i As Long, Left As Long
+Dim Width As Long, Height As Long
+Dim looptime As Long
+Dim FrameCount As Long
+Dim ShouldRender As Boolean
+Dim srcRect As D3DRECT, destRect As D3DRECT
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' Loop through the two animation screens.
+    For i = 0 To 1
+        ' Retrieve the animation we'll be rendering.
+        Animationnum = frmEditor_Animation.scrlSprite(i).Value
+        ' Is it a valid one?
+        If Animationnum >= 1 Or Animationnum <= NumAnimations Then
+            looptime = frmEditor_Animation.scrlLoopTime(i)
+            FrameCount = frmEditor_Animation.scrlFrameCount(i)
+            
+            ShouldRender = False
+            
+            ' check if we need to render new frame
+            If AnimEditorTimer(i) + looptime <= GetTickCount Then
+                ' check if out of range
+                If AnimEditorFrame(i) >= FrameCount Then
+                    AnimEditorFrame(i) = 1
+                Else
+                    AnimEditorFrame(i) = AnimEditorFrame(i) + 1
+                End If
+                AnimEditorTimer(i) = GetTickCount
+                ShouldRender = True
+            End If
+        
+            If ShouldRender Then
+                ' Let's open clear ourselves a nice clean slate to render on shall we?
+                Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+                Call D3DDevice8.BeginScene
+            
+                If frmEditor_Animation.scrlFrameCount(i).Value > 0 Then
+                    ' total width divided by frame count
+                    Width = D3DT_TEXTURE(Tex_Animation(Animationnum)).Width / frmEditor_Animation.scrlFrameCount(i).Value
+                    Height = D3DT_TEXTURE(Tex_Animation(Animationnum)).Height
+                    
+                    Left = (AnimEditorFrame(i) - 1) * Width
+                    
+                    Call RenderGraphic(Tex_Animation(Animationnum), 0, 0, Width, Height, 0, 0, Left, 0)
+                End If
+                
+                ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+                ' Of course, we also need to do a few calculations to make sure it appears where it should.
+                With srcRect
+                    .X1 = 0
+                    .X2 = frmEditor_Animation.picSprite(i).Width
+                    .Y1 = 0
+                    .Y2 = frmEditor_Animation.picSprite(i).Height
+                End With
+    
+                With destRect
+                    .X1 = 0
+                    .X2 = frmEditor_Animation.picSprite(i).Width
+                    .Y1 = 0
+                    .Y2 = frmEditor_Animation.picSprite(i).Height
+                End With
+    
+                Call D3DDevice8.EndScene
+                Call D3DDevice8.Present(srcRect, destRect, frmEditor_Animation.picSprite(i).hWnd, ByVal 0)
+            End If
+        End If
+    Next
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "EditorAnim_DrawAnim", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub EditorItem_DrawItem()
+Dim itemnum As Long, AnimFrame As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+    
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Retrieve the item picture we'll be using.
+    itemnum = frmEditor_Item.scrlPic.Value
+
+    ' Check if it's a valid image.
+    If itemnum < 1 Or itemnum > NumItems Then
+        Exit Sub
+    End If
+
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    AnimFrame = ItemAnimFrame(EditorIndex) * PIC_X
+    
+    Call RenderGraphic(Tex_Item(itemnum), 0, 0, PIC_X, PIC_Y, 0, 0, AnimFrame, 0)
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmEditor_Item.picItem.Width
+        .Y1 = 0
+        .Y2 = frmEditor_Item.picItem.Height
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmEditor_Item.picItem.Width
+        .Y1 = 0
+        .Y2 = frmEditor_Item.picItem.Height
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmEditor_Item.picItem.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "EditorItem_DrawItem", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub EditorItem_DrawPaperdoll()
+Dim Sprite As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Let's retrieve the paperdoll image and check if it's valid.
+    Sprite = frmEditor_Item.scrlPaperdoll.Value
+    If Sprite < 1 Or Sprite > NumPaperdolls Then
+        Exit Sub
+    End If
+
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    ' Render it.
+    Call RenderGraphic(Tex_Paperdoll(Sprite), 0, 0, D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width, D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4, 0, 0, 0, 0)
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmEditor_Item.picPaperdoll.Width
+        .Y1 = 0
+        .Y2 = frmEditor_Item.picPaperdoll.Height
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmEditor_Item.picPaperdoll.Width
+        .Y1 = 0
+        .Y2 = frmEditor_Item.picPaperdoll.Height
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmEditor_Item.picPaperdoll.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "EditorItem_DrawPaperdoll", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+

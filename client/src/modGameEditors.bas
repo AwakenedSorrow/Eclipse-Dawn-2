@@ -604,6 +604,9 @@ Dim SoundSet As Boolean
         frmEditor_Item.cmbSound.AddItem soundCache(i)
     Next
     ' finished populating
+    
+    frmEditor_Item.scrlPic.Max = NumItems
+    frmEditor_Item.scrlPaperdoll.Max = NumPaperdolls
 
     With Item(EditorIndex)
         frmEditor_Item.txtName.text = Trim$(.Name)
@@ -687,8 +690,6 @@ Dim SoundSet As Boolean
         EditorIndex = frmEditor_Item.lstIndex.ListIndex + 1
     End With
 
-    Call EditorItem_BltItem
-    Call EditorItem_BltPaperdoll
     Item_Changed(EditorIndex) = True
     
     ' Error handler
@@ -795,6 +796,7 @@ Dim SoundSet As Boolean
         End If
         
         For i = 0 To 1
+            frmEditor_Animation.scrlSprite(i).Max = NumAnimations
             frmEditor_Animation.scrlSprite(i).Value = .Sprite(i)
             frmEditor_Animation.scrlFrameCount(i).Value = .Frames(i)
             frmEditor_Animation.scrlLoopCount(i).Value = .LoopCount(i)
@@ -810,7 +812,6 @@ Dim SoundSet As Boolean
         EditorIndex = frmEditor_Animation.lstIndex.ListIndex + 1
     End With
 
-    Call EditorAnim_BltAnim
     Animation_Changed(EditorIndex) = True
     
     ' Error handler

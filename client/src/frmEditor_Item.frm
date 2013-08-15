@@ -1074,7 +1074,7 @@ Private Sub scrlPaperdoll_Change()
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     lblPaperdoll.Caption = "Paperdoll: " & scrlPaperdoll.Value
     Item(EditorIndex).Paperdoll = scrlPaperdoll.Value
-    Call EditorItem_BltPaperdoll
+    Call EditorItem_DrawPaperdoll
     
     ' Error handler
     Exit Sub
@@ -1091,7 +1091,7 @@ Private Sub scrlPic_Change()
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     lblPic.Caption = "Pic: " & scrlPic.Value
     Item(EditorIndex).Pic = scrlPic.Value
-    Call EditorItem_BltItem
+    Call EditorItem_DrawItem
     
     ' Error handler
     Exit Sub
@@ -1239,7 +1239,7 @@ Private Sub txtDesc_Change()
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
-    Item(EditorIndex).Desc = txtDesc.text
+    Item(EditorIndex).desc = txtDesc.text
     
     ' Error handler
     Exit Sub
