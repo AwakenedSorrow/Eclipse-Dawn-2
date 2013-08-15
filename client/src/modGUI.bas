@@ -19,7 +19,7 @@ Public Sub DrawGDI()
         If frmMain.picShop.Visible Then DrawShop
         If frmMain.picTempBank.Visible Then DrawDraggedBank frmMain.picTempBank.Left, frmMain.picTempBank.Top
         If frmMain.picBank.Visible Then DrawBank
-        'If frmMain.picTrade.Visible Then DrawTrade
+        If frmMain.picTrade.Visible Then DrawTradeOffer: DrawTradeReceive
     End If
     
     
@@ -88,7 +88,7 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
                     If Item(num).Pic >= 1 And Item(num).Pic <= NumItems Then
                         ' Everything checks out, we can render it!
                         ' Of course we need to know what item image to render there as well.
-                        IconLeft = ItemAnimFrame(num) * 32
+                        IconLeft = ItemAnimFrame(num) * PIC_X
                         
                         ' Now let's actually render it. :)
                         Call RenderGraphic(Tex_Item(Item(num).Pic), Left, Top, PIC_X, PIC_Y, 0, 0, IconLeft, IconTop)
@@ -151,7 +151,7 @@ errorhandler:
 End Sub
 
 Sub DrawPlayerSpells()
-Dim i As Long, X As Long, Y As Long, spellnum As Long, spellicon As Long
+Dim i As Long, x As Long, y As Long, spellnum As Long, spellicon As Long
 Dim Amount As String
 Dim Colour As Long, Left As Long, Top As Long, RenderLeft As Long, RenderTop As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
@@ -222,7 +222,7 @@ errorhandler:
 End Sub
 
 Public Sub DrawInventory()
-Dim i As Long, X As Long, Y As Long, itemnum As Long, itempic As Long
+Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
 Dim Amount As Long
 Dim Top As Long, Left As Long
 Dim Colour As Long
@@ -261,20 +261,20 @@ Dim AnimLeft As Long
             amountModifier = 0
             ' exit out if we're offering item in a trade.
             If InTrade > 0 Then
-                For X = 1 To MAX_INV
-                    tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(X).num)
-                    If TradeYourOffer(X).num = i Then
+                For x = 1 To MAX_INV
+                    tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(x).num)
+                    If TradeYourOffer(x).num = i Then
                         ' check if currency
                         If Not Item(tmpItem).Type = ITEM_TYPE_CURRENCY Then
                             ' normal item, exit out
                             GoTo NextLoop
                         Else
                             ' if amount = all currency, remove from inventory
-                            If TradeYourOffer(X).Value = GetPlayerInvItemValue(MyIndex, i) Then
+                            If TradeYourOffer(x).Value = GetPlayerInvItemValue(MyIndex, i) Then
                                 GoTo NextLoop
                             Else
                                 ' not all, change modifier to show change in currency count
-                                amountModifier = TradeYourOffer(X).Value
+                                amountModifier = TradeYourOffer(x).Value
                             End If
                         End If
                     End If
@@ -288,15 +288,15 @@ Dim AnimLeft As Long
                 Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
                     
                 ' Calculate the Animation Frame
-                AnimLeft = ItemAnimFrame(itemnum) * 32
+                AnimLeft = ItemAnimFrame(itemnum) * PIC_X
                     
                 ' Render the item Icon.
                 Call RenderGraphic(Tex_Item(itempic), Left, Top, PIC_X, PIC_Y, 0, 0, AnimLeft, 0)
                     
                 ' If item is a stack - draw the amount you have
                 If GetPlayerInvItemValue(MyIndex, i) > 1 Then
-                    Y = Top + 22
-                    X = Left - 4
+                    y = Top + 22
+                    x = Left - 4
                         
                     Amount = GetPlayerInvItemValue(MyIndex, i) - amountModifier
                         
@@ -309,7 +309,7 @@ Dim AnimLeft As Long
                         Colour = BrightGreen
                     End If
                         
-                    Call RenderText(MainFont, Format$(ConvertCurrency(Str(Amount)), "#,###,###,###"), X, Y, Colour)
+                    Call RenderText(MainFont, Format$(ConvertCurrency(Str(Amount)), "#,###,###,###"), x, y, Colour)
 
                     ' Check if it's gold, and update the label
                     If GetPlayerInvItemNum(MyIndex, i) = 1 Then '1 = gold :P
@@ -348,7 +348,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub DrawDraggedItem(ByVal X As Long, ByVal Y As Long)
+Public Sub DrawDraggedItem(ByVal x As Long, ByVal y As Long)
 Dim Top As Long, Left As Long
 Dim itemnum As Long, itempic As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
@@ -378,7 +378,7 @@ Dim AnimLeft As Long
         Top = 0
         
         ' Calculate the Animation Frame
-        AnimLeft = ItemAnimFrame(itemnum) * 32
+        AnimLeft = ItemAnimFrame(itemnum) * PIC_X
         
         ' Render the texture to the screen, we're using a 2pixel offset to make sure it's centered and doesn't clip
         ' with the picturebox. It's an original design choice in Mirage4, lord knows why.
@@ -404,8 +404,8 @@ Dim AnimLeft As Long
         Call D3DDevice8.Present(srcRect, destRect, frmMain.picTempInv.hWnd, ByVal 0)
 
         With frmMain.picTempInv
-            .Top = Y
-            .Left = X
+            .Top = y
+            .Left = x
             .Visible = True
             .ZOrder (0)
         End With
@@ -419,7 +419,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub DrawDraggedBank(ByVal X As Long, ByVal Y As Long)
+Public Sub DrawDraggedBank(ByVal x As Long, ByVal y As Long)
 Dim Top As Long, Left As Long
 Dim itemnum As Long, itempic As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
@@ -449,7 +449,7 @@ Dim AnimLeft As Long
         Top = 0
         
         ' Calculate the Animation Frame
-        AnimLeft = ItemAnimFrame(itemnum) * 32
+        AnimLeft = ItemAnimFrame(itemnum) * PIC_X
         
         ' Render the texture to the screen, we're using a 2pixel offset to make sure it's centered and doesn't clip
         ' with the picturebox. It's an original design choice in Mirage4, lord knows why.
@@ -475,8 +475,8 @@ Dim AnimLeft As Long
         Call D3DDevice8.Present(srcRect, destRect, frmMain.picTempBank.hWnd, ByVal 0)
 
         With frmMain.picTempBank
-            .Top = Y
-            .Left = X
+            .Top = y
+            .Left = x
             .Visible = True
             .ZOrder (0)
         End With
@@ -494,7 +494,7 @@ Public Sub DrawItemDesc(ByVal itemnum As Long)
 Dim itempic As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
 Dim Top As Long, Left As Long
-Dim Name As String, Firstletter As String * 1, Colour As Long, X As Long, Y As Long, desc As String
+Dim Name As String, Firstletter As String * 1, Colour As Long, x As Long, y As Long, desc As String
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -538,19 +538,19 @@ Dim Name As String, Firstletter As String * 1, Colour As Long, X As Long, Y As L
         End Select
         
         ' Render the Item Name.
-        X = (frmMain.picItemDesc.Width / 2) - (GetTextWidth(MainFont, Name) / 2)
-        Y = 14
-        Call RenderText(MainFont, Name, X, Y, Colour)
+        x = (frmMain.picItemDesc.Width / 2) - (GetTextWidth(MainFont, Name) / 2)
+        y = 14
+        Call RenderText(MainFont, Name, x, y, Colour)
         
         ' Render the Item Description
-        X = 16
-        Y = 120
+        x = 16
+        y = 120
         desc = WordWrap(Item(itemnum).desc, 27)
-        Call RenderText(MainFont, desc, X, Y, White)
+        Call RenderText(MainFont, desc, x, y, White)
         
         ' Calculate what image we need to use to render here.
         Top = 0
-        Left = ItemAnimFrame(itemnum) * 32
+        Left = ItemAnimFrame(itemnum) * PIC_X
         
         ' Render it on the surface.
         Call RenderGraphic(Tex_Item(itempic), (frmMain.picItemDesc.Width / 2) - PIC_X, 40, PIC_X * 2, PIC_Y * 2, PIC_X, PIC_Y, Left, Top)
@@ -586,7 +586,7 @@ End Sub
 Public Sub DrawSpellDesc(ByVal spellnum As Long)
 Dim spellpic As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
-Dim Top As Long, Left As Long, X As Long, Y As Long, desc As String
+Dim Top As Long, Left As Long, x As Long, y As Long, desc As String
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -606,15 +606,15 @@ Dim Top As Long, Left As Long, X As Long, Y As Long, desc As String
         Call RenderGraphic(Tex_GUI(SpellDescE), 0, 0, D3DT_TEXTURE(Tex_GUI(SpellDescE)).Width, D3DT_TEXTURE(Tex_GUI(SpellDescE)).Height, 0, 0, 0, 0)
         
         ' Render the Spell Name.
-        X = (frmMain.picSpellDesc.Width / 2) - (GetTextWidth(MainFont, Spell(spellnum).Name) / 2)
-        Y = 14
-        Call RenderText(MainFont, Spell(spellnum).Name, X, Y, White)
+        x = (frmMain.picSpellDesc.Width / 2) - (GetTextWidth(MainFont, Spell(spellnum).Name) / 2)
+        y = 14
+        Call RenderText(MainFont, Spell(spellnum).Name, x, y, White)
         
         ' Render the Item Description
-        X = 16
-        Y = 120
+        x = 16
+        y = 120
         desc = WordWrap(Spell(spellnum).desc, 27)
-        Call RenderText(MainFont, desc, X, Y, White)
+        Call RenderText(MainFont, desc, x, y, White)
         
         ' Calculate what image we need to use to render here.
         ' Note that the tooltips do not support animations.
@@ -653,7 +653,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub DrawDraggedSpell(ByVal X As Long, ByVal Y As Long)
+Public Sub DrawDraggedSpell(ByVal x As Long, ByVal y As Long)
 Dim Top As Long, Left As Long
 Dim spellnum As Long, spellpic As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
@@ -706,8 +706,8 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
         Call D3DDevice8.Present(srcRect, destRect, frmMain.picTempSpell.hWnd, ByVal 0)
 
         With frmMain.picTempSpell
-            .Top = Y
-            .Left = X
+            .Top = y
+            .Left = x
             .Visible = True
             .ZOrder (0)
         End With
@@ -763,7 +763,7 @@ Dim Top As Long, Left As Long, AnimFrame As Long, i As Long, itemnum As Long, it
                     Left = EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
 
                     ' Get the item animation frame
-                    AnimFrame = ItemAnimFrame(itemnum) * 32
+                    AnimFrame = ItemAnimFrame(itemnum) * PIC_X
                     
                     ' And now to render it.
                     Call RenderGraphic(Tex_Item(itempic), Left, Top, PIC_X, PIC_Y, 0, 0, AnimFrame, 0)
@@ -925,10 +925,10 @@ Dim X1 As Long, X2 As Long, Y1 As Long, Y2 As Long
     Call RenderGraphic(Tex_TileSet(Tileset), 0, 0, SrcRight, SrcBottom, 0, 0, SrcLeft, SrcTop)
     
     ' Render the tile selection square.
-    X1 = (EditorTileX * 32) - SrcLeft
-    X2 = (EditorTileWidth * 32) + X1
-    Y1 = (EditorTileY * 32) - SrcTop
-    Y2 = (EditorTileHeight * 32) + Y1
+    X1 = (EditorTileX * PIC_X) - SrcLeft
+    X2 = (EditorTileWidth * PIC_X) + X1
+    Y1 = (EditorTileY * PIC_Y) - SrcTop
+    Y2 = (EditorTileHeight * PIC_Y) + Y1
     Call DrawSelectionBox(X1, X2, Y1, Y2)
     
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
@@ -959,16 +959,16 @@ errorhandler:
 End Sub
 
 Sub DrawSelectionBox(ByVal X1 As Long, ByVal X2 As Long, ByVal Y1 As Long, ByVal Y2 As Long)
-Dim Width As Long, Height As Long, X As Long, Y As Long
+Dim Width As Long, Height As Long, x As Long, y As Long
     Width = X2 - X1
     Height = Y2 - Y1
-    X = X1
-    Y = Y1
+    x = X1
+    y = Y1
     If Width > 6 And Height > 6 Then
-        Call RenderGraphic(Tex_Select, X, Y, Width, 3, 0, 0, 0, 0, 255, 0, 255)                 'Top Bar
-        Call RenderGraphic(Tex_Select, X, Y, 3, Height, 0, 0, 0, 0, 255, 0, 255)                'Left bar
-        Call RenderGraphic(Tex_Select, X, Y + Height - 3, Width, 3, 0, 0, 0, 0, 255, 0, 255)    'Bottom Bar
-        Call RenderGraphic(Tex_Select, X + Width - 3, Y, 3, Height, 0, 0, 0, 0, 255, 0, 255)    'Right Bar
+        Call RenderGraphic(Tex_Select, x, y, Width, 3, 0, 0, 0, 0, 255, 0, 255)                 'Top Bar
+        Call RenderGraphic(Tex_Select, x, y, 3, Height, 0, 0, 0, 0, 255, 0, 255)                'Left bar
+        Call RenderGraphic(Tex_Select, x, y + Height - 3, Width, 3, 0, 0, 0, 0, 255, 0, 255)    'Bottom Bar
+        Call RenderGraphic(Tex_Select, x + Width - 3, y, 3, Height, 0, 0, 0, 0, 255, 0, 255)    'Right Bar
     End If
 End Sub
 
@@ -1263,7 +1263,7 @@ End Sub
 Public Sub EditorNpc_DrawSprite()
 Dim Sprite As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
-Dim X As Long, Y As Long, Width As Long, Height As Long
+Dim x As Long, y As Long, Width As Long, Height As Long
     
 
     ' If debug mode, handle error then exit out
@@ -1284,11 +1284,11 @@ Dim X As Long, Y As Long, Width As Long, Height As Long
     Call D3DDevice8.BeginScene
     
     ' Calculate the locations and Render the graphic
-    X = (frmEditor_NPC.picSprite.ScaleWidth / 2) - (D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4) / 2
-    Y = (frmEditor_NPC.picSprite.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) / 2
+    x = (frmEditor_NPC.picSprite.ScaleWidth / 2) - (D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4) / 2
+    y = (frmEditor_NPC.picSprite.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) / 2
     Width = D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4
     Height = D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4
-    Call RenderGraphic(Tex_Character(Sprite), X, Y, Width, Height, 0, 0, 0, Height * 4)
+    Call RenderGraphic(Tex_Character(Sprite), x, y, Width, Height, 0, 0, 0, Height * 4)
     
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
     ' Of course, we also need to do a few calculations to make sure it appears where it should.
@@ -1320,7 +1320,7 @@ End Sub
 Public Sub EditorResource_DrawNormalSprite()
 Dim Sprite As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
-Dim X As Long, Y As Long, Height As Long, Width As Long
+Dim x As Long, y As Long, Height As Long, Width As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -1334,11 +1334,11 @@ Dim X As Long, Y As Long, Height As Long, Width As Long
 
     ' If the sprite is valid, let's calculate the locations and get it rendered.
     If Sprite >= 1 Or Sprite <= NumResources Then
-        X = (frmEditor_Resource.picNormalPic.ScaleWidth / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Width / 2)
-        Y = (frmEditor_Resource.picNormalPic.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Height / 2)
+        x = (frmEditor_Resource.picNormalPic.ScaleWidth / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Width / 2)
+        y = (frmEditor_Resource.picNormalPic.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Height / 2)
         Width = D3DT_TEXTURE(Tex_Resource(Sprite)).Width
         Height = D3DT_TEXTURE(Tex_Resource(Sprite)).Height
-        Call RenderGraphic(Tex_Resource(Sprite), X, Y, Width, Height, 0, 0, 0, 0)
+        Call RenderGraphic(Tex_Resource(Sprite), x, y, Width, Height, 0, 0, 0, 0)
     End If
 
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
@@ -1371,7 +1371,7 @@ End Sub
 Public Sub EditorResource_DrawExhaustedSprite()
 Dim Sprite As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
-Dim X As Long, Y As Long, Height As Long, Width As Long
+Dim x As Long, y As Long, Height As Long, Width As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -1385,11 +1385,11 @@ Dim X As Long, Y As Long, Height As Long, Width As Long
     
     ' If the sprite is valid, let's calculate the locations and get it rendered.
     If Sprite >= 1 Or Sprite <= NumResources Then
-        X = (frmEditor_Resource.picExhaustedPic.ScaleWidth / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Width / 2)
-        Y = (frmEditor_Resource.picExhaustedPic.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Height / 2)
+        x = (frmEditor_Resource.picExhaustedPic.ScaleWidth / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Width / 2)
+        y = (frmEditor_Resource.picExhaustedPic.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Height / 2)
         Width = D3DT_TEXTURE(Tex_Resource(Sprite)).Width
         Height = D3DT_TEXTURE(Tex_Resource(Sprite)).Height
-        Call RenderGraphic(Tex_Resource(Sprite), X, Y, Width, Height, 0, 0, 0, 0)
+        Call RenderGraphic(Tex_Resource(Sprite), x, y, Width, Height, 0, 0, 0, 0)
     End If
 
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
@@ -1470,7 +1470,7 @@ errorhandler:
 End Sub
 
 Sub DrawShop()
-Dim i As Long, X As Long, Y As Long, itemnum As Long, itempic As Long
+Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
 Dim Amount As String
 Dim Colour As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
@@ -1505,8 +1505,8 @@ Dim Top As Long, Left As Long, AnimFrame As Long
                 
                 ' If item is a stack - draw the amount the shop has
                 If Shop(InShop).TradeItem(i).ItemValue > 1 Then
-                    Y = Top + 22
-                    X = Left - 4
+                    y = Top + 22
+                    x = Left - 4
                     Amount = CStr(Shop(InShop).TradeItem(i).ItemValue)
                     
                     ' Draw currency but with k, m, b etc. using a convertion function
@@ -1518,7 +1518,7 @@ Dim Top As Long, Left As Long, AnimFrame As Long
                         Colour = BrightGreen
                     End If
                     
-                    Call RenderText(MainFont, ConvertCurrency(Amount), X, Y, Colour)
+                    Call RenderText(MainFont, ConvertCurrency(Amount), x, y, Colour)
                 End If
             End If
         End If
@@ -1552,7 +1552,7 @@ errorhandler:
 End Sub
 
 Sub DrawBank()
-Dim i As Long, X As Long, Y As Long, itemnum As Long
+Dim i As Long, x As Long, y As Long, itemnum As Long
 Dim Amount As String
 Dim Sprite As Long, Colour As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
@@ -1584,15 +1584,15 @@ Dim Top As Long, Left As Long, AnimFrame As Long
                 ' Calculate the position of the item icon and the animation frame we'll be using.
                 Top = BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
                 Left = BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
-                AnimFrame = ItemAnimFrame(itemnum) * 32
+                AnimFrame = ItemAnimFrame(itemnum) * PIC_X
                 
                 ' Render the item to the screen
                 Call RenderGraphic(Tex_Item(Sprite), Left, Top, PIC_X, PIC_Y, 0, 0, AnimFrame, 0)
 
                 ' If item is a stack - draw the amount you have
                 If GetBankItemValue(i) > 1 Then
-                    Y = Top + 22
-                    X = Left - 4
+                    y = Top + 22
+                    x = Left - 4
                 
                     Amount = CStr(GetBankItemValue(i))
                     ' Draw currency but with k, m, b etc. using a convertion function
@@ -1603,7 +1603,7 @@ Dim Top As Long, Left As Long, AnimFrame As Long
                     ElseIf CLng(Amount) > 10000000 Then
                         Colour = BrightGreen
                     End If
-                    Call RenderText(MainFont, ConvertCurrency(Amount), X, Y, Colour)
+                    Call RenderText(MainFont, ConvertCurrency(Amount), x, y, Colour)
                 End If
             End If
             End If
@@ -1632,6 +1632,182 @@ Dim Top As Long, Left As Long, AnimFrame As Long
     Exit Sub
 errorhandler:
     HandleError "DrawBank", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub DrawTradeOffer()
+Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
+Dim Amount As Long
+Dim Colour As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+Dim Top As Long, Left As Long, AnimFrame As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Exit the sub if we're not in-game.
+    If InGame = False Then Exit Sub
+                
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    ' Cycle through the offered items.
+    For i = 1 To MAX_INV
+        ' Let's retrieve what item's offered in this slot.
+        itemnum = GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).num)
+        
+        ' If the item number's valid we'll continue on.
+        If itemnum > 0 And itemnum <= MAX_ITEMS Then
+        
+            ' Retrieve the item picture and check if it's valid, if it is we can finaly get to rendering stuff!
+            ' Exciting.
+            itempic = Item(itemnum).Pic
+            If itempic > 0 And itempic <= NumItems Then
+                
+                ' Calculate the location to render the texture on.
+                Top = InvTop - 24 + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
+                AnimFrame = ItemAnimFrame(itemnum) * PIC_X
+                
+                ' Render the actual icon.
+                Call RenderGraphic(Tex_Item(itempic), Left, Top, PIC_X, PIC_Y, 0, 0, AnimFrame, 0)
+
+                ' If item is a stack - draw the amount you have
+                If TradeYourOffer(i).Value > 1 Then
+                    y = Top + 22
+                    x = Left - 4
+                    
+                    Amount = TradeYourOffer(i).Value
+                    
+                    ' Draw currency but with k, m, b etc. using a convertion function
+                    If Amount < 1000000 Then
+                        Colour = White
+                    ElseIf Amount > 1000000 And Amount < 10000000 Then
+                        Colour = Yellow
+                    ElseIf Amount > 10000000 Then
+                        Colour = BrightGreen
+                    End If
+                    
+                    Call RenderText(MainFont, ConvertCurrency(Str(Amount)), x, y, Colour)
+
+                End If
+            End If
+        End If
+    Next
+        
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmMain.picYourTrade.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmMain.picYourTrade.ScaleHeight
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmMain.picYourTrade.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmMain.picYourTrade.ScaleHeight
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmMain.picYourTrade.hWnd, ByVal 0)
+        
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawTradeOffer", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub DrawTradeReceive()
+Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
+Dim Amount As Long
+Dim Colour As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+Dim Top As Long, Left As Long, AnimFrame As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Exit the sub if we're not in-game.
+    If InGame = False Then Exit Sub
+                
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    ' Cycle through the offered items.
+    For i = 1 To MAX_INV
+        ' Let's retrieve what item's offered in this slot.
+        itemnum = TradeTheirOffer(i).num
+        
+        ' If the item number's valid we'll continue on.
+        If itemnum > 0 And itemnum <= MAX_ITEMS Then
+        
+            ' Retrieve the item picture and check if it's valid, if it is we can finaly get to rendering stuff!
+            ' Exciting.
+            itempic = Item(itemnum).Pic
+            If itempic > 0 And itempic <= NumItems Then
+                
+                ' Calculate the location to render the texture on.
+                Top = InvTop - 24 + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
+                AnimFrame = ItemAnimFrame(itemnum) * PIC_X
+                
+                ' Render the actual icon.
+                Call RenderGraphic(Tex_Item(itempic), Left, Top, PIC_X, PIC_Y, 0, 0, AnimFrame, 0)
+
+                ' If item is a stack - draw the amount you have
+                If TradeTheirOffer(i).Value > 1 Then
+                    y = Top + 22
+                    x = Left - 4
+                    
+                    Amount = TradeTheirOffer(i).Value
+                    
+                    ' Draw currency but with k, m, b etc. using a convertion function
+                    If Amount < 1000000 Then
+                        Colour = White
+                    ElseIf Amount > 1000000 And Amount < 10000000 Then
+                        Colour = Yellow
+                    ElseIf Amount > 10000000 Then
+                        Colour = BrightGreen
+                    End If
+                    
+                    Call RenderText(MainFont, ConvertCurrency(Str(Amount)), x, y, Colour)
+
+                End If
+            End If
+        End If
+    Next
+        
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmMain.picTheirTrade.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmMain.picTheirTrade.ScaleHeight
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmMain.picTheirTrade.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmMain.picTheirTrade.ScaleHeight
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmMain.picTheirTrade.hWnd, ByVal 0)
+        
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawTradeReceive", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
