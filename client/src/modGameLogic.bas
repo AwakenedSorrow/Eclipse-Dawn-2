@@ -1008,7 +1008,7 @@ Dim Name As String
         .picItemDesc.Left = x
         .picItemDesc.Visible = True
     End With
-
+    
     ' Error handler
     Exit Sub
 errorhandler:
@@ -1179,7 +1179,6 @@ Public Sub OpenShop(ByVal shopnum As Long)
     ShopAction = 0
     frmMain.picCover.Visible = False
     frmMain.picShop.Visible = True
-    BltShop
     
     ' Error handler
     Exit Sub

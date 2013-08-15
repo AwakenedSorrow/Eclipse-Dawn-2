@@ -2159,7 +2159,6 @@ Dim i As Long
     InBank = True
     frmMain.picCover.Visible = False
     frmMain.picBank.Visible = True
-    BltBank
     
     Set Buffer = Nothing
     
@@ -2183,7 +2182,6 @@ Dim Buffer As clsBuffer
     InTrade = Buffer.ReadLong
     frmMain.picCover.Visible = False
     frmMain.picTrade.Visible = True
-    BltTrade
     
     Set Buffer = Nothing
     
@@ -2239,8 +2237,6 @@ Dim i As Long
         Next
         frmMain.lblTheirWorth.Caption = Buffer.ReadLong & "g"
     End If
-    
-    BltTrade
     
     Set Buffer = Nothing
     

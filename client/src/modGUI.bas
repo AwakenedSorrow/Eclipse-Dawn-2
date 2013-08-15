@@ -16,9 +16,9 @@ Public Sub DrawGDI()
         If frmMain.picInventory.Visible Then DrawInventory
         If frmMain.picSpells.Visible Then DrawPlayerSpells
         If frmMain.picCharacter.Visible Then DrawCharacterScreen
-        'If frmMain.picShop.Visible Then DrawShop
-        'If frmMain.picTempBank.Visible Then DrawBankItem frmMain.picTempBank.Left, frmMain.picTempBank.Top
-        'If frmMain.picBank.Visible Then DrawBank
+        If frmMain.picShop.Visible Then DrawShop
+        If frmMain.picTempBank.Visible Then DrawDraggedBank frmMain.picTempBank.Left, frmMain.picTempBank.Top
+        If frmMain.picBank.Visible Then DrawBank
         'If frmMain.picTrade.Visible Then DrawTrade
     End If
     
@@ -382,7 +382,7 @@ Dim AnimLeft As Long
         
         ' Render the texture to the screen, we're using a 2pixel offset to make sure it's centered and doesn't clip
         ' with the picturebox. It's an original design choice in Mirage4, lord knows why.
-        Call RenderGraphic(Tex_Item(itempic), 0, 0, PIC_X, PIC_Y, 0, 0, AnimLeft, Top)
+        Call RenderGraphic(Tex_Item(itempic), 2, 2, PIC_X, PIC_Y, 0, 0, AnimLeft, Top)
         
         ' We're done for now, so we can close the lovely little rendering device and present it to our user!
         ' Of course, we also need to do a few calculations to make sure it appears where it should.
@@ -414,7 +414,78 @@ Dim AnimLeft As Long
     ' Error handler
     Exit Sub
 errorhandler:
-    HandleError "DrawDraggedItem", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    HandleError "DrawDraggedItem", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub DrawDraggedBank(ByVal x As Long, ByVal y As Long)
+Dim Top As Long, Left As Long
+Dim itemnum As Long, itempic As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+Dim AnimLeft As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Retrieve the item number we're trying to drag around.
+    itemnum = GetBankItemNum(DragBankSlotNum)
+    
+    ' If the item number is valid then make sure we do something with it, wouldn't like to have an invisible icon right?
+    If itemnum > 0 And itemnum <= MAX_ITEMS Then
+    
+        ' Retrieve the item texture and make sure it is valid before we continue.
+        itempic = Item(itemnum).Pic
+        If itempic < 1 Or itempic > NumItems Then Exit Sub
+        
+        ' Let's open clear ourselves a nice clean slate to render on shall we?
+        Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+        Call D3DDevice8.BeginScene
+        
+         ' Render the backdrop
+        Call RenderGraphic(Tex_GUI(DragBoxE), 0, 0, D3DT_TEXTURE(Tex_GUI(DragBoxE)).Width, D3DT_TEXTURE(Tex_GUI(DragBoxE)).Height, 0, 0, 0, 0)
+        
+        ' Calculate what image we need to grab from the texture.
+        Top = 0
+        
+        ' Calculate the Animation Frame
+        AnimLeft = ItemAnimFrame(itemnum) * 32
+        
+        ' Render the texture to the screen, we're using a 2pixel offset to make sure it's centered and doesn't clip
+        ' with the picturebox. It's an original design choice in Mirage4, lord knows why.
+        Call RenderGraphic(Tex_Item(itempic), 2, 2, PIC_X, PIC_Y, 0, 0, AnimLeft, Top)
+        
+        ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+        ' Of course, we also need to do a few calculations to make sure it appears where it should.
+        With srcRect
+            .X1 = 0
+            .X2 = frmMain.picTempBank.Width
+            .Y1 = 0
+            .Y2 = frmMain.picTempBank.Height
+        End With
+    
+        With destRect
+            .X1 = 0
+            .X2 = frmMain.picTempBank.Width
+            .Y1 = 0
+            .Y2 = frmMain.picTempBank.Height
+        End With
+    
+        Call D3DDevice8.EndScene
+        Call D3DDevice8.Present(srcRect, destRect, frmMain.picTempBank.hWnd, ByVal 0)
+
+        With frmMain.picTempBank
+            .Top = y
+            .Left = x
+            .Visible = True
+            .ZOrder (0)
+        End With
+    End If
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawDraggedBank", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
@@ -1374,6 +1445,173 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
     Exit Sub
 errorhandler:
     HandleError "EditorSpell_DrawIcon", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub DrawShop()
+Dim i As Long, x As Long, y As Long, itemnum As Long, itempic As Long
+Dim Amount As String
+Dim Colour As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+Dim Top As Long, Left As Long, AnimFrame As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Check if we're not here before we should be.
+    If Not InGame Then Exit Sub
+    
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    ' Loop through the shop's inventory.
+    For i = 1 To MAX_TRADES
+        itemnum = Shop(InShop).TradeItem(i).Item
+        If itemnum > 0 And itemnum <= MAX_ITEMS Then
+            itempic = Item(itemnum).Pic
+            If itempic > 0 And itempic <= NumItems Then
+                
+                ' Work out the position
+                Top = ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
+                Left = ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
+                
+                ' The frame we need to use.
+                AnimFrame = ItemAnimFrame(Shop(InShop).TradeItem(i).Item) * PIC_X
+                
+                ' Render the icon.
+                Call RenderGraphic(Tex_Item(itempic), Left, Top, PIC_X, PIC_Y, 0, 0, AnimFrame, 0)
+                
+                ' If item is a stack - draw the amount the shop has
+                If Shop(InShop).TradeItem(i).ItemValue > 1 Then
+                    y = Top + 22
+                    x = Left - 4
+                    Amount = CStr(Shop(InShop).TradeItem(i).ItemValue)
+                    
+                    ' Draw currency but with k, m, b etc. using a convertion function
+                    If CLng(Amount) < 1000000 Then
+                        Colour = White
+                    ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
+                        Colour = Yellow
+                    ElseIf CLng(Amount) > 10000000 Then
+                        Colour = BrightGreen
+                    End If
+                    
+                    Call RenderText(MainFont, ConvertCurrency(Amount), x, y, Colour)
+                End If
+            End If
+        End If
+    Next
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmMain.picShopItems.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmMain.picShopItems.ScaleHeight
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmMain.picShopItems.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmMain.picShopItems.ScaleHeight
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmMain.picShopItems.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawShop", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub DrawBank()
+Dim i As Long, x As Long, y As Long, itemnum As Long
+Dim Amount As String
+Dim Sprite As Long, Colour As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+Dim Top As Long, Left As Long, AnimFrame As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Exit the sub if we're not in-game.
+    If InGame = False Then Exit Sub
+                
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+                
+    ' Render Backdrop.
+    Call RenderGraphic(Tex_GUI(BankE), 0, 0, D3DT_TEXTURE(Tex_GUI(BankE)).Width, D3DT_TEXTURE(Tex_GUI(BankE)).Height, 0, 0, 0, 0)
+                
+    ' Cycle through all the bank items.
+    For i = 1 To MAX_BANK
+        ' retrieve the item number.
+        itemnum = GetBankItemNum(i)
+        If itemnum > 0 And itemnum <= MAX_ITEMS Then
+            ' And the icon.
+            Sprite = Item(itemnum).Pic
+            ' If the sprite is valid, continue.
+            If Sprite > 0 And Sprite <= NumItems Then
+                
+                ' Calculate the position of the item icon and the animation frame we'll be using.
+                Top = BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
+                Left = BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
+                AnimFrame = ItemAnimFrame(itemnum) * 32
+                
+                ' Render the item to the screen
+                Call RenderGraphic(Tex_Item(Sprite), Left, Top, PIC_X, PIC_Y, 0, 0, AnimFrame, 0)
+
+                ' If item is a stack - draw the amount you have
+                If GetBankItemValue(i) > 1 Then
+                    y = Top + 22
+                    x = Left - 4
+                
+                    Amount = CStr(GetBankItemValue(i))
+                    ' Draw currency but with k, m, b etc. using a convertion function
+                    If CLng(Amount) < 1000000 Then
+                        Colour = White
+                    ElseIf CLng(Amount) > 1000000 And CLng(Amount) < 10000000 Then
+                        Colour = Yellow
+                    ElseIf CLng(Amount) > 10000000 Then
+                        Colour = BrightGreen
+                    End If
+                    Call RenderText(MainFont, ConvertCurrency(Amount), x, y, Colour)
+                End If
+            End If
+            End If
+        Next
+        
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmMain.picBank.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmMain.picBank.ScaleHeight
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmMain.picBank.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmMain.picBank.ScaleHeight
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmMain.picBank.hWnd, ByVal 0)
+        
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawBank", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub

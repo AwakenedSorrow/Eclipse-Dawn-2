@@ -1818,7 +1818,7 @@ Private Sub cmdSSMap_Click()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' render the map temp
-    ScreenshotMap
+    ' ScreenshotMap
     
     ' Error handler
     Exit Sub
@@ -3902,7 +3902,7 @@ Dim X2 As Long, Y2 As Long
     BankY = y
     
     If DragBankSlotNum > 0 Then
-        Call BltBankItem(x + picBank.Left, y + picBank.Top)
+        Call DrawDraggedBank(x + picBank.Left, y + picBank.Top)
     Else
         bankNum = IsBankItem(x, y)
         
@@ -3910,7 +3910,9 @@ Dim X2 As Long, Y2 As Long
             
             X2 = x + picBank.Left + 1
             Y2 = y + picBank.Top + 1
-            UpdateDescWindow Bank.Item(bankNum).num, X2, Y2
+            itemnum = Bank.Item(bankNum).num
+            LastItemDesc = itemnum
+            UpdateDescWindow itemnum, X2, Y2
             Exit Sub
         End If
     End If
