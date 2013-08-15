@@ -1214,7 +1214,8 @@ End Sub
 Private Sub picBackSelect_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
-    
+    x = x + (frmEditor_Map.scrlPictureX.Value * 32)
+    y = y + (frmEditor_Map.scrlPictureY.Value * 32)
     Call MapEditorChooseTile(Button, x, y)
     
     ' Error handler

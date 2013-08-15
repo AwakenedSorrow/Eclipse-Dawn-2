@@ -1096,6 +1096,8 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
 
     ' Check if it's a valid image.
     If itemnum < 1 Or itemnum > NumItems Then
+        ' Clear the picturebox to make sure it doesn't display anything anymore.
+        frmEditor_Item.picItem.Cls
         Exit Sub
     End If
 
@@ -1144,6 +1146,8 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
     ' Let's retrieve the paperdoll image and check if it's valid.
     Sprite = frmEditor_Item.scrlPaperdoll.Value
     If Sprite < 1 Or Sprite > NumPaperdolls Then
+        ' Clear the picturebox to make sure it doesn't display anything anymore.
+        frmEditor_Item.picPaperdoll.Cls
         Exit Sub
     End If
 

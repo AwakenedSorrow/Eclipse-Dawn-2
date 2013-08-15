@@ -183,9 +183,9 @@ Dim srcRect As D3DRECT
     ' This makes sure we can actually SEE what we rendered onto the device above.
     With srcRect
         .X1 = 0
-        .x2 = frmMain.picScreen.ScaleWidth
+        .X2 = frmMain.picScreen.ScaleWidth
         .Y1 = 0
-        .y2 = frmMain.picScreen.ScaleHeight
+        .Y2 = frmMain.picScreen.ScaleHeight
     End With
     
     Call D3DDevice8.EndScene
@@ -354,7 +354,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderSprite(ByVal Sprite As Long, ByVal x2 As Long, y2 As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
+Sub RenderSprite(ByVal Sprite As Long, ByVal X2 As Long, Y2 As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
 Dim x As Long
 Dim y As Long
 Dim Width As Long
@@ -367,8 +367,8 @@ Dim Height As Long
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
     
     ' Convert the provided values to values we can use on the map.
-    x = ConvertMapX(x2)
-    y = ConvertMapY(y2)
+    x = ConvertMapX(X2)
+    y = ConvertMapY(Y2)
     
     ' Pre-Calculate these values, it makes the render line look a lot cleaner.
     Width = D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4
@@ -996,7 +996,7 @@ errorhandler:
     Exit Function
 End Function
 
-Public Sub RenderPaperdoll(ByVal x2 As Long, ByVal y2 As Long, ByVal Sprite As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
+Public Sub RenderPaperdoll(ByVal X2 As Long, ByVal Y2 As Long, ByVal Sprite As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
 Dim Top As Long, Left As Long
 Dim x As Long, y As Long
 Dim Width As Long, Height As Long
@@ -1011,8 +1011,8 @@ Dim Width As Long, Height As Long
     Left = SpriteFrame * (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width / 4)
     
     ' Caclculate a few things we might need.
-    x = ConvertMapX(x2)
-    y = ConvertMapY(y2)
+    x = ConvertMapX(X2)
+    y = ConvertMapY(Y2)
     Width = (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width / 4)
     Height = (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4)
     
@@ -1066,3 +1066,85 @@ errorhandler:
     Err.Clear
     Exit Function
 End Function
+
+Public Sub UpdateCamera()
+Dim offsetX As Long
+Dim offsetY As Long
+Dim StartX As Long
+Dim StartY As Long
+Dim EndX As Long
+Dim EndY As Long
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    offsetX = Player(MyIndex).XOffset + PIC_X
+    offsetY = Player(MyIndex).yOffset + PIC_Y
+
+    StartX = GetPlayerX(MyIndex) - StartXValue
+    StartY = GetPlayerY(MyIndex) - StartYValue
+    If StartX < 0 Then
+        offsetX = 0
+        If StartX = -1 Then
+            If Player(MyIndex).XOffset > 0 Then
+                offsetX = Player(MyIndex).XOffset
+            End If
+        End If
+        StartX = 0
+    End If
+    If StartY < 0 Then
+        offsetY = 0
+        If StartY = -1 Then
+            If Player(MyIndex).yOffset > 0 Then
+                offsetY = Player(MyIndex).yOffset
+            End If
+        End If
+        StartY = 0
+    End If
+    
+    EndX = StartX + EndXValue
+    EndY = StartY + EndYValue
+    If EndX > Map.MaxX Then
+        offsetX = 32
+        If EndX = Map.MaxX + 1 Then
+            If Player(MyIndex).XOffset < 0 Then
+                offsetX = Player(MyIndex).XOffset + PIC_X
+            End If
+        End If
+        EndX = Map.MaxX
+        StartX = EndX - MAX_MAPX - 1
+    End If
+    If EndY > Map.MaxY Then
+        offsetY = 32
+        If EndY = Map.MaxY + 1 Then
+            If Player(MyIndex).yOffset < 0 Then
+                offsetY = Player(MyIndex).yOffset + PIC_Y
+            End If
+        End If
+        EndY = Map.MaxY
+        StartY = EndY - MAX_MAPY - 1
+    End If
+
+    With TileView
+        .Top = StartY
+        .bottom = EndY
+        .Left = StartX
+        .Right = EndX
+    End With
+
+    With Camera
+        .Top = offsetY
+        .bottom = .Top + ScreenY
+        .Left = offsetX
+        .Right = .Left + ScreenX
+    End With
+    
+    UpdateDrawMapName
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "UpdateCamera", "modRendering", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
