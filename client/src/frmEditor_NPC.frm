@@ -99,14 +99,14 @@ Begin VB.Form frmEditor_NPC
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   480
-         Left            =   4440
-         ScaleHeight     =   32
+         Height          =   960
+         Left            =   3960
+         ScaleHeight     =   64
          ScaleMode       =   3  'Pixel
-         ScaleWidth      =   32
+         ScaleWidth      =   64
          TabIndex        =   32
          Top             =   960
-         Width           =   480
+         Width           =   960
       End
       Begin VB.HScrollBar scrlSprite 
          Height          =   255
@@ -114,7 +114,7 @@ Begin VB.Form frmEditor_NPC
          Max             =   255
          TabIndex        =   31
          Top             =   960
-         Width           =   3015
+         Width           =   2535
       End
       Begin VB.TextBox txtName 
          Height          =   270
@@ -131,7 +131,7 @@ Begin VB.Form frmEditor_NPC
          Style           =   2  'Dropdown List
          TabIndex        =   29
          Top             =   1680
-         Width           =   3615
+         Width           =   2535
       End
       Begin VB.HScrollBar scrlRange 
          Height          =   255
@@ -139,7 +139,7 @@ Begin VB.Form frmEditor_NPC
          Max             =   255
          TabIndex        =   28
          Top             =   1320
-         Width           =   3015
+         Width           =   2535
       End
       Begin VB.TextBox txtAttackSay 
          Height          =   255
@@ -605,7 +605,7 @@ Private Sub scrlSprite_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     lblSprite.Caption = "Sprite: " & scrlSprite.Value
-    Call EditorNpc_BltSprite
+    Call EditorNpc_DrawSprite
     Npc(EditorIndex).Sprite = scrlSprite.Value
     
     ' Error handler

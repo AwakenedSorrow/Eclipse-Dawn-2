@@ -2,10 +2,10 @@ VERSION 5.00
 Begin VB.Form frmEditor_Resource 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Resource Editor"
-   ClientHeight    =   8295
+   ClientHeight    =   10515
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   8535
+   ClientWidth     =   9630
    ControlBox      =   0   'False
    BeginProperty Font 
       Name            =   "Verdana"
@@ -20,64 +20,64 @@ Begin VB.Form frmEditor_Resource
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   553
+   ScaleHeight     =   701
    ScaleMode       =   3  'Pixel
-   ScaleWidth      =   569
+   ScaleWidth      =   642
    StartUpPosition =   2  'CenterScreen
    Visible         =   0   'False
    Begin VB.CommandButton cmdDelete 
       Caption         =   "Delete"
       Height          =   375
-      Left            =   5160
+      Left            =   5760
       TabIndex        =   28
-      Top             =   7800
+      Top             =   10080
       Width           =   1455
    End
    Begin VB.CommandButton cmdCancel 
       Caption         =   "Cancel"
       Height          =   375
-      Left            =   6840
+      Left            =   8040
       TabIndex        =   27
-      Top             =   7800
+      Top             =   10080
       Width           =   1455
    End
    Begin VB.CommandButton cmdSave 
       Caption         =   "Save"
       Height          =   375
-      Left            =   3480
+      Left            =   3360
       TabIndex        =   26
-      Top             =   7800
+      Top             =   10080
       Width           =   1455
    End
    Begin VB.Frame Frame1 
       Caption         =   "Resource Properties"
-      Height          =   7575
+      Height          =   9855
       Left            =   3360
       TabIndex        =   3
       Top             =   120
-      Width           =   5055
+      Width           =   6135
       Begin VB.ComboBox cmbSound 
          Height          =   300
          Left            =   960
          Style           =   2  'Dropdown List
          TabIndex        =   32
-         Top             =   7080
-         Width           =   3975
+         Top             =   9360
+         Width           =   5055
       End
       Begin VB.HScrollBar scrlAnimation 
          Height          =   255
          Left            =   120
          Max             =   6000
          TabIndex        =   29
-         Top             =   6720
-         Width           =   4815
+         Top             =   9000
+         Width           =   5895
       End
       Begin VB.HScrollBar scrlExhaustedPic 
          Height          =   255
-         Left            =   2640
+         Left            =   3240
          TabIndex        =   24
          Top             =   1920
-         Width           =   2295
+         Width           =   2775
       End
       Begin VB.PictureBox picExhaustedPic 
          AutoRedraw      =   -1  'True
@@ -93,21 +93,21 @@ Begin VB.Form frmEditor_Resource
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   1680
-         Left            =   2640
-         ScaleHeight     =   112
+         Height          =   3960
+         Left            =   3240
+         ScaleHeight     =   264
          ScaleMode       =   3  'Pixel
-         ScaleWidth      =   152
+         ScaleWidth      =   184
          TabIndex        =   23
          Top             =   2280
-         Width           =   2280
+         Width           =   2760
       End
       Begin VB.TextBox txtName 
          Height          =   285
          Left            =   960
          TabIndex        =   13
          Top             =   240
-         Width           =   3975
+         Width           =   5055
       End
       Begin VB.ComboBox cmbType 
          Height          =   300
@@ -117,37 +117,37 @@ Begin VB.Form frmEditor_Resource
          Style           =   2  'Dropdown List
          TabIndex        =   12
          Top             =   1320
-         Width           =   3975
+         Width           =   5055
       End
       Begin VB.HScrollBar scrlNormalPic 
          Height          =   255
          Left            =   120
          TabIndex        =   11
          Top             =   1920
-         Width           =   2295
+         Width           =   2775
       End
       Begin VB.HScrollBar scrlReward 
          Height          =   255
          Left            =   120
          TabIndex        =   10
-         Top             =   4320
-         Width           =   4815
+         Top             =   6600
+         Width           =   5895
       End
       Begin VB.HScrollBar scrlTool 
          Height          =   255
          Left            =   120
          Max             =   3
          TabIndex        =   9
-         Top             =   4920
-         Width           =   4815
+         Top             =   7200
+         Width           =   5895
       End
       Begin VB.HScrollBar scrlHealth 
          Height          =   255
          Left            =   120
          Max             =   255
          TabIndex        =   8
-         Top             =   5520
-         Width           =   4815
+         Top             =   7800
+         Width           =   5895
       End
       Begin VB.PictureBox picNormalPic 
          AutoRedraw      =   -1  'True
@@ -163,43 +163,43 @@ Begin VB.Form frmEditor_Resource
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   1680
+         Height          =   3960
          Left            =   120
-         ScaleHeight     =   112
+         ScaleHeight     =   264
          ScaleMode       =   3  'Pixel
-         ScaleWidth      =   152
+         ScaleWidth      =   184
          TabIndex        =   7
          Top             =   2280
-         Width           =   2280
+         Width           =   2760
       End
       Begin VB.HScrollBar scrlRespawn 
          Height          =   255
          Left            =   120
          Max             =   6000
          TabIndex        =   6
-         Top             =   6120
-         Width           =   4815
+         Top             =   8400
+         Width           =   5895
       End
       Begin VB.TextBox txtMessage 
          Height          =   285
          Left            =   960
          TabIndex        =   5
          Top             =   600
-         Width           =   3975
+         Width           =   5055
       End
       Begin VB.TextBox txtMessage2 
          Height          =   285
          Left            =   960
          TabIndex        =   4
          Top             =   960
-         Width           =   3975
+         Width           =   5055
       End
       Begin VB.Label Label5 
          Caption         =   "Sound:"
          Height          =   255
          Left            =   120
          TabIndex        =   31
-         Top             =   7080
+         Top             =   9360
          Width           =   1455
       End
       Begin VB.Label lblAnim 
@@ -208,17 +208,18 @@ Begin VB.Form frmEditor_Resource
          Height          =   180
          Left            =   120
          TabIndex        =   30
-         Top             =   6480
+         Top             =   8760
          Width           =   1260
       End
       Begin VB.Label lblExhaustedPic 
+         Alignment       =   2  'Center
          AutoSize        =   -1  'True
          Caption         =   "Exhausted Image: 0"
          Height          =   180
-         Left            =   2640
+         Left            =   3240
          TabIndex        =   25
          Top             =   1680
-         Width           =   1530
+         Width           =   2730
       End
       Begin VB.Label Label1 
          AutoSize        =   -1  'True
@@ -239,6 +240,7 @@ Begin VB.Form frmEditor_Resource
          Width           =   435
       End
       Begin VB.Label lblNormalPic 
+         Alignment       =   2  'Center
          AutoSize        =   -1  'True
          Caption         =   "Normal Image: 0"
          BeginProperty Font 
@@ -254,7 +256,7 @@ Begin VB.Form frmEditor_Resource
          Left            =   120
          TabIndex        =   20
          Top             =   1680
-         Width           =   1470
+         Width           =   2775
       End
       Begin VB.Label lblReward 
          AutoSize        =   -1  'True
@@ -262,7 +264,7 @@ Begin VB.Form frmEditor_Resource
          Height          =   180
          Left            =   120
          TabIndex        =   19
-         Top             =   4080
+         Top             =   6360
          Width           =   1440
       End
       Begin VB.Label lblTool 
@@ -271,7 +273,7 @@ Begin VB.Form frmEditor_Resource
          Height          =   180
          Left            =   120
          TabIndex        =   18
-         Top             =   4680
+         Top             =   6960
          Width           =   1530
       End
       Begin VB.Label lblHealth 
@@ -280,7 +282,7 @@ Begin VB.Form frmEditor_Resource
          Height          =   180
          Left            =   120
          TabIndex        =   17
-         Top             =   5280
+         Top             =   7560
          Width           =   705
       End
       Begin VB.Label lblRespawn 
@@ -289,7 +291,7 @@ Begin VB.Form frmEditor_Resource
          Height          =   180
          Left            =   120
          TabIndex        =   16
-         Top             =   5880
+         Top             =   8160
          Width           =   2100
       End
       Begin VB.Label Label3 
@@ -316,20 +318,20 @@ Begin VB.Form frmEditor_Resource
       Caption         =   "Change Array Size"
       Enabled         =   0   'False
       Height          =   375
-      Left            =   240
+      Left            =   120
       TabIndex        =   2
-      Top             =   7800
+      Top             =   10080
       Width           =   2895
    End
    Begin VB.Frame Frame3 
       Caption         =   "Resource List"
-      Height          =   7575
+      Height          =   9855
       Left            =   120
       TabIndex        =   0
       Top             =   120
       Width           =   3135
       Begin VB.ListBox lstIndex 
-         Height          =   7260
+         Height          =   9420
          Left            =   120
          TabIndex        =   1
          Top             =   240
@@ -459,7 +461,7 @@ Private Sub scrlExhaustedPic_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     lblExhaustedPic.Caption = "Exhausted Image: " & scrlExhaustedPic.Value
-    EditorResource_BltSprite
+    EditorResource_DrawExhaustedSprite
     Resource(EditorIndex).ExhaustedImage = scrlExhaustedPic.Value
     
     ' Error handler
@@ -490,7 +492,7 @@ Private Sub scrlNormalPic_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     lblNormalPic.Caption = "Normal Image: " & scrlNormalPic.Value
-    EditorResource_BltSprite
+    EditorResource_DrawNormalSprite
     Resource(EditorIndex).ResourceImage = scrlNormalPic.Value
     
     ' Error handler

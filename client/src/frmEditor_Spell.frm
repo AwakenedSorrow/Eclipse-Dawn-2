@@ -762,7 +762,7 @@ Private Sub scrlIcon_Change()
         lblIcon.Caption = "Icon: None"
     End If
     Spell(EditorIndex).Icon = scrlIcon.Value
-    EditorSpell_BltIcon
+    EditorSpell_DrawIcon
     
     ' Error handler
     Exit Sub
@@ -927,7 +927,7 @@ Private Sub txtDesc_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    Spell(EditorIndex).Desc = txtDesc.text
+    Spell(EditorIndex).desc = txtDesc.text
     
     ' Error handler
     Exit Sub

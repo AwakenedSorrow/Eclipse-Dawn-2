@@ -39,15 +39,16 @@ Public Sub DrawGDI()
     End If
     
     If frmEditor_NPC.Visible Then
-        'EditorNpc_DrawSprite
+        EditorNpc_DrawSprite
     End If
     
     If frmEditor_Resource.Visible Then
-        'EditorResource_DrawSprite
+        EditorResource_DrawNormalSprite
+        EditorResource_DrawExhaustedSprite
     End If
     
     If frmEditor_Spell.Visible Then
-        'EditorSpell_DrawIcon
+        EditorSpell_DrawIcon
     End If
 
 End Sub
@@ -1185,3 +1186,194 @@ errorhandler:
     Exit Sub
 End Sub
 
+Public Sub EditorNpc_DrawSprite()
+Dim Sprite As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+    
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' retrieve the sprite we'll be rendering.
+    Sprite = frmEditor_NPC.scrlSprite.Value
+
+    ' Check if it's valid.
+    If Sprite < 1 Or Sprite > NumCharacters Then
+        ' Clear the screen so it doesn't leave lingering images.
+        frmEditor_NPC.picSprite.Cls
+        Exit Sub
+    End If
+
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    ' Render the graphic
+    Call RenderGraphic(Tex_Character(Sprite), (frmEditor_NPC.picSprite.ScaleWidth / 2) - (D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4) / 2, (frmEditor_NPC.picSprite.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) / 2, D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4, D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4, 0, 0, 0, (D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) * 4)
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmEditor_NPC.picSprite.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmEditor_NPC.picSprite.ScaleHeight
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmEditor_NPC.picSprite.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmEditor_NPC.picSprite.ScaleHeight
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmEditor_NPC.picSprite.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "EditorNpc_DrawSprite", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub EditorResource_DrawNormalSprite()
+Dim Sprite As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    ' normal sprite
+    Sprite = frmEditor_Resource.scrlNormalPic.Value
+
+    If Sprite >= 1 Or Sprite <= NumResources Then
+        Call RenderGraphic(Tex_Resource(Sprite), (frmEditor_Resource.picNormalPic.ScaleWidth / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Width / 2), (frmEditor_Resource.picNormalPic.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Height / 2), D3DT_TEXTURE(Tex_Resource(Sprite)).Width, D3DT_TEXTURE(Tex_Resource(Sprite)).Height, 0, 0, 0, 0)
+    End If
+
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmEditor_Resource.picNormalPic.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmEditor_Resource.picNormalPic.ScaleHeight
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmEditor_Resource.picNormalPic.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmEditor_Resource.picNormalPic.ScaleHeight
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmEditor_Resource.picNormalPic.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "EditorResource_DrawNormalSprite", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub EditorResource_DrawExhaustedSprite()
+Dim Sprite As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    ' normal sprite
+    Sprite = frmEditor_Resource.scrlExhaustedPic.Value
+
+    If Sprite >= 1 Or Sprite <= NumResources Then
+        Call RenderGraphic(Tex_Resource(Sprite), (frmEditor_Resource.picExhaustedPic.ScaleWidth / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Width / 2), (frmEditor_Resource.picExhaustedPic.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Height / 2), D3DT_TEXTURE(Tex_Resource(Sprite)).Width, D3DT_TEXTURE(Tex_Resource(Sprite)).Height, 0, 0, 0, 0)
+    End If
+
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmEditor_Resource.picExhaustedPic.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmEditor_Resource.picExhaustedPic.ScaleHeight
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmEditor_Resource.picExhaustedPic.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmEditor_Resource.picExhaustedPic.ScaleHeight
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmEditor_Resource.picExhaustedPic.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "EditorResource_DrawExhaustedSprite", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub EditorSpell_DrawIcon()
+Dim iconnum As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' retrieve the item icon.
+    iconnum = frmEditor_Spell.scrlIcon.Value
+    
+    ' Is it valid?
+    If iconnum < 1 Or iconnum > NumSpellIcons Then
+        ' Nope, let's clear the picturebox.
+        frmEditor_Spell.picSprite.Cls
+        Exit Sub
+    End If
+    
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    Call RenderGraphic(Tex_SpellIcon(iconnum), 0, 0, PIC_X, PIC_Y, 0, 0, 0, 0)
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmEditor_Spell.picSprite.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmEditor_Spell.picSprite.ScaleHeight
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmEditor_Spell.picSprite.ScaleWidth
+        .Y1 = 0
+        .Y2 = frmEditor_Spell.picSprite.ScaleHeight
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmEditor_Spell.picSprite.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "EditorSpell_DrawIcon", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub

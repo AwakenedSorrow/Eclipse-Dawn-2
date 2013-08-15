@@ -908,6 +908,7 @@ Dim SoundSet As Boolean
         .txtAttackSay.text = Trim$(Npc(EditorIndex).AttackSay)
         If Npc(EditorIndex).Sprite < 0 Or Npc(EditorIndex).Sprite > .scrlSprite.Max Then Npc(EditorIndex).Sprite = 0
         .scrlSprite.Value = Npc(EditorIndex).Sprite
+        .scrlSprite.Max = NumCharacters
         .txtSpawnSecs.text = CStr(Npc(EditorIndex).SpawnSecs)
         .cmbBehaviour.ListIndex = Npc(EditorIndex).Behaviour
         .scrlRange.Value = Npc(EditorIndex).Range
@@ -935,7 +936,6 @@ Dim SoundSet As Boolean
         Next
     End With
     
-    Call EditorNpc_BltSprite
     NPC_Changed(EditorIndex) = True
     
     ' Error handler
@@ -1056,8 +1056,6 @@ Dim SoundSet As Boolean
         End If
     End With
         
-    Call EditorResource_BltSprite
-    
     Resource_Changed(EditorIndex) = True
     
     ' Error handler
@@ -1305,6 +1303,7 @@ Dim SoundSet As Boolean
         .scrlCast.Value = Spell(EditorIndex).CastTime
         .scrlCool.Value = Spell(EditorIndex).CDTime
         .scrlIcon.Value = Spell(EditorIndex).Icon
+        .scrlIcon.Max = NumSpellIcons
         .scrlMap.Value = Spell(EditorIndex).Map
         .scrlX.Value = Spell(EditorIndex).x
         .scrlY.Value = Spell(EditorIndex).y
@@ -1334,8 +1333,6 @@ Dim SoundSet As Boolean
             If Not SoundSet Or .cmbSound.ListIndex = -1 Then .cmbSound.ListIndex = 0
         End If
     End With
-    
-    EditorSpell_BltIcon
     
     Spell_Changed(EditorIndex) = True
     
