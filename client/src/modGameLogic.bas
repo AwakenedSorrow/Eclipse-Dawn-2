@@ -149,8 +149,8 @@ Dim MaxFrames As Long
         frmMain.picScreen.Visible = False
         frmMenu.Visible = True
         GettingMap = True
-        StopMidi
-        PlayMidi Options.MenuMusic
+        StopMusic
+        PlayMusic Options.MenuMusic
     Else
         ' Shutdown the game
         frmLoad.Visible = True
@@ -974,7 +974,7 @@ Dim i As Long
     End If
     
     With frmMain
-        .picSpellDesc.Top = y
+        .picSpellDesc.top = y
         .picSpellDesc.Left = x
         .picSpellDesc.Visible = True
     End With
@@ -1004,7 +1004,7 @@ Dim Name As String
     frmMain.picItemDesc.ZOrder (0)
 
     With frmMain
-        .picItemDesc.Top = y
+        .picItemDesc.top = y
         .picItemDesc.Left = x
         .picItemDesc.Visible = True
     End With
@@ -1230,7 +1230,7 @@ Public Function GetBankItemValue(ByVal bankslot As Long) As Long
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    GetBankItemValue = Bank.Item(bankslot).Value
+    GetBankItemValue = Bank.Item(bankslot).value
     
     ' Error handler
     Exit Function
@@ -1244,7 +1244,7 @@ Public Sub SetBankItemValue(ByVal bankslot As Long, ByVal ItemValue As Long)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    Bank.Item(bankslot).Value = ItemValue
+    Bank.Item(bankslot).value = ItemValue
     
     ' Error handler
     Exit Sub
@@ -1292,7 +1292,7 @@ errorhandler:
 End Function
 
 Public Function IsHotbarSlot(ByVal x As Single, ByVal y As Single) As Long
-Dim Top As Long, Left As Long
+Dim top As Long, Left As Long
 Dim i As Long
 
     ' If debug mode, handle error then exit out
@@ -1301,10 +1301,10 @@ Dim i As Long
     IsHotbarSlot = 0
 
     For i = 1 To MAX_HOTBAR
-        Top = HotbarTop
+        top = HotbarTop
         Left = HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
         If x >= Left And x <= Left + PIC_X Then
-            If y >= Top And y <= Top + PIC_Y Then
+            If y >= top And y <= top + PIC_Y Then
                 IsHotbarSlot = i
                 Exit Function
             End If

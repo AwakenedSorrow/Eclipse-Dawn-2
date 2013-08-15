@@ -320,8 +320,8 @@ Private Sub cmdPlay_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    StopMidi
-    PlayMidi lstMusic.List(lstMusic.ListIndex)
+    StopMusic
+    PlayMusic lstMusic.List(lstMusic.ListIndex)
     
     ' Error handler
     Exit Sub
@@ -335,7 +335,7 @@ Private Sub cmdStop_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    StopMidi
+    StopMusic
     
     ' Error handler
     Exit Sub
@@ -348,8 +348,8 @@ End Sub
 Private Sub cmdOk_Click()
     Dim i As Long
     Dim sTemp As Long
-    Dim x As Long, x2 As Long
-    Dim Y As Long, y2 As Long
+    Dim x As Long, X2 As Long
+    Dim y As Long, Y2 As Long
     Dim tempArr() As TileRec
     
     ' If debug mode, handle error then exit out
@@ -380,19 +380,19 @@ Private Sub cmdOk_Click()
 
         ' set the data before changing it
         tempArr = Map.Tile
-        x2 = Map.MaxX
-        y2 = Map.MaxY
+        X2 = Map.MaxX
+        Y2 = Map.MaxY
         ' change the data
         .MaxX = Val(txtMaxX.text)
         .MaxY = Val(txtMaxY.text)
         ReDim Map.Tile(0 To .MaxX, 0 To .MaxY)
 
-        If x2 > .MaxX Then x2 = .MaxX
-        If y2 > .MaxY Then y2 = .MaxY
+        If X2 > .MaxX Then X2 = .MaxX
+        If Y2 > .MaxY Then Y2 = .MaxY
 
-        For x = 0 To x2
-            For Y = 0 To y2
-                .Tile(x, Y) = tempArr(x, Y)
+        For x = 0 To X2
+            For y = 0 To Y2
+                .Tile(x, y) = tempArr(x, y)
             Next
         Next
 
@@ -423,6 +423,8 @@ errorhandler:
     Err.Clear
     Exit Sub
 End Sub
+
+
 
 Private Sub lstNpcs_Click()
 Dim tmpString() As String

@@ -2,14 +2,13 @@ Attribute VB_Name = "modGeneral"
 Option Explicit
 
 ' halts thread of execution
-Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
+Public Declare Sub Sleep Lib "Kernel32" (ByVal dwMilliseconds As Long)
 
 ' get system uptime in milliseconds
-Public Declare Function GetTickCount Lib "kernel32" () As Long
+Public Declare Function GetTickCount Lib "Kernel32" () As Long
 
 'For Clear functions
 Public Declare Sub ZeroMemory Lib "kernel32.dll" Alias "RtlZeroMemory" (Destination As Any, ByVal Length As Long)
-Public DX7 As New DirectX7  ' Master Object, early binding
 
 Public Sub Main()
     ' If debug mode, handle error then exit out
@@ -71,13 +70,10 @@ Public Sub Main()
     
     ' Initialize the sound system.
     Call SetStatus("Initializing sound system...")
-    Music_On = True
-    Sound_On = True
-    InitSound
-    InitMusic
+    InitBASS
     
     ' check if we have main-menu music, if so play it.
-    If Len(Trim$(Options.MenuMusic)) > 0 Then PlayMidi Trim$(Options.MenuMusic)
+    If Len(Trim$(Options.MenuMusic)) > 0 Then PlayMusic Trim$(Options.MenuMusic)
     
     ' Cache the buttons then reset & render them
     Call SetStatus("Loading buttons...")
@@ -220,7 +216,7 @@ Public Sub MenuState(ByVal state As Long)
             If ConnectToServer(1) Then
                 Call SetStatus("Connected, sending character addition data...")
 
-                If frmMenu.optMale.Value Then
+                If frmMenu.optMale.value Then
                     Call SendAddChar(frmMenu.txtCName, SEX_MALE, frmMenu.cmbClass.ListIndex + 1, newCharSprite)
                 Else
                     Call SendAddChar(frmMenu.txtCName, SEX_FEMALE, frmMenu.cmbClass.ListIndex + 1, newCharSprite)
@@ -366,11 +362,11 @@ Sub GameInit()
     DrawPing
     
     ' set values for amdin panel
-    frmMain.scrlAItem.Max = MAX_ITEMS
-    frmMain.scrlAItem.Value = 1
+    frmMain.scrlAItem.max = MAX_ITEMS
+    frmMain.scrlAItem.value = 1
     
     'stop the song playing
-    StopMidi
+    StopMusic
     
     ' Error handler
     Exit Sub
@@ -391,10 +387,8 @@ Public Sub DestroyGame()
     'destroy objects in reverse order
     Call UnloadDirectX
 
-    ' destory DirectX7 master object
-    If Not DX7 Is Nothing Then
-        Set DX7 = Nothing
-    End If
+    ' Destroy BASS
+    Call DestroyBASS
 
     Call UnloadAllForms
     End
@@ -482,7 +476,7 @@ errorhandler:
     Exit Function
 End Function
 
-Public Sub MovePicture(PB As PictureBox, Button As Integer, Shift As Integer, x As Single, y As Single)
+Public Sub MovePicture(PB As PictureBox, Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim GlobalX As Long
 Dim GlobalY As Long
 
@@ -490,11 +484,11 @@ Dim GlobalY As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     GlobalX = PB.Left
-    GlobalY = PB.Top
+    GlobalY = PB.top
 
     If Button = 1 Then
-        PB.Left = GlobalX + x - SOffsetX
-        PB.Top = GlobalY + y - SOffsetY
+        PB.Left = GlobalX + X - SOffsetX
+        PB.top = GlobalY + Y - SOffsetY
     End If
 
     ' Error handler
@@ -558,61 +552,61 @@ Public Sub cacheButtons()
     
     ' menu - login
     With MenuButton(1)
-        .fileName = "login"
+        .FileName = "login"
         .state = 0 ' normal
     End With
     
     ' menu - register
     With MenuButton(2)
-        .fileName = "register"
+        .FileName = "register"
         .state = 0 ' normal
     End With
     
     ' menu - credits
     With MenuButton(3)
-        .fileName = "credits"
+        .FileName = "credits"
         .state = 0 ' normal
     End With
     
     ' menu - exit
     With MenuButton(4)
-        .fileName = "exit"
+        .FileName = "exit"
         .state = 0 ' normal
     End With
     
     ' main - inv
     With MainButton(1)
-        .fileName = "inv"
+        .FileName = "inv"
         .state = 0 ' normal
     End With
     
     ' main - skills
     With MainButton(2)
-        .fileName = "skills"
+        .FileName = "skills"
         .state = 0 ' normal
     End With
     
     ' main - char
     With MainButton(3)
-        .fileName = "char"
+        .FileName = "char"
         .state = 0 ' normal
     End With
     
     ' main - opt
     With MainButton(4)
-        .fileName = "opt"
+        .FileName = "opt"
         .state = 0 ' normal
     End With
     
     ' main - trade
     With MainButton(5)
-        .fileName = "trade"
+        .FileName = "trade"
         .state = 0 ' normal
     End With
     
     ' main - party
     With MainButton(6)
-        .fileName = "party"
+        .FileName = "party"
         .state = 0 ' normal
     End With
     
@@ -668,7 +662,7 @@ Dim bSuffix As String
     End Select
     
     ' render the button
-    frmMenu.imgButton(buttonNum).Picture = LoadPicture(App.Path & MENUBUTTON_PATH & MenuButton(buttonNum).fileName & bSuffix & ".jpg")
+    frmMenu.imgButton(buttonNum).Picture = LoadPicture(App.Path & MENUBUTTON_PATH & MenuButton(buttonNum).FileName & bSuffix & ".jpg")
     
     ' Error handler
     Exit Sub
@@ -743,7 +737,7 @@ Dim bSuffix As String
     End Select
     
     ' render the button
-    frmMain.imgButton(buttonNum).Picture = LoadPicture(App.Path & MAINBUTTON_PATH & MainButton(buttonNum).fileName & bSuffix & ".jpg")
+    frmMain.imgButton(buttonNum).Picture = LoadPicture(App.Path & MAINBUTTON_PATH & MainButton(buttonNum).FileName & bSuffix & ".jpg")
     
     ' Error handler
     Exit Sub
@@ -775,19 +769,23 @@ errorhandler:
 End Sub
 
 Public Sub PopulateLists()
-Dim strLoad As String, i As Long
+Dim strLoad As String, i As Long, Ext As String
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' Cache music list
-    strLoad = Dir(App.Path & MUSIC_PATH & "*.mid")
+    strLoad = Dir(App.Path & MUSIC_PATH)
     i = 1
     Do While strLoad > vbNullString
-        ReDim Preserve musicCache(1 To i) As String
-        musicCache(i) = strLoad
+        ' Small modification to this one, we're going to check for several extensions here.
+        Ext = LCase$(Mid$(strLoad, Len(strLoad) - 2))
+        If Ext = "mp3" Or Ext = "ogg" Or Ext = "wav" Then
+            ReDim Preserve musicCache(1 To i) As String
+            musicCache(i) = strLoad
+            i = i + 1
+        End If
         strLoad = Dir
-        i = i + 1
     Loop
     
     ' Cache sound list

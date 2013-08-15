@@ -41,9 +41,10 @@ Private Type OptionsRec
     MenuMusic As String
     Music As Byte
     Sound As Byte
+    Volume As Byte
     ' Advanced Stuff
     Debug As Byte
-    Device As Byte
+    device As Byte
 End Type
 
 Public Type PartyRec
@@ -54,7 +55,7 @@ End Type
 
 Public Type PlayerInvRec
     num As Long
-    Value As Long
+    value As Long
 End Type
 
 Private Type BankRec
@@ -69,7 +70,7 @@ End Type
 
 Private Type PlayerRec
     ' General
-    Name As String
+    name As String
     Class As Long
     Sprite As Long
     Level As Byte
@@ -115,7 +116,7 @@ Public Type TileRec
 End Type
 
 Private Type MapRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     Music As String * NAME_LENGTH
     
     Revision As Long
@@ -138,7 +139,7 @@ Private Type MapRec
 End Type
 
 Private Type ClassRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     Stat(1 To Stats.Stat_Count - 1) As Byte
     MaleSprite() As Long
     FemaleSprite() As Long
@@ -147,7 +148,7 @@ Private Type ClassRec
 End Type
 
 Private Type ItemRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     desc As String * 255
     Sound As String * NAME_LENGTH
     
@@ -180,13 +181,13 @@ End Type
 Private Type MapItemRec
     playerName As String
     num As Long
-    Value As Long
+    value As Long
     x As Byte
     y As Byte
 End Type
 
 Private Type NpcRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     AttackSay As String * 100
     Sound As String * NAME_LENGTH
     
@@ -231,13 +232,13 @@ Private Type TradeItemRec
 End Type
 
 Private Type ShopRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     BuyRate As Long
     TradeItem(1 To MAX_TRADES) As TradeItemRec
 End Type
 
 Private Type SpellRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     desc As String * 255
     Sound As String * NAME_LENGTH
     
@@ -278,7 +279,7 @@ Public Type MapResourceRec
 End Type
 
 Private Type ResourceRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     SuccessMessage As String * NAME_LENGTH
     EmptyMessage As String * NAME_LENGTH
     Sound As String * NAME_LENGTH
@@ -315,7 +316,7 @@ Private Type BloodRec
 End Type
 
 Private Type AnimationRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     Sound As String * NAME_LENGTH
     
     Sprite(0 To 1) As Long
@@ -346,6 +347,6 @@ Public Type HotbarRec
 End Type
 
 Public Type ButtonRec
-    fileName As String
+    FileName As String
     state As Byte
 End Type

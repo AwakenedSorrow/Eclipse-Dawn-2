@@ -721,12 +721,12 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   4050
-      Left            =   8115
+      Left            =   11160
       ScaleHeight     =   270
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   194
       TabIndex        =   89
-      Top             =   4245
+      Top             =   4200
       Visible         =   0   'False
       Width           =   2910
       Begin VB.Image imgPartySpirit 
@@ -1107,7 +1107,6 @@ Begin VB.Form frmMain
       _Version        =   393217
       BackColor       =   790032
       BorderStyle     =   0
-      Enabled         =   -1  'True
       ScrollBars      =   2
       Appearance      =   0
       TextRTF         =   $"frmMain.frx":3332
@@ -1264,12 +1263,12 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   4050
-      Left            =   8115
+      Left            =   11160
       ScaleHeight     =   270
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   194
       TabIndex        =   47
-      Top             =   4245
+      Top             =   4200
       Visible         =   0   'False
       Width           =   2910
    End
@@ -1298,6 +1297,16 @@ Begin VB.Form frmMain
       Top             =   4245
       Visible         =   0   'False
       Width           =   2910
+      Begin VB.HScrollBar scrlVolume 
+         Height          =   255
+         Left            =   240
+         Max             =   100
+         Min             =   1
+         TabIndex        =   97
+         Top             =   2040
+         Value           =   1
+         Width           =   2415
+      End
       Begin VB.PictureBox Picture4 
          BackColor       =   &H00000000&
          BorderStyle     =   0  'None
@@ -1399,6 +1408,26 @@ Begin VB.Form frmMain
             Top             =   0
             Width           =   735
          End
+      End
+      Begin VB.Label lblVolume 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Volume: 100%"
+         BeginProperty Font 
+            Name            =   "Georgia"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   210
+         Left            =   240
+         TabIndex        =   96
+         Top             =   1800
+         Width           =   1365
       End
       Begin VB.Label Label49 
          AutoSize        =   -1  'True
@@ -1835,10 +1864,10 @@ Private Sub Form_Load()
     ' move GUI
     picAdmin.Left = 544
     picCurrency.Left = txtChat.Left
-    picCurrency.Top = txtChat.Top
-    picDialogue.Top = txtChat.Top
+    picCurrency.top = txtChat.top
+    picDialogue.top = txtChat.top
     picDialogue.Left = txtChat.Left
-    picCover.Top = picScreen.Top - 1
+    picCover.top = picScreen.top - 1
     picCover.Left = picScreen.Left - 1
     picCover.Height = picScreen.Height + 2
     picCover.Width = picScreen.Width + 2
@@ -2242,7 +2271,7 @@ Private Sub optMOff_Click()
 
     Options.Music = 0
     ' stop music playing
-    StopMidi
+    StopMusic
     ' save to config.ini
     SaveOptions
     
@@ -2263,9 +2292,9 @@ Dim MusicFile As String
     ' start music playing
     MusicFile = Trim$(Map.Music)
     If Not MusicFile = "None." Then
-        PlayMidi MusicFile
+        PlayMusic MusicFile
     Else
-        StopMidi
+        StopMusic
     End If
     ' save to config.ini
     SaveOptions
@@ -2366,13 +2395,13 @@ Dim SlotNum As Long
     If SlotNum <> 0 Then
         If Hotbar(SlotNum).sType = 1 Then ' item
             x = x + picHotbar.Left + 1
-            y = y + picHotbar.Top - picItemDesc.Height - 1
+            y = y + picHotbar.top - picItemDesc.Height - 1
             UpdateDescWindow Hotbar(SlotNum).Slot, x, y
             LastItemDesc = Hotbar(SlotNum).Slot ' set it so you don't re-set values
             Exit Sub
         ElseIf Hotbar(SlotNum).sType = 2 Then ' spell
             x = x + picHotbar.Left + 1
-            y = y + picHotbar.Top - picSpellDesc.Height - 1
+            y = y + picHotbar.top - picSpellDesc.Height - 1
             UpdateSpellWindow Hotbar(SlotNum).Slot, x, y
             LastSpellDesc = Hotbar(SlotNum).Slot  ' set it so you don't re-set values
             Exit Sub
@@ -2427,7 +2456,7 @@ Private Sub picScreen_MouseMove(Button As Integer, Shift As Integer, x As Single
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     CurX = TileView.Left + ((x + Camera.Left) \ PIC_X)
-    CurY = TileView.Top + ((y + Camera.Top) \ PIC_Y)
+    CurY = TileView.top + ((y + Camera.top) \ PIC_Y)
 
     If InMapEditor Then
         If Button = vbLeftButton Or Button = vbRightButton Then
@@ -2463,14 +2492,14 @@ Dim i As Long
 
         If Shop(InShop).TradeItem(i).Item > 0 And Shop(InShop).TradeItem(i).Item <= MAX_ITEMS Then
             With tempRec
-                .Top = ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
-                .bottom = .Top + PIC_Y
+                .top = ShopTop + ((ShopOffsetY + 32) * ((i - 1) \ ShopColumns))
+                .bottom = .top + PIC_Y
                 .Left = ShopLeft + ((ShopOffsetX + 32) * (((i - 1) Mod ShopColumns)))
                 .Right = .Left + PIC_X
             End With
 
             If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.Top And y <= tempRec.bottom Then
+                If y >= tempRec.top And y <= tempRec.bottom Then
                     IsShopItem = i
                     Exit Function
                 End If
@@ -2507,7 +2536,7 @@ Dim shopItem As Long
         Select Case ShopAction
             Case 0 ' no action, give cost
                 With Shop(InShop).TradeItem(shopItem)
-                    AddText "You can buy this item for " & .CostValue & " " & Trim$(Item(.CostItem).Name) & ".", White
+                    AddText "You can buy this item for " & .CostValue & " " & Trim$(Item(.CostItem).name) & ".", White
                 End With
             Case 1 ' buy item
                 ' buy item code
@@ -2534,7 +2563,7 @@ Dim X2 As Long, Y2 As Long
 
     If shopslot <> 0 Then
         X2 = x + picShop.Left + picShopItems.Left + 1
-        Y2 = y + picShop.Top + picShopItems.Top + 1
+        Y2 = y + picShop.top + picShopItems.top + 1
         UpdateDescWindow Shop(InShop).TradeItem(shopslot).Item, X2, Y2
         LastItemDesc = Shop(InShop).TradeItem(shopslot).Item
         Exit Sub
@@ -2600,7 +2629,7 @@ Dim spellnum As Long
         End If
     ElseIf Button = 2 Then ' right click
         If spellnum <> 0 Then
-            Dialogue "Forget Spell", "Are you sure you want to forget how to cast " & Trim$(Spell(PlayerSpells(spellnum)).Name) & "?", DIALOGUE_TYPE_FORGET, True, spellnum
+            Dialogue "Forget Spell", "Are you sure you want to forget how to cast " & Trim$(Spell(PlayerSpells(spellnum)).name) & "?", DIALOGUE_TYPE_FORGET, True, spellnum
             Exit Sub
         End If
     End If
@@ -2627,7 +2656,7 @@ Dim X2 As Long, Y2 As Long
     
     If DragSpell > 0 Then
         With frmMain.picTempSpell
-            .Top = picSpells.Top + y
+            .top = picSpells.top + y
             .Left = picSpells.Left + x
             .Visible = True
             .ZOrder (0)
@@ -2635,7 +2664,7 @@ Dim X2 As Long, Y2 As Long
     Else
         If spellslot <> 0 Then
             X2 = x + picSpells.Left - picSpellDesc.Width - 1
-            Y2 = y + picSpells.Top - picSpellDesc.Height - 1
+            Y2 = y + picSpells.top - picSpellDesc.Height - 1
             UpdateSpellWindow PlayerSpells(spellslot), X2, Y2
             LastSpellDesc = PlayerSpells(spellslot)
             Exit Sub
@@ -2664,14 +2693,14 @@ Dim rec_pos As RECT
         ' drag + drop
         For i = 1 To MAX_PLAYER_SPELLS
             With rec_pos
-                .Top = SpellTop + ((SpellOffsetY + 32) * ((i - 1) \ SpellColumns))
-                .bottom = .Top + PIC_Y
+                .top = SpellTop + ((SpellOffsetY + 32) * ((i - 1) \ SpellColumns))
+                .bottom = .top + PIC_Y
                 .Left = SpellLeft + ((SpellOffsetX + 32) * (((i - 1) Mod SpellColumns)))
                 .Right = .Left + PIC_X
             End With
 
             If x >= rec_pos.Left And x <= rec_pos.Right Then
-                If y >= rec_pos.Top And y <= rec_pos.bottom Then
+                If y >= rec_pos.top And y <= rec_pos.bottom Then
                     If DragSpell <> i Then
                         SendChangeSpellSlots DragSpell, i
                         Exit For
@@ -2682,14 +2711,14 @@ Dim rec_pos As RECT
         ' hotbar
         For i = 1 To MAX_HOTBAR
             With rec_pos
-                .Top = picHotbar.Top - picSpells.Top
+                .top = picHotbar.top - picSpells.top
                 .Left = picHotbar.Left - picSpells.Left + (HotbarOffsetX * (i - 1)) + (32 * (i - 1))
                 .Right = .Left + 32
-                .bottom = picHotbar.Top - picSpells.Top + 32
+                .bottom = picHotbar.top - picSpells.top + 32
             End With
             
             If x >= rec_pos.Left And x <= rec_pos.Right Then
-                If y >= rec_pos.Top And y <= rec_pos.bottom Then
+                If y >= rec_pos.top And y <= rec_pos.bottom Then
                     SendHotbarChange 2, DragSpell, i
                     DragSpell = 0
                     picTempSpell.Visible = False
@@ -2759,7 +2788,7 @@ Private Sub picYourTrade_MouseMove(Button As Integer, Shift As Integer, x As Sin
     
     If TradeNum <> 0 Then
         x = x + picTrade.Left + picYourTrade.Left + 4
-        y = y + picTrade.Top + picYourTrade.Top + 4
+        y = y + picTrade.top + picYourTrade.top + 4
         UpdateDescWindow GetPlayerInvItemNum(MyIndex, TradeYourOffer(TradeNum).num), x, y
         LastItemDesc = GetPlayerInvItemNum(MyIndex, TradeYourOffer(TradeNum).num) ' set it so you don't re-set values
         Exit Sub
@@ -2786,7 +2815,7 @@ Private Sub picTheirTrade_MouseMove(Button As Integer, Shift As Integer, x As Si
     
     If TradeNum <> 0 Then
         x = x + picTrade.Left + picTheirTrade.Left + 4
-        y = y + picTrade.Top + picTheirTrade.Top + 4
+        y = y + picTrade.top + picTheirTrade.top + 4
         UpdateDescWindow TradeTheirOffer(TradeNum).num, x, y
         LastItemDesc = TradeTheirOffer(TradeNum).num ' set it so you don't re-set values
         Exit Sub
@@ -2807,7 +2836,7 @@ Private Sub scrlAAmount_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    lblAAmount.Caption = "Amount: " & scrlAAmount.Value
+    lblAAmount.Caption = "Amount: " & scrlAAmount.value
     
     ' Error handler
     Exit Sub
@@ -2821,8 +2850,8 @@ Private Sub scrlAItem_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    lblAItem.Caption = "Item: " & Trim$(Item(scrlAItem.Value).Name)
-    If Item(scrlAItem.Value).Type = ITEM_TYPE_CURRENCY Then
+    lblAItem.Caption = "Item: " & Trim$(Item(scrlAItem.value).name)
+    If Item(scrlAItem.value).Type = ITEM_TYPE_CURRENCY Then
         scrlAAmount.Enabled = True
         Exit Sub
     End If
@@ -2832,6 +2861,29 @@ Private Sub scrlAItem_Change()
     Exit Sub
 errorhandler:
     HandleError "scrlAItem_Change", "frmMain", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Private Sub scrlVolume_Change()
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Set the label to something useful.
+    lblVolume.Caption = "Volume: " & Trim$(Str$(scrlVolume.value))
+    
+    ' Change the Option and save it.
+    Options.Volume = scrlVolume.value
+    SaveOptions
+    
+    ' Set the actual volume of the music
+    Call SetVolume(MusicIndex, Options.Volume / 100)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "scrlVolume_Change", "frmMain", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
@@ -2934,7 +2986,7 @@ End Sub
 ' ***************
 Private Sub picInventory_DblClick()
     Dim InvNum As Long
-    Dim Value As Long
+    Dim value As Long
     Dim multiplier As Double
     Dim i As Long
     
@@ -2951,9 +3003,9 @@ Private Sub picInventory_DblClick()
             Select Case ShopAction
                 Case 0 ' nothing, give value
                     multiplier = Shop(InShop).BuyRate / 100
-                    Value = Item(GetPlayerInvItemNum(MyIndex, InvNum)).Price * multiplier
-                    If Value > 0 Then
-                        AddText "You can sell this item for " & Value & " gold.", White
+                    value = Item(GetPlayerInvItemNum(MyIndex, InvNum)).Price * multiplier
+                    If value > 0 Then
+                        AddText "You can sell this item for " & value & " gold.", White
                     Else
                         AddText "The shop does not want this item.", BrightRed
                     End If
@@ -2988,7 +3040,7 @@ Private Sub picInventory_DblClick()
                     ' is currency?
                     If Item(GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).num)).Type = ITEM_TYPE_CURRENCY Then
                         ' only exit out if we're offering all of it
-                        If TradeYourOffer(i).Value = GetPlayerInvItemValue(MyIndex, TradeYourOffer(i).num) Then
+                        If TradeYourOffer(i).value = GetPlayerInvItemValue(MyIndex, TradeYourOffer(i).num) Then
                             Exit Sub
                         End If
                     Else
@@ -3039,14 +3091,14 @@ Private Function IsEqItem(ByVal x As Single, ByVal y As Single) As Long
         If GetPlayerEquipment(MyIndex, i) > 0 And GetPlayerEquipment(MyIndex, i) <= MAX_ITEMS Then
 
             With tempRec
-                .Top = EqTop
-                .bottom = .Top + PIC_Y
+                .top = EqTop
+                .bottom = .top + PIC_Y
                 .Left = EqLeft + ((EqOffsetX + 32) * (((i - 1) Mod EqColumns)))
                 .Right = .Left + PIC_X
             End With
 
             If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.Top And y <= tempRec.bottom Then
+                If y >= tempRec.top And y <= tempRec.bottom Then
                     IsEqItem = i
                     Exit Function
                 End If
@@ -3077,14 +3129,14 @@ Private Function IsInvItem(ByVal x As Single, ByVal y As Single) As Long
         If GetPlayerInvItemNum(MyIndex, i) > 0 And GetPlayerInvItemNum(MyIndex, i) <= MAX_ITEMS Then
 
             With tempRec
-                .Top = InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                .bottom = .Top + PIC_Y
+                .top = InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                .bottom = .top + PIC_Y
                 .Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
                 .Right = .Left + PIC_X
             End With
 
             If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.Top And y <= tempRec.bottom Then
+                If y >= tempRec.top And y <= tempRec.bottom Then
                     IsInvItem = i
                     Exit Function
                 End If
@@ -3115,14 +3167,14 @@ Private Function IsPlayerSpell(ByVal x As Single, ByVal y As Single) As Long
         If PlayerSpells(i) > 0 And PlayerSpells(i) <= MAX_PLAYER_SPELLS Then
 
             With tempRec
-                .Top = SpellTop + ((SpellOffsetY + 32) * ((i - 1) \ SpellColumns))
-                .bottom = .Top + PIC_Y
+                .top = SpellTop + ((SpellOffsetY + 32) * ((i - 1) \ SpellColumns))
+                .bottom = .top + PIC_Y
                 .Left = SpellLeft + ((SpellOffsetX + 32) * (((i - 1) Mod SpellColumns)))
                 .Right = .Left + PIC_X
             End With
 
             If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.Top And y <= tempRec.bottom Then
+                If y >= tempRec.top And y <= tempRec.bottom Then
                     IsPlayerSpell = i
                     Exit Function
                 End If
@@ -3160,14 +3212,14 @@ Private Function IsTradeItem(ByVal x As Single, ByVal y As Single, ByVal Yours A
         If itemnum > 0 And itemnum <= MAX_ITEMS Then
 
             With tempRec
-                .Top = InvTop - 24 + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                .bottom = .Top + PIC_Y
+                .top = InvTop - 24 + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                .bottom = .top + PIC_Y
                 .Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
                 .Right = .Left + PIC_X
             End With
 
             If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.Top And y <= tempRec.bottom Then
+                If y >= tempRec.top And y <= tempRec.bottom Then
                     IsTradeItem = i
                     Exit Function
                 End If
@@ -3242,7 +3294,7 @@ Private Sub picInventory_MouseMove(Button As Integer, Shift As Integer, x As Sin
         If InTrade > 0 Then Exit Sub
         If InBank Or InShop Then Exit Sub
         With frmMain.picTempInv
-            .Top = y + picInventory.Top
+            .top = y + picInventory.top
             .Left = x + picInventory.Left
             .Visible = True
             .ZOrder (0)
@@ -3258,7 +3310,7 @@ Private Sub picInventory_MouseMove(Button As Integer, Shift As Integer, x As Sin
                         ' is currency?
                         If Item(GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).num)).Type = ITEM_TYPE_CURRENCY Then
                             ' only exit out if we're offering all of it
-                            If TradeYourOffer(i).Value = GetPlayerInvItemValue(MyIndex, TradeYourOffer(i).num) Then
+                            If TradeYourOffer(i).value = GetPlayerInvItemValue(MyIndex, TradeYourOffer(i).num) Then
                                 Exit Sub
                             End If
                         Else
@@ -3268,7 +3320,7 @@ Private Sub picInventory_MouseMove(Button As Integer, Shift As Integer, x As Sin
                 Next
             End If
             x = x + picInventory.Left - picItemDesc.Width - 1
-            y = y + picInventory.Top - picItemDesc.Height - 1
+            y = y + picInventory.top - picItemDesc.Height - 1
             UpdateDescWindow GetPlayerInvItemNum(MyIndex, InvNum), x, y
             LastItemDesc = GetPlayerInvItemNum(MyIndex, InvNum) ' set it so you don't re-set values
             Exit Sub
@@ -3300,14 +3352,14 @@ Private Sub picInventory_MouseUp(Button As Integer, Shift As Integer, x As Singl
         ' drag + drop
         For i = 1 To MAX_INV
             With rec_pos
-                .Top = InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
-                .bottom = .Top + PIC_Y
+                .top = InvTop + ((InvOffsetY + 32) * ((i - 1) \ InvColumns))
+                .bottom = .top + PIC_Y
                 .Left = InvLeft + ((InvOffsetX + 32) * (((i - 1) Mod InvColumns)))
                 .Right = .Left + PIC_X
             End With
 
             If x >= rec_pos.Left And x <= rec_pos.Right Then
-                If y >= rec_pos.Top And y <= rec_pos.bottom Then '
+                If y >= rec_pos.top And y <= rec_pos.bottom Then '
                     If DragInvSlotNum <> i Then
                         SendChangeInvSlots DragInvSlotNum, i
                         Exit For
@@ -3318,14 +3370,14 @@ Private Sub picInventory_MouseUp(Button As Integer, Shift As Integer, x As Singl
         ' hotbar
         For i = 1 To MAX_HOTBAR
             With rec_pos
-                .Top = picHotbar.Top - picInventory.Top
+                .top = picHotbar.top - picInventory.top
                 .Left = picHotbar.Left - picInventory.Left + (HotbarOffsetX * (i - 1)) + (32 * (i - 1))
                 .Right = .Left + 32
-                .bottom = picHotbar.Top - picInventory.Top + 32
+                .bottom = picHotbar.top - picInventory.top + 32
             End With
             
             If x >= rec_pos.Left And x <= rec_pos.Right Then
-                If y >= rec_pos.Top And y <= rec_pos.bottom Then
+                If y >= rec_pos.top And y <= rec_pos.bottom Then
                     SendHotbarChange 1, DragInvSlotNum, i
                     DragInvSlotNum = 0
                     picTempInv.Visible = False
@@ -3396,7 +3448,7 @@ Private Sub picCharacter_MouseMove(Button As Integer, Shift As Integer, x As Sin
     EqNum = IsEqItem(x, y)
 
     If EqNum <> 0 Then
-        Y2 = y + picCharacter.Top - frmMain.picItemDesc.Height - 1
+        Y2 = y + picCharacter.top - frmMain.picItemDesc.Height - 1
         X2 = x + picCharacter.Left - frmMain.picItemDesc.Width - 1
         UpdateDescWindow GetPlayerEquipment(MyIndex, EqNum), X2, Y2
         LastItemDesc = GetPlayerEquipment(MyIndex, EqNum) ' set it so you don't re-set values
@@ -3784,7 +3836,7 @@ Private Sub cmdASpawn_Click()
         Exit Sub
     End If
     
-    SendSpawnItem scrlAItem.Value, scrlAAmount.Value
+    SendSpawnItem scrlAItem.value, scrlAAmount.value
     
     ' Error handler
     Exit Sub
@@ -3863,14 +3915,14 @@ Dim rec_pos As RECT
     If DragBankSlotNum > 0 Then
         For i = 1 To MAX_BANK
             With rec_pos
-                .Top = BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
-                .bottom = .Top + PIC_Y
+                .top = BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
+                .bottom = .top + PIC_Y
                 .Left = BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
                 .Right = .Left + PIC_X
             End With
 
             If x >= rec_pos.Left And x <= rec_pos.Right Then
-                If y >= rec_pos.Top And y <= rec_pos.bottom Then
+                If y >= rec_pos.top And y <= rec_pos.bottom Then
                     If DragBankSlotNum <> i Then
                         ChangeBankSlots DragBankSlotNum, i
                         Exit For
@@ -3902,14 +3954,14 @@ Dim X2 As Long, Y2 As Long
     BankY = y
     
     If DragBankSlotNum > 0 Then
-        Call DrawDraggedBank(x + picBank.Left, y + picBank.Top)
+        Call DrawDraggedBank(x + picBank.Left, y + picBank.top)
     Else
         bankNum = IsBankItem(x, y)
         
         If bankNum <> 0 Then
             
             X2 = x + picBank.Left + 1
-            Y2 = y + picBank.Top + 1
+            Y2 = y + picBank.top + 1
             itemnum = Bank.Item(bankNum).num
             LastItemDesc = itemnum
             UpdateDescWindow itemnum, X2, Y2
@@ -3941,14 +3993,14 @@ Dim i As Long
         If GetBankItemNum(i) > 0 And GetBankItemNum(i) <= MAX_ITEMS Then
         
             With tempRec
-                .Top = BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
-                .bottom = .Top + PIC_Y
+                .top = BankTop + ((BankOffsetY + 32) * ((i - 1) \ BankColumns))
+                .bottom = .top + PIC_Y
                 .Left = BankLeft + ((BankOffsetX + 32) * (((i - 1) Mod BankColumns)))
                 .Right = .Left + PIC_X
             End With
             
             If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.Top And y <= tempRec.bottom Then
+                If y >= tempRec.top And y <= tempRec.bottom Then
                     
                     IsBankItem = i
                     Exit Function

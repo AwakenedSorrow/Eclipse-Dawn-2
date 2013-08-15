@@ -1,6 +1,5 @@
 Type=Exe
 Reference=*\G{E1211242-8E94-11D1-8808-00C04FC2C603}#1.0#0#C:\Program Files (x86)\Eclipse Origins Runtime Files\Runtimes\dx8vb.dll#DirectX 8 for Visual Basic Type Library
-Reference=*\G{E1211242-8E94-11D1-8808-00C04FC2C602}#1.0#0#C:\Program Files (x86)\Eclipse Origins Runtime Files\Runtimes\DX7VB.DLL#DirectX 7 for Visual Basic Type Library
 Object={248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0; MSWINSCN.OCX
 Object={3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0; Richtx32.ocx
 Form=src\frmMain.frm
@@ -30,7 +29,8 @@ Module=modText; src\modTextD3D8.bas
 Module=modRendering; src\modRendering.bas
 Module=modGUI; src\modGUI.bas
 Module=modDirectX8; src\modDirectX8.bas
-Module=modSound; src\modSound.bas
+Module=modBASS; src\modBASS.bas
+Module=modAudio; src\modAudio.bas
 IconForm="frmMain"
 Startup="Sub Main"
 HelpFile=""

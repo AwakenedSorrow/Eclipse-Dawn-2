@@ -167,7 +167,7 @@ Public Function InitD3DDevice8() As Boolean
     D3DWindow.BackBufferFormat = DisplayMode.Format
     If Not D3DDevice8 Is Nothing Then Set D3DDevice8 = Nothing
     
-    Select Case Options.Device
+    Select Case Options.device
         ' Hardware Rendering
         Case 1
             Set D3DDevice8 = Direct3D8.CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, frmMain.picScreen.hWnd, D3DCREATE_HARDWARE_VERTEXPROCESSING, D3DWindow)
@@ -401,7 +401,6 @@ Dim i As Long
         NumAnimations = NumAnimations + 1
     Loop
     NumAnimations = NumAnimations - 1
-    ReDim AnimationTimer(1 To NumAnimations)
     
     ' Cache the SpellIcons
     NumSpellIcons = 1

@@ -25,7 +25,7 @@ Dim srcRect As D3DRECT
     ' Render the tiles that will be under the player, in this case Ground, Mask1 and Mask2.
     If NumTileSets > 0 Then
         For x = TileView.Left To TileView.Right
-            For y = TileView.Top To TileView.bottom
+            For y = TileView.top To TileView.bottom
                 If IsValidMapPoint(x, y) Then
                     Call RenderMapTile(x, y)
                 End If
@@ -108,7 +108,7 @@ Dim srcRect As D3DRECT
     ' Render the tiles that will be above the player, in this case Fringe1 and Fringe 2.
     If NumTileSets > 0 Then
         For x = TileView.Left To TileView.Right
-            For y = TileView.Top To TileView.bottom
+            For y = TileView.top To TileView.bottom
                 If IsValidMapPoint(x, y) Then
                     Call RenderUpperMapTile(x, y)
                 End If
@@ -120,9 +120,9 @@ Dim srcRect As D3DRECT
     ' Fairly important stuff if you want to get it all to work. :)
     If InMapEditor Then
         ' Directional Blocking
-        If frmEditor_Map.optBlock.Value = True Then
+        If frmEditor_Map.optBlock.value = True Then
             For x = TileView.Left To TileView.Right
-                For y = TileView.Top To TileView.bottom
+                For y = TileView.top To TileView.bottom
                     If IsValidMapPoint(x, y) Then
                         Call RenderDirBlock(x, y)
                     End If
@@ -174,7 +174,7 @@ Dim srcRect As D3DRECT
     Next
     
     ' Draw map name
-    RenderText MainFont, Map.Name, DrawMapNameX, DrawMapNameY, Yellow
+    RenderText MainFont, Map.name, DrawMapNameX, DrawMapNameY, Yellow
             
     ' If we're in the map editor, draw the attributes.
     If InMapEditor Then Call DrawMapAttributes
@@ -475,9 +475,6 @@ Dim AnimFrame As Long
     ' Retrieve the framecount set in the editor.
     FrameCount = Animation(AnimInstance(Index).Animation).Frames(Layer)
     
-    ' Set the timer.
-    AnimationTimer(Sprite) = GetTickCount + SurfaceTimerMax
-    
     ' Get and set the Height and Width of the sprite frame we'll be using.
     Width = D3DT_TEXTURE(Tex_Animation(Sprite)).Width / FrameCount
     Height = D3DT_TEXTURE(Tex_Animation(Sprite)).Height
@@ -702,7 +699,7 @@ errorhandler:
 End Sub
 
 Sub RenderDirBlock(ByVal x As Long, ByVal y As Long)
-Dim i As Long, Left As Long, Top As Long
+Dim i As Long, Left As Long, top As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -715,12 +712,12 @@ Dim i As Long, Left As Long, Top As Long
         Left = (i - 1) * 8
         ' find out whether render blocked or not
         If Not isDirBlocked(Map.Tile(x, y).DirBlock, CByte(i)) Then
-            Top = 8
+            top = 8
         Else
-            Top = 16
+            top = 16
         End If
         'render the actual thing!
-        Call RenderGraphic(Tex_DirBlock, ConvertMapX(x * PIC_X) + DirArrowX(i), ConvertMapY(y * PIC_Y) + DirArrowY(i), 8, 8, 0, 0, Left, Top)
+        Call RenderGraphic(Tex_DirBlock, ConvertMapX(x * PIC_X) + DirArrowX(i), ConvertMapY(y * PIC_Y) + DirArrowY(i), 8, 8, 0, 0, Left, top)
         
     Next
     
@@ -737,7 +734,7 @@ Sub RenderTileOutline()
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' If we're editing Directional Blocks, disable this outline. It just looks silly.
-    If frmEditor_Map.optBlock.Value Then Exit Sub
+    If frmEditor_Map.optBlock.value Then Exit Sub
     
     ' Render the outline to the screen!
     Call RenderGraphic(Tex_Outline, ConvertMapX(CurX * PIC_X), ConvertMapY(CurY * PIC_Y), PIC_X, PIC_Y, 0, 0, 0, 0)
@@ -753,7 +750,7 @@ End Sub
 Sub RenderBars()
 Dim tmpY As Long, tmpX As Long
 Dim sWidth As Long, sHeight As Long
-Dim Top As Long, Right As Long
+Dim top As Long, Right As Long
 Dim barWidth As Long
 Dim i As Long, npcNum As Long, partyIndex As Long
 
@@ -779,12 +776,12 @@ Dim i As Long, npcNum As Long, partyIndex As Long
                 barWidth = ((MapNpc(i).Vital(Vitals.HP) / sWidth) / (Npc(npcNum).HP / sWidth)) * sWidth
                 
                 ' draw bar background
-                Top = sHeight * 1 ' HP bar background
-                Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, Top)
+                top = sHeight * 1 ' HP bar background
+                Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top)
                 
                 ' draw the content of the bar.
-                Top = 0 ' HP bar
-                Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, Top)
+                top = 0 ' HP bar
+                Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top)
             End If
         End If
     Next
@@ -800,12 +797,12 @@ Dim i As Long, npcNum As Long, partyIndex As Long
             barWidth = (GetTickCount - SpellBufferTimer) / ((Spell(PlayerSpells(SpellBuffer)).CastTime * 1000)) * sWidth
             
             ' draw bar background
-            Top = sHeight * 3 ' Spell bar background
-            Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, Top)
+            top = sHeight * 3 ' Spell bar background
+            Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top)
             
             ' draw the bar proper
-            Top = sHeight * 2 ' Spell bar
-            Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, Top)
+            top = sHeight * 2 ' Spell bar
+            Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top)
         End If
     End If
     
@@ -819,12 +816,12 @@ Dim i As Long, npcNum As Long, partyIndex As Long
         barWidth = ((GetPlayerVital(MyIndex, Vitals.HP) / sWidth) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / sWidth)) * sWidth
        
         ' draw bar background
-        Top = sHeight * 1 ' HP bar background
-        Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, Top)
+        top = sHeight * 1 ' HP bar background
+        Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top)
        
         ' draw the bar proper
-        Top = 0 ' HP bar
-        Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, Top)
+        top = 0 ' HP bar
+        Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top)
     End If
     
     ' draw party health bars
@@ -842,12 +839,12 @@ Dim i As Long, npcNum As Long, partyIndex As Long
                     barWidth = ((GetPlayerVital(partyIndex, Vitals.HP) / sWidth) / (GetPlayerMaxVital(partyIndex, Vitals.HP) / sWidth)) * sWidth
                     
                     ' draw bar background
-                    Top = sHeight * 1 ' HP bar background
-                    Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, Top)
+                    top = sHeight * 1 ' HP bar background
+                    Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top)
                     
                     ' draw the bar's content.
-                    Top = 0 ' HP bar
-                    Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, Top)
+                    top = 0 ' HP bar
+                    Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top)
                 End If
             End If
         Next
@@ -986,7 +983,7 @@ Public Function ConvertMapY(ByVal y As Long) As Long
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
  
-    ConvertMapY = y - (TileView.Top * PIC_Y) - Camera.Top
+    ConvertMapY = y - (TileView.top * PIC_Y) - Camera.top
    
     ' Error handler
     Exit Function
@@ -997,7 +994,7 @@ errorhandler:
 End Function
 
 Public Sub RenderPaperdoll(ByVal X2 As Long, ByVal Y2 As Long, ByVal Sprite As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
-Dim Top As Long, Left As Long
+Dim top As Long, Left As Long
 Dim x As Long, y As Long
 Dim Width As Long, Height As Long
     
@@ -1007,7 +1004,7 @@ Dim Width As Long, Height As Long
     ' Check if the sprite is a valid one. If it isn't then exit out of the sub.
     If Sprite < 1 Or Sprite > NumPaperdolls Then Exit Sub
     
-    Top = SpriteDir * (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4)
+    top = SpriteDir * (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4)
     Left = SpriteFrame * (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width / 4)
     
     ' Caclculate a few things we might need.
@@ -1017,7 +1014,7 @@ Dim Width As Long, Height As Long
     Height = (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4)
     
     ' Rendering time!
-    Call RenderGraphic(Tex_Paperdoll(Sprite), x, y, Width, Height, 0, 0, Left, Top)
+    Call RenderGraphic(Tex_Paperdoll(Sprite), x, y, Width, Height, 0, 0, Left, top)
     
     ' Error handler
     Exit Sub
@@ -1034,7 +1031,7 @@ Public Function InViewPort(ByVal x As Long, ByVal y As Long) As Boolean
     InViewPort = False
 
     If x < TileView.Left Then Exit Function
-    If y < TileView.Top Then Exit Function
+    If y < TileView.top Then Exit Function
     If x > TileView.Right Then Exit Function
     If y > TileView.bottom Then Exit Function
     InViewPort = True
@@ -1126,15 +1123,15 @@ Dim EndY As Long
     End If
 
     With TileView
-        .Top = StartY
+        .top = StartY
         .bottom = EndY
         .Left = StartX
         .Right = EndX
     End With
 
     With Camera
-        .Top = offsetY
-        .bottom = .Top + ScreenY
+        .top = offsetY
+        .bottom = .top + ScreenY
         .Left = offsetX
         .Right = .Left + ScreenX
     End With

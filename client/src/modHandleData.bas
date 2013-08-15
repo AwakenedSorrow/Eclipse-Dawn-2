@@ -180,10 +180,10 @@ Dim Buffer As clsBuffer
     Buffer.WriteBytes Data()
     
     ' save options
-    Options.SavePass = frmMenu.chkPass.Value
+    Options.SavePass = frmMenu.chkPass.value
     Options.Username = Trim$(frmMenu.txtLUser.text)
 
-    If frmMenu.chkPass.Value = 0 Then
+    If frmMenu.chkPass.value = 0 Then
         Options.Password = vbNullString
     Else
         Options.Password = Trim$(frmMenu.txtLPass.text)
@@ -1069,7 +1069,7 @@ Dim Buffer As clsBuffer
         With MapItem(i)
             .playerName = Buffer.ReadString
             .num = Buffer.ReadLong
-            .Value = Buffer.ReadLong
+            .value = Buffer.ReadLong
             .x = Buffer.ReadLong
             .y = Buffer.ReadLong
         End With
@@ -1126,9 +1126,9 @@ Dim MusicFile As String
             
     MusicFile = Trim$(Map.Music)
     If Not MusicFile = "None." Then
-        PlayMidi MusicFile
+        PlayMusic MusicFile
     Else
-        StopMidi
+        StopMusic
     End If
     
     ' re-position the map name
@@ -1279,7 +1279,7 @@ Dim Buffer As clsBuffer
     With MapItem(n)
         .playerName = Buffer.ReadString
         .num = Buffer.ReadLong
-        .Value = Buffer.ReadLong
+        .value = Buffer.ReadLong
         .x = Buffer.ReadLong
         .y = Buffer.ReadLong
     End With
@@ -2153,7 +2153,7 @@ Dim i As Long
     
     For i = 1 To MAX_BANK
         Bank.Item(i).num = Buffer.ReadLong
-        Bank.Item(i).Value = Buffer.ReadLong
+        Bank.Item(i).value = Buffer.ReadLong
     Next
     
     InBank = True
@@ -2226,14 +2226,14 @@ Dim i As Long
     If dataType = 0 Then ' ours!
         For i = 1 To MAX_INV
             TradeYourOffer(i).num = Buffer.ReadLong
-            TradeYourOffer(i).Value = Buffer.ReadLong
+            TradeYourOffer(i).value = Buffer.ReadLong
         Next
         frmMain.lblYourWorth.Caption = Buffer.ReadLong & "g"
 
     ElseIf dataType = 1 Then 'theirs
         For i = 1 To MAX_INV
             TradeTheirOffer(i).num = Buffer.ReadLong
-            TradeTheirOffer(i).Value = Buffer.ReadLong
+            TradeTheirOffer(i).value = Buffer.ReadLong
         Next
         frmMain.lblTheirWorth.Caption = Buffer.ReadLong & "g"
     End If
