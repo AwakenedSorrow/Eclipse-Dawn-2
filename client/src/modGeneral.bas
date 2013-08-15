@@ -90,7 +90,7 @@ Public Sub Main()
     ' Reset values
     Ping = -1
     
-    'Load frmMainMenu
+    'Load frmMainMenu.
     Load frmMenu
     
     ' Time to set two globals that we need to have set before we do much of anything.
@@ -129,6 +129,9 @@ Public Sub Main()
     
     ' hide the load form
     frmLoad.Visible = False
+    
+    ' Start the Menu Loop so we can render items on the screens where it is required.
+    Call MenuLoop
     
     ' Error handler
     Exit Sub
@@ -233,7 +236,7 @@ Public Sub MenuState(ByVal state As Long)
 
             If ConnectToServer(1) Then
                 Call SetStatus("Connected, sending new account information...")
-                Call SendNewAccount(frmMenu.txtRUser.Text, frmMenu.txtRPass.Text)
+                Call SendNewAccount(frmMenu.txtRUser.text, frmMenu.txtRPass.text)
             End If
 
         Case MENU_STATE_LOGIN
@@ -245,7 +248,7 @@ Public Sub MenuState(ByVal state As Long)
 
             If ConnectToServer(1) Then
                 Call SetStatus("Connected, sending login information...")
-                Call SendLogin(frmMenu.txtLUser.Text, frmMenu.txtLPass.Text)
+                Call SendLogin(frmMenu.txtLUser.text, frmMenu.txtLPass.text)
                 Exit Sub
             End If
     End Select
@@ -313,8 +316,8 @@ Dim Buffer As clsBuffer, i As Long
     
     ' hide main form stuffs
     frmMenu.picMain.Visible = True
-    frmMain.txtChat.Text = vbNullString
-    frmMain.txtMyChat.Text = vbNullString
+    frmMain.txtChat.text = vbNullString
+    frmMain.txtMyChat.text = vbNullString
     frmMain.picCurrency.Visible = False
     frmMain.picDialogue.Visible = False
     frmMain.picInventory.Visible = True
@@ -443,12 +446,12 @@ Public Sub TextAdd(ByVal Txt As TextBox, Msg As String, NewLine As Boolean)
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If NewLine Then
-        Txt.Text = Txt.Text + Msg + vbCrLf
+        Txt.text = Txt.text + Msg + vbCrLf
     Else
-        Txt.Text = Txt.Text + Msg
+        Txt.text = Txt.text + Msg
     End If
 
-    Txt.SelStart = Len(Txt.Text) - 1
+    Txt.SelStart = Len(Txt.text) - 1
     
     ' Error handler
     Exit Sub

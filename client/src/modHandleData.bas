@@ -181,12 +181,12 @@ Dim Buffer As clsBuffer
     
     ' save options
     Options.SavePass = frmMenu.chkPass.Value
-    Options.Username = Trim$(frmMenu.txtLUser.Text)
+    Options.Username = Trim$(frmMenu.txtLUser.text)
 
     If frmMenu.chkPass.Value = 0 Then
         Options.Password = vbNullString
     Else
-        Options.Password = Trim$(frmMenu.txtLPass.Text)
+        Options.Password = Trim$(frmMenu.txtLPass.text)
     End If
     
     SaveOptions
@@ -277,7 +277,6 @@ Dim Buffer As clsBuffer
     n = frmMenu.cmbClass.ListIndex + 1
     
     newCharSprite = 0
-    NewCharacterBltSprite
     
     ' Error handler
     Exit Sub
@@ -383,7 +382,7 @@ Dim Buffer As clsBuffer
     
     ' changes to inventory, need to clear any drop menu
     frmMain.picCurrency.Visible = False
-    frmMain.txtCurrency.Text = vbNullString
+    frmMain.txtCurrency.text = vbNullString
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
 
@@ -411,7 +410,7 @@ Dim Buffer As clsBuffer
     Call SetPlayerInvItemValue(MyIndex, n, Buffer.ReadLong) 'CLng(Parse(3)))
     ' changes, clear drop menu
     frmMain.picCurrency.Visible = False
-    frmMain.txtCurrency.Text = vbNullString
+    frmMain.txtCurrency.text = vbNullString
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
@@ -440,7 +439,7 @@ Dim Buffer As clsBuffer
     
     ' changes to inventory, need to clear any drop menu
     frmMain.picCurrency.Visible = False
-    frmMain.txtCurrency.Text = vbNullString
+    frmMain.txtCurrency.text = vbNullString
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
@@ -1369,7 +1368,7 @@ Dim ItemData() As Byte
     Set Buffer = Nothing
     ' changes to inventory, need to clear any drop menu
     frmMain.picCurrency.Visible = False
-    frmMain.txtCurrency.Text = vbNullString
+    frmMain.txtCurrency.text = vbNullString
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
@@ -2066,12 +2065,12 @@ Dim saycolour As Long
         Colour = QBColor(BrightRed)
     End If
     
-    frmMain.txtChat.SelStart = Len(frmMain.txtChat.Text)
+    frmMain.txtChat.SelStart = Len(frmMain.txtChat.text)
     frmMain.txtChat.SelColor = Colour
     frmMain.txtChat.SelText = vbNewLine & Header & Name & ": "
     frmMain.txtChat.SelColor = saycolour
     frmMain.txtChat.SelText = message
-    frmMain.txtChat.SelStart = Len(frmMain.txtChat.Text) - 1
+    frmMain.txtChat.SelStart = Len(frmMain.txtChat.text) - 1
         
     Set Buffer = Nothing
     
@@ -2158,7 +2157,7 @@ Dim i As Long
     Next
     
     InBank = True
-    frmMain.picCover.Visible = True
+    frmMain.picCover.Visible = False
     frmMain.picBank.Visible = True
     BltBank
     
@@ -2182,7 +2181,7 @@ Dim Buffer As clsBuffer
     Buffer.WriteBytes Data()
     
     InTrade = Buffer.ReadLong
-    frmMain.picCover.Visible = True
+    frmMain.picCover.Visible = False
     frmMain.picTrade.Visible = True
     BltTrade
     

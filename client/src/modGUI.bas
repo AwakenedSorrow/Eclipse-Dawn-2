@@ -4,7 +4,7 @@ Option Explicit
 Public Sub DrawGDI()
     'Cycle Through in-game stuff before cycling through editors
     If frmMenu.Visible Then
-        'If frmMenu.picCharacter.Visible Then NewCharacterDrawSprite
+        If frmMenu.picCharacter.Visible Then DrawNewCharacterSprite
     End If
     
     If frmMain.Visible Then
@@ -33,9 +33,9 @@ Public Sub DrawGDI()
     End If
     
     If frmEditor_Map.Visible Then
-        'EditorMap_DrawTileset
-        'If frmEditor_Map.fraMapItem.Visible Then EditorMap_DrawMapItem
-        'If frmEditor_Map.fraMapKey.Visible Then EditorMap_DrawKey
+        EditorMap_DrawTileset
+        If frmEditor_Map.fraMapItem.Visible Then EditorMap_DrawMapItem
+        If frmEditor_Map.fraMapKey.Visible Then EditorMap_DrawKey
     End If
     
     If frmEditor_NPC.Visible Then
@@ -126,16 +126,16 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
     ' Of course, we also need to do a few calculations to make sure it appears where it should.
     With srcRect
         .X1 = 0
-        .x2 = frmMain.picHotbar.Width
+        .X2 = frmMain.picHotbar.Width
         .Y1 = 0
-        .y2 = frmMain.picHotbar.Height
+        .Y2 = frmMain.picHotbar.Height
     End With
     
     With destRect
         .X1 = 0
-        .x2 = frmMain.picHotbar.Width
+        .X2 = frmMain.picHotbar.Width
         .Y1 = 0
-        .y2 = frmMain.picHotbar.Height
+        .Y2 = frmMain.picHotbar.Height
     End With
     
     Call D3DDevice8.EndScene
@@ -197,16 +197,16 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
     ' Of course, we also need to do a few calculations to make sure it appears where it should.
     With srcRect
         .X1 = 0
-        .x2 = frmMain.picSpells.Width
+        .X2 = frmMain.picSpells.Width
         .Y1 = 0
-        .y2 = frmMain.picSpells.Height
+        .Y2 = frmMain.picSpells.Height
     End With
     
     With destRect
         .X1 = 0
-        .x2 = frmMain.picSpells.Width
+        .X2 = frmMain.picSpells.Width
         .Y1 = 0
-        .y2 = frmMain.picSpells.Height
+        .Y2 = frmMain.picSpells.Height
     End With
     
     Call D3DDevice8.EndScene
@@ -324,16 +324,16 @@ NextLoop:
     ' Of course, we also need to do a few calculations to make sure it appears where it should.
     With srcRect
         .X1 = 0
-        .x2 = frmMain.picInventory.Width
+        .X2 = frmMain.picInventory.Width
         .Y1 = 0
-        .y2 = frmMain.picInventory.Height
+        .Y2 = frmMain.picInventory.Height
     End With
     
     With destRect
         .X1 = 0
-        .x2 = frmMain.picInventory.Width
+        .X2 = frmMain.picInventory.Width
         .Y1 = 0
-        .y2 = frmMain.picInventory.Height
+        .Y2 = frmMain.picInventory.Height
     End With
     
     Call D3DDevice8.EndScene
@@ -387,16 +387,16 @@ Dim AnimLeft As Long
         ' Of course, we also need to do a few calculations to make sure it appears where it should.
         With srcRect
             .X1 = 0
-            .x2 = frmMain.picTempInv.Width
+            .X2 = frmMain.picTempInv.Width
             .Y1 = 0
-            .y2 = frmMain.picTempInv.Height
+            .Y2 = frmMain.picTempInv.Height
         End With
     
         With destRect
             .X1 = 0
-            .x2 = frmMain.picTempInv.Width
+            .X2 = frmMain.picTempInv.Width
             .Y1 = 0
-            .y2 = frmMain.picTempInv.Height
+            .Y2 = frmMain.picTempInv.Height
         End With
     
         Call D3DDevice8.EndScene
@@ -487,16 +487,16 @@ Dim Name As String, Firstletter As String * 1, Colour As Long, x As Long, y As L
         ' Of course, we also need to do a few calculations to make sure it appears where it should.
         With srcRect
             .X1 = 0
-            .x2 = frmMain.picItemDesc.Width
+            .X2 = frmMain.picItemDesc.Width
             .Y1 = 0
-            .y2 = frmMain.picItemDesc.Height
+            .Y2 = frmMain.picItemDesc.Height
         End With
     
         With destRect
             .X1 = 0
-            .x2 = frmMain.picItemDesc.Width
+            .X2 = frmMain.picItemDesc.Width
             .Y1 = 0
-            .y2 = frmMain.picItemDesc.Height
+            .Y2 = frmMain.picItemDesc.Height
         End With
     
         Call D3DDevice8.EndScene
@@ -557,16 +557,16 @@ Dim Top As Long, Left As Long, x As Long, y As Long, desc As String
         ' Of course, we also need to do a few calculations to make sure it appears where it should.
         With srcRect
             .X1 = 0
-            .x2 = frmMain.picSpellDesc.Width
+            .X2 = frmMain.picSpellDesc.Width
             .Y1 = 0
-            .y2 = frmMain.picSpellDesc.Height
+            .Y2 = frmMain.picSpellDesc.Height
         End With
     
         With destRect
             .X1 = 0
-            .x2 = frmMain.picSpellDesc.Width
+            .X2 = frmMain.picSpellDesc.Width
             .Y1 = 0
-            .y2 = frmMain.picSpellDesc.Height
+            .Y2 = frmMain.picSpellDesc.Height
         End With
     
         Call D3DDevice8.EndScene
@@ -618,16 +618,16 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
         ' Of course, we also need to do a few calculations to make sure it appears where it should.
         With srcRect
             .X1 = 0
-            .x2 = frmMain.picTempSpell.Width
+            .X2 = frmMain.picTempSpell.Width
             .Y1 = 0
-            .y2 = frmMain.picTempSpell.Height
+            .Y2 = frmMain.picTempSpell.Height
         End With
     
         With destRect
             .X1 = 0
-            .x2 = frmMain.picTempSpell.Width
+            .X2 = frmMain.picTempSpell.Width
             .Y1 = 0
-            .y2 = frmMain.picTempSpell.Height
+            .Y2 = frmMain.picTempSpell.Height
         End With
     
         Call D3DDevice8.EndScene
@@ -731,16 +731,16 @@ Dim Top As Long, Left As Long, AnimFrame As Long, i As Long, itemnum As Long, it
     ' Of course, we also need to do a few calculations to make sure it appears where it should.
     With srcRect
         .X1 = 0
-        .x2 = frmMain.picCharacter.Width
+        .X2 = frmMain.picCharacter.Width
         .Y1 = 0
-        .y2 = frmMain.picCharacter.Height
+        .Y2 = frmMain.picCharacter.Height
     End With
     
     With destRect
         .X1 = 0
-        .x2 = frmMain.picCharacter.Width
+        .X2 = frmMain.picCharacter.Width
         .Y1 = 0
-        .y2 = frmMain.picCharacter.Height
+        .Y2 = frmMain.picCharacter.Height
     End With
     
     Call D3DDevice8.EndScene
@@ -750,6 +750,247 @@ Dim Top As Long, Left As Long, AnimFrame As Long, i As Long, itemnum As Long, it
     Exit Sub
 errorhandler:
     HandleError "DrawCharacterScreen", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub DrawNewCharacterSprite()
+Dim Sprite As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+Dim Width As Long, Height As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Do we have a valic class selected? If not, exit out.
+    If frmMenu.cmbClass.ListIndex = -1 Then Exit Sub
+    
+    ' Should we pick a male or female sprite?
+    If frmMenu.optMale.Value = True Then
+        Sprite = Class(frmMenu.cmbClass.ListIndex + 1).MaleSprite(newCharSprite)
+    Else
+        Sprite = Class(frmMenu.cmbClass.ListIndex + 1).FemaleSprite(newCharSprite)
+    End If
+    
+    ' Is the sprite we're planning to render valid? If it isn't exit out of the sub.
+    If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
+    
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    ' Calculate the width and height of a single sprite on the sheet.
+    Width = D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4
+    Height = D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4
+    frmMenu.picSprite.Width = Width
+    frmMenu.picSprite.Height = Height
+    
+    Call RenderGraphic(Tex_Character(Sprite), 0, 0, Width, Height, 0, 0, 0, 0)
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmMenu.picSprite.Width
+        .Y1 = 0
+        .Y2 = frmMenu.picSprite.Height
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmMenu.picSprite.Width
+        .Y1 = 0
+        .Y2 = frmMenu.picSprite.Height
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmMenu.picSprite.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "DrawNewCharacterSprite", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub EditorMap_DrawTileset()
+Dim Height As Long, Width As Long, Tileset As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+Dim SrcTop As Long, SrcBottom As Long, SrcLeft As Long, SrcRight As Long, scrlX As Long, scrlY As Long
+Dim X1 As Long, X2 As Long, Y1 As Long, Y2 As Long
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' find tileset number
+    Tileset = frmEditor_Map.scrlTileSet.Value
+    
+    ' exit out if doesn't exist
+    If Tileset < 0 Or Tileset > NumTileSets Then Exit Sub
+    
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+     
+    ' Get the position we need to render it all on.
+    scrlX = frmEditor_Map.scrlPictureX.Value * PIC_X
+    scrlY = frmEditor_Map.scrlPictureY.Value * PIC_Y
+    
+    Height = D3DT_TEXTURE(Tex_TileSet(Tileset)).Height - scrlY
+    Width = D3DT_TEXTURE(Tex_TileSet(Tileset)).Width - scrlX
+    
+    SrcTop = frmEditor_Map.scrlPictureY.Value * PIC_Y
+    SrcLeft = frmEditor_Map.scrlPictureX.Value * PIC_X
+    SrcBottom = SrcTop + Height
+    SrcRight = SrcLeft + Width
+    
+    ' Change the background we're rendering on to the right size.
+    frmEditor_Map.picBackSelect.Height = Height
+    frmEditor_Map.picBackSelect.Width = Width
+    
+    ' Render the tileset on the background.
+    Call RenderGraphic(Tex_TileSet(Tileset), 0, 0, SrcRight, SrcBottom, 0, 0, SrcLeft, SrcTop)
+    
+    ' Render the tile selection square.
+    X1 = (EditorTileX * 32) - SrcLeft
+    X2 = (EditorTileWidth * 32) + X1
+    Y1 = (EditorTileY * 32) - SrcTop
+    Y2 = (EditorTileHeight * 32) + Y1
+    Call DrawSelectionBox(X1, X2, Y1, Y2)
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmEditor_Map.picBackSelect.Width
+        .Y1 = 0
+        .Y2 = frmEditor_Map.picBackSelect.Height
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmEditor_Map.picBackSelect.Width
+        .Y1 = 0
+        .Y2 = frmEditor_Map.picBackSelect.Height
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmEditor_Map.picBackSelect.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "EditorMap_DrawTileset", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Sub DrawSelectionBox(ByVal X1 As Long, ByVal X2 As Long, ByVal Y1 As Long, ByVal Y2 As Long)
+Dim Width As Long, Height As Long, x As Long, y As Long
+    Width = X2 - X1
+    Height = Y2 - Y1
+    x = X1
+    y = Y1
+    If Width > 6 And Height > 6 Then
+        Call RenderGraphic(Tex_Select, x, y, Width, 3, 0, 0, 0, 0, 255, 0, 255)                 'Top Bar
+        Call RenderGraphic(Tex_Select, x, y, 3, Height, 0, 0, 0, 0, 255, 0, 255)                'Left bar
+        Call RenderGraphic(Tex_Select, x, y + Height - 3, Width, 3, 0, 0, 0, 0, 255, 0, 255)    'Bottom Bar
+        Call RenderGraphic(Tex_Select, x + Width - 3, y, 3, Height, 0, 0, 0, 0, 255, 0, 255)    'Right Bar
+    End If
+End Sub
+
+Public Sub EditorMap_DrawMapItem()
+Dim itemnum As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' What image are we using?
+    itemnum = Item(frmEditor_Map.scrlMapItem.Value).Pic
+    ' Is it a valid one?
+    If itemnum < 1 Or itemnum > NumItems Then
+        Exit Sub
+    End If
+    
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+
+    Call RenderGraphic(Tex_Item(itemnum), 0, 0, PIC_X, PIC_Y, 0, 0, 0, 0)
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmEditor_Map.picMapItem.Width
+        .Y1 = 0
+        .Y2 = frmEditor_Map.picMapItem.Height
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmEditor_Map.picMapItem.Width
+        .Y1 = 0
+        .Y2 = frmEditor_Map.picMapItem.Height
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmEditor_Map.picMapItem.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "EditorMap_DrawMapItem", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub EditorMap_DrawKey()
+Dim itempic As Long
+Dim srcRect As D3DRECT, destRect As D3DRECT
+    
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ' Retrieve what picture we'll be using.
+    itempic = Item(frmEditor_Map.scrlMapKey.Value).Pic
+
+    ' Is it valid?
+    If itempic < 1 Or itempic > NumItems Then
+        Exit Sub
+    End If
+    
+    ' Let's open clear ourselves a nice clean slate to render on shall we?
+    Call D3DDevice8.Clear(0, ByVal 0, D3DCLEAR_TARGET, 0, 1, 0)
+    Call D3DDevice8.BeginScene
+    
+    Call RenderGraphic(Tex_Item(itempic), 0, 0, PIC_X, PIC_Y, 0, 0, 0, 0)
+    
+    ' We're done for now, so we can close the lovely little rendering device and present it to our user!
+    ' Of course, we also need to do a few calculations to make sure it appears where it should.
+    With srcRect
+        .X1 = 0
+        .X2 = frmEditor_Map.picMapKey.Width
+        .Y1 = 0
+        .Y2 = frmEditor_Map.picMapKey.Height
+    End With
+    
+    With destRect
+        .X1 = 0
+        .X2 = frmEditor_Map.picMapKey.Width
+        .Y1 = 0
+        .Y2 = frmEditor_Map.picMapKey.Height
+    End With
+    
+    Call D3DDevice8.EndScene
+    Call D3DDevice8.Present(srcRect, destRect, frmEditor_Map.picMapKey.hWnd, ByVal 0)
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "EditorMap_DrawKey", "modGUI", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub

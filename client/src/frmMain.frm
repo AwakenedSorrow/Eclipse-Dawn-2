@@ -1107,6 +1107,7 @@ Begin VB.Form frmMain
       _Version        =   393217
       BackColor       =   790032
       BorderStyle     =   0
+      Enabled         =   -1  'True
       ScrollBars      =   2
       Appearance      =   0
       TextRTF         =   $"frmMain.frx":3332
@@ -2048,7 +2049,7 @@ Private Sub lblCurrencyCancel_Click()
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     picCurrency.Visible = False
-    txtCurrency.Text = vbNullString
+    txtCurrency.text = vbNullString
     tmpCurrencyItem = 0
     CurrencyMenu = 0 ' clear
     
@@ -2105,16 +2106,16 @@ Private Sub lblCurrencyOk_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If IsNumeric(txtCurrency.Text) Then
+    If IsNumeric(txtCurrency.text) Then
         Select Case CurrencyMenu
             Case 1 ' drop item
-                SendDropItem tmpCurrencyItem, Val(txtCurrency.Text)
+                SendDropItem tmpCurrencyItem, Val(txtCurrency.text)
             Case 2 ' deposit item
-                DepositItem tmpCurrencyItem, Val(txtCurrency.Text)
+                DepositItem tmpCurrencyItem, Val(txtCurrency.text)
             Case 3 ' withdraw item
-                WithdrawItem tmpCurrencyItem, Val(txtCurrency.Text)
+                WithdrawItem tmpCurrencyItem, Val(txtCurrency.text)
             Case 4 ' offer trade item
-                TradeItem tmpCurrencyItem, Val(txtCurrency.Text)
+                TradeItem tmpCurrencyItem, Val(txtCurrency.text)
         End Select
     Else
         AddText "Please enter a valid amount.", BrightRed
@@ -2123,7 +2124,7 @@ Private Sub lblCurrencyOk_Click()
     
     picCurrency.Visible = False
     tmpCurrencyItem = 0
-    txtCurrency.Text = vbNullString
+    txtCurrency.text = vbNullString
     CurrencyMenu = 0 ' clear
     
     ' Error handler
@@ -2429,8 +2430,6 @@ Private Sub picScreen_MouseMove(Button As Integer, Shift As Integer, x As Single
     CurY = TileView.Top + ((y + Camera.Top) \ PIC_Y)
 
     If InMapEditor Then
-        frmEditor_Map.shpLoc.Visible = False
-
         If Button = vbLeftButton Or Button = vbRightButton Then
             Call MapEditorMouseDown(Button, x, y)
         End If
@@ -2526,7 +2525,7 @@ End Sub
 
 Private Sub picShopItems_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
 Dim shopslot As Long
-Dim x2 As Long, y2 As Long
+Dim X2 As Long, Y2 As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -2534,9 +2533,9 @@ Dim x2 As Long, y2 As Long
     shopslot = IsShopItem(x, y)
 
     If shopslot <> 0 Then
-        x2 = x + picShop.Left + picShopItems.Left + 1
-        y2 = y + picShop.Top + picShopItems.Top + 1
-        UpdateDescWindow Shop(InShop).TradeItem(shopslot).Item, x2, y2
+        X2 = x + picShop.Left + picShopItems.Left + 1
+        Y2 = y + picShop.Top + picShopItems.Top + 1
+        UpdateDescWindow Shop(InShop).TradeItem(shopslot).Item, X2, Y2
         LastItemDesc = Shop(InShop).TradeItem(shopslot).Item
         Exit Sub
     End If
@@ -2616,7 +2615,7 @@ End Sub
 
 Private Sub picSpells_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
 Dim spellslot As Long
-Dim x2 As Long, y2 As Long
+Dim X2 As Long, Y2 As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -2635,9 +2634,9 @@ Dim x2 As Long, y2 As Long
         End With
     Else
         If spellslot <> 0 Then
-            x2 = x + picSpells.Left - picSpellDesc.Width - 1
-            y2 = y + picSpells.Top - picSpellDesc.Height - 1
-            UpdateSpellWindow PlayerSpells(spellslot), x2, y2
+            X2 = x + picSpells.Left - picSpellDesc.Width - 1
+            Y2 = y + picSpells.Top - picSpellDesc.Height - 1
+            UpdateSpellWindow PlayerSpells(spellslot), X2, Y2
             LastSpellDesc = PlayerSpells(spellslot)
             Exit Sub
         End If
@@ -2971,7 +2970,7 @@ Private Sub picInventory_DblClick()
                 CurrencyMenu = 2 ' deposit
                 lblCurrency.Caption = "How many do you want to deposit?"
                 tmpCurrencyItem = InvNum
-                txtCurrency.Text = vbNullString
+                txtCurrency.text = vbNullString
                 picCurrency.Visible = True
                 txtCurrency.SetFocus
                 Exit Sub
@@ -3002,7 +3001,7 @@ Private Sub picInventory_DblClick()
                 CurrencyMenu = 4 ' offer in trade
                 lblCurrency.Caption = "How many do you want to trade?"
                 tmpCurrencyItem = InvNum
-                txtCurrency.Text = vbNullString
+                txtCurrency.text = vbNullString
                 picCurrency.Visible = True
                 txtCurrency.SetFocus
                 Exit Sub
@@ -3208,7 +3207,7 @@ Private Sub picInventory_MouseDown(Button As Integer, Shift As Integer, x As Sin
                         CurrencyMenu = 1 ' drop
                         lblCurrency.Caption = "How many do you want to drop?"
                         tmpCurrencyItem = InvNum
-                        txtCurrency.Text = vbNullString
+                        txtCurrency.text = vbNullString
                         picCurrency.Visible = True
                         txtCurrency.SetFocus
                     End If
@@ -3387,7 +3386,7 @@ End Sub
 
 Private Sub picCharacter_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
     Dim EqNum As Long
-    Dim x2 As Long, y2 As Long
+    Dim X2 As Long, Y2 As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -3397,9 +3396,9 @@ Private Sub picCharacter_MouseMove(Button As Integer, Shift As Integer, x As Sin
     EqNum = IsEqItem(x, y)
 
     If EqNum <> 0 Then
-        y2 = y + picCharacter.Top - frmMain.picItemDesc.Height - 1
-        x2 = x + picCharacter.Left - frmMain.picItemDesc.Width - 1
-        UpdateDescWindow GetPlayerEquipment(MyIndex, EqNum), x2, y2
+        Y2 = y + picCharacter.Top - frmMain.picItemDesc.Height - 1
+        X2 = x + picCharacter.Left - frmMain.picItemDesc.Width - 1
+        UpdateDescWindow GetPlayerEquipment(MyIndex, EqNum), X2, Y2
         LastItemDesc = GetPlayerEquipment(MyIndex, EqNum) ' set it so you don't re-set values
         Exit Sub
     End If
@@ -3466,15 +3465,15 @@ Private Sub cmdAWarp2Me_Click()
         Exit Sub
     End If
 
-    If Len(Trim$(txtAName.Text)) < 1 Then
+    If Len(Trim$(txtAName.text)) < 1 Then
         Exit Sub
     End If
 
-    If IsNumeric(Trim$(txtAName.Text)) Then
+    If IsNumeric(Trim$(txtAName.text)) Then
         Exit Sub
     End If
 
-    WarpToMe Trim$(txtAName.Text)
+    WarpToMe Trim$(txtAName.text)
     
     ' Error handler
     Exit Sub
@@ -3493,15 +3492,15 @@ Private Sub cmdAWarpMe2_Click()
         Exit Sub
     End If
 
-    If Len(Trim$(txtAName.Text)) < 1 Then
+    If Len(Trim$(txtAName.text)) < 1 Then
         Exit Sub
     End If
 
-    If IsNumeric(Trim$(txtAName.Text)) Then
+    If IsNumeric(Trim$(txtAName.text)) Then
         Exit Sub
     End If
 
-    WarpMeTo Trim$(txtAName.Text)
+    WarpMeTo Trim$(txtAName.text)
     
     ' Error handler
     Exit Sub
@@ -3522,15 +3521,15 @@ Dim n As Long
         Exit Sub
     End If
 
-    If Len(Trim$(txtAMap.Text)) < 1 Then
+    If Len(Trim$(txtAMap.text)) < 1 Then
         Exit Sub
     End If
 
-    If Not IsNumeric(Trim$(txtAMap.Text)) Then
+    If Not IsNumeric(Trim$(txtAMap.text)) Then
         Exit Sub
     End If
 
-    n = CLng(Trim$(txtAMap.Text))
+    n = CLng(Trim$(txtAMap.text))
 
     ' Check to make sure its a valid map #
     If n > 0 And n <= MAX_MAPS Then
@@ -3556,15 +3555,15 @@ Private Sub cmdASprite_Click()
         Exit Sub
     End If
 
-    If Len(Trim$(txtASprite.Text)) < 1 Then
+    If Len(Trim$(txtASprite.text)) < 1 Then
         Exit Sub
     End If
 
-    If Not IsNumeric(Trim$(txtASprite.Text)) Then
+    If Not IsNumeric(Trim$(txtASprite.text)) Then
         Exit Sub
     End If
 
-    SendSetSprite CLng(Trim$(txtASprite.Text))
+    SendSetSprite CLng(Trim$(txtASprite.text))
     
     ' Error handler
     Exit Sub
@@ -3621,11 +3620,11 @@ Private Sub cmdABan_Click()
         Exit Sub
     End If
 
-    If Len(Trim$(txtAName.Text)) < 1 Then
+    If Len(Trim$(txtAName.text)) < 1 Then
         Exit Sub
     End If
 
-    SendBan Trim$(txtAName.Text)
+    SendBan Trim$(txtAName.text)
     
     ' Error handler
     Exit Sub
@@ -3739,15 +3738,15 @@ Private Sub cmdAAccess_Click()
         Exit Sub
     End If
 
-    If Len(Trim$(txtAName.Text)) < 2 Then
+    If Len(Trim$(txtAName.text)) < 2 Then
         Exit Sub
     End If
 
-    If IsNumeric(Trim$(txtAName.Text)) Or Not IsNumeric(Trim$(txtAAccess.Text)) Then
+    If IsNumeric(Trim$(txtAName.text)) Or Not IsNumeric(Trim$(txtAAccess.text)) Then
         Exit Sub
     End If
 
-    SendSetAccess Trim$(txtAName.Text), CLng(Trim$(txtAAccess.Text))
+    SendSetAccess Trim$(txtAName.text), CLng(Trim$(txtAAccess.text))
     
     ' Error handler
     Exit Sub
@@ -3812,7 +3811,7 @@ Dim bankNum As Long
                 CurrencyMenu = 3 ' withdraw
                 lblCurrency.Caption = "How many do you want to withdraw?"
                 tmpCurrencyItem = bankNum
-                txtCurrency.Text = vbNullString
+                txtCurrency.text = vbNullString
                 picCurrency.Visible = True
                 txtCurrency.SetFocus
                 Exit Sub
@@ -3894,7 +3893,7 @@ End Sub
 
 Private Sub picBank_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
 Dim bankNum As Long, itemnum As Long, ItemType As Long
-Dim x2 As Long, y2 As Long
+Dim X2 As Long, Y2 As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -3909,9 +3908,9 @@ Dim x2 As Long, y2 As Long
         
         If bankNum <> 0 Then
             
-            x2 = x + picBank.Left + 1
-            y2 = y + picBank.Top + 1
-            UpdateDescWindow Bank.Item(bankNum).num, x2, y2
+            X2 = x + picBank.Left + 1
+            Y2 = y + picBank.Top + 1
+            UpdateDescWindow Bank.Item(bankNum).num, X2, Y2
             Exit Sub
         End If
     End If

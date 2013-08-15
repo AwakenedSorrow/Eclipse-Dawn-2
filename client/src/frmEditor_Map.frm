@@ -49,7 +49,7 @@ Begin VB.Form frmEditor_Map
          Height          =   1455
          Left            =   1800
          TabIndex        =   86
-         Top             =   2640
+         Top             =   3000
          Visible         =   0   'False
          Width           =   3375
          Begin VB.ComboBox cmbSlide 
@@ -76,7 +76,7 @@ Begin VB.Form frmEditor_Map
          Height          =   1575
          Left            =   1800
          TabIndex        =   82
-         Top             =   2520
+         Top             =   3000
          Visible         =   0   'False
          Width           =   3375
          Begin VB.HScrollBar scrlTrap 
@@ -109,7 +109,7 @@ Begin VB.Form frmEditor_Map
          Height          =   1815
          Left            =   1800
          TabIndex        =   77
-         Top             =   2400
+         Top             =   2880
          Visible         =   0   'False
          Width           =   3375
          Begin VB.ComboBox cmbHeal 
@@ -152,7 +152,7 @@ Begin VB.Form frmEditor_Map
          Height          =   2655
          Left            =   1800
          TabIndex        =   36
-         Top             =   2040
+         Top             =   2400
          Visible         =   0   'False
          Width           =   3375
          Begin VB.ListBox lstNpc 
@@ -192,7 +192,7 @@ Begin VB.Form frmEditor_Map
          Height          =   1695
          Left            =   1800
          TabIndex        =   30
-         Top             =   2520
+         Top             =   3000
          Visible         =   0   'False
          Width           =   3375
          Begin VB.CommandButton cmdResourceOk 
@@ -227,7 +227,7 @@ Begin VB.Form frmEditor_Map
          Height          =   2775
          Left            =   1800
          TabIndex        =   59
-         Top             =   1920
+         Top             =   2040
          Visible         =   0   'False
          Width           =   3375
          Begin VB.CommandButton cmdMapWarp 
@@ -291,7 +291,7 @@ Begin VB.Form frmEditor_Map
          Height          =   1335
          Left            =   1920
          TabIndex        =   67
-         Top             =   2640
+         Top             =   3000
          Visible         =   0   'False
          Width           =   3135
          Begin VB.CommandButton cmdShop 
@@ -595,22 +595,6 @@ Begin VB.Form frmEditor_Map
          TabIndex        =   15
          Top             =   0
          Width           =   960
-         Begin VB.Shape shpLoc 
-            BorderColor     =   &H00FF0000&
-            BorderWidth     =   2
-            Height          =   480
-            Left            =   0
-            Top             =   0
-            Width           =   480
-         End
-         Begin VB.Shape shpSelected 
-            BorderColor     =   &H000000FF&
-            BorderWidth     =   2
-            Height          =   480
-            Left            =   0
-            Top             =   0
-            Width           =   480
-         End
       End
    End
    Begin VB.VScrollBar scrlPictureY 
@@ -1047,7 +1031,7 @@ Private Sub Form_Load()
     
     ' move the entire attributes box on screen
     picAttributes.Left = 8
-    picAttributes.top = 8
+    picAttributes.Top = 8
     
     ' Error handler
     Exit Sub
@@ -1169,6 +1153,8 @@ Private Sub optResource_Click()
     picAttributes.Visible = True
     fraResource.Visible = True
     
+    lblResource.Caption = "Resource #" & Trim(Str$(scrlResource.Value)) & ": " & Resource(scrlResource.Value).Name
+    
     ' Error handler
     Exit Sub
 errorhandler:
@@ -1243,9 +1229,6 @@ Private Sub picBackSelect_MouseMove(Button As Integer, Shift As Integer, x As Si
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    shpLoc.top = (y \ PIC_Y) * PIC_Y
-    shpLoc.Left = (x \ PIC_X) * PIC_X
-    shpLoc.Visible = True
     Call MapEditorDrag(Button, x, y)
     
     ' Error handler
@@ -1334,7 +1317,6 @@ Private Sub optItem_Click()
     scrlMapItem.Max = MAX_ITEMS
     scrlMapItem.Value = 1
     lblMapItem.Caption = Trim$(Item(scrlMapItem.Value).Name) & " x" & scrlMapItemValue.Value
-    EditorMap_BltMapItem
     
     ' Error handler
     Exit Sub
@@ -1355,7 +1337,6 @@ Private Sub optKey_Click()
     scrlMapKey.Max = MAX_ITEMS
     scrlMapKey.Value = 1
     chkMapKey.Value = 1
-    EditorMap_BltKey
     lblMapKey.Caption = "Item: " & Trim$(Item(scrlMapKey.Value).Name)
     
     ' Error handler
@@ -1524,7 +1505,7 @@ Private Sub scrlMapItem_Change()
         scrlMapItemValue.Enabled = False
     End If
         
-    EditorMap_BltMapItem
+    EditorMap_DrawMapItem
     lblMapItem.Caption = Trim$(Item(scrlMapItem.Value).Name) & " x" & scrlMapItemValue.Value
     
     ' Error handler
@@ -1581,7 +1562,8 @@ Private Sub scrlMapKey_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblMapKey.Caption = "Item: " & Trim$(Item(scrlMapKey.Value).Name)
+    lblMapKey.Caption = "Item #" & Trim$(Str$(scrlMapKey.Value)) & ": " & Trim$(Item(scrlMapKey.Value).Name)
+    Call EditorMap_DrawKey
     
     ' Error handler
     Exit Sub
@@ -1730,7 +1712,7 @@ Private Sub scrlResource_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblResource.Caption = "Resource: " & Resource(scrlResource.Value).Name
+    lblResource.Caption = "Resource #" & Trim(Str$(scrlResource.Value)) & ": " & Resource(scrlResource.Value).Name
     
     ' Error handler
     Exit Sub
@@ -1773,6 +1755,8 @@ Private Sub scrlPictureY_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     Call MapEditorTileScroll
+    ' Make sure the tileset is drawn as it is being scrolled through.
+    Call EditorMap_DrawTileset
     
     ' Error handler
     Exit Sub
@@ -1787,6 +1771,8 @@ Private Sub scrlPictureX_Scroll()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     scrlPictureY_Change
+    ' Make sure the tileset is drawn as it is being scrolled through.
+    Call EditorMap_DrawTileset
     
     ' Error handler
     Exit Sub
@@ -1815,16 +1801,14 @@ Private Sub scrlTileSet_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     fraTileSet.Caption = "Tileset: " & scrlTileSet.Value
-
-    Call EditorMap_BltTileset
     
-    frmEditor_Map.scrlPictureY.Max = (frmEditor_Map.picBackSelect.height \ PIC_Y) - (frmEditor_Map.picBack.height \ PIC_Y)
-    frmEditor_Map.scrlPictureX.Max = (frmEditor_Map.picBackSelect.width \ PIC_X) - (frmEditor_Map.picBack.width \ PIC_X)
+    frmEditor_Map.scrlPictureY.Max = (frmEditor_Map.picBackSelect.Height \ PIC_Y) - (frmEditor_Map.picBack.Height \ PIC_Y)
+    frmEditor_Map.scrlPictureX.Max = (frmEditor_Map.picBackSelect.Width \ PIC_X) - (frmEditor_Map.picBack.Width \ PIC_X)
     
     MapEditorTileScroll
     
     frmEditor_Map.picBackSelect.Left = 0
-    frmEditor_Map.picBackSelect.top = 0
+    frmEditor_Map.picBackSelect.Top = 0
     
     ' Error handler
     Exit Sub

@@ -11,7 +11,7 @@ Dim smusic() As String
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' set the width
-    frmEditor_Map.width = 7425
+    frmEditor_Map.Width = 7425
     
     ' we're in the map editor
     InMapEditor = True
@@ -24,12 +24,9 @@ Dim smusic() As String
     frmEditor_Map.fraTileSet.Caption = "Tileset: " & 1
     frmEditor_Map.scrlTileSet.Value = 1
     
-    ' render the tiles
-    Call EditorMap_BltTileset
-    
     ' set the scrollbars
-    frmEditor_Map.scrlPictureY.Max = (frmEditor_Map.picBackSelect.height \ PIC_Y) - (frmEditor_Map.picBack.height \ PIC_Y)
-    frmEditor_Map.scrlPictureX.Max = (frmEditor_Map.picBackSelect.width \ PIC_X) - (frmEditor_Map.picBack.width \ PIC_X)
+    frmEditor_Map.scrlPictureY.Max = (D3DT_TEXTURE(Tex_TileSet(frmEditor_Map.scrlTileSet.Value)).Height \ PIC_Y) - (frmEditor_Map.picBack.Height \ PIC_Y)
+    frmEditor_Map.scrlPictureX.Max = (D3DT_TEXTURE(Tex_TileSet(frmEditor_Map.scrlTileSet.Value)).Width \ PIC_X) - (frmEditor_Map.picBack.Width \ PIC_X)
     MapEditorTileScroll
     
     ' set shops for the shop attribute
@@ -37,6 +34,12 @@ Dim smusic() As String
     For i = 1 To MAX_SHOPS
         frmEditor_Map.cmbShop.AddItem i & ": " & Shop(i).Name
     Next
+    
+    ' Set limits for scrollbars
+    frmEditor_Map.scrlMapItem.Max = MAX_ITEMS
+    frmEditor_Map.scrlMapKey.Max = MAX_ITEMS
+    frmEditor_Map.scrlMapWarp = MAX_MAPS
+    frmEditor_Map.scrlResource.Max = MAX_RESOURCES
     
     ' we're not in a shop
     frmEditor_Map.cmbShop.ListIndex = 0
@@ -132,7 +135,7 @@ errorhandler:
 End Sub
 
 Public Sub MapEditorSetTile(ByVal x As Long, ByVal y As Long, ByVal CurLayer As Long, Optional ByVal multitile As Boolean = False)
-Dim x2 As Long, y2 As Long
+Dim X2 As Long, Y2 As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -145,22 +148,22 @@ Dim x2 As Long, y2 As Long
             .Layer(CurLayer).Tileset = frmEditor_Map.scrlTileSet.Value
         End With
     Else ' multitile
-        y2 = 0 ' starting tile for y axis
+        Y2 = 0 ' starting tile for y axis
         For y = CurY To CurY + EditorTileHeight - 1
-            x2 = 0 ' re-set x count every y loop
+            X2 = 0 ' re-set x count every y loop
             For x = CurX To CurX + EditorTileWidth - 1
                 If x >= 0 And x <= Map.MaxX Then
                     If y >= 0 And y <= Map.MaxY Then
                         With Map.Tile(x, y)
-                            .Layer(CurLayer).x = EditorTileX + x2
-                            .Layer(CurLayer).y = EditorTileY + y2
+                            .Layer(CurLayer).x = EditorTileX + X2
+                            .Layer(CurLayer).y = EditorTileY + Y2
                             .Layer(CurLayer).Tileset = frmEditor_Map.scrlTileSet.Value
                         End With
                     End If
                 End If
-                x2 = x2 + 1
+                X2 = X2 + 1
             Next
-            y2 = y2 + 1
+            Y2 = Y2 + 1
         Next
     End If
     
@@ -351,11 +354,6 @@ Public Sub MapEditorChooseTile(Button As Integer, x As Single, y As Single)
         EditorTileX = x \ PIC_X
         EditorTileY = y \ PIC_Y
         
-        frmEditor_Map.shpSelected.top = EditorTileY * PIC_Y
-        frmEditor_Map.shpSelected.Left = EditorTileX * PIC_X
-        
-        frmEditor_Map.shpSelected.width = PIC_X
-        frmEditor_Map.shpSelected.height = PIC_Y
     End If
     
     ' Error handler
@@ -376,9 +374,9 @@ Public Sub MapEditorDrag(Button As Integer, x As Single, y As Single)
         y = (y \ PIC_Y) + 1
         ' check it's not out of bounds
         If x < 0 Then x = 0
-        If x > frmEditor_Map.picBackSelect.width / PIC_X Then x = frmEditor_Map.picBackSelect.width / PIC_X
+        If x > frmEditor_Map.picBackSelect.Width / PIC_X Then x = frmEditor_Map.picBackSelect.Width / PIC_X
         If y < 0 Then y = 0
-        If y > frmEditor_Map.picBackSelect.height / PIC_Y Then y = frmEditor_Map.picBackSelect.height / PIC_Y
+        If y > frmEditor_Map.picBackSelect.Height / PIC_Y Then y = frmEditor_Map.picBackSelect.Height / PIC_Y
         ' find out what to set the width + height of map editor to
         If x > EditorTileX Then ' drag right
             EditorTileWidth = x - EditorTileX
@@ -390,8 +388,6 @@ Public Sub MapEditorDrag(Button As Integer, x As Single, y As Single)
         Else ' drag up
             ' TO DO
         End If
-        frmEditor_Map.shpSelected.width = EditorTileWidth * PIC_X
-        frmEditor_Map.shpSelected.height = EditorTileHeight * PIC_Y
     End If
 
     ' Error handler
@@ -407,19 +403,17 @@ Public Sub MapEditorTileScroll()
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' horizontal scrolling
-    If frmEditor_Map.picBackSelect.width < frmEditor_Map.picBack.width Then
+    If D3DT_TEXTURE(Tex_TileSet(frmEditor_Map.scrlTileSet.Value)).Width < frmEditor_Map.picBack.Width Then
         frmEditor_Map.scrlPictureX.Enabled = False
     Else
         frmEditor_Map.scrlPictureX.Enabled = True
-        frmEditor_Map.picBackSelect.Left = (frmEditor_Map.scrlPictureX.Value * PIC_X) * -1
     End If
     
     ' vertical scrolling
-    If frmEditor_Map.picBackSelect.height < frmEditor_Map.picBack.height Then
+    If D3DT_TEXTURE(Tex_TileSet(frmEditor_Map.scrlTileSet.Value)).Height < frmEditor_Map.picBack.Height Then
         frmEditor_Map.scrlPictureY.Enabled = False
     Else
         frmEditor_Map.scrlPictureY.Enabled = True
-        frmEditor_Map.picBackSelect.top = (frmEditor_Map.scrlPictureY.Value * PIC_Y) * -1
     End If
 
     ' Error handler
@@ -617,7 +611,7 @@ Dim SoundSet As Boolean
         frmEditor_Item.scrlPic.Value = .Pic
         frmEditor_Item.cmbType.ListIndex = .Type
         frmEditor_Item.scrlAnim.Value = .Animation
-        frmEditor_Item.txtDesc.text = Trim$(.Desc)
+        frmEditor_Item.txtDesc.text = Trim$(.desc)
         
         ' find the sound we have set
         If frmEditor_Item.cmbSound.ListCount >= 0 Then
@@ -1301,7 +1295,7 @@ Dim SoundSet As Boolean
         
         ' set values
         .txtName.text = Trim$(Spell(EditorIndex).Name)
-        .txtDesc.text = Trim$(Spell(EditorIndex).Desc)
+        .txtDesc.text = Trim$(Spell(EditorIndex).desc)
         .cmbType.ListIndex = Spell(EditorIndex).Type
         .scrlMP.Value = Spell(EditorIndex).MPCost
         .scrlLevel.Value = Spell(EditorIndex).LevelReq

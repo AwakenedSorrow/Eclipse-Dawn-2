@@ -619,7 +619,6 @@ Option Explicit
 Private Sub cmbClass_Click()
     newCharClass = cmbClass.ListIndex
     newCharSprite = 0
-    NewCharacterBltSprite
 End Sub
 
 Private Sub Form_Load()
@@ -832,8 +831,6 @@ Dim spritecount As Long
         newCharSprite = newCharSprite + 1
     End If
     
-    NewCharacterBltSprite
-    
     ' Error handler
     Exit Sub
 errorhandler:
@@ -848,7 +845,6 @@ Private Sub optFemale_Click()
 
     newCharClass = cmbClass.ListIndex
     newCharSprite = 0
-    NewCharacterBltSprite
     
     ' Error handler
     Exit Sub
@@ -864,7 +860,6 @@ Private Sub optMale_Click()
 
     newCharClass = cmbClass.ListIndex
     newCharSprite = 0
-    NewCharacterBltSprite
     
     ' Error handler
     Exit Sub

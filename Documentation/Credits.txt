@@ -7,6 +7,11 @@ Lead Programmer: Sil van Harberden (The Doctor / Stein)
 ***
 Used Resources
 ***
+Misc. Snippets:
+	Engine of Origin: Eclipse Origins 3.0
+	Creator: JC Snider
+	Website: www.eclipseorigins.com
+
 
 DirectX8 Base:
 	Original File(s): http://www.eclipseorigins.com/community/index.php?/topic/131274-base-d3d8/

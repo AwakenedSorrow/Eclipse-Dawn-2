@@ -859,17 +859,17 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub DevMsg(ByVal Text As String, ByVal color As Byte)
+Public Sub DevMsg(ByVal text As String, ByVal color As Byte)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     If InGame Then
         If GetPlayerAccess(MyIndex) > ADMIN_DEVELOPER Then
-            Call AddText(Text, color)
+            Call AddText(text, color)
         End If
     End If
 
-    Debug.Print Text
+    Debug.Print text
     
     ' Error handler
     Exit Sub
@@ -1177,7 +1177,7 @@ Public Sub OpenShop(ByVal shopnum As Long)
     
     InShop = shopnum
     ShopAction = 0
-    frmMain.picCover.Visible = True
+    frmMain.picCover.Visible = False
     frmMain.picShop.Visible = True
     BltShop
     
@@ -1437,3 +1437,26 @@ Public Sub dialogueHandler(ByVal Index As Long)
     End If
 End Sub
 
+Public Sub MenuLoop()
+
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    ' *** Start GameLoop ***
+    Do While Not InGame
+
+
+        ' *********************
+        ' ** Render Graphics **
+        ' *********************
+        Call DrawGDI
+        DoEvents
+    Loop
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "MenuLoop", "modGameLogic", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
