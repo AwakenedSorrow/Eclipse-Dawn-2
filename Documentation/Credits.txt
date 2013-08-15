@@ -18,6 +18,11 @@ DirectX8 Base:
 	Creator: Tudor Sandulescu (Sekaru)
 	Website: www.sleepystudios.com
 
+Bass Sound Module:
+	Creator: Damian666
+	Website: http://damian666.boot-land.net/
+
+
 Base Engine:
 	Name: Eclipse Origins 2.0
 	Creator: Robin Perris

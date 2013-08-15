@@ -1,6 +1,6 @@
 Attribute VB_Name = "modRendering"
 Public Sub Render_Game()
-Dim x As Long, y As Long, i As Long
+Dim X As Long, Y As Long, i As Long
 Dim rec As RECT
 Dim srcRect As D3DRECT
 
@@ -24,10 +24,10 @@ Dim srcRect As D3DRECT
     
     ' Render the tiles that will be under the player, in this case Ground, Mask1 and Mask2.
     If NumTileSets > 0 Then
-        For x = TileView.Left To TileView.Right
-            For y = TileView.top To TileView.bottom
-                If IsValidMapPoint(x, y) Then
-                    Call RenderMapTile(x, y)
+        For X = TileView.Left To TileView.Right
+            For Y = TileView.top To TileView.bottom
+                If IsValidMapPoint(X, Y) Then
+                    Call RenderMapTile(X, Y)
                 End If
             Next
         Next
@@ -62,14 +62,14 @@ Dim srcRect As D3DRECT
     ' Y-Based Rendering time! Stuff that's "further" away from the front of the screen
     ' (Y-0 being the furthest and the highest being whatever)
     ' Will be rendered first, so it's behind everything else regardless of what it is.
-    For y = 0 To Map.MaxY
+    For Y = 0 To Map.MaxY
         
         ' Check if we have any sprites loaded, if so we can start rendering players and NPCs!
         If NumCharacters > 0 Then
             ' Player Characters
             For i = 1 To Player_HighIndex
                 If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
-                    If Player(i).y = y Then
+                    If Player(i).Y = Y Then
                         Call RenderPlayer(i)
                     End If
                 End If
@@ -77,7 +77,7 @@ Dim srcRect As D3DRECT
             
             ' Non-Player Characters
             For i = 1 To Npc_HighIndex
-                If MapNpc(i).y = y Then
+                If MapNpc(i).Y = Y Then
                     Call RenderNPC(i)
                 End If
             Next
@@ -86,7 +86,7 @@ Dim srcRect As D3DRECT
         ' Time to start cracking on rendering Resources!
         If NumResources > 0 And Resources_Init And Resource_Index > 0 Then
             For i = 1 To Resource_Index
-                If MapResource(i).y = y Then
+                If MapResource(i).Y = Y Then
                     Call RenderMapResource(i)
                 End If
             Next
@@ -107,10 +107,10 @@ Dim srcRect As D3DRECT
     
     ' Render the tiles that will be above the player, in this case Fringe1 and Fringe 2.
     If NumTileSets > 0 Then
-        For x = TileView.Left To TileView.Right
-            For y = TileView.top To TileView.bottom
-                If IsValidMapPoint(x, y) Then
-                    Call RenderUpperMapTile(x, y)
+        For X = TileView.Left To TileView.Right
+            For Y = TileView.top To TileView.bottom
+                If IsValidMapPoint(X, Y) Then
+                    Call RenderUpperMapTile(X, Y)
                 End If
             Next
         Next
@@ -121,10 +121,10 @@ Dim srcRect As D3DRECT
     If InMapEditor Then
         ' Directional Blocking
         If frmEditor_Map.optBlock.value = True Then
-            For x = TileView.Left To TileView.Right
-                For y = TileView.top To TileView.bottom
-                    If IsValidMapPoint(x, y) Then
-                        Call RenderDirBlock(x, y)
+            For X = TileView.Left To TileView.Right
+                For Y = TileView.top To TileView.bottom
+                    If IsValidMapPoint(X, Y) Then
+                        Call RenderDirBlock(X, Y)
                     End If
                 Next
             Next
@@ -202,18 +202,18 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderMapTile(ByVal x As Long, ByVal y As Long)
+Sub RenderMapTile(ByVal X As Long, ByVal Y As Long)
 Dim i As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    With Map.Tile(x, y)
+    With Map.Tile(X, Y)
         ' Time to loop through our layers for this tile.
         For i = MapLayer.Ground To MapLayer.Mask2
             ' Should we skip the tile?
-            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
-                Call RenderGraphic(Tex_TileSet(.Layer(i).Tileset), ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), PIC_X, PIC_Y, 0, 0, .Layer(i).x * PIC_X, .Layer(i).y * PIC_Y)
+            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).X > 0 Or .Layer(i).Y > 0) Then
+                Call RenderGraphic(Tex_TileSet(.Layer(i).Tileset), ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), PIC_X, PIC_Y, 0, 0, .Layer(i).X * PIC_X, .Layer(i).Y * PIC_Y)
             End If
         Next
     End With
@@ -226,18 +226,18 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderUpperMapTile(ByVal x As Long, ByVal y As Long)
+Sub RenderUpperMapTile(ByVal X As Long, ByVal Y As Long)
 Dim i As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    With Map.Tile(x, y)
+    With Map.Tile(X, Y)
         ' Time to loop through our layers for this tile.
         For i = MapLayer.Fringe To MapLayer.Fringe2
             ' Should we skip the tile?
-            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).x > 0 Or .Layer(i).y > 0) Then
-                Call RenderGraphic(Tex_TileSet(.Layer(i).Tileset), ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), PIC_X, PIC_Y, 0, 0, .Layer(i).x * PIC_X, .Layer(i).y * PIC_Y)
+            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).X > 0 Or .Layer(i).Y > 0) Then
+                Call RenderGraphic(Tex_TileSet(.Layer(i).Tileset), ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), PIC_X, PIC_Y, 0, 0, .Layer(i).X * PIC_X, .Layer(i).Y * PIC_Y)
             End If
         Next
     End With
@@ -251,7 +251,7 @@ errorhandler:
 End Sub
 
 Sub RenderPlayer(ByVal Index As Long)
-Dim SpriteFrame As Byte, i As Long, x As Long, y As Long
+Dim SpriteFrame As Byte, i As Long, X As Long, Y As Long
 Dim Sprite As Long, SpriteDir As Long
 Dim attackspeed As Long
     
@@ -320,20 +320,20 @@ Dim attackspeed As Long
     End Select
 
     ' Calculate the X position to render the player sprite at. Along with offset, of course!
-    x = GetPlayerX(Index) * PIC_X + Player(Index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
+    X = GetPlayerX(Index) * PIC_X + Player(Index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
 
     ' Time to work on the Y position.
     ' But first, let's check if the sprite is more than 32 pixels high.
     If (D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) > 32 Then
         ' Create a 32 pixel offset for larger sprites
-        y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
+        Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
     Else
         ' Proceed as normal
-        y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset
+        Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset
     End If
 
     ' We're done here, let's render the sprite!
-    Call RenderSprite(Sprite, x, y, SpriteFrame, SpriteDir)
+    Call RenderSprite(Sprite, X, Y, SpriteFrame, SpriteDir)
     
     ' Paperdoll time!
     ' This will render any equipped items that the player has on which have been assigned a
@@ -341,7 +341,7 @@ Dim attackspeed As Long
     For i = 1 To UBound(PaperdollOrder)
         If GetPlayerEquipment(Index, PaperdollOrder(i)) > 0 Then
             If Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll > 0 Then
-                Call RenderPaperdoll(x, y, Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll, SpriteFrame, SpriteDir)
+                Call RenderPaperdoll(X, Y, Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll, SpriteFrame, SpriteDir)
             End If
         End If
     Next
@@ -355,8 +355,8 @@ errorhandler:
 End Sub
 
 Sub RenderSprite(ByVal Sprite As Long, ByVal X2 As Long, Y2 As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim Width As Long
 Dim Height As Long
     
@@ -367,15 +367,15 @@ Dim Height As Long
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
     
     ' Convert the provided values to values we can use on the map.
-    x = ConvertMapX(X2)
-    y = ConvertMapY(Y2)
+    X = ConvertMapX(X2)
+    Y = ConvertMapY(Y2)
     
     ' Pre-Calculate these values, it makes the render line look a lot cleaner.
     Width = D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4
     Height = D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4
     
     ' Render the sprite itself! Please do -NOT- touch this line unless you know what you're doing.
-    Call RenderGraphic(Tex_Character(Sprite), x, y, Width, Height, 0, 0, SpriteFrame * Width, SpriteDir * Height)
+    Call RenderGraphic(Tex_Character(Sprite), X, Y, Width, Height, 0, 0, SpriteFrame * Width, SpriteDir * Height)
     
 ' Do not put any code beyond this line, this is the error handler.
     Exit Sub
@@ -407,7 +407,7 @@ Sub RenderBlood(ByVal Index As Long)
             End If
             
             ' Now that we've got all that sorted, let's get to rendering this bugger!
-            Call RenderGraphic(Tex_Blood, ConvertMapX(.x * PIC_X), ConvertMapY(.y * PIC_Y), PIC_X, PIC_Y, 0, 0, (.Sprite - 1) * PIC_X, 0, 255, 255, 255, .Alpha)
+            Call RenderGraphic(Tex_Blood, ConvertMapX(.X * PIC_X), ConvertMapY(.Y * PIC_Y), PIC_X, PIC_Y, 0, 0, (.Sprite - 1) * PIC_X, 0, 255, 255, 255, .Alpha)
    
     End With
 ' Do not put any code beyond this line, this is the error handler.
@@ -436,7 +436,7 @@ Dim AnimFrame
         If .Pic < 1 Or .Pic > NumItems Then Exit Sub
         
         ' We've done all the fancy stuff, now let's get to rendering this item!
-        Call RenderGraphic(Tex_Item(.Pic), ConvertMapX(MapItem(Index).x * PIC_X), ConvertMapY(MapItem(Index).y * PIC_Y), PIC_X, PIC_Y, 0, 0, ItemAnimFrame(MapItem(Index).num) * PIC_X, 0)
+        Call RenderGraphic(Tex_Item(.Pic), ConvertMapX(MapItem(Index).X * PIC_X), ConvertMapY(MapItem(Index).Y * PIC_Y), PIC_X, PIC_Y, 0, 0, ItemAnimFrame(MapItem(Index).num) * PIC_X, 0)
         
     End With
 
@@ -454,7 +454,7 @@ Dim i As Long
 Dim Width As Long, Height As Long
 Dim looptime As Long
 Dim FrameCount As Long
-Dim x As Long, y As Long
+Dim X As Long, Y As Long
 Dim lockindex As Long
 Dim AnimFrame As Long
     
@@ -496,8 +496,8 @@ Dim AnimFrame As Long
                 ' check if on same map
                 If GetPlayerMap(lockindex) = GetPlayerMap(MyIndex) Then
                     ' is on map, is playing, set x & y
-                    x = (GetPlayerX(lockindex) * PIC_X) + 16 - (Width / 2) + Player(lockindex).XOffset
-                    y = (GetPlayerY(lockindex) * PIC_Y) + 16 - (Height / 2) + Player(lockindex).yOffset
+                    X = (GetPlayerX(lockindex) * PIC_X) + 16 - (Width / 2) + Player(lockindex).XOffset
+                    Y = (GetPlayerY(lockindex) * PIC_Y) + 16 - (Height / 2) + Player(lockindex).yOffset
                 End If
             End If
         ElseIf AnimInstance(Index).LockType = TARGET_TYPE_NPC Then
@@ -508,8 +508,8 @@ Dim AnimFrame As Long
                 ' check if alive
                 If MapNpc(lockindex).Vital(Vitals.HP) > 0 Then
                     ' exists, is alive, set x & y
-                    x = (MapNpc(lockindex).x * PIC_X) + 16 - (Width / 2) + MapNpc(lockindex).XOffset
-                    y = (MapNpc(lockindex).y * PIC_Y) + 16 - (Height / 2) + MapNpc(lockindex).yOffset
+                    X = (MapNpc(lockindex).X * PIC_X) + 16 - (Width / 2) + MapNpc(lockindex).XOffset
+                    Y = (MapNpc(lockindex).Y * PIC_Y) + 16 - (Height / 2) + MapNpc(lockindex).yOffset
                 Else
                     ' The NPC isn't alive anymore, sadly with the way the system works this means we need to destroy the animation as well.
                     ClearAnimInstance Index
@@ -523,16 +523,16 @@ Dim AnimFrame As Long
         End If
     Else
         ' no lock, default x + y
-        x = (AnimInstance(Index).x * 32) + 16 - (Width / 2)
-        y = (AnimInstance(Index).y * 32) + 16 - (Height / 2)
+        X = (AnimInstance(Index).X * 32) + 16 - (Width / 2)
+        Y = (AnimInstance(Index).Y * 32) + 16 - (Height / 2)
     End If
     
     ' Convert these values beforehand. Saves some space down there.
-    x = ConvertMapX(x)
-    y = ConvertMapY(y)
+    X = ConvertMapX(X)
+    Y = ConvertMapY(Y)
     
     ' Render the actual texture. Should be some fancy animation now!
-    Call RenderGraphic(Tex_Animation(Sprite), x, y, Width, Height, 0, 0, AnimFrame, 0)
+    Call RenderGraphic(Tex_Animation(Sprite), X, Y, Width, Height, 0, 0, AnimFrame, 0)
     
     ' Error handler
     Exit Sub
@@ -543,7 +543,7 @@ errorhandler:
 End Sub
 
 Sub RenderNPC(ByVal Index As Long)
-Dim SpriteAnim As Byte, i As Long, x As Long, y As Long, Sprite As Long, SpriteDir As Long
+Dim SpriteAnim As Byte, i As Long, X As Long, Y As Long, Sprite As Long, SpriteDir As Long
 Dim attackspeed As Long
     
     ' If debug mode, handle error then exit out
@@ -601,18 +601,18 @@ Dim attackspeed As Long
     End Select
 
     ' Calculate the X
-    x = MapNpc(Index).x * PIC_X + MapNpc(Index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
+    X = MapNpc(Index).X * PIC_X + MapNpc(Index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
 
     ' Is the player's height more than 32..?
     If (D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) > 32 Then
         ' Create a 32 pixel offset for larger sprites
-        y = MapNpc(Index).y * PIC_Y + MapNpc(Index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
+        Y = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
     Else
         ' Proceed as normal
-        y = MapNpc(Index).y * PIC_Y + MapNpc(Index).yOffset
+        Y = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset
     End If
 
-    Call RenderSprite(Sprite, x, y, SpriteAnim, SpriteDir)
+    Call RenderSprite(Sprite, X, Y, SpriteAnim, SpriteDir)
     
     ' Error handler
     Exit Sub
@@ -626,17 +626,17 @@ Sub RenderMapResource(ByVal Resource_num As Long)
 Dim Resource_master As Long
 Dim Resource_state As Long
 Dim Resource_sprite As Long
-Dim x As Long, y As Long
+Dim X As Long, Y As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' make sure it's not out of map
-    If MapResource(Resource_num).x > Map.MaxX Then Exit Sub
-    If MapResource(Resource_num).y > Map.MaxY Then Exit Sub
+    If MapResource(Resource_num).X > Map.MaxX Then Exit Sub
+    If MapResource(Resource_num).Y > Map.MaxY Then Exit Sub
         
     ' Get the Original Resource.
-    Resource_master = Map.Tile(MapResource(Resource_num).x, MapResource(Resource_num).y).Data1
+    Resource_master = Map.Tile(MapResource(Resource_num).X, MapResource(Resource_num).Y).Data1
     
     ' Check if it's a valid resource, if it is not then we skip rendering it and carry on.
     ' Same thing with the image.
@@ -659,11 +659,11 @@ Dim x As Long, y As Long
     End If
     
     ' Set base x + y, then the offset due to size
-    x = (MapResource(Resource_num).x * PIC_X) - (D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Width / 2) + 16
-    y = (MapResource(Resource_num).y * PIC_Y) - D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Height + 32
+    X = (MapResource(Resource_num).X * PIC_X) - (D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Width / 2) + 16
+    Y = (MapResource(Resource_num).Y * PIC_Y) - D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Height + 32
     
     ' render it
-    Call RenderResource(Resource_sprite, x, y, D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Width, D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Height)
+    Call RenderResource(Resource_sprite, X, Y, D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Width, D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Height)
     
     ' Error handler
     Exit Sub
@@ -674,8 +674,8 @@ errorhandler:
 End Sub
 
 Sub RenderResource(ByVal Resource As Long, ByVal DX As Long, ByVal DY As Long, ByVal Width As Long, ByVal Height As Long)
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -684,11 +684,11 @@ Dim y As Long
     If Resource < 1 Or Resource > NumResources Then Exit Sub
     
     ' Convert the provided values to something we can use on the map.
-    x = ConvertMapX(DX)
-    y = ConvertMapY(DY)
+    X = ConvertMapX(DX)
+    Y = ConvertMapY(DY)
     
     ' Render the actual resource on the map!
-    Call RenderGraphic(Tex_Resource(Resource), x, y, Width, Height, 0, 0, 0, 0)
+    Call RenderGraphic(Tex_Resource(Resource), X, Y, Width, Height, 0, 0, 0, 0)
     
     ' Error handler
     Exit Sub
@@ -698,26 +698,26 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderDirBlock(ByVal x As Long, ByVal y As Long)
+Sub RenderDirBlock(ByVal X As Long, ByVal Y As Long)
 Dim i As Long, Left As Long, top As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' Render the Grid Texture.
-    Call RenderGraphic(Tex_DirBlock, ConvertMapX(x * PIC_X), ConvertMapY(y * PIC_Y), PIC_X, PIC_Y, 0, 0, 0, 24)
+    Call RenderGraphic(Tex_DirBlock, ConvertMapX(X * PIC_X), ConvertMapY(Y * PIC_Y), PIC_X, PIC_Y, 0, 0, 0, 24)
     
     ' render dir blobs
     For i = 1 To 4
         Left = (i - 1) * 8
         ' find out whether render blocked or not
-        If Not isDirBlocked(Map.Tile(x, y).DirBlock, CByte(i)) Then
+        If Not isDirBlocked(Map.Tile(X, Y).DirBlock, CByte(i)) Then
             top = 8
         Else
             top = 16
         End If
         'render the actual thing!
-        Call RenderGraphic(Tex_DirBlock, ConvertMapX(x * PIC_X) + DirArrowX(i), ConvertMapY(y * PIC_Y) + DirArrowY(i), 8, 8, 0, 0, Left, top)
+        Call RenderGraphic(Tex_DirBlock, ConvertMapX(X * PIC_X) + DirArrowX(i), ConvertMapY(Y * PIC_Y) + DirArrowY(i), 8, 8, 0, 0, Left, top)
         
     Next
     
@@ -759,7 +759,7 @@ Dim i As Long, npcNum As Long, partyIndex As Long
     
     ' dynamic bar calculations
     sWidth = D3DT_TEXTURE(Tex_Bars).Width
-    sHeight = D3DT_TEXTURE(Tex_Bars).Height / 4
+    sHeight = D3DT_TEXTURE(Tex_Bars).Height / 2
     
     ' render health bars
     For i = 1 To MAX_MAP_NPCS
@@ -769,19 +769,19 @@ Dim i As Long, npcNum As Long, partyIndex As Long
             ' alive?
             If MapNpc(i).Vital(Vitals.HP) > 0 And MapNpc(i).Vital(Vitals.HP) < Npc(npcNum).HP Then
                 ' lock to npc
-                tmpX = MapNpc(i).x * PIC_X + MapNpc(i).XOffset + 16 - (sWidth / 2)
-                tmpY = MapNpc(i).y * PIC_Y + MapNpc(i).yOffset + 35
+                tmpX = MapNpc(i).X * PIC_X + MapNpc(i).XOffset + 16 - (sWidth / 2)
+                tmpY = MapNpc(i).Y * PIC_Y + MapNpc(i).yOffset + 35
                 
                 ' calculate the width to fill
                 barWidth = ((MapNpc(i).Vital(Vitals.HP) / sWidth) / (Npc(npcNum).HP / sWidth)) * sWidth
                 
-                ' draw bar background
-                top = sHeight * 1 ' HP bar background
-                Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top)
-                
                 ' draw the content of the bar.
-                top = 0 ' HP bar
-                Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top)
+                top = 0 ' The Bar itself
+                Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top, 255, 0, 0, 255)
+                
+                ' draw bar overlay
+                top = sHeight * 1 ' Bar overlay
+                Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top, 128, 128, 128, 255)
             End If
         End If
     Next
@@ -796,13 +796,13 @@ Dim i As Long, npcNum As Long, partyIndex As Long
             ' calculate the width to fill
             barWidth = (GetTickCount - SpellBufferTimer) / ((Spell(PlayerSpells(SpellBuffer)).CastTime * 1000)) * sWidth
             
-            ' draw bar background
-            top = sHeight * 3 ' Spell bar background
-            Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top)
-            
             ' draw the bar proper
-            top = sHeight * 2 ' Spell bar
-            Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top)
+            top = 0 ' The Bar Itself
+            Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top, 0, 0, 255, 255)
+            
+            ' draw bar Overlay
+            top = sHeight * 1 ' The bar overlay
+            Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top, 128, 128, 128, 255)
         End If
     End If
     
@@ -815,13 +815,13 @@ Dim i As Long, npcNum As Long, partyIndex As Long
         ' calculate the width to fill
         barWidth = ((GetPlayerVital(MyIndex, Vitals.HP) / sWidth) / (GetPlayerMaxVital(MyIndex, Vitals.HP) / sWidth)) * sWidth
        
-        ' draw bar background
-        top = sHeight * 1 ' HP bar background
-        Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top)
-       
-        ' draw the bar proper
-        top = 0 ' HP bar
-        Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top)
+        ' draw the content of the bar.
+        top = 0 ' The Bar itself
+        Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top, 255, 0, 0, 255)
+                
+        ' draw bar overlay
+        top = sHeight * 1 ' Bar overlay
+        Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top, 128, 128, 128, 255)
     End If
     
     ' draw party health bars
@@ -838,13 +838,13 @@ Dim i As Long, npcNum As Long, partyIndex As Long
                     ' calculate the width to fill
                     barWidth = ((GetPlayerVital(partyIndex, Vitals.HP) / sWidth) / (GetPlayerMaxVital(partyIndex, Vitals.HP) / sWidth)) * sWidth
                     
-                    ' draw bar background
-                    top = sHeight * 1 ' HP bar background
-                    Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top)
-                    
-                    ' draw the bar's content.
-                    top = 0 ' HP bar
-                    Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top)
+                    ' draw the content of the bar.
+                    top = 0 ' The Bar itself
+                    Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), barWidth, sHeight, 0, 0, 0, top, 255, 0, 0, 255)
+                
+                    ' draw bar overlay
+                    top = sHeight * 1 ' Bar overlay
+                    Call RenderGraphic(Tex_Bars, ConvertMapX(tmpX), ConvertMapY(tmpY), sWidth, sHeight, 0, 0, 0, top, 128, 128, 128, 255)
                 End If
             End If
         Next
@@ -866,9 +866,9 @@ Sub RenderHoverAndTarget()
     ' Handle the rendering of the target texture if one exists.
     If myTarget > 0 Then
         If myTargetType = TARGET_TYPE_PLAYER Then ' If the target is a player.
-            Call RenderTarget((Player(myTarget).x * 32) + Player(myTarget).XOffset, (Player(myTarget).y * 32) + Player(myTarget).yOffset)
+            Call RenderTarget((Player(myTarget).X * 32) + Player(myTarget).XOffset, (Player(myTarget).Y * 32) + Player(myTarget).yOffset)
         ElseIf myTargetType = TARGET_TYPE_NPC Then ' If the target is an NPC.
-            Call RenderTarget((MapNpc(myTarget).x * 32) + MapNpc(myTarget).XOffset, (MapNpc(myTarget).y * 32) + MapNpc(myTarget).yOffset)
+            Call RenderTarget((MapNpc(myTarget).X * 32) + MapNpc(myTarget).XOffset, (MapNpc(myTarget).Y * 32) + MapNpc(myTarget).yOffset)
         End If
     End If
     
@@ -877,11 +877,11 @@ Sub RenderHoverAndTarget()
     For i = 1 To Player_HighIndex ' Players
         If IsPlaying(i) Then
             If Player(i).Map = Player(MyIndex).Map Then
-                If CurX = Player(i).x And CurY = Player(i).y Then ' Is our cursor over something?
+                If CurX = Player(i).X And CurY = Player(i).Y Then ' Is our cursor over something?
                     If myTargetType = TARGET_TYPE_PLAYER And myTarget = i Then
                         'We're already targetting this player, so no point in rendering this as well.
                     Else
-                        Call RenderHover(TARGET_TYPE_PLAYER, i, (Player(i).x * 32) + Player(i).XOffset, (Player(i).y * 32) + Player(i).yOffset)
+                        Call RenderHover(TARGET_TYPE_PLAYER, i, (Player(i).X * 32) + Player(i).XOffset, (Player(i).Y * 32) + Player(i).yOffset)
                     End If
                 End If
             End If
@@ -889,11 +889,11 @@ Sub RenderHoverAndTarget()
     Next
     For i = 1 To Npc_HighIndex 'NPCs
         If MapNpc(i).num > 0 Then
-            If CurX = MapNpc(i).x And CurY = MapNpc(i).y Then ' Is our cursor over something?
+            If CurX = MapNpc(i).X And CurY = MapNpc(i).Y Then ' Is our cursor over something?
                 If myTargetType = TARGET_TYPE_NPC And myTarget = i Then
                     'We're already targetting this NPC, so no point in rendering this as well.
                 Else
-                    Call RenderHover(TARGET_TYPE_NPC, i, (MapNpc(i).x * 32) + MapNpc(i).XOffset, (MapNpc(i).y * 32) + MapNpc(i).yOffset)
+                    Call RenderHover(TARGET_TYPE_NPC, i, (MapNpc(i).X * 32) + MapNpc(i).XOffset, (MapNpc(i).Y * 32) + MapNpc(i).yOffset)
                 End If
             End If
         End If
@@ -907,7 +907,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub RenderTarget(ByVal x As Long, ByVal y As Long)
+Public Sub RenderTarget(ByVal X As Long, ByVal Y As Long)
 Dim Width As Long, Height As Long
     
     ' If debug mode, handle error then exit out
@@ -918,15 +918,15 @@ Dim Width As Long, Height As Long
     Height = D3DT_TEXTURE(Tex_Target).Height
     
     ' Center it on the Target.
-    x = x - ((Width - 32) / 2)
-    y = y - (Height / 2)
+    X = X - ((Width - 32) / 2)
+    Y = Y - (Height / 2)
     
     ' And convert it to be useful on our map!
-    x = ConvertMapX(x)
-    y = ConvertMapY(y)
+    X = ConvertMapX(X)
+    Y = ConvertMapY(Y)
     
     ' Now render the texture to the screen.
-    Call RenderGraphic(Tex_Target, x, y, Width, Height, 0, 0, 0, 0)
+    Call RenderGraphic(Tex_Target, X, Y, Width, Height, 0, 0, 0, 0)
     
     ' Error handler
     Exit Sub
@@ -936,7 +936,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderHover(ByVal tType As Long, ByVal target As Long, ByVal x As Long, ByVal y As Long)
+Sub RenderHover(ByVal tType As Long, ByVal target As Long, ByVal X As Long, ByVal Y As Long)
 Dim Width As Long, Height As Long
     
     ' If debug mode, handle error then exit out
@@ -947,15 +947,15 @@ Dim Width As Long, Height As Long
     Height = D3DT_TEXTURE(Tex_Target).Height
     
     ' Center it on the Target.
-    x = x - ((Width - 32) / 2)
-    y = y - (Height / 2)
+    X = X - ((Width - 32) / 2)
+    Y = Y - (Height / 2)
     
     ' And convert it to be useful on our map!
-    x = ConvertMapX(x)
-    y = ConvertMapY(y)
+    X = ConvertMapX(X)
+    Y = ConvertMapY(Y)
     
     ' Now render the texture to the screen.
-    Call RenderGraphic(Tex_Target, x, y, Width, Height, 0, 0, Width, 0)
+    Call RenderGraphic(Tex_Target, X, Y, Width, Height, 0, 0, Width, 0)
     
     ' Error handler
     Exit Sub
@@ -965,11 +965,11 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Function ConvertMapX(ByVal x As Long) As Long
+Public Function ConvertMapX(ByVal X As Long) As Long
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
  
-    ConvertMapX = x - (TileView.Left * PIC_X) - Camera.Left
+    ConvertMapX = X - (TileView.Left * PIC_X) - Camera.Left
    
     ' Error handler
     Exit Function
@@ -979,11 +979,11 @@ errorhandler:
     Exit Function
 End Function
  
-Public Function ConvertMapY(ByVal y As Long) As Long
+Public Function ConvertMapY(ByVal Y As Long) As Long
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
  
-    ConvertMapY = y - (TileView.top * PIC_Y) - Camera.top
+    ConvertMapY = Y - (TileView.top * PIC_Y) - Camera.top
    
     ' Error handler
     Exit Function
@@ -995,7 +995,7 @@ End Function
 
 Public Sub RenderPaperdoll(ByVal X2 As Long, ByVal Y2 As Long, ByVal Sprite As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
 Dim top As Long, Left As Long
-Dim x As Long, y As Long
+Dim X As Long, Y As Long
 Dim Width As Long, Height As Long
     
     ' If debug mode, handle error then exit out
@@ -1008,13 +1008,13 @@ Dim Width As Long, Height As Long
     Left = SpriteFrame * (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width / 4)
     
     ' Caclculate a few things we might need.
-    x = ConvertMapX(X2)
-    y = ConvertMapY(Y2)
+    X = ConvertMapX(X2)
+    Y = ConvertMapY(Y2)
     Width = (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width / 4)
     Height = (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4)
     
     ' Rendering time!
-    Call RenderGraphic(Tex_Paperdoll(Sprite), x, y, Width, Height, 0, 0, Left, top)
+    Call RenderGraphic(Tex_Paperdoll(Sprite), X, Y, Width, Height, 0, 0, Left, top)
     
     ' Error handler
     Exit Sub
@@ -1024,16 +1024,16 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Function InViewPort(ByVal x As Long, ByVal y As Long) As Boolean
+Public Function InViewPort(ByVal X As Long, ByVal Y As Long) As Boolean
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     InViewPort = False
 
-    If x < TileView.Left Then Exit Function
-    If y < TileView.top Then Exit Function
-    If x > TileView.Right Then Exit Function
-    If y > TileView.bottom Then Exit Function
+    If X < TileView.Left Then Exit Function
+    If Y < TileView.top Then Exit Function
+    If X > TileView.Right Then Exit Function
+    If Y > TileView.bottom Then Exit Function
     InViewPort = True
     
     ' Error handler
@@ -1044,16 +1044,16 @@ errorhandler:
     Exit Function
 End Function
 
-Public Function IsValidMapPoint(ByVal x As Long, ByVal y As Long) As Boolean
+Public Function IsValidMapPoint(ByVal X As Long, ByVal Y As Long) As Boolean
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     IsValidMapPoint = False
 
-    If x < 0 Then Exit Function
-    If y < 0 Then Exit Function
-    If x > Map.MaxX Then Exit Function
-    If y > Map.MaxY Then Exit Function
+    If X < 0 Then Exit Function
+    If Y < 0 Then Exit Function
+    If X > Map.MaxX Then Exit Function
+    If Y > Map.MaxY Then Exit Function
     IsValidMapPoint = True
         
     ' Error handler

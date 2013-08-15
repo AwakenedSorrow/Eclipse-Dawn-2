@@ -22,8 +22,8 @@ Public DisplayMode As D3DDISPLAYMODE
 Public D3DWindow As D3DPRESENT_PARAMETERS
 
 Public Type TLVERTEX
-    x As Single
-    y As Single
+    X As Single
+    Y As Single
     z As Single
     RHW As Single
     color As Long
@@ -471,7 +471,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub RenderGraphic(ByVal Texture As Long, x As Long, y As Long, DW As Long, DH As Long, Optional TW As Long, Optional TH As Long, _
+Public Sub RenderGraphic(ByVal Texture As Long, X As Long, Y As Long, DW As Long, DH As Long, Optional TW As Long, Optional TH As Long, _
 Optional OX As Long, Optional OY As Long, Optional R As Byte = 255, Optional G As Byte = 255, Optional B As Byte = 255, Optional A As Byte = 255)
 Dim Box(0 To 3) As TLVERTEX, i As Long, TextureWidth As Long, TextureHeight As Long
     
@@ -496,22 +496,22 @@ Dim Box(0 To 3) As TLVERTEX, i As Long, TextureWidth As Long, TextureHeight As L
         Box(i).color = D3DColorRGBA(R, G, B, A)
     Next
 
-    Box(0).x = x
-    Box(0).y = y
+    Box(0).X = X
+    Box(0).Y = Y
     Box(0).tu = (OX / TextureWidth)
     Box(0).tv = (OY / TextureHeight)
-    Box(1).x = x + DW
+    Box(1).X = X + DW
     Box(1).tu = (OX + TW + 1) / TextureWidth
-    Box(2).x = Box(0).x
-    Box(3).x = Box(1).x
+    Box(2).X = Box(0).X
+    Box(3).X = Box(1).X
 
-    Box(2).y = y + DH
+    Box(2).Y = Y + DH
     Box(2).tv = (OY + TH + 1) / TextureHeight
 
-    Box(1).y = Box(0).y
+    Box(1).Y = Box(0).Y
     Box(1).tv = Box(0).tv
     Box(2).tu = Box(0).tu
-    Box(3).y = Box(2).y
+    Box(3).Y = Box(2).Y
     Box(3).tu = Box(1).tu
     Box(3).tv = Box(2).tv
     
