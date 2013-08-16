@@ -370,7 +370,7 @@ Dim tmpIndex As Long
     
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Resource(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Resource(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     ResourceEditorInit
@@ -401,7 +401,10 @@ Private Sub Form_Load()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    scrlReward.Max = MAX_ITEMS
+    scrlReward.max = MAX_ITEMS
+    scrlExhaustedPic.max = NumResources
+    scrlNormalPic.max = NumResources
+    scrlAnimation.max = MAX_ANIMATIONS
     
     ' Error handler
     Exit Sub
@@ -444,9 +447,9 @@ Dim sString As String
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    If scrlAnimation.Value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.Value).Name)
+    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).name)
     lblAnim.Caption = "Animation: " & sString
-    Resource(EditorIndex).Animation = scrlAnimation.Value
+    Resource(EditorIndex).Animation = scrlAnimation.value
     
     ' Error handler
     Exit Sub
@@ -460,9 +463,9 @@ Private Sub scrlExhaustedPic_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblExhaustedPic.Caption = "Exhausted Image: " & scrlExhaustedPic.Value
+    lblExhaustedPic.Caption = "Exhausted Image: " & scrlExhaustedPic.value
     EditorResource_DrawExhaustedSprite
-    Resource(EditorIndex).ExhaustedImage = scrlExhaustedPic.Value
+    Resource(EditorIndex).ExhaustedImage = scrlExhaustedPic.value
     
     ' Error handler
     Exit Sub
@@ -476,8 +479,8 @@ Private Sub scrlHealth_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblHealth.Caption = "Health: " & scrlHealth.Value
-    Resource(EditorIndex).health = scrlHealth.Value
+    lblHealth.Caption = "Health: " & scrlHealth.value
+    Resource(EditorIndex).health = scrlHealth.value
     
     ' Error handler
     Exit Sub
@@ -491,9 +494,9 @@ Private Sub scrlNormalPic_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblNormalPic.Caption = "Normal Image: " & scrlNormalPic.Value
+    lblNormalPic.Caption = "Normal Image: " & scrlNormalPic.value
     EditorResource_DrawNormalSprite
-    Resource(EditorIndex).ResourceImage = scrlNormalPic.Value
+    Resource(EditorIndex).ResourceImage = scrlNormalPic.value
     
     ' Error handler
     Exit Sub
@@ -507,8 +510,8 @@ Private Sub scrlRespawn_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblRespawn.Caption = "Respawn Time (Seconds): " & scrlRespawn.Value
-    Resource(EditorIndex).RespawnTime = scrlRespawn.Value
+    lblRespawn.Caption = "Respawn Time (Seconds): " & scrlRespawn.value
+    Resource(EditorIndex).RespawnTime = scrlRespawn.value
     
     ' Error handler
     Exit Sub
@@ -522,13 +525,13 @@ Private Sub scrlReward_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    If scrlReward.Value > 0 Then
-        lblReward.Caption = "Item Reward: " & Trim$(Item(scrlReward.Value).Name)
+    If scrlReward.value > 0 Then
+        lblReward.Caption = "Item Reward: " & Trim$(Item(scrlReward.value).name)
     Else
         lblReward.Caption = "Item Reward: None"
     End If
     
-    Resource(EditorIndex).ItemReward = scrlReward.Value
+    Resource(EditorIndex).ItemReward = scrlReward.value
 
     ' Error handler
     Exit Sub
@@ -539,25 +542,25 @@ errorhandler:
 End Sub
 
 Private Sub scrlTool_Change()
-    Dim Name As String
+    Dim name As String
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    Select Case scrlTool.Value
+    Select Case scrlTool.value
         Case 0
-            Name = "None"
+            name = "None"
         Case 1
-            Name = "Hatchet"
+            name = "Hatchet"
         Case 2
-            Name = "Rod"
+            name = "Rod"
         Case 3
-            Name = "Pickaxe"
+            name = "Pickaxe"
     End Select
 
-    lblTool.Caption = "Tool Required: " & Name
+    lblTool.Caption = "Tool Required: " & name
     
-    Resource(EditorIndex).ToolRequired = scrlTool.Value
+    Resource(EditorIndex).ToolRequired = scrlTool.value
     
     ' Error handler
     Exit Sub
@@ -603,9 +606,9 @@ Dim tmpIndex As Long
 
     If EditorIndex = 0 Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Resource(EditorIndex).Name = Trim$(txtName.text)
+    Resource(EditorIndex).name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Resource(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Resource(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     ' Error handler

@@ -72,6 +72,10 @@ Public Sub Main()
     Call SetStatus("Initializing sound system...")
     InitBASS
     
+    ' Clear game values
+    Call SetStatus("Clearing game data...")
+    Call ClearGameData
+    
     ' check if we have main-menu music, if so play it.
     If Len(Trim$(Options.MenuMusic)) > 0 Then PlayMusic Trim$(Options.MenuMusic)
     
@@ -323,6 +327,8 @@ Dim Buffer As clsBuffer, i As Long
     frmMain.picCharacter.Visible = False
     frmMain.picOptions.Visible = False
     frmMain.picParty.Visible = False
+    frmMain.picAdmin.Visible = False
+    frmMain.picBank.Visible = False
 End Sub
 
 Sub GameInit()
@@ -802,6 +808,25 @@ Dim strLoad As String, i As Long, Ext As String
     Exit Sub
 errorhandler:
     HandleError "PopulateLists", "modGeneral", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Public Sub ClearGameData()
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    Call ClearNpcs
+    Call ClearResources
+    Call ClearItems
+    Call ClearShops
+    Call ClearSpells
+    Call ClearAnimations
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "ClearGameData", "modGeneral", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub

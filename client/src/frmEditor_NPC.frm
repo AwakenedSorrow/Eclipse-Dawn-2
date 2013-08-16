@@ -513,7 +513,7 @@ Dim tmpIndex As Long
     
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     NpcEditorInit
@@ -530,8 +530,9 @@ Private Sub Form_Load()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    scrlSprite.Max = NumCharacters
-    scrlAnimation.Max = MAX_ANIMATIONS
+    scrlSprite.max = NumCharacters
+    scrlAnimation.max = MAX_ANIMATIONS
+    scrlNum.max = MAX_ITEMS
     
     ' Error handler
     Exit Sub
@@ -588,9 +589,9 @@ Dim sString As String
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    If scrlAnimation.Value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.Value).Name)
+    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).name)
     lblAnimation.Caption = "Anim: " & sString
-    Npc(EditorIndex).Animation = scrlAnimation.Value
+    Npc(EditorIndex).Animation = scrlAnimation.value
     
     ' Error handler
     Exit Sub
@@ -604,9 +605,9 @@ Private Sub scrlSprite_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblSprite.Caption = "Sprite: " & scrlSprite.Value
+    lblSprite.Caption = "Sprite: " & scrlSprite.value
     Call EditorNpc_DrawSprite
-    Npc(EditorIndex).Sprite = scrlSprite.Value
+    Npc(EditorIndex).Sprite = scrlSprite.value
     
     ' Error handler
     Exit Sub
@@ -620,8 +621,8 @@ Private Sub scrlRange_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblRange.Caption = "Range: " & scrlRange.Value
-    Npc(EditorIndex).Range = scrlRange.Value
+    lblRange.Caption = "Range: " & scrlRange.value
+    Npc(EditorIndex).Range = scrlRange.value
     
     ' Error handler
     Exit Sub
@@ -635,13 +636,13 @@ Private Sub scrlNum_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblNum.Caption = "Num: " & scrlNum.Value
+    lblNum.Caption = "Num: " & scrlNum.value
 
-    If scrlNum.Value > 0 Then
-        lblItemName.Caption = "Item: " & Trim$(Item(scrlNum.Value).Name)
+    If scrlNum.value > 0 Then
+        lblItemName.Caption = "Item: " & Trim$(Item(scrlNum.value).name)
     End If
     
-    Npc(EditorIndex).DropItem = scrlNum.Value
+    Npc(EditorIndex).DropItem = scrlNum.value
     
     ' Error handler
     Exit Sub
@@ -668,8 +669,8 @@ Dim prefix As String
         Case 5
             prefix = "Will: "
     End Select
-    lblStat(Index).Caption = prefix & scrlStat(Index).Value
-    Npc(EditorIndex).Stat(Index) = scrlStat(Index).Value
+    lblStat(Index).Caption = prefix & scrlStat(Index).value
+    Npc(EditorIndex).Stat(Index) = scrlStat(Index).value
     
     ' Error handler
     Exit Sub
@@ -683,8 +684,8 @@ Private Sub scrlValue_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblValue.Caption = "Value: " & scrlValue.Value
-    Npc(EditorIndex).DropItemValue = scrlValue.Value
+    lblValue.Caption = "Value: " & scrlValue.value
+    Npc(EditorIndex).DropItemValue = scrlValue.value
     
     ' Error handler
     Exit Sub
@@ -791,9 +792,9 @@ Dim tmpIndex As Long
     
     If EditorIndex = 0 Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Npc(EditorIndex).Name = Trim$(txtName.text)
+    Npc(EditorIndex).name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Npc(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     ' Error handler

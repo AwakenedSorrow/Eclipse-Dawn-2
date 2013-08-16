@@ -845,7 +845,7 @@ Dim tmpIndex As Long
     
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     ItemEditorInit
@@ -862,9 +862,9 @@ Private Sub Form_Load()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    scrlPic.Max = NumItems
-    scrlAnim.Max = MAX_ANIMATIONS
-    scrlPaperdoll.Max = NumPaperdolls
+    scrlPic.max = NumItems
+    scrlAnim.max = MAX_ANIMATIONS
+    scrlPaperdoll.max = NumPaperdolls
     
     ' Error handler
     Exit Sub
@@ -957,8 +957,8 @@ Private Sub scrlAccessReq_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblAccessReq.Caption = "Access Req: " & scrlAccessReq.Value
-    Item(EditorIndex).AccessReq = scrlAccessReq.Value
+    lblAccessReq.Caption = "Access Req: " & scrlAccessReq.value
+    Item(EditorIndex).AccessReq = scrlAccessReq.value
     
     ' Error handler
     Exit Sub
@@ -972,8 +972,8 @@ Private Sub scrlAddHp_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblAddHP.Caption = "Add HP: " & scrlAddHp.Value
-    Item(EditorIndex).AddHP = scrlAddHp.Value
+    lblAddHP.Caption = "Add HP: " & scrlAddHp.value
+    Item(EditorIndex).AddHP = scrlAddHp.value
     
     ' Error handler
     Exit Sub
@@ -987,8 +987,8 @@ Private Sub scrlAddMp_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblAddMP.Caption = "Add MP: " & scrlAddMP.Value
-    Item(EditorIndex).AddMP = scrlAddMP.Value
+    lblAddMP.Caption = "Add MP: " & scrlAddMP.value
+    Item(EditorIndex).AddMP = scrlAddMP.value
     
     ' Error handler
     Exit Sub
@@ -1002,8 +1002,8 @@ Private Sub scrlAddExp_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblAddExp.Caption = "Add Exp: " & scrlAddExp.Value
-    Item(EditorIndex).AddEXP = scrlAddExp.Value
+    lblAddExp.Caption = "Add Exp: " & scrlAddExp.value
+    Item(EditorIndex).AddEXP = scrlAddExp.value
     
     ' Error handler
     Exit Sub
@@ -1019,13 +1019,13 @@ Dim sString As String
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    If scrlAnim.Value = 0 Then
+    If scrlAnim.value = 0 Then
         sString = "None"
     Else
-        sString = Trim$(Animation(scrlAnim.Value).Name)
+        sString = Trim$(Animation(scrlAnim.value).name)
     End If
     lblAnim.Caption = "Anim: " & sString
-    Item(EditorIndex).Animation = scrlAnim.Value
+    Item(EditorIndex).Animation = scrlAnim.value
     
     ' Error handler
     Exit Sub
@@ -1040,8 +1040,8 @@ Private Sub scrlDamage_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblDamage.Caption = "Damage: " & scrlDamage.Value
-    Item(EditorIndex).Data2 = scrlDamage.Value
+    lblDamage.Caption = "Damage: " & scrlDamage.value
+    Item(EditorIndex).Data2 = scrlDamage.value
     
     ' Error handler
     Exit Sub
@@ -1057,7 +1057,7 @@ Private Sub scrlLevelReq_Change()
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     lblLevelReq.Caption = "Level req: " & scrlLevelReq
-    Item(EditorIndex).LevelReq = scrlLevelReq.Value
+    Item(EditorIndex).LevelReq = scrlLevelReq.value
     
     ' Error handler
     Exit Sub
@@ -1072,8 +1072,8 @@ Private Sub scrlPaperdoll_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblPaperdoll.Caption = "Paperdoll: " & scrlPaperdoll.Value
-    Item(EditorIndex).Paperdoll = scrlPaperdoll.Value
+    lblPaperdoll.Caption = "Paperdoll: " & scrlPaperdoll.value
+    Item(EditorIndex).Paperdoll = scrlPaperdoll.value
     Call EditorItem_DrawPaperdoll
     
     ' Error handler
@@ -1089,8 +1089,8 @@ Private Sub scrlPic_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblPic.Caption = "Pic: " & scrlPic.Value
-    Item(EditorIndex).Pic = scrlPic.Value
+    lblPic.Caption = "Pic: " & scrlPic.value
+    Item(EditorIndex).Pic = scrlPic.value
     Call EditorItem_DrawItem
     
     ' Error handler
@@ -1106,8 +1106,8 @@ Private Sub scrlPrice_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblPrice.Caption = "Price: " & scrlPrice.Value
-    Item(EditorIndex).Price = scrlPrice.Value
+    lblPrice.Caption = "Price: " & scrlPrice.value
+    Item(EditorIndex).Price = scrlPrice.value
     
     ' Error handler
     Exit Sub
@@ -1122,8 +1122,8 @@ Private Sub scrlRarity_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblRarity.Caption = "Rarity: " & scrlRarity.Value
-    Item(EditorIndex).Rarity = scrlRarity.Value
+    lblRarity.Caption = "Rarity: " & scrlRarity.value
+    Item(EditorIndex).Rarity = scrlRarity.value
     
     ' Error handler
     Exit Sub
@@ -1138,8 +1138,8 @@ Private Sub scrlSpeed_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
-    lblSpeed.Caption = "Speed: " & scrlSpeed.Value / 1000 & " sec"
-    Item(EditorIndex).Speed = scrlSpeed.Value
+    lblSpeed.Caption = "Speed: " & scrlSpeed.value / 1000 & " sec"
+    Item(EditorIndex).Speed = scrlSpeed.value
     
     ' Error handler
     Exit Sub
@@ -1168,8 +1168,8 @@ Dim text As String
             text = "+ Will: "
     End Select
             
-    lblStatBonus(Index).Caption = text & scrlStatBonus(Index).Value
-    Item(EditorIndex).Add_Stat(Index) = scrlStatBonus(Index).Value
+    lblStatBonus(Index).Caption = text & scrlStatBonus(Index).value
+    Item(EditorIndex).Add_Stat(Index) = scrlStatBonus(Index).value
     
     ' Error handler
     Exit Sub
@@ -1198,8 +1198,8 @@ Private Sub scrlStatReq_Change(Index As Integer)
             text = "Will: "
     End Select
     
-    lblStatReq(Index).Caption = text & scrlStatReq(Index).Value
-    Item(EditorIndex).Stat_Req(Index) = scrlStatReq(Index).Value
+    lblStatReq(Index).Caption = text & scrlStatReq(Index).value
+    Item(EditorIndex).Stat_Req(Index) = scrlStatReq(Index).value
     
     ' Error handler
     Exit Sub
@@ -1215,15 +1215,15 @@ Private Sub scrlSpell_Change()
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     
-    If Len(Trim$(Spell(scrlSpell.Value).Name)) > 0 Then
-        lblSpellName.Caption = "Name: " & Trim$(Spell(scrlSpell.Value).Name)
+    If Len(Trim$(Spell(scrlSpell.value).name)) > 0 Then
+        lblSpellName.Caption = "Name: " & Trim$(Spell(scrlSpell.value).name)
     Else
         lblSpellName.Caption = "Name: None"
     End If
     
-    lblSpell.Caption = "Spell: " & scrlSpell.Value
+    lblSpell.Caption = "Spell: " & scrlSpell.value
     
-    Item(EditorIndex).Data1 = scrlSpell.Value
+    Item(EditorIndex).Data1 = scrlSpell.value
     
     ' Error handler
     Exit Sub
@@ -1257,9 +1257,9 @@ Dim tmpIndex As Long
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Item(EditorIndex).Name = Trim$(txtName.text)
+    Item(EditorIndex).name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     ' Error handler

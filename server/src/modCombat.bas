@@ -335,6 +335,8 @@ Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Lo
                         If Len(Trim$(Npc(npcNum).AttackSay)) > 0 Then
                             PlayerMsg attacker, Trim$(Npc(npcNum).Name) & ": " & Trim$(Npc(npcNum).AttackSay), White
                         End If
+                        ' Reset attack timer
+                        TempPlayer(attacker).AttackTimer = GetTickCount
                     End If
                 End If
             End If
@@ -352,7 +354,7 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, ByVa
     Dim DEF As Long
     Dim mapNum As Long
     Dim npcNum As Long
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
 
     ' Check for subscript out of range
     If IsPlaying(attacker) = False Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Damage < 0 Then
@@ -438,11 +440,11 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal mapNpcNum As Long, ByVa
         Next
         
         ' send death to the map
-        Set Buffer = New clsBuffer
-        Buffer.WriteLong SNpcDead
-        Buffer.WriteLong mapNpcNum
-        SendDataToMap mapNum, Buffer.ToArray()
-        Set Buffer = Nothing
+        Set buffer = New clsBuffer
+        buffer.WriteLong SNpcDead
+        buffer.WriteLong mapNpcNum
+        SendDataToMap mapNum, buffer.ToArray()
+        Set buffer = Nothing
         
         'Loop through entire map and purge NPC from targets
         For i = 1 To Player_HighIndex
@@ -548,20 +550,23 @@ Dim mapNum As Long, npcNum As Long, blockAmount As Long, Damage As Long
         Damage = RAND(1, Damage)
         
         ' * 1.5 if crit hit
-        If CanNpcCrit(index) Then
+        If CanNpcCrit(npcNum) Then
             Damage = Damage * 1.5
             SendActionMsg mapNum, "Critical!", BrightCyan, 1, (MapNpc(mapNum).Npc(mapNpcNum).x * 32), (MapNpc(mapNum).Npc(mapNpcNum).y * 32)
         End If
 
         If Damage > 0 Then
             Call NpcAttackPlayer(mapNpcNum, index, Damage)
+        Else
+            SendActionMsg mapNum, "Block!", Cyan, 1, (GetPlayerX(index) * 32), (GetPlayerY(index) * 32)
         End If
     End If
 End Sub
 
 Function CanNpcAttackPlayer(ByVal mapNpcNum As Long, ByVal index As Long) As Boolean
-    Dim mapNum As Long
-    Dim npcNum As Long
+Dim mapNum As Long
+Dim npcNum As Long
+Dim buffer As clsBuffer
 
     ' Check for subscript out of range
     If mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Not IsPlaying(index) Then
@@ -590,7 +595,7 @@ Function CanNpcAttackPlayer(ByVal mapNpcNum As Long, ByVal index As Long) As Boo
     If TempPlayer(index).GettingMap = YES Then
         Exit Function
     End If
-
+    
     MapNpc(mapNum).Npc(mapNpcNum).AttackTimer = GetTickCount
 
     ' Make sure they are on the same map
@@ -615,14 +620,23 @@ Function CanNpcAttackPlayer(ByVal mapNpcNum As Long, ByVal index As Long) As Boo
             End If
         End If
     End If
+    
+    If CanNpcAttackPlayer = True Then
+        ' Send this packet so they can see the npc attacking
+        Set buffer = New clsBuffer
+        buffer.WriteLong ServerPackets.SNpcAttack
+        buffer.WriteLong mapNpcNum
+        SendDataToMap mapNum, buffer.ToArray()
+        Set buffer = Nothing
+    End If
+    
 End Function
 
 Sub NpcAttackPlayer(ByVal mapNpcNum As Long, ByVal victim As Long, ByVal Damage As Long)
-    Dim Name As String
-    Dim exp As Long
-    Dim mapNum As Long
-    Dim i As Long
-    Dim Buffer As clsBuffer
+Dim Name As String
+Dim exp As Long
+Dim mapNum As Long
+Dim i As Long
 
     ' Check for subscript out of range
     If mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or IsPlaying(victim) = False Then
@@ -636,13 +650,6 @@ Sub NpcAttackPlayer(ByVal mapNpcNum As Long, ByVal victim As Long, ByVal Damage 
 
     mapNum = GetPlayerMap(victim)
     Name = Trim$(Npc(MapNpc(mapNum).Npc(mapNpcNum).Num).Name)
-    
-    ' Send this packet so they can see the npc attacking
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SNpcAttack
-    Buffer.WriteLong mapNpcNum
-    SendDataToMap mapNum, Buffer.ToArray()
-    Set Buffer = Nothing
     
     If Damage <= 0 Then
         Exit Sub
@@ -827,7 +834,7 @@ Sub PlayerAttackPlayer(ByVal attacker As Long, ByVal victim As Long, ByVal Damag
     Dim exp As Long
     Dim n As Long
     Dim i As Long
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
 
     ' Check for subscript out of range
     If IsPlaying(attacker) = False Or IsPlaying(victim) = False Or Damage < 0 Then
@@ -1097,7 +1104,7 @@ Public Sub CastSpell(ByVal index As Long, ByVal spellslot As Long, ByVal target 
     Dim increment As Boolean
     Dim x As Long, y As Long
     
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
     Dim SpellCastType As Long
     
     DidCast = False
@@ -1360,18 +1367,25 @@ Dim Colour As Long
         End If
     
         SendAnimation GetPlayerMap(index), Spell(spellnum).SpellAnim, 0, 0, TARGET_TYPE_PLAYER, index
-        SendActionMsg GetPlayerMap(index), sSymbol & Damage, Colour, ACTIONMSG_SCROLL, GetPlayerX(index) * 32, GetPlayerY(index) * 32
         
         ' send the sound
         SendMapSound index, GetPlayerX(index), GetPlayerY(index), SoundEntity.seSpell, spellnum
         
         If increment Then
-            SetPlayerVital index, Vital, GetPlayerVital(index, Vital) + Damage
+            ' If it's a HoT we don't want to give them an initial heal, we just want to give them the HoT.
             If Spell(spellnum).Duration > 0 Then
                 AddHoT_Player index, spellnum
+            Else
+                SendActionMsg GetPlayerMap(index), sSymbol & Damage, Colour, ACTIONMSG_SCROLL, GetPlayerX(index) * 32, GetPlayerY(index) * 32
+                SetPlayerVital index, Vital, GetPlayerVital(index, Vital) + Damage
+                DoEvents
+                SendVital index, HP
             End If
         ElseIf Not increment Then
+            SendActionMsg GetPlayerMap(index), sSymbol & Damage, Colour, ACTIONMSG_SCROLL, GetPlayerX(index) * 32, GetPlayerY(index) * 32
             SetPlayerVital index, Vital, GetPlayerVital(index, Vital) - Damage
+            DoEvents
+            SendVital index, HP
         End If
     End If
 End Sub
@@ -1531,11 +1545,12 @@ Public Sub HandleHoT_Player(ByVal index As Long, ByVal hotNum As Long)
             If GetTickCount > .Timer + (Spell(.Spell).Interval * 1000) Then
                 SendActionMsg Player(index).Map, "+" & Spell(.Spell).Vital, BrightGreen, ACTIONMSG_SCROLL, Player(index).x * 32, Player(index).y * 32
                 Player(index).Vital(Vitals.HP) = Player(index).Vital(Vitals.HP) + Spell(.Spell).Vital
+                SendVital index, HP
                 .Timer = GetTickCount
-                ' check if DoT is still active - if player died it'll have been purged
+                ' check if HoT is still active - if player died it'll have been purged
                 If .Used And .Spell > 0 Then
                     ' destroy hoT if finished
-                    If GetTickCount - .StartTime >= (Spell(.Spell).Duration * 1000) Then
+                    If GetTickCount - .StartTime > (Spell(.Spell).Duration * 1000) Then
                         .Used = False
                         .Spell = 0
                         .Timer = 0

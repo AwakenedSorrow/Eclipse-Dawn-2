@@ -1107,6 +1107,7 @@ Begin VB.Form frmMain
       _Version        =   393217
       BackColor       =   790032
       BorderStyle     =   0
+      Enabled         =   -1  'True
       ScrollBars      =   2
       Appearance      =   0
       TextRTF         =   $"frmMain.frx":3332
@@ -1895,7 +1896,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
@@ -2014,7 +2015,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub imgButton_MouseMove(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub imgButton_MouseMove(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
@@ -2040,7 +2041,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub imgButton_MouseUp(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub imgButton_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
         
@@ -2055,7 +2056,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub imgButton_MouseDown(Index As Integer, Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub imgButton_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
@@ -2339,7 +2340,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picCover_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picCover_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
@@ -2358,13 +2359,13 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picHotbar_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picHotbar_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim SlotNum As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    SlotNum = IsHotbarSlot(x, y)
+    SlotNum = IsHotbarSlot(X, Y)
 
     If Button = 1 Then
         If SlotNum <> 0 Then
@@ -2384,25 +2385,25 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picHotbar_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picHotbar_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim SlotNum As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    SlotNum = IsHotbarSlot(x, y)
+    SlotNum = IsHotbarSlot(X, Y)
 
     If SlotNum <> 0 Then
         If Hotbar(SlotNum).sType = 1 Then ' item
-            x = x + picHotbar.Left + 1
-            y = y + picHotbar.top - picItemDesc.Height - 1
-            UpdateDescWindow Hotbar(SlotNum).Slot, x, y
+            X = X + picHotbar.Left + 1
+            Y = Y + picHotbar.top - picItemDesc.Height - 1
+            UpdateDescWindow Hotbar(SlotNum).Slot, X, Y
             LastItemDesc = Hotbar(SlotNum).Slot ' set it so you don't re-set values
             Exit Sub
         ElseIf Hotbar(SlotNum).sType = 2 Then ' spell
-            x = x + picHotbar.Left + 1
-            y = y + picHotbar.top - picSpellDesc.Height - 1
-            UpdateSpellWindow Hotbar(SlotNum).Slot, x, y
+            X = X + picHotbar.Left + 1
+            Y = Y + picHotbar.top - picSpellDesc.Height - 1
+            UpdateSpellWindow Hotbar(SlotNum).Slot, X, Y
             LastSpellDesc = Hotbar(SlotNum).Slot  ' set it so you don't re-set values
             Exit Sub
         End If
@@ -2421,12 +2422,12 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picScreen_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picScreen_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If InMapEditor Then
-        Call MapEditorMouseDown(Button, x, y, False)
+        Call MapEditorMouseDown(Button, X, Y, False)
     Else
         ' left click
         If Button = vbLeftButton Then
@@ -2451,16 +2452,16 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picScreen_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picScreen_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    CurX = TileView.Left + ((x + Camera.Left) \ PIC_X)
-    CurY = TileView.top + ((y + Camera.top) \ PIC_Y)
+    CurX = TileView.Left + ((X + Camera.Left) \ PIC_X)
+    CurY = TileView.top + ((Y + Camera.top) \ PIC_Y)
 
     If InMapEditor Then
         If Button = vbLeftButton Or Button = vbRightButton Then
-            Call MapEditorMouseDown(Button, x, y)
+            Call MapEditorMouseDown(Button, X, Y)
         End If
     End If
     
@@ -2479,7 +2480,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Function IsShopItem(ByVal x As Single, ByVal y As Single) As Long
+Private Function IsShopItem(ByVal X As Single, ByVal Y As Single) As Long
 Dim tempRec As RECT
 Dim i As Long
     
@@ -2498,8 +2499,8 @@ Dim i As Long
                 .Right = .Left + PIC_X
             End With
 
-            If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.top And y <= tempRec.bottom Then
+            If X >= tempRec.Left And X <= tempRec.Right Then
+                If Y >= tempRec.top And Y <= tempRec.bottom Then
                     IsShopItem = i
                     Exit Function
                 End If
@@ -2515,7 +2516,7 @@ errorhandler:
     Exit Function
 End Function
 
-Private Sub picShop_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picShop_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' hide the descriptions
     picItemDesc.Visible = False
     picSpellDesc.Visible = False
@@ -2524,13 +2525,13 @@ Private Sub picShop_MouseMove(Button As Integer, Shift As Integer, x As Single, 
     resetButtons_Main
 End Sub
 
-Private Sub picShopItems_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picShopItems_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim shopItem As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    shopItem = IsShopItem(x, y)
+    shopItem = IsShopItem(X, Y)
     
     If shopItem > 0 Then
         Select Case ShopAction
@@ -2552,18 +2553,18 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picShopItems_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picShopItems_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim shopslot As Long
 Dim X2 As Long, Y2 As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    shopslot = IsShopItem(x, y)
+    shopslot = IsShopItem(X, Y)
 
     If shopslot <> 0 Then
-        X2 = x + picShop.Left + picShopItems.Left + 1
-        Y2 = y + picShop.top + picShopItems.top + 1
+        X2 = X + picShop.Left + picShopItems.Left + 1
+        Y2 = Y + picShop.top + picShopItems.top + 1
         UpdateDescWindow Shop(InShop).TradeItem(shopslot).Item, X2, Y2
         LastItemDesc = Shop(InShop).TradeItem(shopslot).Item
         Exit Sub
@@ -2580,7 +2581,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picSpellDesc_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picSpellDesc_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
@@ -2615,7 +2616,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picSpells_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picSpells_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim spellnum As Long
     
     ' If debug mode, handle error then exit out
@@ -2642,29 +2643,29 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picSpells_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picSpells_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim spellslot As Long
 Dim X2 As Long, Y2 As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    SpellX = x
-    SpellY = y
+    SpellX = X
+    SpellY = Y
     
-    spellslot = IsPlayerSpell(x, y)
+    spellslot = IsPlayerSpell(X, Y)
     
     If DragSpell > 0 Then
         With frmMain.picTempSpell
-            .top = picSpells.top + y
-            .Left = picSpells.Left + x
+            .top = picSpells.top + Y
+            .Left = picSpells.Left + X
             .Visible = True
             .ZOrder (0)
         End With
     Else
         If spellslot <> 0 Then
-            X2 = x + picSpells.Left - picSpellDesc.Width - 1
-            Y2 = y + picSpells.top - picSpellDesc.Height - 1
+            X2 = X + picSpells.Left - picSpellDesc.Width - 1
+            Y2 = Y + picSpells.top - picSpellDesc.Height - 1
             UpdateSpellWindow PlayerSpells(spellslot), X2, Y2
             LastSpellDesc = PlayerSpells(spellslot)
             Exit Sub
@@ -2682,7 +2683,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picSpells_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picSpells_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim i As Long
 Dim rec_pos As RECT
 
@@ -2699,8 +2700,8 @@ Dim rec_pos As RECT
                 .Right = .Left + PIC_X
             End With
 
-            If x >= rec_pos.Left And x <= rec_pos.Right Then
-                If y >= rec_pos.top And y <= rec_pos.bottom Then
+            If X >= rec_pos.Left And X <= rec_pos.Right Then
+                If Y >= rec_pos.top And Y <= rec_pos.bottom Then
                     If DragSpell <> i Then
                         SendChangeSpellSlots DragSpell, i
                         Exit For
@@ -2717,8 +2718,8 @@ Dim rec_pos As RECT
                 .bottom = picHotbar.top - picSpells.top + 32
             End With
             
-            If x >= rec_pos.Left And x <= rec_pos.Right Then
-                If y >= rec_pos.top And y <= rec_pos.bottom Then
+            If X >= rec_pos.Left And X <= rec_pos.Right Then
+                If Y >= rec_pos.top And Y <= rec_pos.bottom Then
                     SendHotbarChange 2, DragSpell, i
                     DragSpell = 0
                     picTempSpell.Visible = False
@@ -2739,7 +2740,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picTrade_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picTrade_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
@@ -2775,21 +2776,21 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picYourTrade_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picYourTrade_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Dim TradeNum As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    TradeX = x
-    TradeY = y
+    TradeX = X
+    TradeY = Y
     
-    TradeNum = IsTradeItem(x, y, True)
+    TradeNum = IsTradeItem(X, Y, True)
     
     If TradeNum <> 0 Then
-        x = x + picTrade.Left + picYourTrade.Left + 4
-        y = y + picTrade.top + picYourTrade.top + 4
-        UpdateDescWindow GetPlayerInvItemNum(MyIndex, TradeYourOffer(TradeNum).num), x, y
+        X = X + picTrade.Left + picYourTrade.Left + 4
+        Y = Y + picTrade.top + picYourTrade.top + 4
+        UpdateDescWindow GetPlayerInvItemNum(MyIndex, TradeYourOffer(TradeNum).num), X, Y
         LastItemDesc = GetPlayerInvItemNum(MyIndex, TradeYourOffer(TradeNum).num) ' set it so you don't re-set values
         Exit Sub
     End If
@@ -2805,18 +2806,18 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picTheirTrade_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picTheirTrade_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Dim TradeNum As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    TradeNum = IsTradeItem(x, y, False)
+    TradeNum = IsTradeItem(X, Y, False)
     
     If TradeNum <> 0 Then
-        x = x + picTrade.Left + picTheirTrade.Left + 4
-        y = y + picTrade.top + picTheirTrade.top + 4
-        UpdateDescWindow TradeTheirOffer(TradeNum).num, x, y
+        X = X + picTrade.Left + picTheirTrade.Left + 4
+        Y = Y + picTrade.top + picTheirTrade.top + 4
+        UpdateDescWindow TradeTheirOffer(TradeNum).num, X, Y
         LastItemDesc = TradeTheirOffer(TradeNum).num ' set it so you don't re-set values
         Exit Sub
     End If
@@ -2921,6 +2922,29 @@ Private Sub Form_KeyPress(KeyAscii As Integer)
     Exit Sub
 errorhandler:
     HandleError "Form_KeyPress", "frmMain", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Private Sub cmdAKick_Click()
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+
+        Exit Sub
+    End If
+
+    If Len(Trim$(txtAName.text)) < 1 Then
+        Exit Sub
+    End If
+
+    SendKick Trim$(txtAName.text)
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "cmdAKick_Click", "frmMain", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
@@ -3077,7 +3101,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Function IsEqItem(ByVal x As Single, ByVal y As Single) As Long
+Private Function IsEqItem(ByVal X As Single, ByVal Y As Single) As Long
     Dim tempRec As RECT
     Dim i As Long
     
@@ -3097,8 +3121,8 @@ Private Function IsEqItem(ByVal x As Single, ByVal y As Single) As Long
                 .Right = .Left + PIC_X
             End With
 
-            If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.top And y <= tempRec.bottom Then
+            If X >= tempRec.Left And X <= tempRec.Right Then
+                If Y >= tempRec.top And Y <= tempRec.bottom Then
                     IsEqItem = i
                     Exit Function
                 End If
@@ -3115,7 +3139,7 @@ errorhandler:
     Exit Function
 End Function
 
-Private Function IsInvItem(ByVal x As Single, ByVal y As Single) As Long
+Private Function IsInvItem(ByVal X As Single, ByVal Y As Single) As Long
     Dim tempRec As RECT
     Dim i As Long
     
@@ -3135,8 +3159,8 @@ Private Function IsInvItem(ByVal x As Single, ByVal y As Single) As Long
                 .Right = .Left + PIC_X
             End With
 
-            If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.top And y <= tempRec.bottom Then
+            If X >= tempRec.Left And X <= tempRec.Right Then
+                If Y >= tempRec.top And Y <= tempRec.bottom Then
                     IsInvItem = i
                     Exit Function
                 End If
@@ -3153,7 +3177,7 @@ errorhandler:
     Exit Function
 End Function
 
-Private Function IsPlayerSpell(ByVal x As Single, ByVal y As Single) As Long
+Private Function IsPlayerSpell(ByVal X As Single, ByVal Y As Single) As Long
     Dim tempRec As RECT
     Dim i As Long
     
@@ -3173,8 +3197,8 @@ Private Function IsPlayerSpell(ByVal x As Single, ByVal y As Single) As Long
                 .Right = .Left + PIC_X
             End With
 
-            If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.top And y <= tempRec.bottom Then
+            If X >= tempRec.Left And X <= tempRec.Right Then
+                If Y >= tempRec.top And Y <= tempRec.bottom Then
                     IsPlayerSpell = i
                     Exit Function
                 End If
@@ -3191,7 +3215,7 @@ errorhandler:
     Exit Function
 End Function
 
-Private Function IsTradeItem(ByVal x As Single, ByVal y As Single, ByVal Yours As Boolean) As Long
+Private Function IsTradeItem(ByVal X As Single, ByVal Y As Single, ByVal Yours As Boolean) As Long
     Dim tempRec As RECT
     Dim i As Long
     Dim itemnum As Long
@@ -3218,8 +3242,8 @@ Private Function IsTradeItem(ByVal x As Single, ByVal y As Single, ByVal Yours A
                 .Right = .Left + PIC_X
             End With
 
-            If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.top And y <= tempRec.bottom Then
+            If X >= tempRec.Left And X <= tempRec.Right Then
+                If Y >= tempRec.top And Y <= tempRec.bottom Then
                     IsTradeItem = i
                     Exit Function
                 End If
@@ -3236,13 +3260,13 @@ errorhandler:
     Exit Function
 End Function
 
-Private Sub picInventory_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picInventory_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Dim InvNum As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    InvNum = IsInvItem(x, y)
+    InvNum = IsInvItem(X, Y)
 
     If Button = 1 Then
         If InvNum <> 0 Then
@@ -3280,27 +3304,27 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picInventory_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picInventory_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Dim InvNum As Long
     Dim i As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    InvX = x
-    InvY = y
+    InvX = X
+    InvY = Y
 
     If DragInvSlotNum > 0 Then
         If InTrade > 0 Then Exit Sub
         If InBank Or InShop Then Exit Sub
         With frmMain.picTempInv
-            .top = y + picInventory.top
-            .Left = x + picInventory.Left
+            .top = Y + picInventory.top
+            .Left = X + picInventory.Left
             .Visible = True
             .ZOrder (0)
         End With
     Else
-        InvNum = IsInvItem(x, y)
+        InvNum = IsInvItem(X, Y)
 
         If InvNum <> 0 Then
             ' exit out if we're offering that item
@@ -3319,9 +3343,9 @@ Private Sub picInventory_MouseMove(Button As Integer, Shift As Integer, x As Sin
                     End If
                 Next
             End If
-            x = x + picInventory.Left - picItemDesc.Width - 1
-            y = y + picInventory.top - picItemDesc.Height - 1
-            UpdateDescWindow GetPlayerInvItemNum(MyIndex, InvNum), x, y
+            X = X + picInventory.Left - picItemDesc.Width - 1
+            Y = Y + picInventory.top - picItemDesc.Height - 1
+            UpdateDescWindow GetPlayerInvItemNum(MyIndex, InvNum), X, Y
             LastItemDesc = GetPlayerInvItemNum(MyIndex, InvNum) ' set it so you don't re-set values
             Exit Sub
         End If
@@ -3338,7 +3362,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picInventory_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picInventory_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Dim i As Long
     Dim rec_pos As RECT
     
@@ -3358,8 +3382,8 @@ Private Sub picInventory_MouseUp(Button As Integer, Shift As Integer, x As Singl
                 .Right = .Left + PIC_X
             End With
 
-            If x >= rec_pos.Left And x <= rec_pos.Right Then
-                If y >= rec_pos.top And y <= rec_pos.bottom Then '
+            If X >= rec_pos.Left And X <= rec_pos.Right Then
+                If Y >= rec_pos.top And Y <= rec_pos.bottom Then '
                     If DragInvSlotNum <> i Then
                         SendChangeInvSlots DragInvSlotNum, i
                         Exit For
@@ -3376,8 +3400,8 @@ Private Sub picInventory_MouseUp(Button As Integer, Shift As Integer, x As Singl
                 .bottom = picHotbar.top - picInventory.top + 32
             End With
             
-            If x >= rec_pos.Left And x <= rec_pos.Right Then
-                If y >= rec_pos.top And y <= rec_pos.bottom Then
+            If X >= rec_pos.Left And X <= rec_pos.Right Then
+                If Y >= rec_pos.top And Y <= rec_pos.bottom Then
                     SendHotbarChange 1, DragInvSlotNum, i
                     DragInvSlotNum = 0
                     picTempInv.Visible = False
@@ -3398,7 +3422,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picItemDesc_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picItemDesc_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
@@ -3436,20 +3460,20 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picCharacter_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picCharacter_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Dim EqNum As Long
     Dim X2 As Long, Y2 As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    EqX = x
-    EqY = y
-    EqNum = IsEqItem(x, y)
+    EqX = X
+    EqY = Y
+    EqNum = IsEqItem(X, Y)
 
     If EqNum <> 0 Then
-        Y2 = y + picCharacter.top - frmMain.picItemDesc.Height - 1
-        X2 = x + picCharacter.Left - frmMain.picItemDesc.Width - 1
+        Y2 = Y + picCharacter.top - frmMain.picItemDesc.Height - 1
+        X2 = X + picCharacter.Left - frmMain.picItemDesc.Width - 1
         UpdateDescWindow GetPlayerEquipment(MyIndex, EqNum), X2, Y2
         LastItemDesc = GetPlayerEquipment(MyIndex, EqNum) ' set it so you don't re-set values
         Exit Sub
@@ -3881,13 +3905,13 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picBank_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picBank_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim bankNum As Long
                         
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    bankNum = IsBankItem(x, y)
+    bankNum = IsBankItem(X, Y)
     
     If bankNum <> 0 Then
         
@@ -3904,7 +3928,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picBank_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picBank_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim i As Long
 Dim rec_pos As RECT
     
@@ -3921,8 +3945,8 @@ Dim rec_pos As RECT
                 .Right = .Left + PIC_X
             End With
 
-            If x >= rec_pos.Left And x <= rec_pos.Right Then
-                If y >= rec_pos.top And y <= rec_pos.bottom Then
+            If X >= rec_pos.Left And X <= rec_pos.Right Then
+                If Y >= rec_pos.top And Y <= rec_pos.bottom Then
                     If DragBankSlotNum <> i Then
                         ChangeBankSlots DragBankSlotNum, i
                         Exit For
@@ -3943,25 +3967,25 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picBank_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picBank_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Dim bankNum As Long, itemnum As Long, ItemType As Long
 Dim X2 As Long, Y2 As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    BankX = x
-    BankY = y
+    BankX = X
+    BankY = Y
     
     If DragBankSlotNum > 0 Then
-        Call DrawDraggedBank(x + picBank.Left, y + picBank.top)
+        Call DrawDraggedBank(X + picBank.Left, Y + picBank.top)
     Else
-        bankNum = IsBankItem(x, y)
+        bankNum = IsBankItem(X, Y)
         
         If bankNum <> 0 Then
             
-            X2 = x + picBank.Left + 1
-            Y2 = y + picBank.top + 1
+            X2 = X + picBank.Left + 1
+            Y2 = Y + picBank.top + 1
             itemnum = Bank.Item(bankNum).num
             LastItemDesc = itemnum
             UpdateDescWindow itemnum, X2, Y2
@@ -3980,7 +4004,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Function IsBankItem(ByVal x As Single, ByVal y As Single) As Long
+Private Function IsBankItem(ByVal X As Single, ByVal Y As Single) As Long
 Dim tempRec As RECT
 Dim i As Long
 
@@ -3999,8 +4023,8 @@ Dim i As Long
                 .Right = .Left + PIC_X
             End With
             
-            If x >= tempRec.Left And x <= tempRec.Right Then
-                If y >= tempRec.top And y <= tempRec.bottom Then
+            If X >= tempRec.Left And X <= tempRec.Right Then
+                If Y >= tempRec.top And Y <= tempRec.bottom Then
                     
                     IsBankItem = i
                     Exit Function

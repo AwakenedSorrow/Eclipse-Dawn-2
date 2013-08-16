@@ -863,7 +863,7 @@ Private Sub cmdHeal_Click()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     MapEditorHealType = cmbHeal.ListIndex + 1
-    MapEditorHealAmount = scrlHeal.Value
+    MapEditorHealAmount = scrlHeal.value
     picAttributes.Visible = False
     fraHeal.Visible = False
     
@@ -879,8 +879,8 @@ Private Sub cmdKeyOpen_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    KeyOpenEditorX = scrlKeyX.Value
-    KeyOpenEditorY = scrlKeyY.Value
+    KeyOpenEditorX = scrlKeyX.value
+    KeyOpenEditorY = scrlKeyY.value
     picAttributes.Visible = False
     fraKeyOpen.Visible = False
     
@@ -896,8 +896,8 @@ Private Sub cmdMapItem_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    ItemEditorNum = scrlMapItem.Value
-    ItemEditorValue = scrlMapItemValue.Value
+    ItemEditorNum = scrlMapItem.value
+    ItemEditorValue = scrlMapItemValue.value
     picAttributes.Visible = False
     fraMapItem.Visible = False
     
@@ -913,8 +913,8 @@ Private Sub cmdMapKey_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    KeyEditorNum = scrlMapKey.Value
-    KeyEditorTake = chkMapKey.Value
+    KeyEditorNum = scrlMapKey.value
+    KeyEditorTake = chkMapKey.value
     picAttributes.Visible = False
     fraMapKey.Visible = False
     
@@ -930,9 +930,9 @@ Private Sub cmdMapWarp_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    EditorWarpMap = scrlMapWarp.Value
-    EditorWarpX = scrlMapWarpX.Value
-    EditorWarpY = scrlMapWarpY.Value
+    EditorWarpMap = scrlMapWarp.value
+    EditorWarpX = scrlMapWarpX.value
+    EditorWarpY = scrlMapWarpY.value
     picAttributes.Visible = False
     fraMapWarp.Visible = False
     
@@ -949,7 +949,7 @@ Private Sub cmdNpcSpawn_Click()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     SpawnNpcNum = lstNpc.ListIndex + 1
-    SpawnNpcDir = scrlNpcDir.Value
+    SpawnNpcDir = scrlNpcDir.value
     picAttributes.Visible = False
     fraNpcSpawn.Visible = False
     
@@ -965,7 +965,7 @@ Private Sub cmdResourceOk_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    ResourceEditorNum = scrlResource.Value
+    ResourceEditorNum = scrlResource.value
     picAttributes.Visible = False
     fraResource.Visible = False
     
@@ -1013,7 +1013,7 @@ Private Sub cmdTrap_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    MapEditorHealAmount = scrlTrap.Value
+    MapEditorHealAmount = scrlTrap.value
     picAttributes.Visible = False
     fraTrap.Visible = False
     
@@ -1031,7 +1031,8 @@ Private Sub Form_Load()
     
     ' move the entire attributes box on screen
     picAttributes.Left = 8
-    picAttributes.Top = 8
+    picAttributes.top = 8
+    frmEditor_Map.scrlTileSet.max = NumTileSets
     
     ' Error handler
     Exit Sub
@@ -1049,12 +1050,12 @@ Private Sub optDoor_Click()
     picAttributes.Visible = True
     fraMapWarp.Visible = True
     
-    scrlMapWarp.Max = MAX_MAPS
-    scrlMapWarp.Value = 1
-    scrlMapWarpX.Max = MAX_BYTE
-    scrlMapWarpY.Max = MAX_BYTE
-    scrlMapWarpX.Value = 0
-    scrlMapWarpY.Value = 0
+    scrlMapWarp.max = MAX_MAPS
+    scrlMapWarp.value = 1
+    scrlMapWarpX.max = MAX_BYTE
+    scrlMapWarpY.max = MAX_BYTE
+    scrlMapWarpX.value = 0
+    scrlMapWarpY.value = 0
     
     ' Error handler
     Exit Sub
@@ -1084,7 +1085,7 @@ Private Sub optLayers_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If optLayers.Value Then
+    If optLayers.value Then
         fraLayers.Visible = True
         fraAttribs.Visible = False
     End If
@@ -1101,7 +1102,7 @@ Private Sub optAttribs_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    If optAttribs.Value Then
+    If optAttribs.value Then
         fraLayers.Visible = False
         fraAttribs.Visible = True
     End If
@@ -1124,13 +1125,13 @@ Dim n As Long
     
     For n = 1 To MAX_MAP_NPCS
         If Map.Npc(n) > 0 Then
-            lstNpc.AddItem n & ": " & Npc(Map.Npc(n)).Name
+            lstNpc.AddItem n & ": " & Npc(Map.Npc(n)).name
         Else
             lstNpc.AddItem n & ": No Npc"
         End If
     Next n
     
-    scrlNpcDir.Value = 0
+    scrlNpcDir.value = 0
     lstNpc.ListIndex = 0
     
     ClearAttributeDialogue
@@ -1153,7 +1154,7 @@ Private Sub optResource_Click()
     picAttributes.Visible = True
     fraResource.Visible = True
     
-    lblResource.Caption = "Resource #" & Trim(Str$(scrlResource.Value)) & ": " & Resource(scrlResource.Value).Name
+    lblResource.Caption = "Resource #" & Trim(Str$(scrlResource.value)) & ": " & Resource(scrlResource.value).name
     
     ' Error handler
     Exit Sub
@@ -1211,12 +1212,12 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picBackSelect_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picBackSelect_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
-    x = x + (frmEditor_Map.scrlPictureX.Value * 32)
-    y = y + (frmEditor_Map.scrlPictureY.Value * 32)
-    Call MapEditorChooseTile(Button, x, y)
+    X = X + (frmEditor_Map.scrlPictureX.value * 32)
+    Y = Y + (frmEditor_Map.scrlPictureY.value * 32)
+    Call MapEditorChooseTile(Button, X, Y)
     
     ' Error handler
     Exit Sub
@@ -1226,11 +1227,11 @@ errorhandler:
     Exit Sub
 End Sub
  
-Private Sub picBackSelect_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub picBackSelect_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    Call MapEditorDrag(Button, x, y)
+    Call MapEditorDrag(Button, X, Y)
     
     ' Error handler
     Exit Sub
@@ -1292,12 +1293,12 @@ Private Sub optWarp_Click()
     picAttributes.Visible = True
     fraMapWarp.Visible = True
     
-    scrlMapWarp.Max = MAX_MAPS
-    scrlMapWarp.Value = 1
-    scrlMapWarpX.Max = MAX_BYTE
-    scrlMapWarpY.Max = MAX_BYTE
-    scrlMapWarpX.Value = 0
-    scrlMapWarpY.Value = 0
+    scrlMapWarp.max = MAX_MAPS
+    scrlMapWarp.value = 1
+    scrlMapWarpX.max = MAX_BYTE
+    scrlMapWarpY.max = MAX_BYTE
+    scrlMapWarpX.value = 0
+    scrlMapWarpY.value = 0
     
     ' Error handler
     Exit Sub
@@ -1315,9 +1316,9 @@ Private Sub optItem_Click()
     picAttributes.Visible = True
     fraMapItem.Visible = True
 
-    scrlMapItem.Max = MAX_ITEMS
-    scrlMapItem.Value = 1
-    lblMapItem.Caption = Trim$(Item(scrlMapItem.Value).Name) & " x" & scrlMapItemValue.Value
+    scrlMapItem.max = MAX_ITEMS
+    scrlMapItem.value = 1
+    lblMapItem.Caption = Trim$(Item(scrlMapItem.value).name) & " x" & scrlMapItemValue.value
     
     ' Error handler
     Exit Sub
@@ -1335,10 +1336,10 @@ Private Sub optKey_Click()
     picAttributes.Visible = True
     fraMapKey.Visible = True
     
-    scrlMapKey.Max = MAX_ITEMS
-    scrlMapKey.Value = 1
-    chkMapKey.Value = 1
-    lblMapKey.Caption = "Item: " & Trim$(Item(scrlMapKey.Value).Name)
+    scrlMapKey.max = MAX_ITEMS
+    scrlMapKey.value = 1
+    chkMapKey.value = 1
+    lblMapKey.Caption = "Item: " & Trim$(Item(scrlMapKey.value).name)
     
     ' Error handler
     Exit Sub
@@ -1356,10 +1357,10 @@ Private Sub optKeyOpen_Click()
     fraKeyOpen.Visible = True
     picAttributes.Visible = True
     
-    scrlKeyX.Max = Map.MaxX
-    scrlKeyY.Max = Map.MaxY
-    scrlKeyX.Value = 0
-    scrlKeyY.Value = 0
+    scrlKeyX.max = Map.MaxX
+    scrlKeyY.max = Map.MaxY
+    scrlKeyX.value = 0
+    scrlKeyY.value = 0
     
     ' Error handler
     Exit Sub
@@ -1415,7 +1416,7 @@ Private Sub scrlHeal_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblHeal.Caption = "Amount: " & scrlHeal.Value
+    lblHeal.Caption = "Amount: " & scrlHeal.value
     
     ' Error handler
     Exit Sub
@@ -1429,7 +1430,7 @@ Private Sub scrlKeyX_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblKeyX.Caption = "X: " & scrlKeyX.Value
+    lblKeyX.Caption = "X: " & scrlKeyX.value
     
     ' Error handler
     Exit Sub
@@ -1457,7 +1458,7 @@ Private Sub scrlKeyY_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblKeyY.Caption = "Y: " & scrlKeyY.Value
+    lblKeyY.Caption = "Y: " & scrlKeyY.value
     
     ' Error handler
     Exit Sub
@@ -1485,7 +1486,7 @@ Private Sub scrlTrap_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblTrap.Caption = "Amount: " & scrlTrap.Value
+    lblTrap.Caption = "Amount: " & scrlTrap.value
     
     ' Error handler
     Exit Sub
@@ -1499,15 +1500,15 @@ Private Sub scrlMapItem_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
         
-    If Item(scrlMapItem.Value).Type = ITEM_TYPE_CURRENCY Then
+    If Item(scrlMapItem.value).Type = ITEM_TYPE_CURRENCY Then
         scrlMapItemValue.Enabled = True
     Else
-        scrlMapItemValue.Value = 1
+        scrlMapItemValue.value = 1
         scrlMapItemValue.Enabled = False
     End If
         
     EditorMap_DrawMapItem
-    lblMapItem.Caption = Trim$(Item(scrlMapItem.Value).Name) & " x" & scrlMapItemValue.Value
+    lblMapItem.Caption = Trim$(Item(scrlMapItem.value).name) & " x" & scrlMapItemValue.value
     
     ' Error handler
     Exit Sub
@@ -1535,7 +1536,7 @@ Private Sub scrlMapItemValue_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblMapItem.Caption = Trim$(Item(scrlMapItem.Value).Name) & " x" & scrlMapItemValue.Value
+    lblMapItem.Caption = Trim$(Item(scrlMapItem.value).name) & " x" & scrlMapItemValue.value
     
     ' Error handler
     Exit Sub
@@ -1563,7 +1564,7 @@ Private Sub scrlMapKey_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblMapKey.Caption = "Item #" & Trim$(Str$(scrlMapKey.Value)) & ": " & Trim$(Item(scrlMapKey.Value).Name)
+    lblMapKey.Caption = "Item #" & Trim$(Str$(scrlMapKey.value)) & ": " & Trim$(Item(scrlMapKey.value).name)
     Call EditorMap_DrawKey
     
     ' Error handler
@@ -1592,7 +1593,7 @@ Private Sub scrlMapWarp_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblMapWarp.Caption = "Map: " & scrlMapWarp.Value
+    lblMapWarp.Caption = "Map: " & scrlMapWarp.value
     
     ' Error handler
     Exit Sub
@@ -1620,7 +1621,7 @@ Private Sub scrlMapWarpX_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblMapWarpX.Caption = "X: " & scrlMapWarpX.Value
+    lblMapWarpX.Caption = "X: " & scrlMapWarpX.value
     
     ' Error handler
     Exit Sub
@@ -1648,7 +1649,7 @@ Private Sub scrlMapWarpY_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblMapWarpY.Caption = "Y: " & scrlMapWarpY.Value
+    lblMapWarpY.Caption = "Y: " & scrlMapWarpY.value
     
     ' Error handler
     Exit Sub
@@ -1676,7 +1677,7 @@ Private Sub scrlNpcDir_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    Select Case scrlNpcDir.Value
+    Select Case scrlNpcDir.value
         Case DIR_DOWN
             lblNpcDir = "Direction: Down"
         Case DIR_UP
@@ -1713,7 +1714,7 @@ Private Sub scrlResource_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblResource.Caption = "Resource #" & Trim(Str$(scrlResource.Value)) & ": " & Resource(scrlResource.Value).Name
+    lblResource.Caption = "Resource #" & Trim(Str$(scrlResource.value)) & ": " & Resource(scrlResource.value).name
     
     ' Error handler
     Exit Sub
@@ -1801,15 +1802,15 @@ Private Sub scrlTileSet_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    fraTileSet.Caption = "Tileset: " & scrlTileSet.Value
+    fraTileSet.Caption = "Tileset: " & scrlTileSet.value
     
-    frmEditor_Map.scrlPictureY.Max = (frmEditor_Map.picBackSelect.Height \ PIC_Y) - (frmEditor_Map.picBack.Height \ PIC_Y)
-    frmEditor_Map.scrlPictureX.Max = (frmEditor_Map.picBackSelect.Width \ PIC_X) - (frmEditor_Map.picBack.Width \ PIC_X)
+    frmEditor_Map.scrlPictureY.max = (frmEditor_Map.picBackSelect.Height \ PIC_Y) - (frmEditor_Map.picBack.Height \ PIC_Y)
+    frmEditor_Map.scrlPictureX.max = (frmEditor_Map.picBackSelect.Width \ PIC_X) - (frmEditor_Map.picBack.Width \ PIC_X)
     
     MapEditorTileScroll
     
     frmEditor_Map.picBackSelect.Left = 0
-    frmEditor_Map.picBackSelect.Top = 0
+    frmEditor_Map.picBackSelect.top = 0
     
     ' Error handler
     Exit Sub

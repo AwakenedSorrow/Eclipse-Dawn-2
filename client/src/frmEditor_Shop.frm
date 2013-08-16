@@ -222,6 +222,27 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Sub cmdDelete_Click()
+Dim tmpIndex As Long
+ 
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ClearShop EditorIndex
+    tmpIndex = lstIndex.ListIndex
+    lstIndex.RemoveItem EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Shop(EditorIndex).name, EditorIndex - 1
+    lstIndex.ListIndex = tmpIndex
+    ShopEditorInit
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "cmdDelete_Click", "frmEditor_Shop", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
 Private Sub cmdSave_Click()
     
     ' If debug mode, handle error then exit out
@@ -322,8 +343,8 @@ Private Sub scrlBuy_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblBuy.Caption = "Buy Rate: " & scrlBuy.Value & "%"
-    Shop(EditorIndex).BuyRate = scrlBuy.Value
+    lblBuy.Caption = "Buy Rate: " & scrlBuy.value & "%"
+    Shop(EditorIndex).BuyRate = scrlBuy.value
     
     ' Error handler
     Exit Sub
@@ -340,9 +361,9 @@ Dim tmpIndex As Long
 
     If EditorIndex = 0 Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Shop(EditorIndex).Name = Trim$(txtName.text)
+    Shop(EditorIndex).name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Shop(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Shop(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     ' Error handler

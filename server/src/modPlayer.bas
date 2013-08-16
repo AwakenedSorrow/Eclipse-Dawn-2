@@ -75,7 +75,32 @@ Sub LeftGame(ByVal index As Long)
     
     If TempPlayer(index).InGame Then
         TempPlayer(index).InGame = False
-
+        
+        ' Loop through entire map and purge Player from targets
+        For i = 1 To Player_HighIndex
+            If IsPlaying(i) And IsConnected(i) Then
+                If GetPlayerMap(i) = GetPlayerMap(index) Then
+                    If TempPlayer(i).targetType = TARGET_TYPE_PLAYER Then
+                        If TempPlayer(i).target = index Then
+                            TempPlayer(i).target = 0
+                            TempPlayer(i).targetType = TARGET_TYPE_NONE
+                            SendTarget i
+                        End If
+                    End If
+                End If
+            End If
+        Next
+        
+        'Loop through the mapnpcs to remove the player from their targets
+        For i = 1 To MAX_MAP_NPCS
+            If MapNpc(GetPlayerMap(index)).Npc(i).targetType = TARGET_TYPE_PLAYER Then
+                If MapNpc(GetPlayerMap(index)).Npc(i).target = index Then
+                    MapNpc(GetPlayerMap(index)).Npc(i).target = 0
+                    MapNpc(GetPlayerMap(index)).Npc(i).targetType = TARGET_TYPE_NONE
+                End If
+            End If
+        Next
+        
         ' Check if player was the only player on the map and stop npc processing if so
         If GetTotalMapPlayers(GetPlayerMap(index)) < 1 Then
             PlayersOnMap(GetPlayerMap(index)) = NO
@@ -186,7 +211,7 @@ Sub PlayerWarp(ByVal index As Long, ByVal mapNum As Long, ByVal x As Long, ByVal
     Dim shopNum As Long
     Dim OldMap As Long
     Dim i As Long
-    Dim Buffer As clsBuffer
+    Dim buffer As clsBuffer
 
     ' Check for subscript out of range
     If IsPlaying(index) = False Or mapNum <= 0 Or mapNum > MAX_MAPS Then
@@ -252,16 +277,16 @@ Sub PlayerWarp(ByVal index As Long, ByVal mapNum As Long, ByVal x As Long, ByVal
     ' Sets it so we know to process npcs on the map
     PlayersOnMap(mapNum) = YES
     TempPlayer(index).GettingMap = YES
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong SCheckForMap
-    Buffer.WriteLong mapNum
-    Buffer.WriteLong Map(mapNum).Revision
-    SendDataTo index, Buffer.ToArray()
-    Set Buffer = Nothing
+    Set buffer = New clsBuffer
+    buffer.WriteLong SCheckForMap
+    buffer.WriteLong mapNum
+    buffer.WriteLong Map(mapNum).Revision
+    SendDataTo index, buffer.ToArray()
+    Set buffer = Nothing
 End Sub
 
 Sub PlayerMove(ByVal index As Long, ByVal Dir As Long, ByVal movement As Long, Optional ByVal sendToSelf As Boolean = False)
-    Dim Buffer As clsBuffer, mapNum As Long
+    Dim buffer As clsBuffer, mapNum As Long
     Dim x As Long, y As Long
     Dim Moved As Byte, MovedSoFar As Boolean
     Dim NewMapX As Byte, NewMapY As Byte
@@ -501,7 +526,17 @@ Sub PlayerMove(ByVal index As Long, ByVal Dir As Long, ByVal movement As Long, O
         
         ' Slide
         If .Type = TILE_TYPE_SLIDE Then
-            ForcePlayerMove index, MOVING_WALKING, GetPlayerDir(index)
+             Select Case .Data1
+                 Case DIR_UP
+                     If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) - 1).Type = TILE_TYPE_RESOURCE Or Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) - 1).Type = TILE_TYPE_BLOCKED Then Exit Sub
+                Case DIR_LEFT
+                     If Map(GetPlayerMap(index)).Tile(GetPlayerX(index) - 1, GetPlayerY(index)).Type = TILE_TYPE_RESOURCE Or Map(GetPlayerMap(index)).Tile(GetPlayerX(index) - 1, GetPlayerY(index)).Type = TILE_TYPE_BLOCKED Then Exit Sub
+                Case DIR_DOWN
+                     If Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) + 1).Type = TILE_TYPE_RESOURCE Or Map(GetPlayerMap(index)).Tile(GetPlayerX(index), GetPlayerY(index) + 1).Type = TILE_TYPE_BLOCKED Then Exit Sub
+                Case DIR_RIGHT
+                    If Map(GetPlayerMap(index)).Tile(GetPlayerX(index) + 1, GetPlayerY(index)).Type = TILE_TYPE_RESOURCE Or Map(GetPlayerMap(index)).Tile(GetPlayerX(index) + 1, GetPlayerY(index)).Type = TILE_TYPE_BLOCKED Then Exit Sub
+            End Select
+            ForcePlayerMove index, MOVING_WALKING, .Data1
             Moved = YES
         End If
     End With
@@ -927,6 +962,9 @@ Sub CheckPlayerLevelUp(ByVal index As Long)
         End If
         SendEXP index
         SendPlayerData index
+        For i = 1 To Vitals.Vital_Count - 1
+            SendVital index, i
+        Next
     End If
 End Sub
 
@@ -1176,7 +1214,22 @@ Sub OnDeath(ByVal index As Long)
     
     ' Set HP to nothing
     Call SetPlayerVital(index, Vitals.HP, 0)
-
+    
+    ' Loop through entire map and purge NPC from targets
+    For i = 1 To Player_HighIndex
+        If IsPlaying(i) And IsConnected(i) Then
+            If GetPlayerMap(i) = GetPlayerMap(index) Then
+                If TempPlayer(i).targetType = TARGET_TYPE_PLAYER Then
+                    If TempPlayer(i).target = index Then
+                        TempPlayer(i).target = 0
+                        TempPlayer(i).targetType = TARGET_TYPE_NONE
+                        SendTarget i
+                    End If
+                End If
+            End If
+        End If
+    Next
+    
     ' Drop all worn items
     For i = 1 To Equipment.Equipment_Count - 1
         If GetPlayerEquipment(index, i) > 0 Then
@@ -1244,6 +1297,13 @@ Sub CheckResource(ByVal index As Long, ByVal x As Long, ByVal y As Long)
     Dim rX As Long, rY As Long
     Dim i As Long
     Dim Damage As Long
+    
+    ' Check attack timer
+    If GetPlayerEquipment(index, Weapon) > 0 Then
+        If GetTickCount < TempPlayer(index).AttackTimer + Item(GetPlayerEquipment(index, Weapon)).Speed Then Exit Sub
+    Else
+        If GetTickCount < TempPlayer(index).AttackTimer + 1000 Then Exit Sub
+    End If
     
     If Map(GetPlayerMap(index)).Tile(x, y).Type = TILE_TYPE_RESOURCE Then
         Resource_num = 0
@@ -1313,7 +1373,8 @@ Sub CheckResource(ByVal index As Long, ByVal x As Long, ByVal y As Long)
                             SendActionMsg GetPlayerMap(index), Trim$(Resource(Resource_index).EmptyMessage), BrightRed, 1, (GetPlayerX(index) * 32), (GetPlayerY(index) * 32)
                         End If
                     End If
-
+                    ' Reset attack timer
+                    TempPlayer(index).AttackTimer = GetTickCount
                 Else
                     PlayerMsg index, "You have the wrong type of tool equiped.", BrightRed
                 End If
@@ -1870,6 +1931,7 @@ Dim n As Long, i As Long, tempItem As Long, x As Long, y As Long, itemnum As Lon
                                     Call SendAnimation(GetPlayerMap(index), Item(itemnum).Animation, 0, 0, TARGET_TYPE_PLAYER, index)
                                     Call TakeInvItem(index, itemnum, 0)
                                     Call PlayerMsg(index, "You feel the rush of knowledge fill your mind. You can now use " & Trim$(Spell(n).Name) & ".", BrightGreen)
+                                    Call SendPlayerSpells(index)
                                 Else
                                     Call PlayerMsg(index, "You already have knowledge of this skill.", BrightRed)
                                 End If

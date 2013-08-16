@@ -167,9 +167,9 @@ End Sub
 ' **************
 ' ** Accounts **
 ' **************
-Function AccountExist(ByVal name As String) As Boolean
+Function AccountExist(ByVal Name As String) As Boolean
     Dim filename As String
-    filename = "data\accounts\" & Trim(name) & ".bin"
+    filename = "data\accounts\" & Trim(Name) & ".bin"
 
     If FileExist(filename) Then
         AccountExist = True
@@ -177,13 +177,13 @@ Function AccountExist(ByVal name As String) As Boolean
 
 End Function
 
-Function PasswordOK(ByVal name As String, ByVal Password As String) As Boolean
+Function PasswordOK(ByVal Name As String, ByVal Password As String) As Boolean
     Dim filename As String
     Dim RightPassword As String * NAME_LENGTH
     Dim nFileNum As Long
 
-    If AccountExist(name) Then
-        filename = App.Path & "\data\accounts\" & Trim$(name) & ".bin"
+    If AccountExist(Name) Then
+        filename = App.Path & "\data\accounts\" & Trim$(Name) & ".bin"
         nFileNum = FreeFile
         Open filename For Binary As #nFileNum
         Get #nFileNum, ACCOUNT_LENGTH, RightPassword
@@ -196,18 +196,18 @@ Function PasswordOK(ByVal name As String, ByVal Password As String) As Boolean
 
 End Function
 
-Sub AddAccount(ByVal index As Long, ByVal name As String, ByVal Password As String)
+Sub AddAccount(ByVal index As Long, ByVal Name As String, ByVal Password As String)
     Dim i As Long
     
     ClearPlayer index
     
-    Player(index).Login = name
+    Player(index).Login = Name
     Player(index).Password = Password
 
     Call SavePlayer(index)
 End Sub
 
-Sub DeleteName(ByVal name As String)
+Sub DeleteName(ByVal Name As String)
     Dim f1 As Long
     Dim f2 As Long
     Dim s As String
@@ -221,7 +221,7 @@ Sub DeleteName(ByVal name As String)
     Do While Not EOF(f1)
         Input #f1, s
 
-        If Trim$(LCase$(s)) <> Trim$(LCase$(name)) Then
+        If Trim$(LCase$(s)) <> Trim$(LCase$(Name)) Then
             Print #f2, s
         End If
 
@@ -237,22 +237,22 @@ End Sub
 ' ****************
 Function CharExist(ByVal index As Long) As Boolean
 
-    If LenB(Trim$(Player(index).name)) > 0 Then
+    If LenB(Trim$(Player(index).Name)) > 0 Then
         CharExist = True
     End If
 
 End Function
 
-Sub AddChar(ByVal index As Long, ByVal name As String, ByVal Sex As Byte, ByVal ClassNum As Long, ByVal Sprite As Long)
+Sub AddChar(ByVal index As Long, ByVal Name As String, ByVal Sex As Byte, ByVal ClassNum As Long, ByVal Sprite As Long)
     Dim F As Long
     Dim n As Long
     Dim spritecheck As Boolean
 
-    If LenB(Trim$(Player(index).name)) = 0 Then
+    If LenB(Trim$(Player(index).Name)) = 0 Then
         
         spritecheck = False
         
-        Player(index).name = name
+        Player(index).Name = Name
         Player(index).Sex = Sex
         Player(index).Class = ClassNum
         
@@ -281,7 +281,7 @@ Sub AddChar(ByVal index As Long, ByVal name As String, ByVal Sex As Byte, ByVal 
             For n = 1 To Class(ClassNum).startItemCount
                 If Class(ClassNum).StartItem(n) > 0 Then
                     ' item exist?
-                    If Len(Trim$(Item(Class(ClassNum).StartItem(n)).name)) > 0 Then
+                    If Len(Trim$(Item(Class(ClassNum).StartItem(n)).Name)) > 0 Then
                         Player(index).Inv(n).Num = Class(ClassNum).StartItem(n)
                         Player(index).Inv(n).Value = Class(ClassNum).StartValue(n)
                     End If
@@ -294,7 +294,7 @@ Sub AddChar(ByVal index As Long, ByVal name As String, ByVal Sex As Byte, ByVal 
             For n = 1 To Class(ClassNum).startSpellCount
                 If Class(ClassNum).StartSpell(n) > 0 Then
                     ' spell exist?
-                    If Len(Trim$(Spell(Class(ClassNum).StartItem(n)).name)) > 0 Then
+                    If Len(Trim$(Spell(Class(ClassNum).StartItem(n)).Name)) > 0 Then
                         Player(index).Spell(n) = Class(ClassNum).StartSpell(n)
                     End If
                 End If
@@ -304,7 +304,7 @@ Sub AddChar(ByVal index As Long, ByVal name As String, ByVal Sex As Byte, ByVal 
         ' Append name to file
         F = FreeFile
         Open App.Path & "\data\accounts\charlist.txt" For Append As #F
-        Print #F, name
+        Print #F, Name
         Close #F
         Call SavePlayer(index)
         Exit Sub
@@ -312,7 +312,7 @@ Sub AddChar(ByVal index As Long, ByVal name As String, ByVal Sex As Byte, ByVal 
 
 End Sub
 
-Function FindChar(ByVal name As String) As Boolean
+Function FindChar(ByVal Name As String) As Boolean
     Dim F As Long
     Dim s As String
     F = FreeFile
@@ -321,7 +321,7 @@ Function FindChar(ByVal name As String) As Boolean
     Do While Not EOF(F)
         Input #F, s
 
-        If Trim$(LCase$(s)) = Trim$(LCase$(name)) Then
+        If Trim$(LCase$(s)) = Trim$(LCase$(Name)) Then
             FindChar = True
             Close #F
             Exit Function
@@ -362,11 +362,11 @@ Sub SavePlayer(ByVal index As Long)
     Close #F
 End Sub
 
-Sub LoadPlayer(ByVal index As Long, ByVal name As String)
+Sub LoadPlayer(ByVal index As Long, ByVal Name As String)
     Dim filename As String
     Dim F As Long
     Call ClearPlayer(index)
-    filename = App.Path & "\data\accounts\" & Trim(name) & ".bin"
+    filename = App.Path & "\data\accounts\" & Trim(Name) & ".bin"
     F = FreeFile
     Open filename For Binary As #F
     Get #F, , Player(index)
@@ -377,12 +377,12 @@ Sub ClearPlayer(ByVal index As Long)
     Dim i As Long
     
     Call ZeroMemory(ByVal VarPtr(TempPlayer(index)), LenB(TempPlayer(index)))
-    Set TempPlayer(index).Buffer = New clsBuffer
+    Set TempPlayer(index).buffer = New clsBuffer
     
     Call ZeroMemory(ByVal VarPtr(Player(index)), LenB(Player(index)))
     Player(index).Login = vbNullString
     Player(index).Password = vbNullString
-    Player(index).name = vbNullString
+    Player(index).Name = vbNullString
     Player(index).Class = 1
 
     frmServer.lvwInfo.ListItems(index).SubItems(1) = vbNullString
@@ -429,7 +429,7 @@ Sub LoadClasses()
     Call ClearClasses
 
     For i = 1 To Max_Classes
-        Class(i).name = GetVar(filename, "CLASS" & i, "Name")
+        Class(i).Name = GetVar(filename, "CLASS" & i, "Name")
         
         ' read string of sprites
         tmpSprite = GetVar(filename, "CLASS" & i, "MaleSprite")
@@ -480,7 +480,7 @@ Sub LoadClasses()
         
         ' loop for spells
         Class(i).startSpellCount = startSpellCount
-        If startSpellCount >= 1 And startSpellCount <= MAX_INV Then
+        If startSpellCount >= 1 And startSpellCount <= MAX_PLAYER_SPELLS Then
             For x = 1 To startSpellCount
                 Class(i).StartSpell(x) = Val(GetVar(filename, "CLASS" & i, "StartSpell" & x))
             Next
@@ -497,7 +497,7 @@ Sub SaveClasses()
     filename = App.Path & "\data\classes.ini"
 
     For i = 1 To Max_Classes
-        Call PutVar(filename, "CLASS" & i, "Name", Trim$(Class(i).name))
+        Call PutVar(filename, "CLASS" & i, "Name", Trim$(Class(i).Name))
         Call PutVar(filename, "CLASS" & i, "Maleprite", "1")
         Call PutVar(filename, "CLASS" & i, "Femaleprite", "1")
         Call PutVar(filename, "CLASS" & i, "Strength", STR(Class(i).Stat(Stats.Strength)))
@@ -534,7 +534,7 @@ Sub ClearClasses()
 
     For i = 1 To Max_Classes
         Call ZeroMemory(ByVal VarPtr(Class(i)), LenB(Class(i)))
-        Class(i).name = vbNullString
+        Class(i).Name = vbNullString
     Next
 
 End Sub
@@ -592,7 +592,7 @@ End Sub
 
 Sub ClearItem(ByVal index As Long)
     Call ZeroMemory(ByVal VarPtr(Item(index)), LenB(Item(index)))
-    Item(index).name = vbNullString
+    Item(index).Name = vbNullString
     Item(index).Desc = vbNullString
     Item(index).Sound = "None."
 End Sub
@@ -659,7 +659,7 @@ End Sub
 
 Sub ClearShop(ByVal index As Long)
     Call ZeroMemory(ByVal VarPtr(Shop(index)), LenB(Shop(index)))
-    Shop(index).name = vbNullString
+    Shop(index).Name = vbNullString
 End Sub
 
 Sub ClearShops()
@@ -725,7 +725,7 @@ End Sub
 
 Sub ClearSpell(ByVal index As Long)
     Call ZeroMemory(ByVal VarPtr(Spell(index)), LenB(Spell(index)))
-    Spell(index).name = vbNullString
+    Spell(index).Name = vbNullString
     Spell(index).LevelReq = 1 'Needs to be 1 for the spell editor
     Spell(index).Desc = vbNullString
     Spell(index).Sound = "None."
@@ -793,7 +793,7 @@ End Sub
 
 Sub ClearNpc(ByVal index As Long)
     Call ZeroMemory(ByVal VarPtr(Npc(index)), LenB(Npc(index)))
-    Npc(index).name = vbNullString
+    Npc(index).Name = vbNullString
     Npc(index).AttackSay = vbNullString
     Npc(index).Sound = "None."
 End Sub
@@ -860,7 +860,7 @@ End Sub
 
 Sub ClearResource(ByVal index As Long)
     Call ZeroMemory(ByVal VarPtr(Resource(index)), LenB(Resource(index)))
-    Resource(index).name = vbNullString
+    Resource(index).Name = vbNullString
     Resource(index).SuccessMessage = vbNullString
     Resource(index).EmptyMessage = vbNullString
     Resource(index).Sound = "None."
@@ -929,7 +929,7 @@ End Sub
 
 Sub ClearAnimation(ByVal index As Long)
     Call ZeroMemory(ByVal VarPtr(Animation(index)), LenB(Animation(index)))
-    Animation(index).name = vbNullString
+    Animation(index).Name = vbNullString
     Animation(index).Sound = "None."
 End Sub
 
@@ -953,7 +953,7 @@ Sub SaveMap(ByVal mapNum As Long)
     F = FreeFile
     
     Open filename For Binary As #F
-    Put #F, , Map(mapNum).name
+    Put #F, , Map(mapNum).Name
     Put #F, , Map(mapNum).Music
     Put #F, , Map(mapNum).Revision
     Put #F, , Map(mapNum).Moral
@@ -1002,7 +1002,7 @@ Sub LoadMaps()
         filename = App.Path & "\data\maps\map" & i & ".dat"
         F = FreeFile
         Open filename For Binary As #F
-        Get #F, , Map(i).name
+        Get #F, , Map(i).Name
         Get #F, , Map(i).Music
         Get #F, , Map(i).Revision
         Get #F, , Map(i).Moral
@@ -1086,7 +1086,7 @@ End Sub
 
 Sub ClearMap(ByVal mapNum As Long)
     Call ZeroMemory(ByVal VarPtr(Map(mapNum)), LenB(Map(mapNum)))
-    Map(mapNum).name = vbNullString
+    Map(mapNum).Name = vbNullString
     Map(mapNum).MaxX = MAX_MAPX
     Map(mapNum).MaxY = MAX_MAPY
     ReDim Map(mapNum).Tile(0 To Map(mapNum).MaxX, 0 To Map(mapNum).MaxY)
@@ -1106,7 +1106,7 @@ Sub ClearMaps()
 End Sub
 
 Function GetClassName(ByVal ClassNum As Long) As String
-    GetClassName = Trim$(Class(ClassNum).name)
+    GetClassName = Trim$(Class(ClassNum).Name)
 End Function
 
 Function GetClassMaxVital(ByVal ClassNum As Long, ByVal Vital As Vitals) As Long
@@ -1138,13 +1138,13 @@ Sub SaveBank(ByVal index As Long)
     Close #F
 End Sub
 
-Public Sub LoadBank(ByVal index As Long, ByVal name As String)
+Public Sub LoadBank(ByVal index As Long, ByVal Name As String)
     Dim filename As String
     Dim F As Long
 
     Call ClearBank(index)
 
-    filename = App.Path & "\data\banks\" & Trim$(name) & ".bin"
+    filename = App.Path & "\data\banks\" & Trim$(Name) & ".bin"
     
     If Not FileExist(filename, True) Then
         Call SaveBank(index)

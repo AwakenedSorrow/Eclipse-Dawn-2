@@ -401,6 +401,11 @@ Dim d As Long
         Exit Function
     End If
     
+    If frmMain.picCurrency.Visible = True Then
+        CanMove = False
+        Exit Function
+    End If
+    
     ' not in bank
     If InBank Then
         'CanMove = False
@@ -545,8 +550,8 @@ errorhandler:
 End Function
 
 Function CheckDirection(ByVal Direction As Byte) As Boolean
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim i As Long
 
     ' If debug mode, handle error then exit out
@@ -562,36 +567,36 @@ Dim i As Long
 
     Select Case Direction
         Case DIR_UP
-            x = GetPlayerX(MyIndex)
-            y = GetPlayerY(MyIndex) - 1
+            X = GetPlayerX(MyIndex)
+            Y = GetPlayerY(MyIndex) - 1
         Case DIR_DOWN
-            x = GetPlayerX(MyIndex)
-            y = GetPlayerY(MyIndex) + 1
+            X = GetPlayerX(MyIndex)
+            Y = GetPlayerY(MyIndex) + 1
         Case DIR_LEFT
-            x = GetPlayerX(MyIndex) - 1
-            y = GetPlayerY(MyIndex)
+            X = GetPlayerX(MyIndex) - 1
+            Y = GetPlayerY(MyIndex)
         Case DIR_RIGHT
-            x = GetPlayerX(MyIndex) + 1
-            y = GetPlayerY(MyIndex)
+            X = GetPlayerX(MyIndex) + 1
+            Y = GetPlayerY(MyIndex)
     End Select
 
     ' Check to see if the map tile is blocked or not
-    If Map.Tile(x, y).Type = TILE_TYPE_BLOCKED Then
+    If Map.Tile(X, Y).Type = TILE_TYPE_BLOCKED Then
         CheckDirection = True
         Exit Function
     End If
 
     ' Check to see if the map tile is tree or not
-    If Map.Tile(x, y).Type = TILE_TYPE_RESOURCE Then
+    If Map.Tile(X, Y).Type = TILE_TYPE_RESOURCE Then
         CheckDirection = True
         Exit Function
     End If
 
     ' Check to see if the key door is open or not
-    If Map.Tile(x, y).Type = TILE_TYPE_KEY Then
+    If Map.Tile(X, Y).Type = TILE_TYPE_KEY Then
 
         ' This actually checks if its open or not
-        If TempTile(x, y).DoorOpen = NO Then
+        If TempTile(X, Y).DoorOpen = NO Then
             CheckDirection = True
             Exit Function
         End If
@@ -600,8 +605,8 @@ Dim i As Long
     ' Check to see if a player is already on that tile
     For i = 1 To Player_HighIndex
         If IsPlaying(i) And GetPlayerMap(i) = GetPlayerMap(MyIndex) Then
-            If GetPlayerX(i) = x Then
-                If GetPlayerY(i) = y Then
+            If GetPlayerX(i) = X Then
+                If GetPlayerY(i) = Y Then
                     CheckDirection = True
                     Exit Function
                 End If
@@ -612,8 +617,8 @@ Dim i As Long
     ' Check to see if a npc is already on that tile
     For i = 1 To Npc_HighIndex
         If MapNpc(i).num > 0 Then
-            If MapNpc(i).x = x Then
-                If MapNpc(i).y = y Then
+            If MapNpc(i).X = X Then
+                If MapNpc(i).Y = Y Then
                     CheckDirection = True
                     Exit Function
                 End If
@@ -706,7 +711,7 @@ Public Sub UpdateDrawMapName()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    DrawMapNameX = (ScreenX + 64) / 2 - GetTextWidth(MainFont, Trim$(Map.Name))
+    DrawMapNameX = (ScreenX + 64) / 2 - GetTextWidth(MainFont, Trim$(Map.name))
     DrawMapNameY = 1
 
     Select Case Map.Moral
@@ -806,7 +811,7 @@ Dim Buffer As clsBuffer
 
     ' Check if player has enough MP
     If GetPlayerVital(MyIndex, Vitals.MP) < Spell(PlayerSpells(spellslot)).MPCost Then
-        Call AddText("Not enough MP to cast " & Trim$(Spell(PlayerSpells(spellslot)).Name) & ".", BrightRed)
+        Call AddText("Not enough MP to cast " & Trim$(Spell(PlayerSpells(spellslot)).name) & ".", BrightRed)
         Exit Sub
     End If
 
@@ -837,17 +842,17 @@ errorhandler:
 End Sub
 
 Sub ClearTempTile()
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ReDim TempTile(0 To Map.MaxX, 0 To Map.MaxY)
 
-    For x = 0 To Map.MaxX
-        For y = 0 To Map.MaxY
-            TempTile(x, y).DoorOpen = NO
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
+            TempTile(X, Y).DoorOpen = NO
         Next
     Next
 
@@ -962,20 +967,20 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub UpdateSpellWindow(ByVal spellnum As Long, ByVal x As Long, ByVal y As Long)
+Public Sub UpdateSpellWindow(ByVal spellnum As Long, ByVal X As Long, ByVal Y As Long)
 Dim i As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' check for off-screen
-    If y + frmMain.picSpellDesc.Height > frmMain.ScaleHeight Then
-        y = frmMain.ScaleHeight - frmMain.picSpellDesc.Height
+    If Y + frmMain.picSpellDesc.Height > frmMain.ScaleHeight Then
+        Y = frmMain.ScaleHeight - frmMain.picSpellDesc.Height
     End If
     
     With frmMain
-        .picSpellDesc.top = y
-        .picSpellDesc.Left = x
+        .picSpellDesc.top = Y
+        .picSpellDesc.Left = X
         .picSpellDesc.Visible = True
     End With
     
@@ -987,25 +992,25 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub UpdateDescWindow(ByVal itemnum As Long, ByVal x As Long, ByVal y As Long)
+Public Sub UpdateDescWindow(ByVal itemnum As Long, ByVal X As Long, ByVal Y As Long)
 Dim i As Long
 Dim Firstletter As String * 1
-Dim Name As String
+Dim name As String
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' check for off-screen
-    If y + frmMain.picItemDesc.Height > frmMain.ScaleHeight Then
-        y = frmMain.ScaleHeight - frmMain.picItemDesc.Height
+    If Y + frmMain.picItemDesc.Height > frmMain.ScaleHeight Then
+        Y = frmMain.ScaleHeight - frmMain.picItemDesc.Height
     End If
     
     ' set z-order
     frmMain.picItemDesc.ZOrder (0)
 
     With frmMain
-        .picItemDesc.top = y
-        .picItemDesc.Left = x
+        .picItemDesc.top = Y
+        .picItemDesc.Left = X
         .picItemDesc.Visible = True
     End With
     
@@ -1018,20 +1023,20 @@ errorhandler:
 End Sub
 
 Public Sub CacheResources()
-Dim x As Long, y As Long, Resource_Count As Long
+Dim X As Long, Y As Long, Resource_Count As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     Resource_Count = 0
 
-    For x = 0 To Map.MaxX
-        For y = 0 To Map.MaxY
-            If Map.Tile(x, y).Type = TILE_TYPE_RESOURCE Then
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
+            If Map.Tile(X, Y).Type = TILE_TYPE_RESOURCE Then
                 Resource_Count = Resource_Count + 1
                 ReDim Preserve MapResource(0 To Resource_Count)
-                MapResource(Resource_Count).x = x
-                MapResource(Resource_Count).y = y
+                MapResource(Resource_Count).X = X
+                MapResource(Resource_Count).Y = Y
             End If
         Next
     Next
@@ -1046,7 +1051,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub CreateActionMsg(ByVal message As String, ByVal color As Integer, ByVal MsgType As Byte, ByVal x As Long, ByVal y As Long)
+Public Sub CreateActionMsg(ByVal message As String, ByVal color As Integer, ByVal MsgType As Byte, ByVal X As Long, ByVal Y As Long)
 Dim i As Long
 
     ' If debug mode, handle error then exit out
@@ -1061,13 +1066,13 @@ Dim i As Long
         .Type = MsgType
         .Created = GetTickCount
         .Scroll = 1
-        .x = x
-        .y = y
+        .X = X
+        .Y = Y
     End With
 
     If ActionMsg(ActionMsgIndex).Type = ACTIONMSG_SCROLL Then
-        ActionMsg(ActionMsgIndex).y = ActionMsg(ActionMsgIndex).y + Rand(-2, 6)
-        ActionMsg(ActionMsgIndex).x = ActionMsg(ActionMsgIndex).x + Rand(-8, 8)
+        ActionMsg(ActionMsgIndex).Y = ActionMsg(ActionMsgIndex).Y + Rand(-2, 6)
+        ActionMsg(ActionMsgIndex).X = ActionMsg(ActionMsgIndex).X + Rand(-8, 8)
     End If
     
     ' find the new high index
@@ -1099,8 +1104,8 @@ Dim i As Long
     ActionMsg(Index).Type = 0
     ActionMsg(Index).color = 0
     ActionMsg(Index).Scroll = 0
-    ActionMsg(Index).x = 0
-    ActionMsg(Index).y = 0
+    ActionMsg(Index).X = 0
+    ActionMsg(Index).Y = 0
     
     ' find the new high index
     For i = MAX_BYTE To 1 Step -1
@@ -1291,7 +1296,7 @@ errorhandler:
     Exit Function
 End Function
 
-Public Function IsHotbarSlot(ByVal x As Single, ByVal y As Single) As Long
+Public Function IsHotbarSlot(ByVal X As Single, ByVal Y As Single) As Long
 Dim top As Long, Left As Long
 Dim i As Long
 
@@ -1303,8 +1308,8 @@ Dim i As Long
     For i = 1 To MAX_HOTBAR
         top = HotbarTop
         Left = HotbarLeft + ((HotbarOffsetX + 32) * (((i - 1) Mod MAX_HOTBAR)))
-        If x >= Left And x <= Left + PIC_X Then
-            If y >= top And y <= top + PIC_Y Then
+        If X >= Left And X <= Left + PIC_X Then
+            If Y >= top And Y <= top + PIC_Y Then
                 IsHotbarSlot = i
                 Exit Function
             End If
@@ -1319,7 +1324,7 @@ errorhandler:
     Exit Function
 End Function
 
-Public Sub PlayMapSound(ByVal x As Long, ByVal y As Long, ByVal entityType As Long, ByVal entityNum As Long)
+Public Sub PlayMapSound(ByVal X As Long, ByVal Y As Long, ByVal entityType As Long, ByVal entityNum As Long)
 Dim soundName As String
 
     ' If debug mode, handle error then exit out

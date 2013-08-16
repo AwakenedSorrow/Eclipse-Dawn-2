@@ -7,6 +7,11 @@ Lead Programmer: Sil van Harberden (The Doctor / Stein)
 ***
 Used Resources
 ***
+Misc. BugFixes:
+	- iRicardo
+	- Matthew
+	- GuardianBR
+
 Misc. Snippets:
 	Engine of Origin: Eclipse Origins 3.0
 	Creator: JC Snider

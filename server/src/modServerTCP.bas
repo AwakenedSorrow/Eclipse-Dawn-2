@@ -337,12 +337,16 @@ Dim pLength As Long
     If GetPlayerAccess(index) <= 0 Then
         ' Check for data flooding
         If TempPlayer(index).DataBytes > 1000 Then
-            Exit Sub
+            If GetTickCount < TempPlayer(index).DataTimer Then
+                Exit Sub
+            End If
         End If
-    
+
         ' Check for packet flooding
         If TempPlayer(index).DataPackets > 25 Then
-            Exit Sub
+            If GetTickCount < TempPlayer(index).DataTimer Then
+                Exit Sub
+            End If
         End If
     End If
             
@@ -1402,7 +1406,7 @@ Sub ResetShopAction(ByVal index As Long)
     Set Buffer = New clsBuffer
     Buffer.WriteLong SResetShopAction
     
-    SendDataToAll Buffer.ToArray()
+    SendDataTo index, Buffer.ToArray()
     
     Set Buffer = Nothing
 End Sub

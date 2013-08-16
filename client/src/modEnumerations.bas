@@ -178,7 +178,7 @@ Public Enum ClientPackets
     CMSG_COUNT
 End Enum
 
-Public HandleDataSub(CMSG_COUNT) As Long
+Public HandleDataSub(SMSG_COUNT) As Long
 
 ' Stats used by Players, Npcs and Classes
 Public Enum Stats
@@ -212,7 +212,7 @@ End Enum
 ' Layers in a map
 Public Enum MapLayer
     Ground = 1
-    Mask
+    mask
     Mask2
     Fringe
     Fringe2
