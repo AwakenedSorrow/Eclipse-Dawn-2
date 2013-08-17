@@ -1,4 +1,4 @@
-modConstants = 0, 0, 0, 0, C
+modConstants = 200, 200, 1524, 878, 
 modDatabase = 175, 175, 1499, 853, 
 modGameLogic = 25, 25, 1287, 703, 
 modGeneral = 0, 0, 0, 0, C
@@ -7,7 +7,7 @@ modHandleData = 100, 100, 1424, 778,
 modServerTCP = 75, 75, 1399, 753, 
 modSysTray = 0, 0, 0, 0, C
 modTypes = 0, 0, 0, 0, C
-frmServer = 0, 0, 0, 0, C, 0, 0, 0, 0, C
+frmServer = 0, 0, 0, 0, C, 225, 225, 1549, 903, C
 modServerLoop = 50, 50, 1312, 728, 
 modEnumerations = 0, 0, 0, 0, C
 modPlayer = 125, 125, 1449, 803, 

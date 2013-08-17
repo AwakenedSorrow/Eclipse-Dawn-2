@@ -721,12 +721,12 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   4050
-      Left            =   11160
+      Left            =   8115
       ScaleHeight     =   270
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   194
       TabIndex        =   89
-      Top             =   4200
+      Top             =   4245
       Visible         =   0   'False
       Width           =   2910
       Begin VB.Image imgPartySpirit 
@@ -1107,7 +1107,6 @@ Begin VB.Form frmMain
       _Version        =   393217
       BackColor       =   790032
       BorderStyle     =   0
-      Enabled         =   -1  'True
       ScrollBars      =   2
       Appearance      =   0
       TextRTF         =   $"frmMain.frx":3332
@@ -1264,12 +1263,12 @@ Begin VB.Form frmMain
       EndProperty
       ForeColor       =   &H80000008&
       Height          =   4050
-      Left            =   11160
+      Left            =   8115
       ScaleHeight     =   270
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   194
       TabIndex        =   47
-      Top             =   4200
+      Top             =   4245
       Visible         =   0   'False
       Width           =   2910
    End
@@ -1929,14 +1928,14 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub imgButton_Click(Index As Integer)
+Private Sub imgButton_Click(index As Integer)
 Dim Buffer As clsBuffer
 Dim i As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    Select Case Index
+    Select Case index
         Case 1
             If Not picInventory.Visible Then
                 ' show the window
@@ -2015,22 +2014,22 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub imgButton_MouseMove(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
+Private Sub imgButton_MouseMove(index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' reset other buttons
-    resetButtons_Main Index
+    resetButtons_Main index
     
     ' change the button we're hovering on
-    If Not MainButton(Index).state = 2 Then ' make sure we're not clicking
-        changeButtonState_Main Index, 1 ' hover
+    If Not MainButton(index).state = 2 Then ' make sure we're not clicking
+        changeButtonState_Main index, 1 ' hover
     End If
     
     ' play sound
-    If Not LastButtonSound_Main = Index Then
+    If Not LastButtonSound_Main = index Then
         PlaySound Sound_ButtonHover
-        LastButtonSound_Main = Index
+        LastButtonSound_Main = index
     End If
     
     ' Error handler
@@ -2041,7 +2040,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub imgButton_MouseUp(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
+Private Sub imgButton_MouseUp(index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
         
@@ -2056,15 +2055,15 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub imgButton_MouseDown(Index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
+Private Sub imgButton_MouseDown(index As Integer, Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' reset other buttons
-    resetButtons_Main Index
+    resetButtons_Main index
     
     ' change the button we're hovering on
-    changeButtonState_Main Index, 2 ' clicked
+    changeButtonState_Main index, 2 ' clicked
     
     ' Error handler
     Exit Sub
@@ -2197,12 +2196,12 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub lblDialogue_Button_Click(Index As Integer)
+Private Sub lblDialogue_Button_Click(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' call the handler
-    dialogueHandler Index
+    dialogueHandler index
     
     picDialogue.Visible = False
     dialogueIndex = 0
@@ -2251,12 +2250,12 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub lblTrainStat_Click(Index As Integer)
+Private Sub lblTrainStat_Click(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If GetPlayerPOINTS(MyIndex) = 0 Then Exit Sub
-    SendTrainStat Index
+    SendTrainStat index
     
     ' Error handler
     Exit Sub
