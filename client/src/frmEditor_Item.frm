@@ -691,7 +691,7 @@ Begin VB.Form frmEditor_Item
    Begin VB.CommandButton cmdCancel 
       Caption         =   "Cancel"
       Height          =   375
-      Left            =   8880
+      Left            =   8760
       TabIndex        =   3
       Top             =   6240
       Width           =   1455

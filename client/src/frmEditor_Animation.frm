@@ -19,8 +19,9 @@ Begin VB.Form frmEditor_Animation
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   6975
-   ScaleWidth      =   10095
+   ScaleHeight     =   465
+   ScaleMode       =   3  'Pixel
+   ScaleWidth      =   673
    StartUpPosition =   2  'CenterScreen
    Begin VB.CommandButton cmdDelete 
       Caption         =   "Delete"
@@ -111,14 +112,15 @@ Begin VB.Form frmEditor_Animation
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   2535
+         Height          =   1985
          Index           =   1
-         Left            =   3360
-         ScaleHeight     =   2475
-         ScaleWidth      =   3075
+         Left            =   3960
+         ScaleHeight     =   128
+         ScaleMode       =   3  'Pixel
+         ScaleWidth      =   128
          TabIndex        =   14
-         Top             =   3600
-         Width           =   3135
+         Top             =   3840
+         Width           =   1985
       End
       Begin VB.HScrollBar scrlSprite 
          Height          =   255
@@ -155,14 +157,15 @@ Begin VB.Form frmEditor_Animation
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   2535
+         Height          =   1985
          Index           =   0
-         Left            =   120
-         ScaleHeight     =   2475
-         ScaleWidth      =   3075
+         Left            =   720
+         ScaleHeight     =   128
+         ScaleMode       =   3  'Pixel
+         ScaleWidth      =   128
          TabIndex        =   7
-         Top             =   3600
-         Width           =   3135
+         Top             =   3840
+         Width           =   1985
       End
       Begin VB.HScrollBar scrlSprite 
          Height          =   255

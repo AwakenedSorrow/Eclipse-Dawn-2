@@ -63,6 +63,7 @@ Public Tex_Bars As Long
 Public Tex_Target As Long
 Public Tex_GUI() As Long
 Public Tex_Select As Long
+Public Tex_EditorBackDrop As Long
 
 ' Texture counts
 Public NumTileSets As Long
@@ -441,6 +442,9 @@ Dim i As Long
     
     Tex_Select = SetTexturePath(App.Path & GFX_PATH & "select" & GFX_EXT)
     Call LoadTexture(Tex_Select)
+    
+    Tex_EditorBackDrop = SetTexturePath(App.Path & GFX_PATH & "backdrop" & GFX_EXT)
+    Call LoadTexture(Tex_EditorBackDrop)
     
     ' Load all the UI elements.
     ' Some of this is for the future, but I reckon some of it will be useful already.
