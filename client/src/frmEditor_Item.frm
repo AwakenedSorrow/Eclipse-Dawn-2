@@ -722,7 +722,7 @@ Begin VB.Form frmEditor_Item
    Begin VB.Frame fraVitals 
       Caption         =   "Consume Data"
       Height          =   1935
-      Left            =   4440
+      Left            =   4560
       TabIndex        =   44
       Top             =   3960
       Visible         =   0   'False
@@ -823,10 +823,8 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   1080
          Max             =   255
-         Min             =   1
          TabIndex        =   48
          Top             =   720
-         Value           =   1
          Width           =   2415
       End
       Begin VB.Label lblSpellName 
@@ -953,6 +951,7 @@ Private Sub Form_Load()
     scrlPic.max = NumItems
     scrlAnim.max = MAX_ANIMATIONS
     scrlPaperdoll.max = NumPaperdolls
+    scrlSpell.max = MAX_SPELLS
     
     ' Error handler
     Exit Sub
@@ -1323,10 +1322,14 @@ Private Sub scrlSpell_Change()
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     
-    If Len(Trim$(Spell(scrlSpell.value).name)) > 0 Then
-        lblSpellName.Caption = "Name: " & Trim$(Spell(scrlSpell.value).name)
-    Else
+    If scrlSpell.value = 0 Then
         lblSpellName.Caption = "Name: None"
+    Else
+        If Len(Trim$(Spell(scrlSpell.value).name)) > 0 Then
+            lblSpellName.Caption = "Name: " & Trim$(Spell(scrlSpell.value).name)
+        Else
+            lblSpellName.Caption = "Name: None"
+        End If
     End If
     
     lblSpell.Caption = "Spell: " & scrlSpell.value
