@@ -265,7 +265,7 @@ Sub AddChar(ByVal index As Long, ByVal Name As String, ByVal Sex As Byte, ByVal 
         Player(index).Level = 1
 
         For n = 1 To Stats.Stat_Count - 1
-            Player(index).Stat(n) = Class(ClassNum).Stat(n)
+            Player(index).Stat(n) = 0
         Next n
 
         Player(index).Dir = DIR_DOWN
