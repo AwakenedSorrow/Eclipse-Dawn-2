@@ -1260,7 +1260,7 @@ errorhandler:
 End Sub
 
 Public Sub EditorItem_DrawPaperdoll()
-Dim Sprite As Long
+Dim Sprite As Long, Red As Byte, Green As Byte, Blue As Byte, Alpha As Byte
 Dim srcRect As D3DRECT, destRect As D3DRECT
 Dim Width As Long, Height As Long
     
@@ -1282,7 +1282,14 @@ Dim Width As Long, Height As Long
     ' Calculate the locations and Render it.
     Width = D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width
     Height = D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4
-    Call RenderGraphic(Tex_Paperdoll(Sprite), 0, 0, Width, Height, 0, 0, 0, 0)
+    
+    ' The Colors maaan!
+    Red = Item(EditorIndex).Red
+    Green = Item(EditorIndex).Green
+    Blue = Item(EditorIndex).Blue
+    Alpha = Item(EditorIndex).Alpha
+    
+    Call RenderGraphic(Tex_Paperdoll(Sprite), 0, 0, Width, Height, 0, 0, 0, 0, Red, Green, Blue, Alpha)
     
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
     ' Of course, we also need to do a few calculations to make sure it appears where it should.
