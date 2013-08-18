@@ -1104,7 +1104,7 @@ End Function
 Public Function GetPlayerRawStatNoClass(ByVal Index As Long, ByVal Stat As Stats) As Long
     If Index > MAX_PLAYERS Then Exit Function
     
-    GetPlayerRawStat = Player(Index).Stat(Stat)
+    GetPlayerRawStatNoClass = Player(Index).Stat(Stat)
 End Function
 
 Public Sub SetPlayerStat(ByVal Index As Long, ByVal Stat As Stats, ByVal Value As Long)
