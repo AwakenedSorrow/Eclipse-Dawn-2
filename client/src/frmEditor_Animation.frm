@@ -372,7 +372,7 @@ Private Sub cmdDelete_Click()
     
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     AnimationEditorInit
@@ -406,10 +406,10 @@ Dim i As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     For i = 0 To 1
-        scrlSprite(i).Max = NumAnimations
-        scrlLoopCount(i).Max = 100
-        scrlFrameCount(i).Max = 100
-        scrlLoopTime(i).Max = 1000
+        scrlSprite(i).max = NumAnimations
+        scrlLoopCount(i).max = 100
+        scrlFrameCount(i).max = 100
+        scrlLoopTime(i).max = 1000
     Next
     
     ' Error handler
@@ -434,12 +434,12 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlFrameCount_Change(Index As Integer)
+Private Sub scrlFrameCount_Change(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblFrameCount(Index).Caption = "Frame Count: " & scrlFrameCount(Index).Value
-    Animation(EditorIndex).Frames(Index) = scrlFrameCount(Index).Value
+    lblFrameCount(index).Caption = "Frame Count: " & scrlFrameCount(index).value
+    Animation(EditorIndex).Frames(index) = scrlFrameCount(index).value
     
     ' Error handler
     Exit Sub
@@ -449,11 +449,11 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlFrameCount_Scroll(Index As Integer)
+Private Sub scrlFrameCount_Scroll(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    scrlFrameCount_Change Index
+    scrlFrameCount_Change index
     
     ' Error handler
     Exit Sub
@@ -463,12 +463,12 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlLoopCount_Change(Index As Integer)
+Private Sub scrlLoopCount_Change(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblLoopCount(Index).Caption = "Loop Count: " & scrlLoopCount(Index).Value
-    Animation(EditorIndex).LoopCount(Index) = scrlLoopCount(Index).Value
+    lblLoopCount(index).Caption = "Loop Count: " & scrlLoopCount(index).value
+    Animation(EditorIndex).LoopCount(index) = scrlLoopCount(index).value
     
     ' Error handler
     Exit Sub
@@ -478,11 +478,11 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlLoopCount_Scroll(Index As Integer)
+Private Sub scrlLoopCount_Scroll(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    scrlLoopCount_Change Index
+    scrlLoopCount_Change index
     
     ' Error handler
     Exit Sub
@@ -492,12 +492,12 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlLoopTime_Change(Index As Integer)
+Private Sub scrlLoopTime_Change(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblLoopTime(Index).Caption = "Loop Time: " & scrlLoopTime(Index).Value
-    Animation(EditorIndex).looptime(Index) = scrlLoopTime(Index).Value
+    lblLoopTime(index).Caption = "Loop Time: " & scrlLoopTime(index).value
+    Animation(EditorIndex).looptime(index) = scrlLoopTime(index).value
     
     ' Error handler
     Exit Sub
@@ -507,11 +507,11 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlLoopTime_Scroll(Index As Integer)
+Private Sub scrlLoopTime_Scroll(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    scrlLoopTime_Change Index
+    scrlLoopTime_Change index
     
     ' Error handler
     Exit Sub
@@ -521,12 +521,12 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlSprite_Change(Index As Integer)
+Private Sub scrlSprite_Change(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblSprite(Index).Caption = "Sprite: " & scrlSprite(Index).Value
-    Animation(EditorIndex).Sprite(Index) = scrlSprite(Index).Value
+    lblSprite(index).Caption = "Sprite: " & scrlSprite(index).value
+    Animation(EditorIndex).Sprite(index) = scrlSprite(index).value
     
     ' Error handler
     Exit Sub
@@ -536,11 +536,11 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlSprite_Scroll(Index As Integer)
+Private Sub scrlSprite_Scroll(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    scrlSprite_Change Index
+    scrlSprite_Change index
     
     ' Error handler
     Exit Sub
@@ -558,9 +558,9 @@ Dim tmpIndex As Long
     
     If EditorIndex = 0 Or EditorIndex > MAX_ANIMATIONS Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Animation(EditorIndex).Name = Trim$(txtName.text)
+    Animation(EditorIndex).name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Animation(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     ' Error handler

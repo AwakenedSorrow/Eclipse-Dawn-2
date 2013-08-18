@@ -136,10 +136,10 @@ Sub SpawnMapItems(ByVal mapNum As Long)
         For y = 0 To Map(mapNum).MaxY
 
             ' Check if the tile type is an item or a saved tile incase someone drops something
-            If (Map(mapNum).Tile(x, y).Type = TILE_TYPE_ITEM) Then
+            If (Map(mapNum).Tile(x, y).Type = TileTypeItem) Then
 
                 ' Check to see if its a currency and if they set the value to 0 set it to 1 automatically
-                If Item(Map(mapNum).Tile(x, y).Data1).Type = ITEM_TYPE_CURRENCY And Map(mapNum).Tile(x, y).Data2 <= 0 Then
+                If Item(Map(mapNum).Tile(x, y).Data1).Type = ItemTypeCurrency And Map(mapNum).Tile(x, y).Data2 <= 0 Then
                     Call SpawnItem(Map(mapNum).Tile(x, y).Data1, 1, mapNum, x, y)
                 Else
                     Call SpawnItem(Map(mapNum).Tile(x, y).Data1, Map(mapNum).Tile(x, y).Data2, mapNum, x, y)
@@ -181,7 +181,7 @@ Public Sub SpawnNpc(ByVal mapNpcNum As Long, ByVal mapNum As Long)
         'Check if theres a spawn tile for the specific npc
         For x = 0 To Map(mapNum).MaxX
             For y = 0 To Map(mapNum).MaxY
-                If Map(mapNum).Tile(x, y).Type = TILE_TYPE_NPCSPAWN Then
+                If Map(mapNum).Tile(x, y).Type = TileTypeNPCSpawn Then
                     If Map(mapNum).Tile(x, y).Data1 = mapNpcNum Then
                         MapNpc(mapNum).Npc(mapNpcNum).x = x
                         MapNpc(mapNum).Npc(mapNpcNum).y = y
@@ -284,9 +284,9 @@ Public Function NpcTileIsOpen(ByVal mapNum As Long, ByVal x As Long, ByVal y As 
 
     Next
 
-    If Map(mapNum).Tile(x, y).Type <> TILE_TYPE_WALKABLE Then
-        If Map(mapNum).Tile(x, y).Type <> TILE_TYPE_NPCSPAWN Then
-            If Map(mapNum).Tile(x, y).Type <> TILE_TYPE_ITEM Then
+    If Map(mapNum).Tile(x, y).Type <> TileTypeWalkable Then
+        If Map(mapNum).Tile(x, y).Type <> TileTypeNPCSpawn Then
+            If Map(mapNum).Tile(x, y).Type <> TileTypeItem Then
                 NpcTileIsOpen = False
             End If
         End If
@@ -318,7 +318,7 @@ Function CanNpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
     Dim y As Long
 
     ' Check for subscript out of range
-    If mapNum <= 0 Or mapNum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Dir < DIR_UP Or Dir > DIR_RIGHT Then
+    If mapNum <= 0 Or mapNum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Dir < North Or Dir > East Then
         Exit Function
     End If
 
@@ -327,14 +327,14 @@ Function CanNpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
     CanNpcMove = True
 
     Select Case Dir
-        Case DIR_UP
+        Case North
 
             ' Check to make sure not outside of boundries
             If y > 0 Then
                 n = Map(mapNum).Tile(x, y - 1).Type
 
                 ' Check to make sure that the tile is walkable
-                If n <> TILE_TYPE_WALKABLE And n <> TILE_TYPE_ITEM And n <> TILE_TYPE_NPCSPAWN Then
+                If n <> TileTypeWalkable And n <> TileTypeItem And n <> TileTypeNPCSpawn Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -358,7 +358,7 @@ Function CanNpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapNum).Tile(MapNpc(mapNum).Npc(mapNpcNum).x, MapNpc(mapNum).Npc(mapNpcNum).y).DirBlock, DIR_UP + 1) Then
+                If isDirBlocked(Map(mapNum).Tile(MapNpc(mapNum).Npc(mapNpcNum).x, MapNpc(mapNum).Npc(mapNpcNum).y).DirBlock, North + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -366,14 +366,14 @@ Function CanNpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 CanNpcMove = False
             End If
 
-        Case DIR_DOWN
+        Case South
 
             ' Check to make sure not outside of boundries
             If y < Map(mapNum).MaxY Then
                 n = Map(mapNum).Tile(x, y + 1).Type
 
                 ' Check to make sure that the tile is walkable
-                If n <> TILE_TYPE_WALKABLE And n <> TILE_TYPE_ITEM And n <> TILE_TYPE_NPCSPAWN Then
+                If n <> TileTypeWalkable And n <> TileTypeItem And n <> TileTypeNPCSpawn Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -397,7 +397,7 @@ Function CanNpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapNum).Tile(MapNpc(mapNum).Npc(mapNpcNum).x, MapNpc(mapNum).Npc(mapNpcNum).y).DirBlock, DIR_DOWN + 1) Then
+                If isDirBlocked(Map(mapNum).Tile(MapNpc(mapNum).Npc(mapNpcNum).x, MapNpc(mapNum).Npc(mapNpcNum).y).DirBlock, South + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -405,14 +405,14 @@ Function CanNpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 CanNpcMove = False
             End If
 
-        Case DIR_LEFT
+        Case West
 
             ' Check to make sure not outside of boundries
             If x > 0 Then
                 n = Map(mapNum).Tile(x - 1, y).Type
 
                 ' Check to make sure that the tile is walkable
-                If n <> TILE_TYPE_WALKABLE And n <> TILE_TYPE_ITEM And n <> TILE_TYPE_NPCSPAWN Then
+                If n <> TileTypeWalkable And n <> TileTypeItem And n <> TileTypeNPCSpawn Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -436,7 +436,7 @@ Function CanNpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapNum).Tile(MapNpc(mapNum).Npc(mapNpcNum).x, MapNpc(mapNum).Npc(mapNpcNum).y).DirBlock, DIR_LEFT + 1) Then
+                If isDirBlocked(Map(mapNum).Tile(MapNpc(mapNum).Npc(mapNpcNum).x, MapNpc(mapNum).Npc(mapNpcNum).y).DirBlock, West + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -444,14 +444,14 @@ Function CanNpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 CanNpcMove = False
             End If
 
-        Case DIR_RIGHT
+        Case East
 
             ' Check to make sure not outside of boundries
             If x < Map(mapNum).MaxX Then
                 n = Map(mapNum).Tile(x + 1, y).Type
 
                 ' Check to make sure that the tile is walkable
-                If n <> TILE_TYPE_WALKABLE And n <> TILE_TYPE_ITEM And n <> TILE_TYPE_NPCSPAWN Then
+                If n <> TileTypeWalkable And n <> TileTypeItem And n <> TileTypeNPCSpawn Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -475,7 +475,7 @@ Function CanNpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As 
                 Next
                 
                 ' Directional blocking
-                If isDirBlocked(Map(mapNum).Tile(MapNpc(mapNum).Npc(mapNpcNum).x, MapNpc(mapNum).Npc(mapNpcNum).y).DirBlock, DIR_RIGHT + 1) Then
+                If isDirBlocked(Map(mapNum).Tile(MapNpc(mapNum).Npc(mapNpcNum).x, MapNpc(mapNum).Npc(mapNpcNum).y).DirBlock, East + 1) Then
                     CanNpcMove = False
                     Exit Function
                 End If
@@ -492,14 +492,14 @@ Sub NpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As Long, By
     Dim Buffer As clsBuffer
 
     ' Check for subscript out of range
-    If mapNum <= 0 Or mapNum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Dir < DIR_UP Or Dir > DIR_RIGHT Or movement < 1 Or movement > 2 Then
+    If mapNum <= 0 Or mapNum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Dir < North Or Dir > East Or movement < 1 Or movement > 2 Then
         Exit Sub
     End If
 
     MapNpc(mapNum).Npc(mapNpcNum).Dir = Dir
 
     Select Case Dir
-        Case DIR_UP
+        Case North
             MapNpc(mapNum).Npc(mapNpcNum).y = MapNpc(mapNum).Npc(mapNpcNum).y - 1
             Set Buffer = New clsBuffer
             Buffer.WriteLong SNpcMove
@@ -510,7 +510,7 @@ Sub NpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As Long, By
             Buffer.WriteLong movement
             SendDataToMap mapNum, Buffer.ToArray()
             Set Buffer = Nothing
-        Case DIR_DOWN
+        Case South
             MapNpc(mapNum).Npc(mapNpcNum).y = MapNpc(mapNum).Npc(mapNpcNum).y + 1
             Set Buffer = New clsBuffer
             Buffer.WriteLong SNpcMove
@@ -521,7 +521,7 @@ Sub NpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As Long, By
             Buffer.WriteLong movement
             SendDataToMap mapNum, Buffer.ToArray()
             Set Buffer = Nothing
-        Case DIR_LEFT
+        Case West
             MapNpc(mapNum).Npc(mapNpcNum).x = MapNpc(mapNum).Npc(mapNpcNum).x - 1
             Set Buffer = New clsBuffer
             Buffer.WriteLong SNpcMove
@@ -532,7 +532,7 @@ Sub NpcMove(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As Long, By
             Buffer.WriteLong movement
             SendDataToMap mapNum, Buffer.ToArray()
             Set Buffer = Nothing
-        Case DIR_RIGHT
+        Case East
             MapNpc(mapNum).Npc(mapNpcNum).x = MapNpc(mapNum).Npc(mapNpcNum).x + 1
             Set Buffer = New clsBuffer
             Buffer.WriteLong SNpcMove
@@ -552,7 +552,7 @@ Sub NpcDir(ByVal mapNum As Long, ByVal mapNpcNum As Long, ByVal Dir As Long)
     Dim Buffer As clsBuffer
 
     ' Check for subscript out of range
-    If mapNum <= 0 Or mapNum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Dir < DIR_UP Or Dir > DIR_RIGHT Then
+    If mapNum <= 0 Or mapNum > MAX_MAPS Or mapNpcNum <= 0 Or mapNpcNum > MAX_MAP_NPCS Or Dir < North Or Dir > East Then
         Exit Sub
     End If
 
@@ -611,7 +611,7 @@ Public Sub CacheResources(ByVal mapNum As Long)
     For x = 0 To Map(mapNum).MaxX
         For y = 0 To Map(mapNum).MaxY
 
-            If Map(mapNum).Tile(x, y).Type = TILE_TYPE_RESOURCE Then
+            If Map(mapNum).Tile(x, y).Type = TileTypeResource Then
                 Resource_Count = Resource_Count + 1
                 ReDim Preserve ResourceCache(mapNum).ResourceData(0 To Resource_Count)
                 ResourceCache(mapNum).ResourceData(Resource_Count).x = x

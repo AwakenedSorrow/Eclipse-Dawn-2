@@ -277,16 +277,16 @@ errorhandler:
 End Sub
 
 Private Sub cmdUpdate_Click()
-Dim Index As Long
+Dim index As Long
 Dim tmpPos As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     tmpPos = lstTradeItem.ListIndex
-    Index = lstTradeItem.ListIndex + 1
-    If Index = 0 Then Exit Sub
-    With Shop(EditorIndex).TradeItem(Index)
+    index = lstTradeItem.ListIndex + 1
+    If index = 0 Then Exit Sub
+    With Shop(EditorIndex).TradeItem(index)
         .Item = cmbItem.ListIndex
         .ItemValue = Val(txtItemValue.text)
         .CostItem = cmbCostItem.ListIndex
@@ -303,13 +303,13 @@ errorhandler:
 End Sub
 
 Private Sub cmdDeleteTrade_Click()
-Dim Index As Long
+Dim index As Long
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    Index = lstTradeItem.ListIndex + 1
-    If Index = 0 Then Exit Sub
-    With Shop(EditorIndex).TradeItem(Index)
+    index = lstTradeItem.ListIndex + 1
+    If index = 0 Then Exit Sub
+    With Shop(EditorIndex).TradeItem(index)
         .Item = 0
         .ItemValue = 0
         .CostItem = 0

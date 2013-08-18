@@ -351,7 +351,7 @@ Private Sub HandleAddChar(ByVal index As Long, ByRef Data() As Byte, ByVal Start
         Next
 
         ' Prevent hacking
-        If (Sex < SEX_MALE) Or (Sex > SEX_FEMALE) Then
+        If (Sex < SexMale) Or (Sex > SexFemale) Then
             Exit Sub
         End If
 
@@ -522,7 +522,7 @@ Sub HandlePlayerMove(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr 
     Set Buffer = Nothing
 
     ' Prevent hacking
-    If Dir < DIR_UP Or Dir > DIR_RIGHT Then
+    If Dir < North Or Dir > East Then
         Exit Sub
     End If
 
@@ -587,7 +587,7 @@ Sub HandlePlayerDir(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     Set Buffer = Nothing
 
     ' Prevent hacking
-    If Dir < DIR_UP Or Dir > DIR_RIGHT Then
+    If Dir < North Or Dir > East Then
         Exit Sub
     End If
 
@@ -651,22 +651,22 @@ Sub HandleAttack(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As L
 
     ' Check tradeskills
     Select Case GetPlayerDir(index)
-        Case DIR_UP
+        Case North
 
             If GetPlayerY(index) = 0 Then Exit Sub
             x = GetPlayerX(index)
             y = GetPlayerY(index) - 1
-        Case DIR_DOWN
+        Case South
 
             If GetPlayerY(index) = Map(GetPlayerMap(index)).MaxY Then Exit Sub
             x = GetPlayerX(index)
             y = GetPlayerY(index) + 1
-        Case DIR_LEFT
+        Case West
 
             If GetPlayerX(index) = 0 Then Exit Sub
             x = GetPlayerX(index) - 1
             y = GetPlayerY(index)
-        Case DIR_RIGHT
+        Case East
 
             If GetPlayerX(index) = Map(GetPlayerMap(index)).MaxX Then Exit Sub
             x = GetPlayerX(index) + 1
@@ -760,7 +760,7 @@ Sub HandleWarpMeTo(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -794,7 +794,7 @@ Sub HandleWarpToMe(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -828,7 +828,7 @@ Sub HandleWarpTo(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As L
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -856,7 +856,7 @@ Sub HandleSetSprite(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -887,7 +887,7 @@ Sub HandleRequestNewMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartAd
     Set Buffer = Nothing
 
     ' Prevent hacking
-    If Dir < DIR_UP Or Dir > DIR_RIGHT Then
+    If Dir < North Or Dir > East Then
         Exit Sub
     End If
 
@@ -907,7 +907,7 @@ Sub HandleMapData(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As 
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -1038,7 +1038,7 @@ Sub HandleMapDropItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr
     
     If GetPlayerInvItemNum(index, invNum) < 1 Or GetPlayerInvItemNum(index, invNum) > MAX_ITEMS Then Exit Sub
     
-    If Item(GetPlayerInvItemNum(index, invNum)).Type = ITEM_TYPE_CURRENCY Then
+    If Item(GetPlayerInvItemNum(index, invNum)).Type = ItemTypeCurrency Then
         If amount < 1 Or amount > GetPlayerInvItemValue(index, invNum) Then Exit Sub
     End If
     
@@ -1053,7 +1053,7 @@ Sub HandleMapRespawn(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr 
     Dim i As Long
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -1086,7 +1086,7 @@ Sub HandleMapReport(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     Dim tMapEnd As Long
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -1164,7 +1164,7 @@ Sub HandleBanList(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As 
     Dim Name As String
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -1191,7 +1191,7 @@ Sub HandleBanDestroy(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr 
     Dim F As Long
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_CREATOR Then
+    If GetPlayerAccess(index) < RankAdministrator Then
         Exit Sub
     End If
 
@@ -1217,7 +1217,7 @@ Sub HandleBanPlayer(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -1250,7 +1250,7 @@ Sub HandleRequestEditMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartA
     Dim Buffer As clsBuffer
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -1267,7 +1267,7 @@ Sub HandleRequestEditItem(ByVal index As Long, ByRef Data() As Byte, ByVal Start
     Dim Buffer As clsBuffer
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1289,7 +1289,7 @@ Sub HandleSaveItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1319,7 +1319,7 @@ Sub HandleRequestEditAnimation(ByVal index As Long, ByRef Data() As Byte, ByVal 
     Dim Buffer As clsBuffer
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1341,7 +1341,7 @@ Sub HandleSaveAnimation(ByVal index As Long, ByRef Data() As Byte, ByVal StartAd
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1371,7 +1371,7 @@ Sub HandleRequestEditNpc(ByVal index As Long, ByRef Data() As Byte, ByVal StartA
     Dim Buffer As clsBuffer
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1391,7 +1391,7 @@ Private Sub HandleSaveNpc(ByVal index As Long, ByRef Data() As Byte, ByVal Start
     Dim NPCData() As Byte
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1421,7 +1421,7 @@ Sub HandleRequestEditResource(ByVal index As Long, ByRef Data() As Byte, ByVal S
     Dim Buffer As clsBuffer
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1441,7 +1441,7 @@ Private Sub HandleSaveResource(ByVal index As Long, ByRef Data() As Byte, ByVal 
     Dim ResourceData() As Byte
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1471,7 +1471,7 @@ Sub HandleRequestEditShop(ByVal index As Long, ByRef Data() As Byte, ByVal Start
     Dim Buffer As clsBuffer
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1494,7 +1494,7 @@ Sub HandleSaveShop(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1524,7 +1524,7 @@ Sub HandleRequestEditspell(ByVal index As Long, ByRef Data() As Byte, ByVal Star
     Dim Buffer As clsBuffer
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1544,7 +1544,7 @@ Sub HandleSaveSpell(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     Dim SpellData() As Byte
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(index) < RankDeveloper Then
         Exit Sub
     End If
 
@@ -1578,7 +1578,7 @@ Sub HandleSetAccess(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_CREATOR Then
+    If GetPlayerAccess(index) < RankAdministrator Then
         Exit Sub
     End If
 
@@ -1633,7 +1633,7 @@ Sub HandleSetMotd(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As 
     Buffer.WriteBytes Data()
 
     ' Prevent hacking
-    If GetPlayerAccess(index) < ADMIN_MAPPER Then
+    If GetPlayerAccess(index) < RankMapper Then
         Exit Sub
     End If
 
@@ -1671,14 +1671,14 @@ Sub HandleSearch(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As L
                 If GetPlayerX(i) = x Then
                     If GetPlayerY(i) = y Then
                         ' Change target
-                        If TempPlayer(index).targetType = TARGET_TYPE_PLAYER And TempPlayer(index).target = i Then
+                        If TempPlayer(index).targetType = TargetTypePlayer And TempPlayer(index).target = i Then
                             TempPlayer(index).target = 0
-                            TempPlayer(index).targetType = TARGET_TYPE_NONE
+                            TempPlayer(index).targetType = TargetTypeNone
                             ' send target to player
                             SendTarget index
                         Else
                             TempPlayer(index).target = i
-                            TempPlayer(index).targetType = TARGET_TYPE_PLAYER
+                            TempPlayer(index).targetType = TargetTypePlayer
                             ' send target to player
                             SendTarget index
                         End If
@@ -1694,16 +1694,16 @@ Sub HandleSearch(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As L
         If MapNpc(GetPlayerMap(index)).Npc(i).Num > 0 Then
             If MapNpc(GetPlayerMap(index)).Npc(i).x = x Then
                 If MapNpc(GetPlayerMap(index)).Npc(i).y = y Then
-                    If TempPlayer(index).target = i And TempPlayer(index).targetType = TARGET_TYPE_NPC Then
+                    If TempPlayer(index).target = i And TempPlayer(index).targetType = TargetTypeNPC Then
                         ' Change target
                         TempPlayer(index).target = 0
-                        TempPlayer(index).targetType = TARGET_TYPE_NONE
+                        TempPlayer(index).targetType = TargetTypeNone
                         ' send target to player
                         SendTarget index
                     Else
                         ' Change target
                         TempPlayer(index).target = i
-                        TempPlayer(index).targetType = TARGET_TYPE_NPC
+                        TempPlayer(index).targetType = TargetTypeNPC
                         ' send target to player
                         SendTarget index
                         Exit Sub
@@ -1849,7 +1849,7 @@ Sub HandleSpawnItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     tmpItem = Buffer.ReadLong
     tmpAmount = Buffer.ReadLong
         
-    If GetPlayerAccess(index) < ADMIN_CREATOR Then Exit Sub
+    If GetPlayerAccess(index) < RankAdministrator Then Exit Sub
     
     SpawnItem tmpItem, tmpAmount, GetPlayerMap(index), GetPlayerX(index), GetPlayerY(index), GetPlayerName(index)
     Set Buffer = Nothing
@@ -2059,7 +2059,7 @@ Sub HandleAdminWarp(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
     x = Buffer.ReadLong
     y = Buffer.ReadLong
     
-    If GetPlayerAccess(index) >= ADMIN_MAPPER Then
+    If GetPlayerAccess(index) >= RankMapper Then
         'PlayerWarp index, GetPlayerMap(index), x, y
         SetPlayerX index, x
         SetPlayerY index, y
@@ -2072,7 +2072,7 @@ End Sub
 Sub HandleTradeRequest(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim tradeTarget As Long, sX As Long, sY As Long, tX As Long, tY As Long
     ' can't trade npcs
-    If TempPlayer(index).targetType <> TARGET_TYPE_PLAYER Then Exit Sub
+    If TempPlayer(index).targetType <> TargetTypePlayer Then Exit Sub
 
     ' find the target
     tradeTarget = TempPlayer(index).target
@@ -2282,7 +2282,7 @@ Sub HandleTradeItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr A
         Exit Sub
     End If
 
-    If Item(itemnum).Type = ITEM_TYPE_CURRENCY Then
+    If Item(itemnum).Type = ItemTypeCurrency Then
         ' check if already offering same currency item
         For i = 1 To MAX_INV
             If TempPlayer(index).TradeOffer(i).Num = invSlot Then
@@ -2430,7 +2430,7 @@ End Sub
 
 Sub HandlePartyRequest(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     ' make sure it's a valid target
-    If TempPlayer(index).targetType <> TARGET_TYPE_PLAYER Then Exit Sub
+    If TempPlayer(index).targetType <> TargetTypePlayer Then Exit Sub
     If TempPlayer(index).target = index Then Exit Sub
     
     ' make sure they're connected and on the same map

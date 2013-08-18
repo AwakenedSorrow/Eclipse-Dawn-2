@@ -995,21 +995,21 @@ Private Sub cmbType_Click()
 
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
 
-    If (cmbType.ListIndex >= ITEM_TYPE_WEAPON) And (cmbType.ListIndex <= ITEM_TYPE_SHIELD) Then
+    If (cmbType.ListIndex >= ItemTypeWeapon) And (cmbType.ListIndex <= ItemTypeShield) Then
         fraEquipment.Visible = True
         'scrlDamage_Change
     Else
         fraEquipment.Visible = False
     End If
 
-    If cmbType.ListIndex = ITEM_TYPE_CONSUME Then
+    If cmbType.ListIndex = ItemTypeConsume Then
         fraVitals.Visible = True
         'scrlVitalMod_Change
     Else
         fraVitals.Visible = False
     End If
 
-    If (cmbType.ListIndex = ITEM_TYPE_SPELL) Then
+    If (cmbType.ListIndex = ItemTypeSpell) Then
         fraSpell.Visible = True
     Else
         fraSpell.Visible = False

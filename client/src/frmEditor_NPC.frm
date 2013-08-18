@@ -652,12 +652,12 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlStat_Change(Index As Integer)
+Private Sub scrlStat_Change(index As Integer)
 Dim prefix As String
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    Select Case Index
+    Select Case index
         Case 1
             prefix = "Str: "
         Case 2
@@ -669,8 +669,8 @@ Dim prefix As String
         Case 5
             prefix = "Will: "
     End Select
-    lblStat(Index).Caption = prefix & scrlStat(Index).value
-    Npc(EditorIndex).Stat(Index) = scrlStat(Index).value
+    lblStat(index).Caption = prefix & scrlStat(index).value
+    Npc(EditorIndex).Stat(index) = scrlStat(index).value
     
     ' Error handler
     Exit Sub

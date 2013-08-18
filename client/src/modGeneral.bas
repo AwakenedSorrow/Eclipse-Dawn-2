@@ -210,7 +210,7 @@ Public Sub MenuState(ByVal state As Long)
     frmLoad.Visible = True
 
     Select Case state
-        Case MENU_STATE_ADDCHAR
+        Case MenuStateAddChar
             frmMenu.Visible = False
             frmMenu.picCredits.Visible = False
             frmMenu.picLogin.Visible = False
@@ -221,13 +221,13 @@ Public Sub MenuState(ByVal state As Long)
                 Call SetStatus("Connected, sending character addition data...")
 
                 If frmMenu.optMale.value Then
-                    Call SendAddChar(frmMenu.txtCName, SEX_MALE, frmMenu.cmbClass.ListIndex + 1, newCharSprite)
+                    Call SendAddChar(frmMenu.txtCName, SexMale, frmMenu.cmbClass.ListIndex + 1, newCharSprite)
                 Else
-                    Call SendAddChar(frmMenu.txtCName, SEX_FEMALE, frmMenu.cmbClass.ListIndex + 1, newCharSprite)
+                    Call SendAddChar(frmMenu.txtCName, SexFemale, frmMenu.cmbClass.ListIndex + 1, newCharSprite)
                 End If
             End If
             
-        Case MENU_STATE_NEWACCOUNT
+        Case MenuStateNewAccount
             frmMenu.Visible = False
             frmMenu.picCredits.Visible = False
             frmMenu.picLogin.Visible = False
@@ -239,7 +239,7 @@ Public Sub MenuState(ByVal state As Long)
                 Call SendNewAccount(frmMenu.txtRUser.text, frmMenu.txtRPass.text)
             End If
 
-        Case MENU_STATE_LOGIN
+        Case MenuStateLogin
             frmMenu.Visible = False
             frmMenu.picCredits.Visible = False
             frmMenu.picLogin.Visible = False

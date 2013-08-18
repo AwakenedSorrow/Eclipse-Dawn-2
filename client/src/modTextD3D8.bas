@@ -1,26 +1,6 @@
 Attribute VB_Name = "modText"
 Option Explicit
 
-' Text color pointers
-Public Const Black As Byte = 0
-Public Const Blue As Byte = 1
-Public Const Green As Byte = 2
-Public Const Cyan As Byte = 3
-Public Const Red As Byte = 4
-Public Const Magenta As Byte = 5
-Public Const Brown As Byte = 6
-Public Const Grey As Byte = 7
-Public Const DarkGrey As Byte = 8
-Public Const BrightBlue As Byte = 9
-Public Const BrightGreen As Byte = 10
-Public Const BrightCyan  As Byte = 11
-Public Const BrightRed As Byte = 12
-Public Const Pink As Byte = 13
-Public Const Yellow As Byte = 14
-Public Const White As Byte = 15
-Public Const DarkBrown As Byte = 16
-Public Const Orange As Byte = 17
-
 Private Type CharVA
     Vertex(0 To 3) As TLVERTEX
 End Type
@@ -36,8 +16,8 @@ Private Type VFH
 End Type
 
 Public Type POINTAPI
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
 End Type
 
 Private Type CustomFont
@@ -52,7 +32,7 @@ End Type
 
 Public MainFont As CustomFont
 
-Public Sub RenderText(ByRef UseFont As CustomFont, Text As String, x As Long, y As Long, color As Long, Optional Alpha As Byte = 255)
+Public Sub RenderText(ByRef UseFont As CustomFont, text As String, X As Long, Y As Long, color As Long, Optional Alpha As Byte = 255)
 Dim TempVA(0 To 3) As TLVERTEX
 Dim TempStr() As String
 Dim Count As Integer
@@ -70,10 +50,10 @@ Dim yOffset As Single
     color = DX8Colour(color, Alpha)
 
     ' Check for valid text to render
-    If LenB(Text) = 0 Then Exit Sub
+    If LenB(text) = 0 Then Exit Sub
     
     ' Get the text into arrays (split by vbCrLf)
-    TempStr = Split(Text, vbCrLf)
+    TempStr = Split(text, vbCrLf)
     
     ' Set the temp color (or else the first character has no color)
     TempColor = color
@@ -96,14 +76,14 @@ Dim yOffset As Single
                 Call CopyMemory(TempVA(0), UseFont.HeaderInfo.CharVA(Ascii(j - 1)).Vertex(0), FVF_Size * 4)
                 
                 ' Set up the verticies
-                TempVA(0).x = x + Count
-                TempVA(0).y = y + yOffset
-                TempVA(1).x = TempVA(1).x + x + Count
-                TempVA(1).y = TempVA(0).y
-                TempVA(2).x = TempVA(0).x
-                TempVA(2).y = TempVA(2).y + TempVA(0).y
-                TempVA(3).x = TempVA(1).x
-                TempVA(3).y = TempVA(2).y
+                TempVA(0).X = X + Count
+                TempVA(0).Y = Y + yOffset
+                TempVA(1).X = TempVA(1).X + X + Count
+                TempVA(1).Y = TempVA(0).Y
+                TempVA(2).X = TempVA(0).X
+                TempVA(2).Y = TempVA(2).Y + TempVA(0).Y
+                TempVA(3).X = TempVA(1).X
+                TempVA(3).Y = TempVA(2).Y
                 
                 ' Set the colors
                 TempVA(0).color = TempColor
@@ -136,20 +116,20 @@ Public Sub EngineInitFontTextures()
     Set MainFont.Texture = D3DX8.CreateTextureFromFileEx(D3DDevice8, App.Path & GFX_PATH & "fonts\" & FONT_NAME & ".png", 512, 512, 0, 0, _
     D3DFMT_UNKNOWN, D3DPOOL_MANAGED, D3DX_FILTER_POINT, D3DX_FILTER_POINT, RGB(255, 0, 255), ByVal 0, ByVal 0)
     
-    MainFont.TextureSize.x = 512
-    MainFont.TextureSize.y = 512
+    MainFont.TextureSize.X = 512
+    MainFont.TextureSize.Y = 512
     
     ' Init the fonts
     InitFonts
 End Sub
 
-Public Sub LoadFontHeader(ByRef UseFont As CustomFont, fileName As String)
+Public Sub LoadFontHeader(ByRef UseFont As CustomFont, FileName As String)
 Dim F As Long, i As Long
 Dim Row As Single, u As Single, v As Single
 
     ' Load the header information
     F = FreeFile
-    Open App.Path & GFX_PATH & "fonts\" & fileName For Binary As #F
+    Open App.Path & GFX_PATH & "fonts\" & FileName For Binary As #F
         Get #F, , UseFont.HeaderInfo
     Close #F
     
@@ -172,29 +152,29 @@ Dim Row As Single, u As Single, v As Single
             .Vertex(0).RHW = 1
             .Vertex(0).tu = u
             .Vertex(0).tv = v
-            .Vertex(0).x = 0
-            .Vertex(0).y = 0
+            .Vertex(0).X = 0
+            .Vertex(0).Y = 0
             .Vertex(0).z = 0
             .Vertex(1).color = D3DColorARGB(255, 0, 0, 0)
             .Vertex(1).RHW = 1
             .Vertex(1).tu = u + UseFont.ColFactor
             .Vertex(1).tv = v
-            .Vertex(1).x = UseFont.HeaderInfo.CellWidth
-            .Vertex(1).y = 0
+            .Vertex(1).X = UseFont.HeaderInfo.CellWidth
+            .Vertex(1).Y = 0
             .Vertex(1).z = 0
             .Vertex(2).color = D3DColorARGB(255, 0, 0, 0)
             .Vertex(2).RHW = 1
             .Vertex(2).tu = u
             .Vertex(2).tv = v + UseFont.RowFactor
-            .Vertex(2).x = 0
-            .Vertex(2).y = UseFont.HeaderInfo.CellHeight
+            .Vertex(2).X = 0
+            .Vertex(2).Y = UseFont.HeaderInfo.CellHeight
             .Vertex(2).z = 0
             .Vertex(3).color = D3DColorARGB(255, 0, 0, 0)
             .Vertex(3).RHW = 1
             .Vertex(3).tu = u + UseFont.ColFactor
             .Vertex(3).tv = v + UseFont.RowFactor
-            .Vertex(3).x = UseFont.HeaderInfo.CellWidth
-            .Vertex(3).y = UseFont.HeaderInfo.CellHeight
+            .Vertex(3).X = UseFont.HeaderInfo.CellWidth
+            .Vertex(3).Y = UseFont.HeaderInfo.CellHeight
             .Vertex(3).z = 0
         End With
     Next
@@ -263,15 +243,15 @@ Public Function DX8Colour(ByVal ColourNum As Long, ByVal Alpha As Long) As Long
     End Select
 End Function
 
-Public Function GetTextWidth(ByRef UseFont As CustomFont, ByVal Text As String) As Integer
+Public Function GetTextWidth(ByRef UseFont As CustomFont, ByVal text As String) As Integer
 Dim i As Long
 
     ' Make sure we have text
-    If LenB(Text) = 0 Then Exit Function
+    If LenB(text) = 0 Then Exit Function
     
     ' Loop through the text
-    For i = 1 To Len(Text)
-        GetTextWidth = GetTextWidth + UseFont.HeaderInfo.CharWidth(Asc(Mid$(Text, i, 1)))
+    For i = 1 To Len(text)
+        GetTextWidth = GetTextWidth + UseFont.HeaderInfo.CharWidth(Asc(Mid$(text, i, 1)))
     Next
 End Function
 
@@ -282,10 +262,10 @@ Dim S As String
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     S = vbNewLine & Msg
-    frmMain.txtChat.SelStart = Len(frmMain.txtChat.Text)
+    frmMain.txtChat.SelStart = Len(frmMain.txtChat.text)
     frmMain.txtChat.SelColor = QBColor(color)
     frmMain.txtChat.SelText = S
-    frmMain.txtChat.SelStart = Len(frmMain.txtChat.Text) - 1
+    frmMain.txtChat.SelStart = Len(frmMain.txtChat.text) - 1
     
     ' Error handler
     Exit Sub
@@ -296,49 +276,49 @@ errorhandler:
 End Sub
 
 Public Function DrawMapAttributes()
-    Dim x As Long
-    Dim y As Long
+    Dim X As Long
+    Dim Y As Long
     Dim tx As Long
     Dim ty As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If frmEditor_Map.optAttribs.Value Then
-        For x = TileView.Left To TileView.Right
-            For y = TileView.Top To TileView.bottom
-                If IsValidMapPoint(x, y) Then
-                    With Map.Tile(x, y)
-                        tx = ((ConvertMapX(x * PIC_X)) - 4) + (PIC_X * 0.5)
-                        ty = ((ConvertMapY(y * PIC_Y)) - 7) + (PIC_Y * 0.5)
+    If frmEditor_Map.optAttribs.value Then
+        For X = TileView.Left To TileView.Right
+            For Y = TileView.top To TileView.bottom
+                If IsValidMapPoint(X, Y) Then
+                    With Map.Tile(X, Y)
+                        tx = ((ConvertMapX(X * PIC_X)) - 4) + (PIC_X * 0.5)
+                        ty = ((ConvertMapY(Y * PIC_Y)) - 7) + (PIC_Y * 0.5)
                         Select Case .Type
-                            Case TILE_TYPE_BLOCKED
+                            Case TileTypeBlocked
                                 RenderText MainFont, "B", tx, ty, BrightRed, 200
-                            Case TILE_TYPE_WARP
+                            Case TileTypeWarp
                                 RenderText MainFont, "W", tx, ty, BrightBlue, 200
-                            Case TILE_TYPE_ITEM
+                            Case TileTypeItem
                                 RenderText MainFont, "I", tx, ty, White, 200
-                            Case TILE_TYPE_NPCAVOID
+                            Case TileTypeNPCAvoid
                                 RenderText MainFont, "Na", tx, ty, White, 200
-                            Case TILE_TYPE_KEY
+                            Case TileTypeKey
                                 RenderText MainFont, "K", tx, ty, White, 200
-                            Case TILE_TYPE_KEYOPEN
+                            Case TileTypeKeyOpen
                                 RenderText MainFont, "O", tx, ty, White, 200
-                            Case TILE_TYPE_RESOURCE
+                            Case TileTypeResource
                                 RenderText MainFont, "R", tx, ty, Green, 200
-                            Case TILE_TYPE_DOOR
+                            Case TileTypeDoor
                                 RenderText MainFont, "D", tx, ty, Brown, 200
-                            Case TILE_TYPE_NPCSPAWN
+                            Case TileTypeNPCSpawn
                                 RenderText MainFont, "Ns", tx, ty, Yellow, 200
-                            Case TILE_TYPE_SHOP
+                            Case TileTypeShop
                                 RenderText MainFont, "Sh", tx, ty, BrightBlue, 200
-                            Case TILE_TYPE_BANK
+                            Case TileTypeBank
                                 RenderText MainFont, "Ba", tx, ty, Blue, 200
-                            Case TILE_TYPE_HEAL
+                            Case TileTypeHeal
                                 RenderText MainFont, "H", tx, ty, BrightGreen, 200
-                            Case TILE_TYPE_TRAP
+                            Case TileTypeTrap
                                 RenderText MainFont, "T", tx, ty, BrightRed, 200
-                            Case TILE_TYPE_SLIDE
+                            Case TileTypeSlide
                                 RenderText MainFont, "Sl", tx, ty, BrightCyan, 200
                         End Select
                     End With
@@ -355,66 +335,66 @@ errorhandler:
     Exit Function
 End Function
 
-Sub DrawActionMsg(ByVal Index As Long)
-    Dim x As Long, y As Long, i As Long, Time As Long, color As Long
+Sub DrawActionMsg(ByVal index As Long)
+    Dim X As Long, Y As Long, i As Long, time As Long, color As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' does it exist
-    If ActionMsg(Index).Created = 0 Then Exit Sub
+    If ActionMsg(index).Created = 0 Then Exit Sub
 
     ' how long we want each message to appear
-    Select Case ActionMsg(Index).Type
-        Case ACTIONMSG_STATIC
-            Time = 1500
+    Select Case ActionMsg(index).Type
+        Case ActionMsgStatic
+            time = 1500
 
-            If ActionMsg(Index).y > 0 Then
-                x = ActionMsg(Index).x + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
-                y = ActionMsg(Index).y - Int(PIC_Y \ 2) - 2
+            If ActionMsg(index).Y > 0 Then
+                X = ActionMsg(index).X + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(index).message)) \ 2) * 8)
+                Y = ActionMsg(index).Y - Int(PIC_Y \ 2) - 2
             Else
-                x = ActionMsg(Index).x + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
-                y = ActionMsg(Index).y - Int(PIC_Y \ 2) + 18
+                X = ActionMsg(index).X + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(index).message)) \ 2) * 8)
+                Y = ActionMsg(index).Y - Int(PIC_Y \ 2) + 18
             End If
 
-        Case ACTIONMSG_SCROLL
-            Time = 1500
+        Case ActionMsgScroll
+            time = 1500
         
-            If ActionMsg(Index).y > 0 Then
-                x = ActionMsg(Index).x + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
-                y = ActionMsg(Index).y - Int(PIC_Y \ 2) - 2 - (ActionMsg(Index).Scroll * 0.6)
-                ActionMsg(Index).Scroll = ActionMsg(Index).Scroll + 1
+            If ActionMsg(index).Y > 0 Then
+                X = ActionMsg(index).X + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(index).message)) \ 2) * 8)
+                Y = ActionMsg(index).Y - Int(PIC_Y \ 2) - 2 - (ActionMsg(index).Scroll * 0.6)
+                ActionMsg(index).Scroll = ActionMsg(index).Scroll + 1
             Else
-                x = ActionMsg(Index).x + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
-                y = ActionMsg(Index).y - Int(PIC_Y \ 2) + 18 + (ActionMsg(Index).Scroll * 0.6)
-                ActionMsg(Index).Scroll = ActionMsg(Index).Scroll + 1
+                X = ActionMsg(index).X + Int(PIC_X \ 2) - ((Len(Trim$(ActionMsg(index).message)) \ 2) * 8)
+                Y = ActionMsg(index).Y - Int(PIC_Y \ 2) + 18 + (ActionMsg(index).Scroll * 0.6)
+                ActionMsg(index).Scroll = ActionMsg(index).Scroll + 1
             End If
 
-        Case ACTIONMSG_SCREEN
-            Time = 3000
+        Case ActionMsgScreen
+            time = 3000
 
             ' This will kill any action screen messages that there in the system
             For i = MAX_BYTE To 1 Step -1
-                If ActionMsg(i).Type = ACTIONMSG_SCREEN Then
-                    If i <> Index Then
-                        ClearActionMsg Index
-                        Index = i
+                If ActionMsg(i).Type = ActionMsgScreen Then
+                    If i <> index Then
+                        ClearActionMsg index
+                        index = i
                     End If
                 End If
             Next
-            x = (frmMain.picScreen.Width \ 2) - ((Len(Trim$(ActionMsg(Index).message)) \ 2) * 8)
-            y = 425
+            X = (frmMain.picScreen.Width \ 2) - ((Len(Trim$(ActionMsg(index).message)) \ 2) * 8)
+            Y = 425
 
     End Select
     
-    x = ConvertMapX(x)
-    y = ConvertMapY(y)
+    X = ConvertMapX(X)
+    Y = ConvertMapY(Y)
 
-    If GetTickCount < ActionMsg(Index).Created + Time Then
-        color = ActionMsg(Index).color
-        RenderText MainFont, ActionMsg(Index).message, x, y, color
+    If GetTickCount < ActionMsg(index).Created + time Then
+        color = ActionMsg(index).color
+        RenderText MainFont, ActionMsg(index).message, X, Y, color
     Else
-        ClearActionMsg Index
+        ClearActionMsg index
     End If
 
     ' Error handler
@@ -425,19 +405,19 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub DrawPlayerName(ByVal Index As Long)
+Public Sub DrawPlayerName(ByVal index As Long)
 Dim TextX As Long
 Dim TextY As Long
 Dim color As Long
-Dim Name As String
+Dim name As String
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' Check access level
-    If GetPlayerPK(Index) = NO Then
+    If GetPlayerPK(index) = NO Then
 
-        Select Case GetPlayerAccess(Index)
+        Select Case GetPlayerAccess(index)
             Case 0
                 color = Orange
             Case 1
@@ -454,18 +434,18 @@ Dim Name As String
         color = BrightRed
     End If
 
-    Name = Trim$(Player(Index).Name)
+    name = Trim$(Player(index).name)
     ' calc pos
-    TextX = ConvertMapX(GetPlayerX(Index) * PIC_X) + Player(Index).XOffset + (PIC_X \ 2) - (GetTextWidth(MainFont, (Trim$(Name))) / 2)
-    If GetPlayerSprite(Index) < 1 Or GetPlayerSprite(Index) > NumCharacters Then
-        TextY = ConvertMapY(GetPlayerY(Index) * PIC_Y) + Player(Index).yOffset - 16
+    TextX = ConvertMapX(GetPlayerX(index) * PIC_X) + Player(index).XOffset + (PIC_X \ 2) - (GetTextWidth(MainFont, (Trim$(name))) / 2)
+    If GetPlayerSprite(index) < 1 Or GetPlayerSprite(index) > NumCharacters Then
+        TextY = ConvertMapY(GetPlayerY(index) * PIC_Y) + Player(index).yOffset - 16
     Else
         ' Determine location for text
-        TextY = ConvertMapY(GetPlayerY(Index) * PIC_Y) + Player(Index).yOffset - (D3DT_TEXTURE(Tex_Character(GetPlayerSprite(Index))).Height / 4) + 16
+        TextY = ConvertMapY(GetPlayerY(index) * PIC_Y) + Player(index).yOffset - (D3DT_TEXTURE(Tex_Character(GetPlayerSprite(index))).Height / 4) + 16
     End If
 
     ' Draw name
-    RenderText MainFont, Name, TextX, TextY, color
+    RenderText MainFont, name, TextX, TextY, color
     
     ' Error handler
     Exit Sub
@@ -475,40 +455,40 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub DrawNpcName(ByVal Index As Long)
+Public Sub DrawNpcName(ByVal index As Long)
 Dim TextX As Long
 Dim TextY As Long
 Dim color As Long
-Dim Name As String
+Dim name As String
 Dim npcNum As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    npcNum = MapNpc(Index).num
+    npcNum = MapNpc(index).num
 
     Select Case Npc(npcNum).Behaviour
-        Case NPC_BEHAVIOUR_ATTACKONSIGHT
+        Case NPCTypeAggressive
             color = BrightRed
-        Case NPC_BEHAVIOUR_ATTACKWHENATTACKED
+        Case NPCTypeNeutral
             color = Yellow
-        Case NPC_BEHAVIOUR_GUARD
+        Case NPCTypeProtectAllies
             color = Grey
         Case Else
             color = BrightGreen
     End Select
 
-    Name = Trim$(Npc(npcNum).Name)
-    TextX = ConvertMapX(MapNpc(Index).x * PIC_X) + MapNpc(Index).XOffset + (PIC_X \ 2) - (GetTextWidth(MainFont, (Trim$(Name))) / 2)
+    name = Trim$(Npc(npcNum).name)
+    TextX = ConvertMapX(MapNpc(index).X * PIC_X) + MapNpc(index).XOffset + (PIC_X \ 2) - (GetTextWidth(MainFont, (Trim$(name))) / 2)
     If Npc(npcNum).Sprite < 1 Or Npc(npcNum).Sprite > NumCharacters Then
-        TextY = ConvertMapY(MapNpc(Index).y * PIC_Y) + MapNpc(Index).yOffset - 16
+        TextY = ConvertMapY(MapNpc(index).Y * PIC_Y) + MapNpc(index).yOffset - 16
     Else
         ' Determine location for text
-        TextY = ConvertMapY(MapNpc(Index).y * PIC_Y) + MapNpc(Index).yOffset - (D3DT_TEXTURE(Tex_Character(Npc(npcNum).Sprite)).Height / 4) + 16
+        TextY = ConvertMapY(MapNpc(index).Y * PIC_Y) + MapNpc(index).yOffset - (D3DT_TEXTURE(Tex_Character(Npc(npcNum).Sprite)).Height / 4) + 16
     End If
 
     ' Draw name
-    RenderText MainFont, Name, TextX, TextY, color
+    RenderText MainFont, name, TextX, TextY, color
     
     ' Error handler
     Exit Sub
@@ -518,10 +498,10 @@ errorhandler:
     Exit Sub
 End Sub
 
-Function WordWrap(ByVal Text As String, Optional ByVal MaxLineLen As Integer = 70)
+Function WordWrap(ByVal text As String, Optional ByVal MaxLineLen As Integer = 70)
 Dim i As Integer
-For i = 1 To Len(Text) / MaxLineLen
-Text = Mid(Text, 1, MaxLineLen * i - 1) & Replace(Text, " ", vbCrLf, MaxLineLen * i, 1, vbTextCompare)
+For i = 1 To Len(text) / MaxLineLen
+text = Mid(text, 1, MaxLineLen * i - 1) & Replace(text, " ", vbCrLf, MaxLineLen * i, 1, vbTextCompare)
 Next i
-WordWrap = Text
+WordWrap = text
 End Function

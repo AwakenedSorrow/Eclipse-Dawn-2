@@ -286,13 +286,13 @@ Dim attackspeed As Long, Red As Byte, Green As Byte, Blue As Byte, Alpha As Byte
     Else
         ' Apparently not, so we'll be using the regular movement animations!
         Select Case GetPlayerDir(index)
-            Case DIR_UP
+            Case North
                 If (Player(index).yOffset > 8) Then SpriteFrame = Player(index).Step
-            Case DIR_DOWN
+            Case South
                 If (Player(index).yOffset < -8) Then SpriteFrame = Player(index).Step
-            Case DIR_LEFT
+            Case West
                 If (Player(index).XOffset > 8) Then SpriteFrame = Player(index).Step
-            Case DIR_RIGHT
+            Case East
                 If (Player(index).XOffset < -8) Then SpriteFrame = Player(index).Step
         End Select
     End If
@@ -309,13 +309,13 @@ Dim attackspeed As Long, Red As Byte, Green As Byte, Blue As Byte, Alpha As Byte
     ' On your spritesheet. Please change these if your spritesheet's in a different order from the standard
     ' RMXP format.
     Select Case GetPlayerDir(index)
-        Case DIR_UP
+        Case North
             SpriteDir = 3
-        Case DIR_RIGHT
+        Case East
             SpriteDir = 2
-        Case DIR_DOWN
+        Case South
             SpriteDir = 0
-        Case DIR_LEFT
+        Case West
             SpriteDir = 1
     End Select
 
@@ -506,9 +506,9 @@ Dim AnimFrame As Long
 
     ' Let's change the X/Y offset if the Animation is locked onto a target so it actually displays on
     ' top of it.
-    If AnimInstance(index).LockType > TARGET_TYPE_NONE Then ' if <> none
+    If AnimInstance(index).LockType > TargetTypeNone Then ' if <> none
         ' Locked On to a Player.
-        If AnimInstance(index).LockType = TARGET_TYPE_PLAYER Then
+        If AnimInstance(index).LockType = TargetTypePlayer Then
             ' quick save the index
             lockindex = AnimInstance(index).lockindex
             ' check if is ingame
@@ -520,7 +520,7 @@ Dim AnimFrame As Long
                     Y = (GetPlayerY(lockindex) * PIC_Y) + 16 - (Height / 2) + Player(lockindex).yOffset
                 End If
             End If
-        ElseIf AnimInstance(index).LockType = TARGET_TYPE_NPC Then
+        ElseIf AnimInstance(index).LockType = TargetTypeNPC Then
             ' quick save the index
             lockindex = AnimInstance(index).lockindex
             ' check if NPC exists
@@ -589,13 +589,13 @@ Dim attackspeed As Long
     Else
         ' If not attacking, walk normally
         Select Case MapNpc(index).Dir
-            Case DIR_UP
+            Case North
                 If (MapNpc(index).yOffset > 8) Then SpriteAnim = MapNpc(index).Step
-            Case DIR_DOWN
+            Case South
                 If (MapNpc(index).yOffset < -8) Then SpriteAnim = MapNpc(index).Step
-            Case DIR_LEFT
+            Case West
                 If (MapNpc(index).XOffset > 8) Then SpriteAnim = MapNpc(index).Step
-            Case DIR_RIGHT
+            Case East
                 If (MapNpc(index).XOffset < -8) Then SpriteAnim = MapNpc(index).Step
         End Select
     End If
@@ -610,13 +610,13 @@ Dim attackspeed As Long
 
     ' Set the Sprite Direction
     Select Case MapNpc(index).Dir
-        Case DIR_UP
+        Case North
             SpriteDir = 3
-        Case DIR_RIGHT
+        Case East
             SpriteDir = 2
-        Case DIR_DOWN
+        Case South
             SpriteDir = 0
-        Case DIR_LEFT
+        Case West
             SpriteDir = 1
     End Select
 
@@ -886,9 +886,9 @@ Public Sub RenderHoverAndTarget()
 
     ' Handle the rendering of the target texture if one exists.
     If myTarget > 0 Then
-        If myTargetType = TARGET_TYPE_PLAYER Then ' If the target is a player.
+        If myTargetType = TargetTypePlayer Then ' If the target is a player.
             Call RenderTarget((Player(myTarget).X * 32) + Player(myTarget).XOffset, (Player(myTarget).Y * 32) + Player(myTarget).yOffset)
-        ElseIf myTargetType = TARGET_TYPE_NPC Then ' If the target is an NPC.
+        ElseIf myTargetType = TargetTypeNPC Then ' If the target is an NPC.
             Call RenderTarget((MapNpc(myTarget).X * 32) + MapNpc(myTarget).XOffset, (MapNpc(myTarget).Y * 32) + MapNpc(myTarget).yOffset)
         End If
     End If
@@ -899,10 +899,10 @@ Public Sub RenderHoverAndTarget()
         If IsPlaying(i) Then
             If Player(i).Map = Player(MyIndex).Map Then
                 If CurX = Player(i).X And CurY = Player(i).Y Then ' Is our cursor over something?
-                    If myTargetType = TARGET_TYPE_PLAYER And myTarget = i Then
+                    If myTargetType = TargetTypePlayer And myTarget = i Then
                         'We're already targetting this player, so no point in rendering this as well.
                     Else
-                        Call RenderHover(TARGET_TYPE_PLAYER, i, (Player(i).X * 32) + Player(i).XOffset, (Player(i).Y * 32) + Player(i).yOffset)
+                        Call RenderHover(TargetTypePlayer, i, (Player(i).X * 32) + Player(i).XOffset, (Player(i).Y * 32) + Player(i).yOffset)
                     End If
                 End If
             End If
@@ -911,10 +911,10 @@ Public Sub RenderHoverAndTarget()
     For i = 1 To Npc_HighIndex 'NPCs
         If MapNpc(i).num > 0 Then
             If CurX = MapNpc(i).X And CurY = MapNpc(i).Y Then ' Is our cursor over something?
-                If myTargetType = TARGET_TYPE_NPC And myTarget = i Then
+                If myTargetType = TargetTypeNPC And myTarget = i Then
                     'We're already targetting this NPC, so no point in rendering this as well.
                 Else
-                    Call RenderHover(TARGET_TYPE_NPC, i, (MapNpc(i).X * 32) + MapNpc(i).XOffset, (MapNpc(i).Y * 32) + MapNpc(i).yOffset)
+                    Call RenderHover(TargetTypeNPC, i, (MapNpc(i).X * 32) + MapNpc(i).XOffset, (MapNpc(i).Y * 32) + MapNpc(i).yOffset)
                 End If
             End If
         End If

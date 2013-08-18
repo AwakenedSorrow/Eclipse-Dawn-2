@@ -981,7 +981,7 @@ Private Sub cmdShop_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    EditorShop = cmbShop.ListIndex
+    EditorShopNum = cmbShop.ListIndex
     picAttributes.Visible = False
     fraShop.Visible = False
     
@@ -1500,7 +1500,7 @@ Private Sub scrlMapItem_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
         
-    If Item(scrlMapItem.value).Type = ITEM_TYPE_CURRENCY Then
+    If Item(scrlMapItem.value).Type = ItemTypeCurrency Then
         scrlMapItemValue.Enabled = True
     Else
         scrlMapItemValue.value = 1
@@ -1678,13 +1678,13 @@ Private Sub scrlNpcDir_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     Select Case scrlNpcDir.value
-        Case DIR_DOWN
+        Case South
             lblNpcDir = "Direction: Down"
-        Case DIR_UP
+        Case North
             lblNpcDir = "Direction: Up"
-        Case DIR_LEFT
+        Case West
             lblNpcDir = "Direction: Left"
-        Case DIR_RIGHT
+        Case East
             lblNpcDir = "Direction: Right"
     End Select
     

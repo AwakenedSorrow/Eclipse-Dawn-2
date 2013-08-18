@@ -256,7 +256,7 @@ Sub AddChar(ByVal index As Long, ByVal Name As String, ByVal Sex As Byte, ByVal 
         Player(index).Sex = Sex
         Player(index).Class = ClassNum
         
-        If Player(index).Sex = SEX_MALE Then
+        If Player(index).Sex = SexMale Then
             Player(index).Sprite = Class(ClassNum).MaleSprite(Sprite)
         Else
             Player(index).Sprite = Class(ClassNum).FemaleSprite(Sprite)
@@ -268,11 +268,11 @@ Sub AddChar(ByVal index As Long, ByVal Name As String, ByVal Sex As Byte, ByVal 
             Player(index).Stat(n) = 0
         Next n
 
-        Player(index).Dir = DIR_DOWN
+        Player(index).Dir = South
         Player(index).Map = START_MAP
         Player(index).x = START_X
         Player(index).y = START_Y
-        Player(index).Dir = DIR_DOWN
+        Player(index).Dir = South
         Player(index).Vital(Vitals.HP) = GetPlayerMaxVital(index, Vitals.HP)
         Player(index).Vital(Vitals.MP) = GetPlayerMaxVital(index, Vitals.MP)
         

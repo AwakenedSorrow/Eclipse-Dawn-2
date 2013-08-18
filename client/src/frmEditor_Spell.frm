@@ -498,7 +498,7 @@ Private Sub chkAOE_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If chkAOE.Value = 0 Then
+    If chkAOE.value = 0 Then
         Spell(EditorIndex).IsAoE = False
     Else
         Spell(EditorIndex).IsAoE = True
@@ -550,7 +550,7 @@ Dim tmpIndex As Long
     
     tmpIndex = lstIndex.ListIndex
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Spell(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Spell(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     SpellEditorInit
@@ -609,12 +609,12 @@ Private Sub scrlAccess_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If scrlAccess.Value > 0 Then
-        lblAccess.Caption = "Access Required: " & scrlAccess.Value
+    If scrlAccess.value > 0 Then
+        lblAccess.Caption = "Access Required: " & scrlAccess.value
     Else
         lblAccess.Caption = "Access Required: None"
     End If
-    Spell(EditorIndex).AccessReq = scrlAccess.Value
+    Spell(EditorIndex).AccessReq = scrlAccess.value
     
     ' Error handler
     Exit Sub
@@ -628,12 +628,12 @@ Private Sub scrlAnim_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If scrlAnim.Value > 0 Then
-        lblAnim.Caption = "Animation: " & Trim$(Animation(scrlAnim.Value).Name)
+    If scrlAnim.value > 0 Then
+        lblAnim.Caption = "Animation: " & Trim$(Animation(scrlAnim.value).name)
     Else
         lblAnim.Caption = "Animation: None"
     End If
-    Spell(EditorIndex).SpellAnim = scrlAnim.Value
+    Spell(EditorIndex).SpellAnim = scrlAnim.value
     
     ' Error handler
     Exit Sub
@@ -647,12 +647,12 @@ Private Sub scrlAnimCast_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If scrlAnimCast.Value > 0 Then
-        lblAnimCast.Caption = "Cast Anim: " & Trim$(Animation(scrlAnimCast.Value).Name)
+    If scrlAnimCast.value > 0 Then
+        lblAnimCast.Caption = "Cast Anim: " & Trim$(Animation(scrlAnimCast.value).name)
     Else
         lblAnimCast.Caption = "Cast Anim: None"
     End If
-    Spell(EditorIndex).CastAnim = scrlAnimCast.Value
+    Spell(EditorIndex).CastAnim = scrlAnimCast.value
     
     ' Error handler
     Exit Sub
@@ -666,12 +666,12 @@ Private Sub scrlAOE_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If scrlAOE.Value > 0 Then
-        lblAOE.Caption = "AoE: " & scrlAOE.Value & " tiles."
+    If scrlAOE.value > 0 Then
+        lblAOE.Caption = "AoE: " & scrlAOE.value & " tiles."
     Else
         lblAOE.Caption = "AoE: Self-cast"
     End If
-    Spell(EditorIndex).AoE = scrlAOE.Value
+    Spell(EditorIndex).AoE = scrlAOE.value
     
     ' Error handler
     Exit Sub
@@ -685,8 +685,8 @@ Private Sub scrlCast_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    lblCast.Caption = "Casting Time: " & scrlCast.Value & "s"
-    Spell(EditorIndex).CastTime = scrlCast.Value
+    lblCast.Caption = "Casting Time: " & scrlCast.value & "s"
+    Spell(EditorIndex).CastTime = scrlCast.value
     
     ' Error handler
     Exit Sub
@@ -700,8 +700,8 @@ Private Sub scrlCool_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    lblCool.Caption = "Cooldown Time: " & scrlCool.Value & "s"
-    Spell(EditorIndex).CDTime = scrlCool.Value
+    lblCool.Caption = "Cooldown Time: " & scrlCool.value & "s"
+    Spell(EditorIndex).CDTime = scrlCool.value
     
     ' Error handler
     Exit Sub
@@ -716,18 +716,18 @@ Dim sDir As String
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    Select Case scrlDir.Value
-        Case DIR_UP
+    Select Case scrlDir.value
+        Case North
             sDir = "Up"
-        Case DIR_DOWN
+        Case South
             sDir = "Down"
-        Case DIR_RIGHT
+        Case East
             sDir = "Right"
-        Case DIR_LEFT
+        Case West
             sDir = "Left"
     End Select
     lblDir.Caption = "Dir: " & sDir
-    Spell(EditorIndex).Dir = scrlDir.Value
+    Spell(EditorIndex).Dir = scrlDir.value
     
     ' Error handler
     Exit Sub
@@ -741,8 +741,8 @@ Private Sub scrlDuration_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    lblDuration.Caption = "Duration: " & scrlDuration.Value & "s"
-    Spell(EditorIndex).Duration = scrlDuration.Value
+    lblDuration.Caption = "Duration: " & scrlDuration.value & "s"
+    Spell(EditorIndex).Duration = scrlDuration.value
     
     ' Error handler
     Exit Sub
@@ -756,12 +756,12 @@ Private Sub scrlIcon_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If scrlIcon.Value > 0 Then
-        lblIcon.Caption = "Icon: " & scrlIcon.Value
+    If scrlIcon.value > 0 Then
+        lblIcon.Caption = "Icon: " & scrlIcon.value
     Else
         lblIcon.Caption = "Icon: None"
     End If
-    Spell(EditorIndex).Icon = scrlIcon.Value
+    Spell(EditorIndex).Icon = scrlIcon.value
     EditorSpell_DrawIcon
     
     ' Error handler
@@ -776,8 +776,8 @@ Private Sub scrlInterval_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    lblInterval.Caption = "Interval: " & scrlInterval.Value & "s"
-    Spell(EditorIndex).Interval = scrlInterval.Value
+    lblInterval.Caption = "Interval: " & scrlInterval.value & "s"
+    Spell(EditorIndex).Interval = scrlInterval.value
     
     ' Error handler
     Exit Sub
@@ -791,12 +791,12 @@ Private Sub scrlLevel_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If scrlLevel.Value > 0 Then
-        lblLevel.Caption = "Level Required: " & scrlLevel.Value
+    If scrlLevel.value > 0 Then
+        lblLevel.Caption = "Level Required: " & scrlLevel.value
     Else
         lblLevel.Caption = "Level Required: None"
     End If
-    Spell(EditorIndex).LevelReq = scrlLevel.Value
+    Spell(EditorIndex).LevelReq = scrlLevel.value
     
     ' Error handler
     Exit Sub
@@ -810,8 +810,8 @@ Private Sub scrlMap_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    lblMap.Caption = "Map: " & scrlMap.Value
-    Spell(EditorIndex).Map = scrlMap.Value
+    lblMap.Caption = "Map: " & scrlMap.value
+    Spell(EditorIndex).Map = scrlMap.value
     
     ' Error handler
     Exit Sub
@@ -825,12 +825,12 @@ Private Sub scrlMP_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If scrlMP.Value > 0 Then
-        lblMP.Caption = "MP Cost: " & scrlMP.Value
+    If scrlMP.value > 0 Then
+        lblMP.Caption = "MP Cost: " & scrlMP.value
     Else
         lblMP.Caption = "MP Cost: None"
     End If
-    Spell(EditorIndex).MPCost = scrlMP.Value
+    Spell(EditorIndex).MPCost = scrlMP.value
     
     ' Error handler
     Exit Sub
@@ -844,12 +844,12 @@ Private Sub scrlRange_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If scrlRange.Value > 0 Then
-        lblRange.Caption = "Range: " & scrlRange.Value & " tiles."
+    If scrlRange.value > 0 Then
+        lblRange.Caption = "Range: " & scrlRange.value & " tiles."
     Else
         lblRange.Caption = "Range: Self-cast"
     End If
-    Spell(EditorIndex).Range = scrlRange.Value
+    Spell(EditorIndex).Range = scrlRange.value
     
     ' Error handler
     Exit Sub
@@ -863,12 +863,12 @@ Private Sub scrlStun_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If scrlStun.Value > 0 Then
-        lblStun.Caption = "Stun Duration: " & scrlStun.Value & "s"
+    If scrlStun.value > 0 Then
+        lblStun.Caption = "Stun Duration: " & scrlStun.value & "s"
     Else
         lblStun.Caption = "Stun Duration: None"
     End If
-    Spell(EditorIndex).StunDuration = scrlStun.Value
+    Spell(EditorIndex).StunDuration = scrlStun.value
     
     ' Error handler
     Exit Sub
@@ -882,8 +882,8 @@ Private Sub scrlVital_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    lblVital.Caption = "Vital: " & scrlVital.Value
-    Spell(EditorIndex).Vital = scrlVital.Value
+    lblVital.Caption = "Vital: " & scrlVital.value
+    Spell(EditorIndex).Vital = scrlVital.value
     
     ' Error handler
     Exit Sub
@@ -897,8 +897,8 @@ Private Sub scrlX_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    lblX.Caption = "X: " & scrlX.Value
-    Spell(EditorIndex).x = scrlX.Value
+    lblX.Caption = "X: " & scrlX.value
+    Spell(EditorIndex).X = scrlX.value
     
     ' Error handler
     Exit Sub
@@ -912,8 +912,8 @@ Private Sub scrlY_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    lblY.Caption = "Y: " & scrlY.Value
-    Spell(EditorIndex).y = scrlY.Value
+    lblY.Caption = "Y: " & scrlY.value
+    Spell(EditorIndex).Y = scrlY.value
     
     ' Error handler
     Exit Sub
@@ -945,9 +945,9 @@ Dim tmpIndex As Long
 
     If EditorIndex = 0 Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Spell(EditorIndex).Name = Trim$(txtName.text)
+    Spell(EditorIndex).name = Trim$(txtName.text)
     lstIndex.RemoveItem EditorIndex - 1
-    lstIndex.AddItem EditorIndex & ": " & Spell(EditorIndex).Name, EditorIndex - 1
+    lstIndex.AddItem EditorIndex & ": " & Spell(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
     
     ' Error handler

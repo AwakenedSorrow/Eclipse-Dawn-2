@@ -201,94 +201,94 @@ Dim tmpDir As Byte
         ElseIf frmEditor_Map.optAttribs.value Then
             With Map.Tile(CurX, CurY)
                 ' blocked tile
-                If frmEditor_Map.optBlocked.value Then .Type = TILE_TYPE_BLOCKED
+                If frmEditor_Map.optBlocked.value Then .Type = TileTypeBlocked
                 ' warp tile
                 If frmEditor_Map.optWarp.value Then
-                    .Type = TILE_TYPE_WARP
+                    .Type = TileTypeWarp
                     .Data1 = EditorWarpMap
                     .Data2 = EditorWarpX
                     .Data3 = EditorWarpY
                 End If
                 ' item spawn
                 If frmEditor_Map.optItem.value Then
-                    .Type = TILE_TYPE_ITEM
+                    .Type = TileTypeItem
                     .Data1 = ItemEditorNum
                     .Data2 = ItemEditorValue
                     .Data3 = 0
                 End If
                 ' npc avoid
                 If frmEditor_Map.optNpcAvoid.value Then
-                    .Type = TILE_TYPE_NPCAVOID
+                    .Type = TileTypeNPCAvoid
                     .Data1 = 0
                     .Data2 = 0
                     .Data3 = 0
                 End If
                 ' key
                 If frmEditor_Map.optKey.value Then
-                    .Type = TILE_TYPE_KEY
+                    .Type = TileTypeKey
                     .Data1 = KeyEditorNum
                     .Data2 = KeyEditorTake
                     .Data3 = 0
                 End If
                 ' key open
                 If frmEditor_Map.optKeyOpen.value Then
-                    .Type = TILE_TYPE_KEYOPEN
+                    .Type = TileTypeKeyOpen
                     .Data1 = KeyOpenEditorX
                     .Data2 = KeyOpenEditorY
                     .Data3 = 0
                 End If
                 ' resource
                 If frmEditor_Map.optResource.value Then
-                    .Type = TILE_TYPE_RESOURCE
+                    .Type = TileTypeResource
                     .Data1 = ResourceEditorNum
                     .Data2 = 0
                     .Data3 = 0
                 End If
                 ' door
                 If frmEditor_Map.optDoor.value Then
-                    .Type = TILE_TYPE_DOOR
+                    .Type = TileTypeDoor
                     .Data1 = EditorWarpMap
                     .Data2 = EditorWarpX
                     .Data3 = EditorWarpY
                 End If
                 ' npc spawn
                 If frmEditor_Map.optNpcSpawn.value Then
-                    .Type = TILE_TYPE_NPCSPAWN
+                    .Type = TileTypeNPCSpawn
                     .Data1 = SpawnNpcNum
                     .Data2 = SpawnNpcDir
                     .Data3 = 0
                 End If
                 ' shop
                 If frmEditor_Map.optShop.value Then
-                    .Type = TILE_TYPE_SHOP
-                    .Data1 = EditorShop
+                    .Type = TileTypeShop
+                    .Data1 = EditorShopNum
                     .Data2 = 0
                     .Data3 = 0
                 End If
                 ' bank
                 If frmEditor_Map.optBank.value Then
-                    .Type = TILE_TYPE_BANK
+                    .Type = TileTypeBank
                     .Data1 = 0
                     .Data2 = 0
                     .Data3 = 0
                 End If
                 ' heal
                 If frmEditor_Map.optHeal.value Then
-                    .Type = TILE_TYPE_HEAL
+                    .Type = TileTypeHeal
                     .Data1 = MapEditorHealType
                     .Data2 = MapEditorHealAmount
                     .Data3 = 0
                 End If
                 ' trap
                 If frmEditor_Map.optTrap.value Then
-                    .Type = TILE_TYPE_TRAP
+                    .Type = TileTypeTrap
                     .Data1 = MapEditorHealAmount
                     .Data2 = 0
                     .Data3 = 0
                 End If
                 ' slide
                 If frmEditor_Map.optSlide.value Then
-                    .Type = TILE_TYPE_SLIDE
+                    .Type = TileTypeSlide
                     .Data1 = MapEditorSlideDir
                     .Data2 = 0
                     .Data3 = 0
@@ -628,7 +628,7 @@ Dim SoundSet As Boolean
         End If
 
         ' Type specific settings
-        If (frmEditor_Item.cmbType.ListIndex >= ITEM_TYPE_WEAPON) And (frmEditor_Item.cmbType.ListIndex <= ITEM_TYPE_SHIELD) Then
+        If (frmEditor_Item.cmbType.ListIndex >= ItemTypeWeapon) And (frmEditor_Item.cmbType.ListIndex <= ItemTypeShield) Then
             frmEditor_Item.fraEquipment.Visible = True
             frmEditor_Item.scrlDamage.value = .Data2
             frmEditor_Item.cmbTool.ListIndex = .Data3
@@ -646,7 +646,7 @@ Dim SoundSet As Boolean
             frmEditor_Item.fraEquipment.Visible = False
         End If
 
-        If frmEditor_Item.cmbType.ListIndex = ITEM_TYPE_CONSUME Then
+        If frmEditor_Item.cmbType.ListIndex = ItemTypeConsume Then
             frmEditor_Item.fraVitals.Visible = True
             frmEditor_Item.scrlAddHp.value = .AddHP
             frmEditor_Item.scrlAddMP.value = .AddMP
@@ -657,7 +657,7 @@ Dim SoundSet As Boolean
             frmEditor_Item.fraVitals.Visible = False
         End If
 
-        If (frmEditor_Item.cmbType.ListIndex = ITEM_TYPE_SPELL) Then
+        If (frmEditor_Item.cmbType.ListIndex = ItemTypeSpell) Then
             frmEditor_Item.fraSpell.Visible = True
             frmEditor_Item.scrlSpell.value = .Data1
         Else

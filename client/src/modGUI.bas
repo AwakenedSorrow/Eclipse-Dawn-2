@@ -271,7 +271,7 @@ Dim AnimLeft As Long
                     tmpItem = GetPlayerInvItemNum(MyIndex, TradeYourOffer(X).num)
                     If TradeYourOffer(X).num = i Then
                         ' check if currency
-                        If Not Item(tmpItem).Type = ITEM_TYPE_CURRENCY Then
+                        If Not Item(tmpItem).Type = ItemTypeCurrency Then
                             ' normal item, exit out
                             GoTo NextLoop
                         Else

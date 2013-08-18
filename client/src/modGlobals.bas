@@ -165,7 +165,7 @@ Public EditorWarpX As Long
 Public EditorWarpY As Long
 Public SpawnNpcNum As Long
 Public SpawnNpcDir As Byte
-Public EditorShop As Long
+Public EditorShopNum As Long
 
 ' Used for map item editor
 Public ItemEditorNum As Long

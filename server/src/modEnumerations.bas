@@ -230,3 +230,107 @@ Public Enum SoundEntity
     ' Make sure SoundEntity_Count is below everything else
     SoundEntity_Count
 End Enum
+
+Public Enum TileTypes
+    TileTypeWalkable = 0
+    TileTypeBlocked
+    TileTypeWarp
+    TileTypeItem
+    TileTypeNPCAvoid
+    TileTypeKey
+    TileTypeKeyOpen
+    TileTypeResource
+    TileTypeDoor
+    TileTypeNPCSpawn
+    TileTypeShop
+    TileTypeBank
+    TileTypeHeal
+    TileTypeTrap
+    TileTypeSlide
+End Enum
+
+Public Enum MapMorals
+    MapMoralNone = 0
+    MapMoralSafe
+End Enum
+
+Public Enum ItemTypes
+    ItemTypeNone = 0
+    ItemTypeWeapon
+    ItemTypeArmor
+    ItemTypeHelmet
+    ItemTypeShield
+    ItemTypeConsume
+    ItemTypeKey
+    ItemTypeCurrency
+    ItemTypeSpell
+End Enum
+
+Public Enum Genders
+    SexMale = 0
+    SexFemale
+End Enum
+
+Public Enum Directions
+    North = 0
+    South
+    West
+    East
+End Enum
+
+Public Enum PlayerRanks
+    RankPlayer = 0
+    RankModerator
+    RankMapper
+    RankDeveloper
+    RankAdministrator
+End Enum
+
+Public Enum NPCTypes
+    NPCTypeAggressive = 0
+    NPCTypeNeutral
+    NPCTypeFriendly
+    NPCTypeStationary
+    NPCTypeProtectAllies
+End Enum
+
+Public Enum SpellTypes
+    SpellTypeDamageHP = 0
+    SpellTypeDamageMP
+    SpellTypeHealHP
+    SpellTypeHealMP
+    SpellTypeWarp
+End Enum
+
+Public Enum ActionMessages
+    ActionMsgStatic = 0
+    ActionMsgScroll
+    ActionMsgScreen
+End Enum
+
+Public Enum TargetTypes
+    TargetTypeNone = 0
+    TargetTypePlayer
+    TargetTypeNPC
+End Enum
+
+Public Enum Colors
+    Black = 0
+    Blue
+    Green
+    Cyan
+    Red
+    Magenta
+    Brown
+    Grey
+    DarkGrey
+    BrightBlue
+    BrightGreen
+    BrightCyan
+    BrightRed
+    Pink
+    Yellow
+    White
+    DarkBrown
+    Orange
+End Enum

@@ -872,7 +872,7 @@ Dim Buffer As clsBuffer
     ' do basic checks
     If InvNum < 1 Or InvNum > MAX_INV Then Exit Sub
     If PlayerInv(InvNum).num < 1 Or PlayerInv(InvNum).num > MAX_ITEMS Then Exit Sub
-    If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ITEM_TYPE_CURRENCY Then
+    If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ItemTypeCurrency Then
         If Amount < 1 Or Amount > PlayerInv(InvNum).value Then Exit Sub
     End If
     

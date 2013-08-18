@@ -139,7 +139,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandleAlertMsg(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandleAlertMsg(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Msg As String
 Dim Buffer As clsBuffer
 
@@ -170,7 +170,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandleLoginOk(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandleLoginOk(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -209,7 +209,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandleNewCharClasses(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandleNewCharClasses(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim i As Long
 Dim z As Long, X As Long
@@ -286,7 +286,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandleClassesData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandleClassesData(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim i As Long
 Dim z As Long, X As Long
@@ -346,7 +346,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandleInGame(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandleInGame(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
@@ -362,7 +362,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandlePlayerInv(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandlePlayerInv(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim i As Long
 Dim Buffer As clsBuffer
@@ -396,7 +396,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandlePlayerInvUpdate(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandlePlayerInvUpdate(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim Buffer As clsBuffer
 
@@ -424,7 +424,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandlePlayerWornEq(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandlePlayerWornEq(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -453,7 +453,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandleMapWornEq(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandleMapWornEq(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim playerNum As Long
 
@@ -480,7 +480,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePlayerHp(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePlayerHp(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -506,7 +506,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePlayerMp(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePlayerMp(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -532,7 +532,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePlayerStats(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePlayerStats(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim i As Long
 
@@ -543,7 +543,7 @@ Dim i As Long
     Buffer.WriteBytes Data()
     
     For i = 1 To Stats.Stat_Count - 1
-        SetPlayerStat Index, i, Buffer.ReadLong
+        SetPlayerStat index, i, Buffer.ReadLong
     Next
     
     ' Error handler
@@ -554,7 +554,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePlayerExp(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePlayerExp(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim i As Long
 Dim TNL As Long
@@ -567,7 +567,7 @@ Dim TNL As Long
     
     SetPlayerExp MyIndex, Buffer.ReadLong
     TNL = Buffer.ReadLong
-    frmMain.lblEXP.Caption = GetPlayerExp(Index) & "/" & TNL
+    frmMain.lblEXP.Caption = GetPlayerExp(index) & "/" & TNL
     ' mp bar
     frmMain.imgEXPBar.Width = ((GetPlayerExp(MyIndex) / EXPBar_Width) / (TNL / EXPBar_Width)) * EXPBar_Width
     
@@ -579,7 +579,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePlayerData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePlayerData(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim i As Long, X As Long
 Dim Buffer As clsBuffer
 
@@ -615,7 +615,7 @@ Dim Buffer As clsBuffer
         ' Set training label visiblity depending on points
         If GetPlayerPOINTS(MyIndex) > 0 Then
             For X = 1 To Stats.Stat_Count - 1
-                If GetPlayerStat(Index, X) < 255 Then
+                If GetPlayerStat(index, X) < 255 Then
                     frmMain.lblTrainStat(X).Visible = True
                 Else
                     frmMain.lblTrainStat(X).Visible = False
@@ -641,7 +641,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePlayerMove(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePlayerMove(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim i As Long
 Dim X As Long
 Dim Y As Long
@@ -667,13 +667,13 @@ Dim Buffer As clsBuffer
     Player(i).Moving = n
 
     Select Case GetPlayerDir(i)
-        Case DIR_UP
+        Case North
             Player(i).yOffset = PIC_Y
-        Case DIR_DOWN
+        Case South
             Player(i).yOffset = PIC_Y * -1
-        Case DIR_LEFT
+        Case West
             Player(i).XOffset = PIC_X
-        Case DIR_RIGHT
+        Case East
             Player(i).XOffset = PIC_X * -1
     End Select
     
@@ -685,7 +685,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleNpcMove(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleNpcMove(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim MapNpcNum As Long
 Dim X As Long
 Dim Y As Long
@@ -713,13 +713,13 @@ Dim Buffer As clsBuffer
         .Moving = Movement
 
         Select Case .Dir
-            Case DIR_UP
+            Case North
                 .yOffset = PIC_Y
-            Case DIR_DOWN
+            Case South
                 .yOffset = PIC_Y * -1
-            Case DIR_LEFT
+            Case West
                 .XOffset = PIC_X
-            Case DIR_RIGHT
+            Case East
                 .XOffset = PIC_X * -1
         End Select
 
@@ -733,7 +733,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePlayerDir(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePlayerDir(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim i As Long
 Dim Dir As Byte
 Dim Buffer As clsBuffer
@@ -761,7 +761,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleNpcDir(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleNpcDir(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim i As Long
 Dim Dir As Byte
 Dim Buffer As clsBuffer
@@ -789,7 +789,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePlayerXY(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePlayerXY(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim X As Long
 Dim Y As Long
 Dim Dir As Long
@@ -819,7 +819,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePlayerXYMap(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePlayerXYMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim X As Long
 Dim Y As Long
 Dim Dir As Long
@@ -851,7 +851,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleAttack(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleAttack(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim i As Long
 Dim Buffer As clsBuffer
 
@@ -873,7 +873,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleNpcAttack(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleNpcAttack(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim i As Long
 Dim Buffer As clsBuffer
 
@@ -895,7 +895,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleCheckForMap(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleCheckForMap(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim X As Long
 Dim Y As Long
 Dim i As Long
@@ -976,7 +976,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandleMapData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandleMapData(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim X As Long
 Dim Y As Long
@@ -1055,7 +1055,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleMapItemData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleMapItemData(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim i As Long
 Dim Buffer As clsBuffer
 
@@ -1083,7 +1083,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleMapNpcData(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleMapNpcData(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim i As Long
 Dim Buffer As clsBuffer
 
@@ -1155,7 +1155,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleBroadcastMsg(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleBroadcastMsg(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim Msg As String
 Dim color As Byte
@@ -1177,7 +1177,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleGlobalMsg(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleGlobalMsg(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim Msg As String
 Dim color As Byte
@@ -1199,7 +1199,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePlayerMsg(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePlayerMsg(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim Msg As String
 Dim color As Byte
@@ -1221,7 +1221,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleMapMsg(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleMapMsg(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim Msg As String
 Dim color As Byte
@@ -1243,7 +1243,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleAdminMsg(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleAdminMsg(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim Msg As String
 Dim color As Byte
@@ -1265,7 +1265,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleSpawnItem(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleSpawnItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim Buffer As clsBuffer
 
@@ -1299,7 +1299,7 @@ Dim i As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     With frmEditor_Item
-        Editor = EDITOR_ITEM
+        Editor = EditorItem
         .lstIndex.Clear
 
         ' Add the names
@@ -1327,7 +1327,7 @@ Dim i As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     With frmEditor_Animation
-        Editor = EDITOR_ANIMATION
+        Editor = EditorAnimation
         .lstIndex.Clear
 
         ' Add the names
@@ -1348,7 +1348,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleUpdateItem(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleUpdateItem(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim Buffer As clsBuffer
 Dim ItemSize As Long
@@ -1380,7 +1380,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleUpdateAnimation(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleUpdateAnimation(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim Buffer As clsBuffer
 Dim AnimationSize As Long
@@ -1407,7 +1407,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleSpawnNpc(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleSpawnNpc(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim Buffer As clsBuffer
 
@@ -1437,7 +1437,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleNpcDead(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleNpcDead(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim Buffer As clsBuffer
 
@@ -1464,7 +1464,7 @@ Dim i As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     With frmEditor_NPC
-        Editor = EDITOR_NPC
+        Editor = EditorNPC
         .lstIndex.Clear
 
         ' Add the names
@@ -1485,7 +1485,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleUpdateNpc(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleUpdateNpc(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim Buffer As clsBuffer
 Dim NpcSize As Long
@@ -1521,7 +1521,7 @@ Dim i As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     With frmEditor_Resource
-        Editor = EDITOR_RESOURCE
+        Editor = EditorResource
         .lstIndex.Clear
 
         ' Add the names
@@ -1542,7 +1542,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleUpdateResource(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleUpdateResource(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim ResourceNum As Long
 Dim Buffer As clsBuffer
 Dim ResourceSize As Long
@@ -1574,7 +1574,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleMapKey(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleMapKey(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim n As Long
 Dim X As Long
 Dim Y As Long
@@ -1619,7 +1619,7 @@ Dim i As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     With frmEditor_Shop
-        Editor = EDITOR_SHOP
+        Editor = EditorShop
         .lstIndex.Clear
 
         ' Add the names
@@ -1640,7 +1640,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleUpdateShop(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleUpdateShop(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim shopnum As Long
 Dim Buffer As clsBuffer
 Dim ShopSize As Long
@@ -1676,7 +1676,7 @@ Dim i As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     With frmEditor_Spell
-        Editor = EDITOR_SPELL
+        Editor = EditorSpell
         .lstIndex.Clear
 
         ' Add the names
@@ -1697,7 +1697,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleUpdateSpell(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleUpdateSpell(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim spellnum As Long
 Dim Buffer As clsBuffer
 Dim SpellSize As Long
@@ -1725,7 +1725,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub HandleSpells(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Sub HandleSpells(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim i As Long
 Dim Buffer As clsBuffer
 
@@ -1749,7 +1749,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleLeft(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleLeft(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -1768,7 +1768,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleResourceCache(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleResourceCache(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim i As Long
 
@@ -1806,7 +1806,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleSendPing(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleSendPing(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
@@ -1822,7 +1822,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleDoorAnimation(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleDoorAnimation(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim X As Long, Y As Long
     
@@ -1848,7 +1848,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleActionMsg(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleActionMsg(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim X As Long, Y As Long, message As String, color As Long, tmpType As Long
     
@@ -1876,7 +1876,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleBlood(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleBlood(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim X As Long, Y As Long, Sprite As Long, i As Long
     
@@ -1924,7 +1924,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleAnimation(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleAnimation(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
     
     ' If debug mode, handle error then exit out
@@ -1960,7 +1960,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleMapNpcVitals(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleMapNpcVitals(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim i As Long
 Dim MapNpcNum As Byte
@@ -1986,7 +1986,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleCooldown(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleCooldown(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim Slot As Long
 
@@ -2009,7 +2009,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleClearSpellBuffer(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleClearSpellBuffer(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
@@ -2024,7 +2024,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleSayMsg(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleSayMsg(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim Access As Long
 Dim name As String
@@ -2082,7 +2082,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleOpenShop(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleOpenShop(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim shopnum As Long
 
@@ -2106,7 +2106,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleResetShopAction(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleResetShopAction(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
@@ -2120,7 +2120,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleStunned(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleStunned(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -2141,7 +2141,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleBank(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleBank(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim i As Long
 
@@ -2170,7 +2170,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleTrade(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleTrade(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -2193,7 +2193,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleCloseTrade(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleCloseTrade(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
@@ -2210,7 +2210,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleTradeUpdate(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleTradeUpdate(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim dataType As Byte
 Dim i As Long
@@ -2248,7 +2248,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleTradeStatus(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleTradeStatus(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim tradeStatus As Byte
 
@@ -2279,7 +2279,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleTarget(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleTarget(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -2301,7 +2301,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleHotbar(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleHotbar(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim i As Long
     
@@ -2324,7 +2324,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleHighIndex(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleHighIndex(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
     
     ' If debug mode, handle error then exit out
@@ -2343,7 +2343,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleSound(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleSound(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim X As Long, Y As Long, entityType As Long, entityNum As Long
     
@@ -2368,7 +2368,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandleTradeRequest(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleTradeRequest(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim theName As String
     
@@ -2380,7 +2380,7 @@ Dim theName As String
     
     theName = Buffer.ReadString
     
-    Dialogue "Trade Request", theName & " has requested a trade. Would you like to accept?", DIALOGUE_TYPE_TRADE, True
+    Dialogue "Trade Request", theName & " has requested a trade. Would you like to accept?", DialogueTrade, True
     
     ' Error handler
     Exit Sub
@@ -2390,7 +2390,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePartyInvite(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePartyInvite(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer
 Dim theName As String
     
@@ -2402,7 +2402,7 @@ Dim theName As String
 
     theName = Buffer.ReadString
     
-    Dialogue "Party Invitation", theName & " has invited you to a party. Would you like to join?", DIALOGUE_TYPE_PARTY, True
+    Dialogue "Party Invitation", theName & " has invited you to a party. Would you like to join?", DialogueParty, True
     
     ' Error handler
     Exit Sub
@@ -2412,7 +2412,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePartyUpdate(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePartyUpdate(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim Buffer As clsBuffer, i As Long, inParty As Byte
     
     ' If debug mode, handle error then exit out
@@ -2460,7 +2460,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub HandlePartyVitals(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandlePartyVitals(ByVal index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim playerNum As Long, partyIndex As Long
 Dim Buffer As clsBuffer, i As Long
 

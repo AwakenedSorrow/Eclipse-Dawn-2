@@ -1107,6 +1107,7 @@ Begin VB.Form frmMain
       _Version        =   393217
       BackColor       =   790032
       BorderStyle     =   0
+      Enabled         =   -1  'True
       ScrollBars      =   2
       Appearance      =   0
       TextRTF         =   $"frmMain.frx":3332
@@ -1808,7 +1809,7 @@ Private Sub cmdAAnim_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(MyIndex) < RankDeveloper Then
         
         Exit Sub
     End If
@@ -1827,7 +1828,7 @@ Private Sub cmdLevel_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(MyIndex) < RankDeveloper Then
         
         Exit Sub
     End If
@@ -1988,7 +1989,7 @@ Dim i As Long
                 PlaySound Sound_ButtonClick
             End If
         Case 5
-            If myTargetType = TARGET_TYPE_PLAYER And myTarget <> MyIndex Then
+            If myTargetType = TargetTypePlayer And myTarget <> MyIndex Then
                 SendTradeRequest
                 ' play sound
                 PlaySound Sound_ButtonClick
@@ -2218,7 +2219,7 @@ Private Sub lblPartyInvite_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    If myTargetType = TARGET_TYPE_PLAYER And myTarget <> MyIndex Then
+    If myTargetType = TargetTypePlayer And myTarget <> MyIndex Then
         SendPartyRequest
     Else
         AddText "Invalid invitation target.", BrightRed
@@ -2629,7 +2630,7 @@ Dim spellnum As Long
         End If
     ElseIf Button = 2 Then ' right click
         If spellnum <> 0 Then
-            Dialogue "Forget Spell", "Are you sure you want to forget how to cast " & Trim$(Spell(PlayerSpells(spellnum)).name) & "?", DIALOGUE_TYPE_FORGET, True, spellnum
+            Dialogue "Forget Spell", "Are you sure you want to forget how to cast " & Trim$(Spell(PlayerSpells(spellnum)).name) & "?", DialogueForget, True, spellnum
             Exit Sub
         End If
     End If
@@ -2851,7 +2852,7 @@ Private Sub scrlAItem_Change()
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     lblAItem.Caption = "Item: " & Trim$(Item(scrlAItem.value).name)
-    If Item(scrlAItem.value).Type = ITEM_TYPE_CURRENCY Then
+    If Item(scrlAItem.value).Type = ItemTypeCurrency Then
         scrlAAmount.Enabled = True
         Exit Sub
     End If
@@ -2929,7 +2930,7 @@ Private Sub cmdAKick_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+    If GetPlayerAccess(MyIndex) < RankMapper Then
 
         Exit Sub
     End If
@@ -3041,7 +3042,7 @@ Private Sub picInventory_DblClick()
         
         ' in bank?
         If InBank Then
-            If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ITEM_TYPE_CURRENCY Then
+            If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ItemTypeCurrency Then
                 CurrencyMenu = 2 ' deposit
                 lblCurrency.Caption = "How many do you want to deposit?"
                 tmpCurrencyItem = InvNum
@@ -3061,7 +3062,7 @@ Private Sub picInventory_DblClick()
             For i = 1 To MAX_INV
                 If TradeYourOffer(i).num = InvNum Then
                     ' is currency?
-                    If Item(GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).num)).Type = ITEM_TYPE_CURRENCY Then
+                    If Item(GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).num)).Type = ItemTypeCurrency Then
                         ' only exit out if we're offering all of it
                         If TradeYourOffer(i).value = GetPlayerInvItemValue(MyIndex, TradeYourOffer(i).num) Then
                             Exit Sub
@@ -3072,7 +3073,7 @@ Private Sub picInventory_DblClick()
                 End If
             Next
             
-            If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ITEM_TYPE_CURRENCY Then
+            If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ItemTypeCurrency Then
                 CurrencyMenu = 4 ' offer in trade
                 lblCurrency.Caption = "How many do you want to trade?"
                 tmpCurrencyItem = InvNum
@@ -3087,7 +3088,7 @@ Private Sub picInventory_DblClick()
         End If
         
         ' use item if not doing anything else
-        If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ITEM_TYPE_NONE Then Exit Sub
+        If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ItemTypeNone Then Exit Sub
         Call SendUseItem(InvNum)
         Exit Sub
     End If
@@ -3277,7 +3278,7 @@ Private Sub picInventory_MouseDown(Button As Integer, Shift As Integer, X As Sin
     ElseIf Button = 2 Then
         If Not InBank And Not InShop And Not InTrade > 0 Then
             If InvNum <> 0 Then
-                If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ITEM_TYPE_CURRENCY Then
+                If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ItemTypeCurrency Then
                     If GetPlayerInvItemValue(MyIndex, InvNum) > 0 Then
                         CurrencyMenu = 1 ' drop
                         lblCurrency.Caption = "How many do you want to drop?"
@@ -3331,7 +3332,7 @@ Private Sub picInventory_MouseMove(Button As Integer, Shift As Integer, X As Sin
                 For i = 1 To MAX_INV
                     If TradeYourOffer(i).num = InvNum Then
                         ' is currency?
-                        If Item(GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).num)).Type = ITEM_TYPE_CURRENCY Then
+                        If Item(GetPlayerInvItemNum(MyIndex, TradeYourOffer(i).num)).Type = ItemTypeCurrency Then
                             ' only exit out if we're offering all of it
                             If TradeYourOffer(i).value = GetPlayerInvItemValue(MyIndex, TradeYourOffer(i).num) Then
                                 Exit Sub
@@ -3497,7 +3498,7 @@ Private Sub cmdALoc_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+    If GetPlayerAccess(MyIndex) < RankMapper Then
         
         Exit Sub
     End If
@@ -3516,7 +3517,7 @@ Private Sub cmdAMap_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+    If GetPlayerAccess(MyIndex) < RankMapper Then
         
         Exit Sub
     End If
@@ -3535,7 +3536,7 @@ Private Sub cmdAWarp2Me_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+    If GetPlayerAccess(MyIndex) < RankMapper Then
         
         Exit Sub
     End If
@@ -3562,7 +3563,7 @@ Private Sub cmdAWarpMe2_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+    If GetPlayerAccess(MyIndex) < RankMapper Then
         
         Exit Sub
     End If
@@ -3591,7 +3592,7 @@ Dim n As Long
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+    If GetPlayerAccess(MyIndex) < RankMapper Then
         
         Exit Sub
     End If
@@ -3625,7 +3626,7 @@ Private Sub cmdASprite_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+    If GetPlayerAccess(MyIndex) < RankMapper Then
         
         Exit Sub
     End If
@@ -3652,7 +3653,7 @@ Private Sub cmdAMapReport_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+    If GetPlayerAccess(MyIndex) < RankMapper Then
         
         Exit Sub
     End If
@@ -3671,7 +3672,7 @@ Private Sub cmdARespawn_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+    If GetPlayerAccess(MyIndex) < RankMapper Then
         
         Exit Sub
     End If
@@ -3690,7 +3691,7 @@ Private Sub cmdABan_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_MAPPER Then
+    If GetPlayerAccess(MyIndex) < RankMapper Then
         
         Exit Sub
     End If
@@ -3713,7 +3714,7 @@ Private Sub cmdAItem_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(MyIndex) < RankDeveloper Then
         
         Exit Sub
     End If
@@ -3732,7 +3733,7 @@ Private Sub cmdANpc_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(MyIndex) < RankDeveloper Then
         
         Exit Sub
     End If
@@ -3751,7 +3752,7 @@ Private Sub cmdAResource_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(MyIndex) < RankDeveloper Then
         
         Exit Sub
     End If
@@ -3770,7 +3771,7 @@ Private Sub cmdAShop_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(MyIndex) < RankDeveloper Then
         
         Exit Sub
     End If
@@ -3789,7 +3790,7 @@ Private Sub cmdASpell_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_DEVELOPER Then
+    If GetPlayerAccess(MyIndex) < RankDeveloper Then
         
         Exit Sub
     End If
@@ -3808,7 +3809,7 @@ Private Sub cmdAAccess_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_CREATOR Then
+    If GetPlayerAccess(MyIndex) < RankAdministrator Then
         
         Exit Sub
     End If
@@ -3835,7 +3836,7 @@ Private Sub cmdADestroy_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_CREATOR Then
+    If GetPlayerAccess(MyIndex) < RankAdministrator Then
         
         Exit Sub
     End If
@@ -3854,7 +3855,7 @@ Private Sub cmdASpawn_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    If GetPlayerAccess(MyIndex) < ADMIN_CREATOR Then
+    If GetPlayerAccess(MyIndex) < RankAdministrator Then
         
         Exit Sub
     End If
@@ -3880,9 +3881,9 @@ Dim bankNum As Long
 
     bankNum = IsBankItem(BankX, BankY)
     If bankNum <> 0 Then
-         If GetBankItemNum(bankNum) = ITEM_TYPE_NONE Then Exit Sub
+         If GetBankItemNum(bankNum) = ItemTypeNone Then Exit Sub
          
-             If Item(GetBankItemNum(bankNum)).Type = ITEM_TYPE_CURRENCY Then
+             If Item(GetBankItemNum(bankNum)).Type = ItemTypeCurrency Then
                 CurrencyMenu = 3 ' withdraw
                 lblCurrency.Caption = "How many do you want to withdraw?"
                 tmpCurrencyItem = bankNum
