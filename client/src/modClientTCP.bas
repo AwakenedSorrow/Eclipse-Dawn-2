@@ -1585,6 +1585,14 @@ Dim Buffer As clsBuffer
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
+    ' check if we're trying to cast a spell.
+    ' If we are, we're using a different method of sending this to the server.
+    If Hotbar(Slot).sType = 2 Then ' spell
+        Call CastSpell(Hotbar(Slot).Slot)
+        Exit Sub
+    End If
+    
+    ' It's not a spell, we can send this to the server.
     Set Buffer = New clsBuffer
     Buffer.WriteLong CHotbarUse
     Buffer.WriteLong Slot

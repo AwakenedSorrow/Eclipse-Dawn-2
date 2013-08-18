@@ -166,52 +166,52 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub ProcessMovement(ByVal Index As Long)
+Sub ProcessMovement(ByVal index As Long)
 Dim MovementSpeed As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' Check if player is walking, and if so process moving them over
-    Select Case Player(Index).Moving
+    Select Case Player(index).Moving
         Case MOVING_WALKING: MovementSpeed = ((ElapsedTime / 1000) * (RUN_SPEED * SIZE_X))
         Case MOVING_RUNNING: MovementSpeed = ((ElapsedTime / 1000) * (WALK_SPEED * SIZE_X))
         Case Else: Exit Sub
     End Select
     
-    Select Case GetPlayerDir(Index)
+    Select Case GetPlayerDir(index)
         Case DIR_UP
-            Player(Index).yOffset = Player(Index).yOffset - MovementSpeed
-            If Player(Index).yOffset < 0 Then Player(Index).yOffset = 0
+            Player(index).yOffset = Player(index).yOffset - MovementSpeed
+            If Player(index).yOffset < 0 Then Player(index).yOffset = 0
         Case DIR_DOWN
-            Player(Index).yOffset = Player(Index).yOffset + MovementSpeed
-            If Player(Index).yOffset > 0 Then Player(Index).yOffset = 0
+            Player(index).yOffset = Player(index).yOffset + MovementSpeed
+            If Player(index).yOffset > 0 Then Player(index).yOffset = 0
         Case DIR_LEFT
-            Player(Index).XOffset = Player(Index).XOffset - MovementSpeed
-            If Player(Index).XOffset < 0 Then Player(Index).XOffset = 0
+            Player(index).XOffset = Player(index).XOffset - MovementSpeed
+            If Player(index).XOffset < 0 Then Player(index).XOffset = 0
         Case DIR_RIGHT
-            Player(Index).XOffset = Player(Index).XOffset + MovementSpeed
-            If Player(Index).XOffset > 0 Then Player(Index).XOffset = 0
+            Player(index).XOffset = Player(index).XOffset + MovementSpeed
+            If Player(index).XOffset > 0 Then Player(index).XOffset = 0
     End Select
 
     ' Check if completed walking over to the next tile
-    If Player(Index).Moving > 0 Then
-        If GetPlayerDir(Index) = DIR_RIGHT Or GetPlayerDir(Index) = DIR_DOWN Then
-            If (Player(Index).XOffset >= 0) And (Player(Index).yOffset >= 0) Then
-                Player(Index).Moving = 0
-                If Player(Index).Step = 1 Then
-                    Player(Index).Step = 3
+    If Player(index).Moving > 0 Then
+        If GetPlayerDir(index) = DIR_RIGHT Or GetPlayerDir(index) = DIR_DOWN Then
+            If (Player(index).XOffset >= 0) And (Player(index).yOffset >= 0) Then
+                Player(index).Moving = 0
+                If Player(index).Step = 1 Then
+                    Player(index).Step = 3
                 Else
-                    Player(Index).Step = 1
+                    Player(index).Step = 1
                 End If
             End If
         Else
-            If (Player(Index).XOffset <= 0) And (Player(Index).yOffset <= 0) Then
-                Player(Index).Moving = 0
-                If Player(Index).Step = 1 Then
-                    Player(Index).Step = 3
+            If (Player(index).XOffset <= 0) And (Player(index).yOffset <= 0) Then
+                Player(index).Moving = 0
+                If Player(index).Step = 1 Then
+                    Player(index).Step = 3
                 Else
-                    Player(Index).Step = 1
+                    Player(index).Step = 1
                 End If
             End If
         End If
@@ -791,14 +791,26 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub CastSpell(ByVal spellslot As Long)
+Public Sub CastSpell(ByVal spellnum As Long)
 Dim Buffer As clsBuffer
+Dim spellslot As Long, i As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' Check for subscript out of range
-    If spellslot < 1 Or spellslot > MAX_PLAYER_SPELLS Then
+    If spellnum < 1 Or spellnum > MAX_SPELLS Then
+        Exit Sub
+    End If
+    
+    ' See what slot this spell is using for us.
+    spellslot = 0
+    For i = 1 To MAX_PLAYER_SPELLS
+        If PlayerSpells(i) = spellnum Then spellslot = i
+    Next i
+    
+    If spellslot = 0 Then
+        AddText "You are not familiar with this spell", BrightRed
         Exit Sub
     End If
     
@@ -1093,19 +1105,19 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub ClearActionMsg(ByVal Index As Byte)
+Public Sub ClearActionMsg(ByVal index As Byte)
 Dim i As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    ActionMsg(Index).message = vbNullString
-    ActionMsg(Index).Created = 0
-    ActionMsg(Index).Type = 0
-    ActionMsg(Index).color = 0
-    ActionMsg(Index).Scroll = 0
-    ActionMsg(Index).X = 0
-    ActionMsg(Index).Y = 0
+    ActionMsg(index).message = vbNullString
+    ActionMsg(index).Created = 0
+    ActionMsg(index).Type = 0
+    ActionMsg(index).color = 0
+    ActionMsg(index).Scroll = 0
+    ActionMsg(index).X = 0
+    ActionMsg(index).Y = 0
     
     ' find the new high index
     For i = MAX_BYTE To 1 Step -1
@@ -1125,7 +1137,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub CheckAnimInstance(ByVal Index As Long)
+Public Sub CheckAnimInstance(ByVal index As Long)
 Dim looptime As Long
 Dim Layer As Long
 Dim FrameCount As Long
@@ -1135,38 +1147,38 @@ Dim lockindex As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' if doesn't exist then exit sub
-    If AnimInstance(Index).Animation <= 0 Then Exit Sub
-    If AnimInstance(Index).Animation >= MAX_ANIMATIONS Then Exit Sub
+    If AnimInstance(index).Animation <= 0 Then Exit Sub
+    If AnimInstance(index).Animation >= MAX_ANIMATIONS Then Exit Sub
     
     For Layer = 0 To 1
-        If AnimInstance(Index).Used(Layer) Then
-            looptime = Animation(AnimInstance(Index).Animation).looptime(Layer)
-            FrameCount = Animation(AnimInstance(Index).Animation).Frames(Layer)
+        If AnimInstance(index).Used(Layer) Then
+            looptime = Animation(AnimInstance(index).Animation).looptime(Layer)
+            FrameCount = Animation(AnimInstance(index).Animation).Frames(Layer)
             
             ' if zero'd then set so we don't have extra loop and/or frame
-            If AnimInstance(Index).FrameIndex(Layer) = 0 Then AnimInstance(Index).FrameIndex(Layer) = 1
-            If AnimInstance(Index).LoopIndex(Layer) = 0 Then AnimInstance(Index).LoopIndex(Layer) = 1
+            If AnimInstance(index).FrameIndex(Layer) = 0 Then AnimInstance(index).FrameIndex(Layer) = 1
+            If AnimInstance(index).LoopIndex(Layer) = 0 Then AnimInstance(index).LoopIndex(Layer) = 1
             
             ' check if frame timer is set, and needs to have a frame change
-            If AnimInstance(Index).timer(Layer) + looptime <= GetTickCount Then
+            If AnimInstance(index).timer(Layer) + looptime <= GetTickCount Then
                 ' check if out of range
-                If AnimInstance(Index).FrameIndex(Layer) >= FrameCount Then
-                    AnimInstance(Index).LoopIndex(Layer) = AnimInstance(Index).LoopIndex(Layer) + 1
-                    If AnimInstance(Index).LoopIndex(Layer) > Animation(AnimInstance(Index).Animation).LoopCount(Layer) Then
-                        AnimInstance(Index).Used(Layer) = False
+                If AnimInstance(index).FrameIndex(Layer) >= FrameCount Then
+                    AnimInstance(index).LoopIndex(Layer) = AnimInstance(index).LoopIndex(Layer) + 1
+                    If AnimInstance(index).LoopIndex(Layer) > Animation(AnimInstance(index).Animation).LoopCount(Layer) Then
+                        AnimInstance(index).Used(Layer) = False
                     Else
-                        AnimInstance(Index).FrameIndex(Layer) = 1
+                        AnimInstance(index).FrameIndex(Layer) = 1
                     End If
                 Else
-                    AnimInstance(Index).FrameIndex(Layer) = AnimInstance(Index).FrameIndex(Layer) + 1
+                    AnimInstance(index).FrameIndex(Layer) = AnimInstance(index).FrameIndex(Layer) + 1
                 End If
-                AnimInstance(Index).timer(Layer) = GetTickCount
+                AnimInstance(index).timer(Layer) = GetTickCount
             End If
         End If
     Next
     
     ' if neither layer is used, clear
-    If AnimInstance(Index).Used(0) = False And AnimInstance(Index).Used(1) = False Then ClearAnimInstance (Index)
+    If AnimInstance(index).Used(0) = False And AnimInstance(index).Used(1) = False Then ClearAnimInstance (index)
     
     ' Error handler
     Exit Sub
@@ -1413,14 +1425,14 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub dialogueHandler(ByVal Index As Long)
+Public Sub dialogueHandler(ByVal index As Long)
     ' find out which button
-    If Index = 1 Then ' okay button
+    If index = 1 Then ' okay button
         ' dialogue index
         Select Case dialogueIndex
         
         End Select
-    ElseIf Index = 2 Then ' yes button
+    ElseIf index = 2 Then ' yes button
         ' dialogue index
         Select Case dialogueIndex
             Case DIALOGUE_TYPE_TRADE
@@ -1430,7 +1442,7 @@ Public Sub dialogueHandler(ByVal Index As Long)
             Case DIALOGUE_TYPE_PARTY
                 SendAcceptParty
         End Select
-    ElseIf Index = 3 Then ' no button
+    ElseIf index = 3 Then ' no button
         ' dialogue index
         Select Case dialogueIndex
             Case DIALOGUE_TYPE_TRADE
