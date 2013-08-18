@@ -610,6 +610,10 @@ Dim SoundSet As Boolean
         frmEditor_Item.scrlPic.value = .Pic
         frmEditor_Item.cmbType.ListIndex = .Type
         frmEditor_Item.scrlAnim.value = .Animation
+        frmEditor_Item.scrlRed = .Red
+        frmEditor_Item.scrlGreen = .Green
+        frmEditor_Item.scrlBlue = .Blue
+        frmEditor_Item.scrlAlpha = .Alpha
         frmEditor_Item.txtDesc.text = Trim$(.desc)
         
         ' find the sound we have set

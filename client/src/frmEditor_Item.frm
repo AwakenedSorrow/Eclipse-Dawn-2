@@ -2,10 +2,10 @@ VERSION 5.00
 Begin VB.Form frmEditor_Item 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Item Editor"
-   ClientHeight    =   8415
+   ClientHeight    =   6720
    ClientLeft      =   45
    ClientTop       =   330
-   ClientWidth     =   9735
+   ClientWidth     =   13095
    ControlBox      =   0   'False
    BeginProperty Font 
       Name            =   "Verdana"
@@ -20,331 +20,56 @@ Begin VB.Form frmEditor_Item
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   561
+   ScaleHeight     =   448
    ScaleMode       =   3  'Pixel
-   ScaleWidth      =   649
+   ScaleWidth      =   873
    ShowInTaskbar   =   0   'False
    StartUpPosition =   2  'CenterScreen
    Visible         =   0   'False
-   Begin VB.Frame fraEquipment 
-      Caption         =   "Equipment Data"
-      Height          =   3135
-      Left            =   3360
-      TabIndex        =   32
-      Top             =   4680
-      Visible         =   0   'False
-      Width           =   6255
-      Begin VB.PictureBox picPaperdoll 
-         AutoRedraw      =   -1  'True
-         BackColor       =   &H00000000&
-         BorderStyle     =   0  'None
-         BeginProperty Font 
-            Name            =   "Verdana"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   400
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         Height          =   1080
-         Left            =   120
-         ScaleHeight     =   72
-         ScaleMode       =   3  'Pixel
-         ScaleWidth      =   400
-         TabIndex        =   58
-         Top             =   1920
-         Width           =   6000
-      End
-      Begin VB.HScrollBar scrlPaperdoll 
-         Height          =   255
-         Left            =   5040
-         TabIndex        =   57
-         Top             =   1560
-         Width           =   1095
-      End
-      Begin VB.HScrollBar scrlSpeed 
-         Height          =   255
-         LargeChange     =   100
-         Left            =   4560
-         Max             =   3000
-         Min             =   100
-         SmallChange     =   100
-         TabIndex        =   40
-         Top             =   840
-         Value           =   100
-         Width           =   1575
-      End
-      Begin VB.HScrollBar scrlStatBonus 
-         Height          =   255
-         Index           =   5
-         LargeChange     =   10
-         Left            =   3000
-         Max             =   255
-         TabIndex        =   39
-         Top             =   1560
-         Width           =   855
-      End
-      Begin VB.HScrollBar scrlStatBonus 
-         Height          =   255
-         Index           =   4
-         LargeChange     =   10
-         Left            =   960
-         Max             =   255
-         TabIndex        =   38
-         Top             =   1560
-         Width           =   855
-      End
-      Begin VB.HScrollBar scrlStatBonus 
-         Height          =   255
-         Index           =   3
-         LargeChange     =   10
-         Left            =   5280
-         Max             =   255
-         TabIndex        =   37
-         Top             =   1200
-         Width           =   855
-      End
-      Begin VB.HScrollBar scrlStatBonus 
-         Height          =   255
-         Index           =   2
-         LargeChange     =   10
-         Left            =   3000
-         Max             =   255
-         TabIndex        =   36
-         Top             =   1200
-         Width           =   855
-      End
-      Begin VB.HScrollBar scrlDamage 
-         Height          =   255
-         LargeChange     =   10
-         Left            =   1320
-         Max             =   255
-         TabIndex        =   35
-         Top             =   840
-         Width           =   1815
-      End
-      Begin VB.ComboBox cmbTool 
-         Height          =   300
-         ItemData        =   "frmEditor_Item.frx":3332
-         Left            =   1320
-         List            =   "frmEditor_Item.frx":3342
-         Style           =   2  'Dropdown List
-         TabIndex        =   34
-         Top             =   360
-         Width           =   4815
-      End
-      Begin VB.HScrollBar scrlStatBonus 
-         Height          =   255
-         Index           =   1
-         LargeChange     =   10
-         Left            =   960
-         Max             =   255
-         TabIndex        =   33
-         Top             =   1200
-         Width           =   855
-      End
-      Begin VB.Label lblPaperdoll 
-         AutoSize        =   -1  'True
-         Caption         =   "Paperdoll: 0"
-         Height          =   180
-         Left            =   3960
-         TabIndex        =   56
-         Top             =   1560
-         Width           =   915
-      End
-      Begin VB.Label lblSpeed 
-         AutoSize        =   -1  'True
-         Caption         =   "Speed: 0.1 sec"
-         Height          =   180
-         Left            =   3240
-         TabIndex        =   48
-         Top             =   840
-         UseMnemonic     =   0   'False
-         Width           =   1140
-      End
-      Begin VB.Label lblStatBonus 
-         AutoSize        =   -1  'True
-         Caption         =   "+ Will: 0"
-         Height          =   180
-         Index           =   5
-         Left            =   2160
-         TabIndex        =   47
-         Top             =   1560
-         UseMnemonic     =   0   'False
-         Width           =   630
-      End
-      Begin VB.Label lblStatBonus 
-         AutoSize        =   -1  'True
-         Caption         =   "+ Agi: 0"
-         Height          =   180
-         Index           =   4
-         Left            =   120
-         TabIndex        =   46
-         Top             =   1560
-         UseMnemonic     =   0   'False
-         Width           =   615
-      End
-      Begin VB.Label lblStatBonus 
-         AutoSize        =   -1  'True
-         Caption         =   "+ Int: 0"
-         Height          =   180
-         Index           =   3
-         Left            =   4440
-         TabIndex        =   45
-         Top             =   1200
-         UseMnemonic     =   0   'False
-         Width           =   585
-      End
-      Begin VB.Label lblStatBonus 
-         AutoSize        =   -1  'True
-         Caption         =   "+ End: 0"
-         Height          =   180
-         Index           =   2
-         Left            =   2160
-         TabIndex        =   44
-         Top             =   1200
-         UseMnemonic     =   0   'False
-         Width           =   645
-      End
-      Begin VB.Label lblDamage 
-         AutoSize        =   -1  'True
-         Caption         =   "Damage: 0"
-         Height          =   180
-         Left            =   120
-         TabIndex        =   43
-         Top             =   840
-         UseMnemonic     =   0   'False
-         Width           =   825
-      End
-      Begin VB.Label Label8 
-         AutoSize        =   -1  'True
-         Caption         =   "Object Tool:"
-         Height          =   180
-         Left            =   120
-         TabIndex        =   42
-         Top             =   360
-         Width           =   945
-      End
-      Begin VB.Label lblStatBonus 
-         AutoSize        =   -1  'True
-         Caption         =   "+ Str: 0"
-         Height          =   180
-         Index           =   1
-         Left            =   120
-         TabIndex        =   41
-         Top             =   1200
-         UseMnemonic     =   0   'False
-         Width           =   585
-      End
-   End
-   Begin VB.Frame Frame2 
-      Caption         =   "Info"
-      Height          =   3375
-      Left            =   3360
-      TabIndex        =   17
+   Begin VB.Frame Frame4 
+      Caption         =   "Graphics"
+      Height          =   2535
+      Left            =   9720
+      TabIndex        =   65
       Top             =   120
-      Width           =   6255
-      Begin VB.HScrollBar scrlLevelReq 
-         Height          =   255
-         LargeChange     =   10
-         Left            =   4200
-         Max             =   99
-         TabIndex        =   74
-         Top             =   2760
-         Width           =   1935
-      End
-      Begin VB.HScrollBar scrlAccessReq 
-         Height          =   255
-         Left            =   4200
-         Max             =   5
-         TabIndex        =   72
-         Top             =   2400
-         Width           =   1935
-      End
-      Begin VB.ComboBox cmbClassReq 
-         Height          =   300
-         Left            =   3840
-         Style           =   2  'Dropdown List
-         TabIndex        =   70
-         Top             =   2040
-         Width           =   2295
-      End
-      Begin VB.ComboBox cmbSound 
-         Height          =   300
-         Left            =   3720
-         Style           =   2  'Dropdown List
-         TabIndex        =   69
-         Top             =   1680
-         Width           =   2415
-      End
-      Begin VB.TextBox txtDesc 
-         Height          =   1455
-         Left            =   120
-         MaxLength       =   255
-         MultiLine       =   -1  'True
-         ScrollBars      =   2  'Vertical
-         TabIndex        =   60
-         Top             =   1800
-         Width           =   2655
-      End
-      Begin VB.HScrollBar scrlRarity 
-         Height          =   255
-         Left            =   4200
-         Max             =   5
-         TabIndex        =   25
-         Top             =   960
-         Width           =   1935
-      End
-      Begin VB.ComboBox cmbBind 
-         Height          =   300
-         ItemData        =   "frmEditor_Item.frx":3363
-         Left            =   4200
-         List            =   "frmEditor_Item.frx":3370
-         Style           =   2  'Dropdown List
-         TabIndex        =   24
-         Top             =   600
-         Width           =   1935
-      End
-      Begin VB.HScrollBar scrlPrice 
-         Height          =   255
-         LargeChange     =   100
-         Left            =   4200
-         Max             =   30000
-         TabIndex        =   23
-         Top             =   240
-         Width           =   1935
-      End
+      Width           =   3255
       Begin VB.HScrollBar scrlAnim 
          Height          =   255
-         Left            =   5040
+         Left            =   1800
          Max             =   5
-         TabIndex        =   22
-         Top             =   1320
-         Width           =   1095
+         TabIndex        =   83
+         Top             =   2040
+         Width           =   1335
       End
-      Begin VB.ComboBox cmbType 
-         Height          =   300
-         ItemData        =   "frmEditor_Item.frx":3399
-         Left            =   120
-         List            =   "frmEditor_Item.frx":33B8
-         Style           =   2  'Dropdown List
-         TabIndex        =   21
-         Top             =   1200
-         Width           =   2655
-      End
-      Begin VB.TextBox txtName 
+      Begin VB.HScrollBar scrlAlpha 
          Height          =   255
-         Left            =   720
-         TabIndex        =   20
-         Top             =   240
-         Width           =   2055
-      End
-      Begin VB.HScrollBar scrlPic 
-         Height          =   255
-         Left            =   840
+         Left            =   1200
          Max             =   255
-         TabIndex        =   19
+         TabIndex        =   81
+         Top             =   1680
+         Width           =   1335
+      End
+      Begin VB.HScrollBar scrlBlue 
+         Height          =   255
+         Left            =   1200
+         Max             =   255
+         TabIndex        =   79
+         Top             =   1320
+         Width           =   1335
+      End
+      Begin VB.HScrollBar scrlGreen 
+         Height          =   255
+         Left            =   1200
+         Max             =   255
+         TabIndex        =   77
+         Top             =   960
+         Width           =   1335
+      End
+      Begin VB.HScrollBar scrlRed 
+         Height          =   255
+         Left            =   1200
+         Max             =   255
+         TabIndex        =   75
          Top             =   600
          Width           =   1335
       End
@@ -362,55 +87,385 @@ Begin VB.Form frmEditor_Item
             Strikethrough   =   0   'False
          EndProperty
          Height          =   480
-         Left            =   2280
+         Left            =   2650
          ScaleHeight     =   32
          ScaleMode       =   3  'Pixel
          ScaleWidth      =   32
-         TabIndex        =   18
-         Top             =   600
+         TabIndex        =   67
+         Top             =   840
          Width           =   480
       End
-      Begin VB.Label lblLevelReq 
-         AutoSize        =   -1  'True
-         Caption         =   "Level req: 0"
-         Height          =   180
-         Left            =   2880
-         TabIndex        =   75
-         Top             =   2760
-         Width           =   900
+      Begin VB.HScrollBar scrlPic 
+         Height          =   255
+         Left            =   1200
+         Max             =   255
+         TabIndex        =   66
+         Top             =   240
+         Width           =   1335
       End
-      Begin VB.Label lblAccessReq 
+      Begin VB.Label lblAnim 
          AutoSize        =   -1  'True
-         Caption         =   "Access Req: 0"
+         Caption         =   "Anim: None"
          Height          =   180
-         Left            =   2880
-         TabIndex        =   73
-         Top             =   2400
-         Width           =   1110
-      End
-      Begin VB.Label Label2 
-         AutoSize        =   -1  'True
-         Caption         =   "Class Req:"
-         Height          =   180
-         Left            =   2880
-         TabIndex        =   71
+         Left            =   120
+         TabIndex        =   84
          Top             =   2040
+         Width           =   885
+      End
+      Begin VB.Label lblAlpha 
+         AutoSize        =   -1  'True
+         Caption         =   "Alpha: 255"
+         Height          =   180
+         Left            =   120
+         TabIndex        =   82
+         Top             =   1680
+         UseMnemonic     =   0   'False
+         Width           =   855
+      End
+      Begin VB.Label lblBlue 
+         AutoSize        =   -1  'True
+         Caption         =   "Blue: 255"
+         Height          =   180
+         Left            =   120
+         TabIndex        =   80
+         Top             =   1320
+         UseMnemonic     =   0   'False
+         Width           =   750
+      End
+      Begin VB.Label lblGreen 
+         AutoSize        =   -1  'True
+         Caption         =   "Green: 255"
+         Height          =   180
+         Left            =   120
+         TabIndex        =   78
+         Top             =   960
+         UseMnemonic     =   0   'False
+         Width           =   870
+      End
+      Begin VB.Label lblRed 
+         AutoSize        =   -1  'True
+         Caption         =   "Red: 255"
+         Height          =   180
+         Left            =   120
+         TabIndex        =   76
+         Top             =   600
+         UseMnemonic     =   0   'False
+         Width           =   705
+      End
+      Begin VB.Label lblPic 
+         AutoSize        =   -1  'True
+         Caption         =   "Pic: 0"
+         Height          =   180
+         Left            =   120
+         TabIndex        =   68
+         Top             =   240
+         UseMnemonic     =   0   'False
+         Width           =   450
+      End
+   End
+   Begin VB.Frame fraEquipment 
+      Caption         =   "Equipment Data"
+      Height          =   2175
+      Left            =   3360
+      TabIndex        =   27
+      Top             =   3960
+      Visible         =   0   'False
+      Width           =   9615
+      Begin VB.PictureBox picPaperdoll 
+         AutoRedraw      =   -1  'True
+         BackColor       =   &H00000000&
+         BorderStyle     =   0  'None
+         BeginProperty Font 
+            Name            =   "Verdana"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   960
+         Left            =   7560
+         ScaleHeight     =   64
+         ScaleMode       =   3  'Pixel
+         ScaleWidth      =   128
+         TabIndex        =   53
+         Top             =   1080
+         Width           =   1920
+      End
+      Begin VB.HScrollBar scrlPaperdoll 
+         Height          =   255
+         Left            =   7560
+         TabIndex        =   52
+         Top             =   720
+         Width           =   1935
+      End
+      Begin VB.HScrollBar scrlSpeed 
+         Height          =   255
+         LargeChange     =   100
+         Left            =   7800
+         Max             =   3000
+         Min             =   100
+         SmallChange     =   100
+         TabIndex        =   35
+         Top             =   360
+         Value           =   100
+         Width           =   1695
+      End
+      Begin VB.HScrollBar scrlStatBonus 
+         Height          =   255
+         Index           =   5
+         LargeChange     =   10
+         Left            =   2760
+         Max             =   255
+         TabIndex        =   34
+         Top             =   1440
+         Width           =   855
+      End
+      Begin VB.HScrollBar scrlStatBonus 
+         Height          =   255
+         Index           =   4
+         LargeChange     =   10
+         Left            =   2760
+         Max             =   255
+         TabIndex        =   33
+         Top             =   1080
+         Width           =   855
+      End
+      Begin VB.HScrollBar scrlStatBonus 
+         Height          =   255
+         Index           =   3
+         LargeChange     =   10
+         Left            =   960
+         Max             =   255
+         TabIndex        =   32
+         Top             =   1800
+         Width           =   855
+      End
+      Begin VB.HScrollBar scrlStatBonus 
+         Height          =   255
+         Index           =   2
+         LargeChange     =   10
+         Left            =   960
+         Max             =   255
+         TabIndex        =   31
+         Top             =   1440
+         Width           =   855
+      End
+      Begin VB.HScrollBar scrlDamage 
+         Height          =   255
+         LargeChange     =   10
+         Left            =   1320
+         Max             =   255
+         TabIndex        =   30
+         Top             =   720
+         Width           =   1815
+      End
+      Begin VB.ComboBox cmbTool 
+         Height          =   300
+         ItemData        =   "frmEditor_Item.frx":3332
+         Left            =   1320
+         List            =   "frmEditor_Item.frx":3342
+         Style           =   2  'Dropdown List
+         TabIndex        =   29
+         Top             =   360
+         Width           =   4815
+      End
+      Begin VB.HScrollBar scrlStatBonus 
+         Height          =   255
+         Index           =   1
+         LargeChange     =   10
+         Left            =   960
+         Max             =   255
+         TabIndex        =   28
+         Top             =   1080
+         Width           =   855
+      End
+      Begin VB.Label lblPaperdoll 
+         AutoSize        =   -1  'True
+         Caption         =   "Paperdoll: 0"
+         Height          =   180
+         Left            =   6480
+         TabIndex        =   51
+         Top             =   720
+         Width           =   915
+      End
+      Begin VB.Label lblSpeed 
+         AutoSize        =   -1  'True
+         Caption         =   "Speed: 0.1 sec"
+         Height          =   180
+         Left            =   6360
+         TabIndex        =   43
+         Top             =   360
+         UseMnemonic     =   0   'False
+         Width           =   1140
+      End
+      Begin VB.Label lblStatBonus 
+         AutoSize        =   -1  'True
+         Caption         =   "+ Will: 0"
+         Height          =   180
+         Index           =   5
+         Left            =   1920
+         TabIndex        =   42
+         Top             =   1440
+         UseMnemonic     =   0   'False
+         Width           =   630
+      End
+      Begin VB.Label lblStatBonus 
+         AutoSize        =   -1  'True
+         Caption         =   "+ Agi: 0"
+         Height          =   180
+         Index           =   4
+         Left            =   1920
+         TabIndex        =   41
+         Top             =   1080
+         UseMnemonic     =   0   'False
+         Width           =   615
+      End
+      Begin VB.Label lblStatBonus 
+         AutoSize        =   -1  'True
+         Caption         =   "+ Int: 0"
+         Height          =   180
+         Index           =   3
+         Left            =   120
+         TabIndex        =   40
+         Top             =   1800
+         UseMnemonic     =   0   'False
+         Width           =   585
+      End
+      Begin VB.Label lblStatBonus 
+         AutoSize        =   -1  'True
+         Caption         =   "+ End: 0"
+         Height          =   180
+         Index           =   2
+         Left            =   120
+         TabIndex        =   39
+         Top             =   1440
+         UseMnemonic     =   0   'False
+         Width           =   645
+      End
+      Begin VB.Label lblDamage 
+         AutoSize        =   -1  'True
+         Caption         =   "Damage: 0"
+         Height          =   180
+         Left            =   120
+         TabIndex        =   38
+         Top             =   720
+         UseMnemonic     =   0   'False
          Width           =   825
+      End
+      Begin VB.Label Label8 
+         AutoSize        =   -1  'True
+         Caption         =   "Object Tool:"
+         Height          =   180
+         Left            =   120
+         TabIndex        =   37
+         Top             =   360
+         Width           =   945
+      End
+      Begin VB.Label lblStatBonus 
+         AutoSize        =   -1  'True
+         Caption         =   "+ Str: 0"
+         Height          =   180
+         Index           =   1
+         Left            =   120
+         TabIndex        =   36
+         Top             =   1080
+         UseMnemonic     =   0   'False
+         Width           =   585
+      End
+   End
+   Begin VB.Frame Frame2 
+      Caption         =   "Info"
+      Height          =   2535
+      Left            =   3360
+      TabIndex        =   17
+      Top             =   120
+      Width           =   6255
+      Begin VB.ComboBox cmbSound 
+         Height          =   300
+         Left            =   3720
+         Style           =   2  'Dropdown List
+         TabIndex        =   64
+         Top             =   1320
+         Width           =   2415
+      End
+      Begin VB.TextBox txtDesc 
+         Height          =   1575
+         Left            =   120
+         MaxLength       =   255
+         MultiLine       =   -1  'True
+         ScrollBars      =   2  'Vertical
+         TabIndex        =   55
+         Top             =   840
+         Width           =   2655
+      End
+      Begin VB.HScrollBar scrlRarity 
+         Height          =   255
+         Left            =   4200
+         Max             =   5
+         TabIndex        =   22
+         Top             =   960
+         Width           =   1935
+      End
+      Begin VB.ComboBox cmbBind 
+         Height          =   300
+         ItemData        =   "frmEditor_Item.frx":3363
+         Left            =   4200
+         List            =   "frmEditor_Item.frx":3370
+         Style           =   2  'Dropdown List
+         TabIndex        =   21
+         Top             =   600
+         Width           =   1935
+      End
+      Begin VB.HScrollBar scrlPrice 
+         Height          =   255
+         LargeChange     =   100
+         Left            =   4200
+         Max             =   30000
+         TabIndex        =   20
+         Top             =   240
+         Width           =   1935
+      End
+      Begin VB.ComboBox cmbType 
+         Height          =   300
+         ItemData        =   "frmEditor_Item.frx":3399
+         Left            =   2880
+         List            =   "frmEditor_Item.frx":33B8
+         Style           =   2  'Dropdown List
+         TabIndex        =   19
+         Top             =   2040
+         Width           =   3255
+      End
+      Begin VB.TextBox txtName 
+         Height          =   255
+         Left            =   720
+         TabIndex        =   18
+         Top             =   240
+         Width           =   2055
+      End
+      Begin VB.Label Label5 
+         Caption         =   "Item Type:"
+         Height          =   255
+         Left            =   2880
+         TabIndex        =   85
+         Top             =   1800
+         Width           =   855
       End
       Begin VB.Label Label4 
          Caption         =   "Sound:"
          Height          =   255
          Left            =   2880
-         TabIndex        =   68
-         Top             =   1680
+         TabIndex        =   63
+         Top             =   1320
          Width           =   1455
       End
       Begin VB.Label Label3 
          Caption         =   "Description:"
          Height          =   255
          Left            =   120
-         TabIndex        =   59
-         Top             =   1560
+         TabIndex        =   54
+         Top             =   600
          Width           =   975
       End
       Begin VB.Label lblRarity 
@@ -418,7 +473,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Rarity: 0"
          Height          =   180
          Left            =   2880
-         TabIndex        =   31
+         TabIndex        =   26
          Top             =   960
          Width           =   660
       End
@@ -427,7 +482,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Bind Type:"
          Height          =   180
          Left            =   2880
-         TabIndex        =   30
+         TabIndex        =   25
          Top             =   600
          Width           =   810
       End
@@ -436,52 +491,58 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Price: 0"
          Height          =   180
          Left            =   2880
-         TabIndex        =   29
+         TabIndex        =   24
          Top             =   240
          Width           =   600
-      End
-      Begin VB.Label lblAnim 
-         AutoSize        =   -1  'True
-         Caption         =   "Anim: None"
-         Height          =   180
-         Left            =   2880
-         TabIndex        =   28
-         Top             =   1320
-         Width           =   885
       End
       Begin VB.Label Label1 
          AutoSize        =   -1  'True
          Caption         =   "Name:"
          Height          =   180
          Left            =   120
-         TabIndex        =   27
+         TabIndex        =   23
          Top             =   240
          UseMnemonic     =   0   'False
          Width           =   495
       End
-      Begin VB.Label lblPic 
-         AutoSize        =   -1  'True
-         Caption         =   "Pic: 0"
-         Height          =   180
-         Left            =   120
-         TabIndex        =   26
-         Top             =   600
-         UseMnemonic     =   0   'False
-         Width           =   450
-      End
    End
    Begin VB.Frame Frame1 
       Caption         =   "Requirements"
-      Height          =   975
+      Height          =   1095
       Left            =   3360
       TabIndex        =   6
-      Top             =   3600
-      Width           =   6255
+      Top             =   2760
+      Width           =   9615
+      Begin VB.ComboBox cmbClassReq 
+         Height          =   300
+         Left            =   1080
+         Style           =   2  'Dropdown List
+         TabIndex        =   71
+         Top             =   600
+         Width           =   2295
+      End
+      Begin VB.HScrollBar scrlAccessReq 
+         Height          =   255
+         Left            =   4800
+         Max             =   5
+         TabIndex        =   70
+         Top             =   600
+         Width           =   1695
+      End
+      Begin VB.HScrollBar scrlLevelReq 
+         Height          =   255
+         LargeChange     =   10
+         Left            =   7680
+         Max             =   99
+         TabIndex        =   69
+         Top             =   600
+         Width           =   1695
+      End
       Begin VB.HScrollBar scrlStatReq 
          Height          =   255
          Index           =   1
          LargeChange     =   10
-         Left            =   720
+         Left            =   1200
          Max             =   255
          TabIndex        =   11
          Top             =   240
@@ -501,7 +562,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Index           =   3
          LargeChange     =   10
-         Left            =   5160
+         Left            =   4560
          Max             =   255
          TabIndex        =   9
          Top             =   240
@@ -511,28 +572,55 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Index           =   4
          LargeChange     =   10
-         Left            =   720
+         Left            =   6120
          Max             =   255
          TabIndex        =   8
-         Top             =   600
+         Top             =   240
          Width           =   855
       End
       Begin VB.HScrollBar scrlStatReq 
          Height          =   255
          Index           =   5
          LargeChange     =   10
-         Left            =   2880
+         Left            =   7920
          Max             =   255
          TabIndex        =   7
-         Top             =   600
+         Top             =   240
          Width           =   855
+      End
+      Begin VB.Label lblLevelReq 
+         AutoSize        =   -1  'True
+         Caption         =   "Level req: 0"
+         Height          =   180
+         Left            =   6600
+         TabIndex        =   74
+         Top             =   600
+         Width           =   900
+      End
+      Begin VB.Label Label2 
+         AutoSize        =   -1  'True
+         Caption         =   "Class Req:"
+         Height          =   180
+         Left            =   120
+         TabIndex        =   73
+         Top             =   600
+         Width           =   825
+      End
+      Begin VB.Label lblAccessReq 
+         AutoSize        =   -1  'True
+         Caption         =   "Access Req: 0"
+         Height          =   180
+         Left            =   3480
+         TabIndex        =   72
+         Top             =   600
+         Width           =   1110
       End
       Begin VB.Label lblStatReq 
          AutoSize        =   -1  'True
          Caption         =   "Str: 0"
          Height          =   180
          Index           =   1
-         Left            =   120
+         Left            =   600
          TabIndex        =   16
          Top             =   240
          UseMnemonic     =   0   'False
@@ -543,7 +631,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "End: 0"
          Height          =   180
          Index           =   2
-         Left            =   2280
+         Left            =   2160
          TabIndex        =   15
          Top             =   240
          UseMnemonic     =   0   'False
@@ -554,7 +642,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Int: 0"
          Height          =   180
          Index           =   3
-         Left            =   4560
+         Left            =   3840
          TabIndex        =   14
          Top             =   240
          UseMnemonic     =   0   'False
@@ -565,9 +653,9 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Agi: 0"
          Height          =   180
          Index           =   4
-         Left            =   120
+         Left            =   5520
          TabIndex        =   13
-         Top             =   600
+         Top             =   240
          UseMnemonic     =   0   'False
          Width           =   465
       End
@@ -576,9 +664,9 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Will: 0"
          Height          =   180
          Index           =   5
-         Left            =   2280
+         Left            =   7200
          TabIndex        =   12
-         Top             =   600
+         Top             =   240
          UseMnemonic     =   0   'False
          Width           =   480
       End
@@ -589,42 +677,42 @@ Begin VB.Form frmEditor_Item
       Height          =   375
       Left            =   240
       TabIndex        =   5
-      Top             =   7920
+      Top             =   6240
       Width           =   2895
    End
    Begin VB.CommandButton cmdSave 
       Caption         =   "Save"
       Height          =   375
-      Left            =   4200
+      Left            =   5640
       TabIndex        =   4
-      Top             =   7920
+      Top             =   6240
       Width           =   1455
    End
    Begin VB.CommandButton cmdCancel 
       Caption         =   "Cancel"
       Height          =   375
-      Left            =   7320
+      Left            =   8880
       TabIndex        =   3
-      Top             =   7920
+      Top             =   6240
       Width           =   1455
    End
    Begin VB.CommandButton cmdDelete 
       Caption         =   "Delete"
       Height          =   375
-      Left            =   5760
+      Left            =   7200
       TabIndex        =   2
-      Top             =   7920
+      Top             =   6240
       Width           =   1455
    End
    Begin VB.Frame Frame3 
       Caption         =   "Item List"
-      Height          =   7695
+      Height          =   6015
       Left            =   120
       TabIndex        =   0
       Top             =   120
       Width           =   3135
       Begin VB.ListBox lstIndex 
-         Height          =   7260
+         Height          =   5640
          Left            =   120
          TabIndex        =   1
          Top             =   240
@@ -633,27 +721,27 @@ Begin VB.Form frmEditor_Item
    End
    Begin VB.Frame fraVitals 
       Caption         =   "Consume Data"
-      Height          =   3135
-      Left            =   3360
-      TabIndex        =   49
-      Top             =   4680
+      Height          =   1935
+      Left            =   4440
+      TabIndex        =   44
+      Top             =   3960
       Visible         =   0   'False
-      Width           =   3735
+      Width           =   7335
       Begin VB.CheckBox chkInstant 
          Caption         =   "Instant Cast?"
          Height          =   255
-         Left            =   120
-         TabIndex        =   67
-         Top             =   2760
+         Left            =   3000
+         TabIndex        =   62
+         Top             =   1560
          Visible         =   0   'False
          Width           =   1455
       End
       Begin VB.HScrollBar scrlCastSpell 
          Height          =   255
-         Left            =   120
+         Left            =   3720
          Max             =   255
-         TabIndex        =   65
-         Top             =   2400
+         TabIndex        =   60
+         Top             =   1200
          Visible         =   0   'False
          Width           =   3495
       End
@@ -661,23 +749,23 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   120
          Max             =   255
-         TabIndex        =   63
-         Top             =   1800
+         TabIndex        =   58
+         Top             =   1200
          Width           =   3495
       End
       Begin VB.HScrollBar scrlAddMP 
          Height          =   255
-         Left            =   120
+         Left            =   3720
          Max             =   255
-         TabIndex        =   61
-         Top             =   1200
+         TabIndex        =   56
+         Top             =   600
          Width           =   3495
       End
       Begin VB.HScrollBar scrlAddHp 
          Height          =   255
          Left            =   120
          Max             =   255
-         TabIndex        =   50
+         TabIndex        =   45
          Top             =   600
          Width           =   3495
       End
@@ -685,9 +773,9 @@ Begin VB.Form frmEditor_Item
          AutoSize        =   -1  'True
          Caption         =   "Cast Spell: None"
          Height          =   180
-         Left            =   120
-         TabIndex        =   66
-         Top             =   2160
+         Left            =   3720
+         TabIndex        =   61
+         Top             =   960
          UseMnemonic     =   0   'False
          Visible         =   0   'False
          Width           =   1275
@@ -697,8 +785,8 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Add Exp: 0"
          Height          =   180
          Left            =   120
-         TabIndex        =   64
-         Top             =   1560
+         TabIndex        =   59
+         Top             =   960
          UseMnemonic     =   0   'False
          Width           =   840
       End
@@ -706,9 +794,9 @@ Begin VB.Form frmEditor_Item
          AutoSize        =   -1  'True
          Caption         =   "Add MP: 0"
          Height          =   180
-         Left            =   120
-         TabIndex        =   62
-         Top             =   960
+         Left            =   3720
+         TabIndex        =   57
+         Top             =   360
          UseMnemonic     =   0   'False
          Width           =   795
       End
@@ -717,7 +805,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Add HP: 0"
          Height          =   180
          Left            =   120
-         TabIndex        =   51
+         TabIndex        =   46
          Top             =   360
          UseMnemonic     =   0   'False
          Width           =   780
@@ -726,9 +814,9 @@ Begin VB.Form frmEditor_Item
    Begin VB.Frame fraSpell 
       Caption         =   "Spell Data"
       Height          =   1215
-      Left            =   3360
-      TabIndex        =   52
-      Top             =   4680
+      Left            =   6240
+      TabIndex        =   47
+      Top             =   3960
       Visible         =   0   'False
       Width           =   3735
       Begin VB.HScrollBar scrlSpell 
@@ -736,7 +824,7 @@ Begin VB.Form frmEditor_Item
          Left            =   1080
          Max             =   255
          Min             =   1
-         TabIndex        =   53
+         TabIndex        =   48
          Top             =   720
          Value           =   1
          Width           =   2415
@@ -746,7 +834,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Name: None"
          Height          =   180
          Left            =   240
-         TabIndex        =   55
+         TabIndex        =   50
          Top             =   360
          Width           =   930
       End
@@ -755,7 +843,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Num: 0"
          Height          =   180
          Left            =   240
-         TabIndex        =   54
+         TabIndex        =   49
          Top             =   720
          Width           =   555
       End
@@ -1013,6 +1101,11 @@ errorhandler:
     Exit Sub
 End Sub
 
+Private Sub scrlAlpha_Change()
+    lblAlpha.Caption = "Alpha: " & Trim$(Str$(scrlAlpha.value))
+    Item(EditorIndex).Alpha = scrlAlpha.value
+End Sub
+
 Private Sub scrlAnim_Change()
 Dim sString As String
     ' If debug mode, handle error then exit out
@@ -1035,6 +1128,11 @@ errorhandler:
     Exit Sub
 End Sub
 
+Private Sub scrlBlue_Change()
+    lblBlue.Caption = "Blue: " & Trim$(Str$(scrlBlue.value))
+    Item(EditorIndex).Blue = scrlBlue.value
+End Sub
+
 Private Sub scrlDamage_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -1049,6 +1147,11 @@ errorhandler:
     HandleError "scrlDamage_Change", "frmEditor_Item", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
+End Sub
+
+Private Sub scrlGreen_Change()
+    lblGreen.Caption = "Green: " & Trim$(Str$(scrlGreen.value))
+    Item(EditorIndex).Green = scrlGreen.value
 End Sub
 
 Private Sub scrlLevelReq_Change()
@@ -1133,6 +1236,11 @@ errorhandler:
     Exit Sub
 End Sub
 
+Private Sub scrlRed_Change()
+    lblRed.Caption = "Red: " & Trim$(Str$(scrlRed.value))
+    Item(EditorIndex).Red = scrlRed.value
+End Sub
+
 Private Sub scrlSpeed_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -1149,13 +1257,13 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlStatBonus_Change(Index As Integer)
+Private Sub scrlStatBonus_Change(index As Integer)
 Dim text As String
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    Select Case Index
+    Select Case index
         Case 1
             text = "+ Str: "
         Case 2
@@ -1168,8 +1276,8 @@ Dim text As String
             text = "+ Will: "
     End Select
             
-    lblStatBonus(Index).Caption = text & scrlStatBonus(Index).value
-    Item(EditorIndex).Add_Stat(Index) = scrlStatBonus(Index).value
+    lblStatBonus(index).Caption = text & scrlStatBonus(index).value
+    Item(EditorIndex).Add_Stat(index) = scrlStatBonus(index).value
     
     ' Error handler
     Exit Sub
@@ -1179,13 +1287,13 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlStatReq_Change(Index As Integer)
+Private Sub scrlStatReq_Change(index As Integer)
     Dim text As String
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    Select Case Index
+    Select Case index
         Case 1
             text = "Str: "
         Case 2
@@ -1198,8 +1306,8 @@ Private Sub scrlStatReq_Change(Index As Integer)
             text = "Will: "
     End Select
     
-    lblStatReq(Index).Caption = text & scrlStatReq(Index).value
-    Item(EditorIndex).Stat_Req(Index) = scrlStatReq(Index).value
+    lblStatReq(index).Caption = text & scrlStatReq(index).value
+    Item(EditorIndex).Stat_Req(index) = scrlStatReq(index).value
     
     ' Error handler
     Exit Sub

@@ -59,7 +59,7 @@ Private Type PlayerRec
     Password As String * NAME_LENGTH
     
     ' General
-    name As String * ACCOUNT_LENGTH
+    Name As String * ACCOUNT_LENGTH
     Sex As Byte
     Class As Long
     Sprite As Long
@@ -157,7 +157,7 @@ Private Type TileRec
 End Type
 
 Private Type MapRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     Music As String * NAME_LENGTH
     
     Revision As Long
@@ -180,7 +180,7 @@ Private Type MapRec
 End Type
 
 Private Type ClassRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     Stat(1 To Stats.Stat_Count - 1) As Byte
     MaleSprite() As Long
     FemaleSprite() As Long
@@ -194,7 +194,7 @@ Private Type ClassRec
 End Type
 
 Private Type ItemRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     Desc As String * 255
     Sound As String * NAME_LENGTH
     
@@ -223,6 +223,11 @@ Private Type ItemRec
     AddEXP As Long
     CastSpell As Long
     instaCast As Byte
+    
+    Red As Byte
+    Green As Byte
+    Blue As Byte
+    Alpha As Byte
 End Type
 
 Private Type MapItemRec
@@ -238,7 +243,7 @@ Private Type MapItemRec
 End Type
 
 Private Type NpcRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     AttackSay As String * 100
     Sound As String * NAME_LENGTH
     
@@ -286,13 +291,13 @@ Private Type TradeItemRec
 End Type
 
 Private Type ShopRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     BuyRate As Long
     TradeItem(1 To MAX_TRADES) As TradeItemRec
 End Type
 
 Private Type SpellRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     Desc As String * 255
     Sound As String * NAME_LENGTH
     
@@ -342,7 +347,7 @@ Private Type ResourceCacheRec
 End Type
 
 Private Type ResourceRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     SuccessMessage As String * NAME_LENGTH
     EmptyMessage As String * NAME_LENGTH
     Sound As String * NAME_LENGTH
@@ -359,7 +364,7 @@ Private Type ResourceRec
 End Type
 
 Private Type AnimationRec
-    name As String * NAME_LENGTH
+    Name As String * NAME_LENGTH
     Sound As String * NAME_LENGTH
     
     Sprite(0 To 1) As Long

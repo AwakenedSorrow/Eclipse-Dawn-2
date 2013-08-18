@@ -87,8 +87,8 @@ Private Type PlayerRec
     Equipment(1 To Equipment.Equipment_Count - 1) As Long
     ' Position
     Map As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     Dir As Byte
     ' Client use only
     XOffset As Integer
@@ -101,8 +101,8 @@ Private Type PlayerRec
 End Type
 
 Private Type TileDataRec
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Tileset As Long
 End Type
 
@@ -176,14 +176,19 @@ Private Type ItemRec
     AddEXP As Long
     CastSpell As Long
     instaCast As Byte
+    
+    Red As Byte
+    Green As Byte
+    Blue As Byte
+    Alpha As Byte
 End Type
 
 Private Type MapItemRec
     playerName As String
     num As Long
     value As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
 End Type
 
 Private Type NpcRec
@@ -212,8 +217,8 @@ Private Type MapNpcRec
     TargetType As Byte
     Vital(1 To Vitals.Vital_Count - 1) As Long
     Map As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     Dir As Byte
     ' Client use only
     XOffset As Long
@@ -251,8 +256,8 @@ Private Type SpellRec
     CDTime As Long
     Icon As Long
     Map As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Dir As Byte
     Vital As Long
     Duration As Long
@@ -273,8 +278,8 @@ Private Type TempTileRec
 End Type
 
 Public Type MapResourceRec
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     ResourceState As Byte
 End Type
 
@@ -301,8 +306,8 @@ Private Type ActionMsgRec
     Type As Long
     color As Long
     Scroll As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     timer As Long
 End Type
 
@@ -311,8 +316,8 @@ Private Type BloodRec
     Alpha As Byte
     LastTimer As Long
     timer As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
 End Type
 
 Private Type AnimationRec
@@ -327,8 +332,8 @@ End Type
 
 Private Type AnimInstanceRec
     Animation As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     ' used for locking to players/npcs
     lockindex As Long
     LockType As Byte

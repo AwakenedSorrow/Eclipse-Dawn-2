@@ -202,7 +202,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderMapTile(ByVal X As Long, ByVal Y As Long)
+Public Sub RenderMapTile(ByVal X As Long, ByVal Y As Long)
 Dim i As Long
     
     ' If debug mode, handle error then exit out
@@ -226,7 +226,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderUpperMapTile(ByVal X As Long, ByVal Y As Long)
+Public Sub RenderUpperMapTile(ByVal X As Long, ByVal Y As Long)
 Dim i As Long
     
     ' If debug mode, handle error then exit out
@@ -250,55 +250,55 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderPlayer(ByVal Index As Long)
+Public Sub RenderPlayer(ByVal index As Long)
 Dim SpriteFrame As Byte, i As Long, X As Long, Y As Long
 Dim Sprite As Long, SpriteDir As Long
-Dim attackspeed As Long
+Dim attackspeed As Long, Red As Byte, Green As Byte, Blue As Byte, Alpha As Byte
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' Get the sprite we're using for this player.
-    Sprite = GetPlayerSprite(Index)
+    Sprite = GetPlayerSprite(index)
     
     ' Check if the sprite's valid, if not exit the sub so we don't cause any issues.
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
 
     ' Retrieve the weapon speed if the player has one equipped.
-    If GetPlayerEquipment(Index, Weapon) > 0 Then
-        attackspeed = Item(GetPlayerEquipment(Index, Weapon)).Speed
+    If GetPlayerEquipment(index, Weapon) > 0 Then
+        attackspeed = Item(GetPlayerEquipment(index, Weapon)).Speed
     Else
         attackspeed = 1000
     End If
 
     ' Reset the movement frame if the player;s at the end of beginning of a movement.
-    If Player(Index).Step = 3 Then
+    If Player(index).Step = 3 Then
         SpriteFrame = 0
-    ElseIf Player(Index).Step = 1 Then
+    ElseIf Player(index).Step = 1 Then
         SpriteFrame = 2
     End If
     
     ' Check if we should be using the attack Frame
-    If Player(Index).AttackTimer + (attackspeed / 2) > GetTickCount Then
-        If Player(Index).Attacking = 1 Then
+    If Player(index).AttackTimer + (attackspeed / 2) > GetTickCount Then
+        If Player(index).Attacking = 1 Then
             SpriteFrame = 3
         End If
     Else
         ' Apparently not, so we'll be using the regular movement animations!
-        Select Case GetPlayerDir(Index)
+        Select Case GetPlayerDir(index)
             Case DIR_UP
-                If (Player(Index).yOffset > 8) Then SpriteFrame = Player(Index).Step
+                If (Player(index).yOffset > 8) Then SpriteFrame = Player(index).Step
             Case DIR_DOWN
-                If (Player(Index).yOffset < -8) Then SpriteFrame = Player(Index).Step
+                If (Player(index).yOffset < -8) Then SpriteFrame = Player(index).Step
             Case DIR_LEFT
-                If (Player(Index).XOffset > 8) Then SpriteFrame = Player(Index).Step
+                If (Player(index).XOffset > 8) Then SpriteFrame = Player(index).Step
             Case DIR_RIGHT
-                If (Player(Index).XOffset < -8) Then SpriteFrame = Player(Index).Step
+                If (Player(index).XOffset < -8) Then SpriteFrame = Player(index).Step
         End Select
     End If
 
     ' Are we allowed to still attack the next frame? Probably not!
-    With Player(Index)
+    With Player(index)
         If .AttackTimer + attackspeed < GetTickCount Then
             .Attacking = 0
             .AttackTimer = 0
@@ -308,7 +308,7 @@ Dim attackspeed As Long
     ' Decide which direction our little sprite should be facing, 0 being the top row and 3 being the bottom
     ' On your spritesheet. Please change these if your spritesheet's in a different order from the standard
     ' RMXP format.
-    Select Case GetPlayerDir(Index)
+    Select Case GetPlayerDir(index)
         Case DIR_UP
             SpriteDir = 3
         Case DIR_RIGHT
@@ -320,16 +320,16 @@ Dim attackspeed As Long
     End Select
 
     ' Calculate the X position to render the player sprite at. Along with offset, of course!
-    X = GetPlayerX(Index) * PIC_X + Player(Index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
+    X = GetPlayerX(index) * PIC_X + Player(index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
 
     ' Time to work on the Y position.
     ' But first, let's check if the sprite is more than 32 pixels high.
     If (D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) > 32 Then
         ' Create a 32 pixel offset for larger sprites
-        Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
+        Y = GetPlayerY(index) * PIC_Y + Player(index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
     Else
         ' Proceed as normal
-        Y = GetPlayerY(Index) * PIC_Y + Player(Index).yOffset
+        Y = GetPlayerY(index) * PIC_Y + Player(index).yOffset
     End If
 
     ' We're done here, let's render the sprite!
@@ -339,9 +339,13 @@ Dim attackspeed As Long
     ' This will render any equipped items that the player has on which have been assigned a
     ' paperdoll.
     For i = 1 To UBound(PaperdollOrder)
-        If GetPlayerEquipment(Index, PaperdollOrder(i)) > 0 Then
-            If Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll > 0 Then
-                Call RenderPaperdoll(X, Y, Item(GetPlayerEquipment(Index, PaperdollOrder(i))).Paperdoll, SpriteFrame, SpriteDir)
+        If GetPlayerEquipment(index, PaperdollOrder(i)) > 0 Then
+            If Item(GetPlayerEquipment(index, PaperdollOrder(i))).Paperdoll > 0 Then
+                Red = Item(GetPlayerEquipment(index, PaperdollOrder(i))).Red
+                Green = Item(GetPlayerEquipment(index, PaperdollOrder(i))).Green
+                Blue = Item(GetPlayerEquipment(index, PaperdollOrder(i))).Blue
+                Alpha = Item(GetPlayerEquipment(index, PaperdollOrder(i))).Alpha
+                Call RenderPaperdoll(X, Y, Item(GetPlayerEquipment(index, PaperdollOrder(i))).Paperdoll, SpriteFrame, SpriteDir, Red, Green, Blue, Alpha)
             End If
         End If
     Next
@@ -354,11 +358,8 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderSprite(ByVal Sprite As Long, ByVal X2 As Long, Y2 As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
-Dim X As Long
-Dim Y As Long
-Dim Width As Long
-Dim Height As Long
+Public Sub RenderSprite(ByVal Sprite As Long, ByVal X2 As Long, Y2 As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
+Dim X As Long, Y As Long, Width As Long, Height As Long
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -373,9 +374,11 @@ Dim Height As Long
     ' Pre-Calculate these values, it makes the render line look a lot cleaner.
     Width = D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4
     Height = D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4
+    SpriteFrame = SpriteFrame * Width
+    SpriteDir = SpriteDir * Height
     
     ' Render the sprite itself! Please do -NOT- touch this line unless you know what you're doing.
-    Call RenderGraphic(Tex_Character(Sprite), X, Y, Width, Height, 0, 0, SpriteFrame * Width, SpriteDir * Height)
+    Call RenderGraphic(Tex_Character(Sprite), X, Y, Width, Height, 0, 0, SpriteFrame, SpriteDir)
     
 ' Do not put any code beyond this line, this is the error handler.
     Exit Sub
@@ -385,29 +388,35 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderBlood(ByVal Index As Long)
-    
+Public Sub RenderBlood(ByVal index As Long)
+Dim X As Long, Y As Long, Sprite As Long
+
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    With Blood(Index)
+    With Blood(index)
         ' Before we continue, we may want to see if the Blood Decal is still "valid".
         ' If not, we just exit the sub and continue on to the next one.
         If .timer + 60000 < GetTickCount Then Exit Sub
         
-            ' Right, a little addition of my own. The longer blood's been on the map the less visible it will become.
-            ' It will fade a bit every 1.5 seconds. It's nothing fancy but I prefer it this way. :)
-            If .LastTimer + 1500 < GetTickCount Then
-                If .Alpha >= 7 Then
-                    .Alpha = .Alpha - 7
-                Else
-                    .Alpha = 0
-                End If
-                .LastTimer = .LastTimer + 1500
+        ' Right, a little addition of my own. The longer blood's been on the map the less visible it will become.
+        ' It will fade a bit every 1.5 seconds. It's nothing fancy but I prefer it this way. :)
+        If .LastTimer + 1500 < GetTickCount Then
+            If .Alpha >= 7 Then
+                .Alpha = .Alpha - 7
+            Else
+                .Alpha = 0
             End If
+            .LastTimer = .LastTimer + 1500
+        End If
             
-            ' Now that we've got all that sorted, let's get to rendering this bugger!
-            Call RenderGraphic(Tex_Blood, ConvertMapX(.X * PIC_X), ConvertMapY(.Y * PIC_Y), PIC_X, PIC_Y, 0, 0, (.Sprite - 1) * PIC_X, 0, 255, 255, 255, .Alpha)
+        ' Calculate the locations we'll use for the blood.
+        X = ConvertMapX(.X * PIC_X)
+        Y = ConvertMapY(.Y * PIC_Y)
+        Sprite = (.Sprite - 1) * PIC_X
+            
+        ' Now that we've got all that sorted, let's get to rendering this bugger!
+        Call RenderGraphic(Tex_Blood, X, Y, PIC_X, PIC_Y, 0, 0, Sprite, 0, 255, 255, 255, .Alpha)
    
     End With
 ' Do not put any code beyond this line, this is the error handler.
@@ -418,25 +427,36 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderMapItem(ByVal Index As Long)
-Dim AnimFrame
+Public Sub RenderMapItem(ByVal index As Long)
+Dim AnimFrame As Long, X As Long, Y As Long, Red As Byte, Green As Byte, Blue As Byte, Alpha As Byte
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     ' Check if the itemdrop belongs to anyone, if it does and it is not us we skip rendering it.
     ' Wouldn't want to be able to steal someone else's items right?
-    If MapItem(Index).playerName <> vbNullString Then
-        If MapItem(Index).playerName <> Trim$(GetPlayerName(MyIndex)) Then Exit Sub
+    If MapItem(index).playerName <> vbNullString Then
+        If MapItem(index).playerName <> Trim$(GetPlayerName(MyIndex)) Then Exit Sub
     End If
     
-    With Item(MapItem(Index).num)
+    With Item(MapItem(index).num)
         
         ' Let's make sure we're using a valid picture for the item, if not we skip rendering it to avoid issues.
         If .Pic < 1 Or .Pic > NumItems Then Exit Sub
         
+        ' Calculate the locations we'll be using for the item.
+        X = ConvertMapX(MapItem(index).X * PIC_X)
+        Y = ConvertMapY(MapItem(index).Y * PIC_Y)
+        AnimFrame = ItemAnimFrame(MapItem(index).num) * PIC_X
+        
+        ' The Colors maaan!
+        Red = Item(MapItem(index).num).Red
+        Green = Item(MapItem(index).num).Green
+        Blue = Item(MapItem(index).num).Blue
+        Alpha = Item(MapItem(index).num).Alpha
+        
         ' We've done all the fancy stuff, now let's get to rendering this item!
-        Call RenderGraphic(Tex_Item(.Pic), ConvertMapX(MapItem(Index).X * PIC_X), ConvertMapY(MapItem(Index).Y * PIC_Y), PIC_X, PIC_Y, 0, 0, ItemAnimFrame(MapItem(Index).num) * PIC_X, 0)
+        Call RenderGraphic(Tex_Item(.Pic), X, Y, PIC_X, PIC_Y, 0, 0, AnimFrame, 0, Red, Green, Blue, Alpha)
         
     End With
 
@@ -448,7 +468,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderAnimation(ByVal Index As Long, ByVal Layer As Byte)
+Public Sub RenderAnimation(ByVal index As Long, ByVal Layer As Byte)
 Dim Sprite As Long
 Dim i As Long
 Dim Width As Long, Height As Long
@@ -462,18 +482,18 @@ Dim AnimFrame As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' If the animation instance doesn't hold anything for whatever reason, clear it and exit the sub.
-    If AnimInstance(Index).Animation = 0 Then
-        ClearAnimInstance Index
+    If AnimInstance(index).Animation = 0 Then
+        ClearAnimInstance index
         Exit Sub
     End If
     
     ' Retrieve the texture we're using for this Animation and check if it is a valid number.
     ' If it isn't, exit out of this sub and continue on to the next.
-    Sprite = Animation(AnimInstance(Index).Animation).Sprite(Layer)
+    Sprite = Animation(AnimInstance(index).Animation).Sprite(Layer)
     If Sprite < 1 Or Sprite > NumAnimations Then Exit Sub
     
     ' Retrieve the framecount set in the editor.
-    FrameCount = Animation(AnimInstance(Index).Animation).Frames(Layer)
+    FrameCount = Animation(AnimInstance(index).Animation).Frames(Layer)
     
     ' Get and set the Height and Width of the sprite frame we'll be using.
     Width = D3DT_TEXTURE(Tex_Animation(Sprite)).Width / FrameCount
@@ -482,15 +502,15 @@ Dim AnimFrame As Long
     ' Set the Animation Frame we'll be using.
     ' Note that unlike most other render subs, this frame already includes the full location of the texture.
     ' This does not need to be multiplied again further on to get the proper frame texture.
-    AnimFrame = (AnimInstance(Index).FrameIndex(Layer) - 1) * Width
+    AnimFrame = (AnimInstance(index).FrameIndex(Layer) - 1) * Width
 
     ' Let's change the X/Y offset if the Animation is locked onto a target so it actually displays on
     ' top of it.
-    If AnimInstance(Index).LockType > TARGET_TYPE_NONE Then ' if <> none
+    If AnimInstance(index).LockType > TARGET_TYPE_NONE Then ' if <> none
         ' Locked On to a Player.
-        If AnimInstance(Index).LockType = TARGET_TYPE_PLAYER Then
+        If AnimInstance(index).LockType = TARGET_TYPE_PLAYER Then
             ' quick save the index
-            lockindex = AnimInstance(Index).lockindex
+            lockindex = AnimInstance(index).lockindex
             ' check if is ingame
             If IsPlaying(lockindex) Then
                 ' check if on same map
@@ -500,9 +520,9 @@ Dim AnimFrame As Long
                     Y = (GetPlayerY(lockindex) * PIC_Y) + 16 - (Height / 2) + Player(lockindex).yOffset
                 End If
             End If
-        ElseIf AnimInstance(Index).LockType = TARGET_TYPE_NPC Then
+        ElseIf AnimInstance(index).LockType = TARGET_TYPE_NPC Then
             ' quick save the index
-            lockindex = AnimInstance(Index).lockindex
+            lockindex = AnimInstance(index).lockindex
             ' check if NPC exists
             If MapNpc(lockindex).num > 0 Then
                 ' check if alive
@@ -512,19 +532,19 @@ Dim AnimFrame As Long
                     Y = (MapNpc(lockindex).Y * PIC_Y) + 16 - (Height / 2) + MapNpc(lockindex).yOffset
                 Else
                     ' The NPC isn't alive anymore, sadly with the way the system works this means we need to destroy the animation as well.
-                    ClearAnimInstance Index
+                    ClearAnimInstance index
                     Exit Sub
                 End If
             Else
                 ' The NPC isn't alive anymore, sadly with the way the system works this means we need to destroy the animation as well.
-                ClearAnimInstance Index
+                ClearAnimInstance index
                 Exit Sub
             End If
         End If
     Else
         ' no lock, default x + y
-        X = (AnimInstance(Index).X * 32) + 16 - (Width / 2)
-        Y = (AnimInstance(Index).Y * 32) + 16 - (Height / 2)
+        X = (AnimInstance(index).X * 32) + 16 - (Width / 2)
+        Y = (AnimInstance(index).Y * 32) + 16 - (Height / 2)
     End If
     
     ' Convert these values beforehand. Saves some space down there.
@@ -542,7 +562,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderNPC(ByVal Index As Long)
+Public Sub RenderNPC(ByVal index As Long)
 Dim SpriteAnim As Byte, i As Long, X As Long, Y As Long, Sprite As Long, SpriteDir As Long
 Dim attackspeed As Long
     
@@ -550,11 +570,11 @@ Dim attackspeed As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' Check if we actually set an NPC here, if not exit the sub and carry on to the next one.
-    If MapNpc(Index).num = 0 Then Exit Sub
+    If MapNpc(index).num = 0 Then Exit Sub
     
     ' Retrieve the sprite we'll be using, and check if it is valid.
     ' If not, exit the sub and carry on.
-    Sprite = Npc(MapNpc(Index).num).Sprite
+    Sprite = Npc(MapNpc(index).num).Sprite
     If Sprite < 1 Or Sprite > NumCharacters Then Exit Sub
     
     attackspeed = 1000
@@ -562,26 +582,26 @@ Dim attackspeed As Long
     ' Reset the animation frame
     SpriteAnim = 0
     ' Check for attacking animation
-    If MapNpc(Index).AttackTimer + (attackspeed / 2) > GetTickCount Then
-        If MapNpc(Index).Attacking = 1 Then
+    If MapNpc(index).AttackTimer + (attackspeed / 2) > GetTickCount Then
+        If MapNpc(index).Attacking = 1 Then
             SpriteAnim = 3
         End If
     Else
         ' If not attacking, walk normally
-        Select Case MapNpc(Index).Dir
+        Select Case MapNpc(index).Dir
             Case DIR_UP
-                If (MapNpc(Index).yOffset > 8) Then SpriteAnim = MapNpc(Index).Step
+                If (MapNpc(index).yOffset > 8) Then SpriteAnim = MapNpc(index).Step
             Case DIR_DOWN
-                If (MapNpc(Index).yOffset < -8) Then SpriteAnim = MapNpc(Index).Step
+                If (MapNpc(index).yOffset < -8) Then SpriteAnim = MapNpc(index).Step
             Case DIR_LEFT
-                If (MapNpc(Index).XOffset > 8) Then SpriteAnim = MapNpc(Index).Step
+                If (MapNpc(index).XOffset > 8) Then SpriteAnim = MapNpc(index).Step
             Case DIR_RIGHT
-                If (MapNpc(Index).XOffset < -8) Then SpriteAnim = MapNpc(Index).Step
+                If (MapNpc(index).XOffset < -8) Then SpriteAnim = MapNpc(index).Step
         End Select
     End If
 
     ' Check to see if we want to stop making him attack
-    With MapNpc(Index)
+    With MapNpc(index)
         If .AttackTimer + attackspeed < GetTickCount Then
             .Attacking = 0
             .AttackTimer = 0
@@ -589,7 +609,7 @@ Dim attackspeed As Long
     End With
 
     ' Set the Sprite Direction
-    Select Case MapNpc(Index).Dir
+    Select Case MapNpc(index).Dir
         Case DIR_UP
             SpriteDir = 3
         Case DIR_RIGHT
@@ -601,15 +621,15 @@ Dim attackspeed As Long
     End Select
 
     ' Calculate the X
-    X = MapNpc(Index).X * PIC_X + MapNpc(Index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
+    X = MapNpc(index).X * PIC_X + MapNpc(index).XOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Width / 4 - 32) / 2)
 
     ' Is the player's height more than 32..?
     If (D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) > 32 Then
         ' Create a 32 pixel offset for larger sprites
-        Y = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
+        Y = MapNpc(index).Y * PIC_Y + MapNpc(index).yOffset - ((D3DT_TEXTURE(Tex_Character(Sprite)).Height / 4) - 32)
     Else
         ' Proceed as normal
-        Y = MapNpc(Index).Y * PIC_Y + MapNpc(Index).yOffset
+        Y = MapNpc(index).Y * PIC_Y + MapNpc(index).yOffset
     End If
 
     Call RenderSprite(Sprite, X, Y, SpriteAnim, SpriteDir)
@@ -622,7 +642,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderMapResource(ByVal Resource_num As Long)
+Public Sub RenderMapResource(ByVal Resource_num As Long)
 Dim Resource_master As Long
 Dim Resource_state As Long
 Dim Resource_sprite As Long
@@ -673,7 +693,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderResource(ByVal Resource As Long, ByVal DX As Long, ByVal DY As Long, ByVal Width As Long, ByVal Height As Long)
+Public Sub RenderResource(ByVal Resource As Long, ByVal DX As Long, ByVal DY As Long, ByVal Width As Long, ByVal Height As Long)
 Dim X As Long
 Dim Y As Long
 
@@ -698,7 +718,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderDirBlock(ByVal X As Long, ByVal Y As Long)
+Public Sub RenderDirBlock(ByVal X As Long, ByVal Y As Long)
 Dim i As Long, Left As Long, top As Long
     
     ' If debug mode, handle error then exit out
@@ -728,7 +748,8 @@ errorhandler:
     Err.Clear
     Exit Sub
 End Sub
-Sub RenderTileOutline()
+
+Public Sub RenderTileOutline()
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -747,7 +768,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderBars()
+Public Sub RenderBars()
 Dim tmpY As Long, tmpX As Long
 Dim sWidth As Long, sHeight As Long
 Dim top As Long, Right As Long
@@ -858,7 +879,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderHoverAndTarget()
+Public Sub RenderHoverAndTarget()
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -936,7 +957,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Sub RenderHover(ByVal tType As Long, ByVal target As Long, ByVal X As Long, ByVal Y As Long)
+Public Sub RenderHover(ByVal tType As Long, ByVal target As Long, ByVal X As Long, ByVal Y As Long)
 Dim Width As Long, Height As Long
     
     ' If debug mode, handle error then exit out
@@ -993,7 +1014,7 @@ errorhandler:
     Exit Function
 End Function
 
-Public Sub RenderPaperdoll(ByVal X2 As Long, ByVal Y2 As Long, ByVal Sprite As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long)
+Public Sub RenderPaperdoll(ByVal X2 As Long, ByVal Y2 As Long, ByVal Sprite As Long, ByVal SpriteFrame As Long, ByVal SpriteDir As Long, ByVal Red As Byte, ByVal Green As Byte, ByVal Blue As Byte, ByVal Alpha As Byte)
 Dim top As Long, Left As Long
 Dim X As Long, Y As Long
 Dim Width As Long, Height As Long
@@ -1014,7 +1035,7 @@ Dim Width As Long, Height As Long
     Height = (D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4)
     
     ' Rendering time!
-    Call RenderGraphic(Tex_Paperdoll(Sprite), X, Y, Width, Height, 0, 0, Left, top)
+    Call RenderGraphic(Tex_Paperdoll(Sprite), X, Y, Width, Height, 0, 0, Left, top, Red, Green, Blue, Alpha)
     
     ' Error handler
     Exit Sub

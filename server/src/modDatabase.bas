@@ -377,7 +377,7 @@ Sub ClearPlayer(ByVal index As Long)
     Dim i As Long
     
     Call ZeroMemory(ByVal VarPtr(TempPlayer(index)), LenB(TempPlayer(index)))
-    Set TempPlayer(index).buffer = New clsBuffer
+    Set TempPlayer(index).Buffer = New clsBuffer
     
     Call ZeroMemory(ByVal VarPtr(Player(index)), LenB(Player(index)))
     Player(index).Login = vbNullString
@@ -595,6 +595,10 @@ Sub ClearItem(ByVal index As Long)
     Item(index).Name = vbNullString
     Item(index).Desc = vbNullString
     Item(index).Sound = "None."
+    Item(index).Red = 255
+    Item(index).Green = 255
+    Item(index).Blue = 255
+    Item(index).Alpha = 255
 End Sub
 
 Sub ClearItems()
