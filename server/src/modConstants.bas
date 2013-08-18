@@ -10,8 +10,8 @@ Public Const ADMIN_LOG As String = "admin.log"
 Public Const PLAYER_LOG As String = "player.log"
 
 ' Version constants
-Public Const CLIENT_MAJOR As Byte = 1
-Public Const CLIENT_MINOR As Byte = 3
+Public Const CLIENT_MAJOR As Byte = 2
+Public Const CLIENT_MINOR As Byte = 0
 Public Const CLIENT_REVISION As Byte = 0
 Public Const MAX_LINES As Long = 500 ' Used for frmServer.txtText
 

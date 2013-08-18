@@ -29,7 +29,7 @@ Sub DestroyTCP()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    frmMain.Socket.Close
+    frmMain.Socket.close
     
     ' Error handler
     Exit Sub
@@ -84,7 +84,7 @@ Dim Wait As Long
     End If
     
     Wait = GetTickCount
-    frmMain.Socket.Close
+    frmMain.Socket.close
     frmMain.Socket.Connect
     
     SetStatus "Connecting to server..."
@@ -120,12 +120,12 @@ errorhandler:
     Exit Function
 End Function
 
-Function IsPlaying(ByVal Index As Long) As Boolean
+Function IsPlaying(ByVal index As Long) As Boolean
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' if the player doesn't exist, the name will equal 0
-    If LenB(GetPlayerName(Index)) > 0 Then
+    If LenB(GetPlayerName(index)) > 0 Then
         IsPlaying = True
     End If
 
@@ -162,7 +162,7 @@ End Sub
 ' *****************************
 ' ** Outgoing Client Packets **
 ' *****************************
-Public Sub SendNewAccount(ByVal Name As String, ByVal Password As String)
+Public Sub SendNewAccount(ByVal name As String, ByVal Password As String)
 Dim Buffer As clsBuffer
     
     ' If debug mode, handle error then exit out
@@ -170,7 +170,7 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong CNewAccount
-    Buffer.WriteString Name
+    Buffer.WriteString name
     Buffer.WriteString Password
     SendData Buffer.ToArray()
     Set Buffer = Nothing
@@ -183,7 +183,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub SendDelAccount(ByVal Name As String, ByVal Password As String)
+Public Sub SendDelAccount(ByVal name As String, ByVal Password As String)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -191,7 +191,7 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong CDelAccount
-    Buffer.WriteString Name
+    Buffer.WriteString name
     Buffer.WriteString Password
     SendData Buffer.ToArray()
     Set Buffer = Nothing
@@ -204,7 +204,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub SendLogin(ByVal Name As String, ByVal Password As String)
+Public Sub SendLogin(ByVal name As String, ByVal Password As String)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -212,7 +212,7 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong CLogin
-    Buffer.WriteString Name
+    Buffer.WriteString name
     Buffer.WriteString Password
     Buffer.WriteLong App.Major
     Buffer.WriteLong App.Minor
@@ -228,7 +228,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub SendAddChar(ByVal Name As String, ByVal Sex As Long, ByVal ClassNum As Long, ByVal Sprite As Long)
+Public Sub SendAddChar(ByVal name As String, ByVal Sex As Long, ByVal ClassNum As Long, ByVal Sprite As Long)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -236,7 +236,7 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong CAddChar
-    Buffer.WriteString Name
+    Buffer.WriteString name
     Buffer.WriteLong Sex
     Buffer.WriteLong ClassNum
     Buffer.WriteLong Sprite
@@ -362,8 +362,8 @@ Dim Buffer As clsBuffer
     Buffer.WriteLong CPlayerMove
     Buffer.WriteLong GetPlayerDir(MyIndex)
     Buffer.WriteLong Player(MyIndex).Moving
-    Buffer.WriteLong Player(MyIndex).x
-    Buffer.WriteLong Player(MyIndex).y
+    Buffer.WriteLong Player(MyIndex).X
+    Buffer.WriteLong Player(MyIndex).Y
     SendData Buffer.ToArray()
     Set Buffer = Nothing
     
@@ -417,8 +417,8 @@ End Sub
 
 Public Sub SendMap()
 Dim packet As String
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 Dim i As Long
 Dim Buffer As clsBuffer
 
@@ -430,7 +430,7 @@ Dim Buffer As clsBuffer
 
     With Map
         Buffer.WriteLong CMapData
-        Buffer.WriteString Trim$(.Name)
+        Buffer.WriteString Trim$(.name)
         Buffer.WriteString Trim$(.Music)
         Buffer.WriteByte .Moral
         Buffer.WriteLong .Up
@@ -444,13 +444,13 @@ Dim Buffer As clsBuffer
         Buffer.WriteByte .MaxY
     End With
 
-    For x = 0 To Map.MaxX
-        For y = 0 To Map.MaxY
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
 
-            With Map.Tile(x, y)
+            With Map.Tile(X, Y)
                 For i = 1 To MapLayer.Layer_Count - 1
-                    Buffer.WriteLong .Layer(i).x
-                    Buffer.WriteLong .Layer(i).y
+                    Buffer.WriteLong .Layer(i).X
+                    Buffer.WriteLong .Layer(i).Y
                     Buffer.WriteLong .Layer(i).Tileset
                 Next
                 Buffer.WriteByte .Type
@@ -465,8 +465,8 @@ Dim Buffer As clsBuffer
 
     With Map
 
-        For x = 1 To MAX_MAP_NPCS
-            Buffer.WriteLong .Npc(x)
+        For X = 1 To MAX_MAP_NPCS
+            Buffer.WriteLong .Npc(X)
         Next
 
     End With
@@ -482,7 +482,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub WarpMeTo(ByVal Name As String)
+Public Sub WarpMeTo(ByVal name As String)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -490,7 +490,7 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong CWarpMeTo
-    Buffer.WriteString Name
+    Buffer.WriteString name
     SendData Buffer.ToArray()
     Set Buffer = Nothing
     
@@ -502,7 +502,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub WarpToMe(ByVal Name As String)
+Public Sub WarpToMe(ByVal name As String)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -510,7 +510,7 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong CWarpToMe
-    Buffer.WriteString Name
+    Buffer.WriteString name
     SendData Buffer.ToArray()
     Set Buffer = Nothing
     
@@ -542,7 +542,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub SendSetAccess(ByVal Name As String, ByVal Access As Byte)
+Public Sub SendSetAccess(ByVal name As String, ByVal Access As Byte)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -550,7 +550,7 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong CSetAccess
-    Buffer.WriteString Name
+    Buffer.WriteString name
     Buffer.WriteLong Access
     SendData Buffer.ToArray()
     Set Buffer = Nothing
@@ -583,7 +583,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub SendKick(ByVal Name As String)
+Public Sub SendKick(ByVal name As String)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -591,7 +591,7 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong CKickPlayer
-    Buffer.WriteString Name
+    Buffer.WriteString name
     SendData Buffer.ToArray()
     Set Buffer = Nothing
     
@@ -603,7 +603,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub SendBan(ByVal Name As String)
+Public Sub SendBan(ByVal name As String)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -611,7 +611,7 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong CBanPlayer
-    Buffer.WriteString Name
+    Buffer.WriteString name
     SendData Buffer.ToArray()
     Set Buffer = Nothing
     
@@ -751,7 +751,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub SendSaveNpc(ByVal NpcNum As Long)
+Public Sub SendSaveNpc(ByVal npcNum As Long)
 Dim Buffer As clsBuffer
 Dim NpcSize As Long
 Dim NpcData() As Byte
@@ -760,11 +760,11 @@ Dim NpcData() As Byte
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     Set Buffer = New clsBuffer
-    NpcSize = LenB(Npc(NpcNum))
+    NpcSize = LenB(Npc(npcNum))
     ReDim NpcData(NpcSize - 1)
-    CopyMemory NpcData(0), ByVal VarPtr(Npc(NpcNum)), NpcSize
+    CopyMemory NpcData(0), ByVal VarPtr(Npc(npcNum)), NpcSize
     Buffer.WriteLong CSaveNpc
-    Buffer.WriteLong NpcNum
+    Buffer.WriteLong npcNum
     Buffer.WriteBytes NpcData
     SendData Buffer.ToArray()
     Set Buffer = Nothing
@@ -873,7 +873,7 @@ Dim Buffer As clsBuffer
     If InvNum < 1 Or InvNum > MAX_INV Then Exit Sub
     If PlayerInv(InvNum).num < 1 Or PlayerInv(InvNum).num > MAX_ITEMS Then Exit Sub
     If Item(GetPlayerInvItemNum(MyIndex, InvNum)).Type = ITEM_TYPE_CURRENCY Then
-        If Amount < 1 Or Amount > PlayerInv(InvNum).Value Then Exit Sub
+        If Amount < 1 Or Amount > PlayerInv(InvNum).value Then Exit Sub
     End If
     
     Set Buffer = New clsBuffer
@@ -1456,7 +1456,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub AdminWarp(ByVal x As Long, ByVal y As Long)
+Public Sub AdminWarp(ByVal X As Long, ByVal Y As Long)
 Dim Buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
@@ -1464,8 +1464,8 @@ Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong CAdminWarp
-    Buffer.WriteLong x
-    Buffer.WriteLong y
+    Buffer.WriteLong X
+    Buffer.WriteLong Y
     SendData Buffer.ToArray()
     Set Buffer = Nothing
     
@@ -1585,12 +1585,6 @@ Dim Buffer As clsBuffer
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    ' check if spell
-    If Hotbar(Slot).sType = 2 Then ' spell
-        Call CastSpell(PlayerSpells(Hotbar(Slot).Slot))
-        Exit Sub
-    End If
-
     Set Buffer = New clsBuffer
     Buffer.WriteLong CHotbarUse
     Buffer.WriteLong Slot

@@ -3187,7 +3187,7 @@ Private Function IsPlayerSpell(ByVal X As Single, ByVal Y As Single) As Long
 
     For i = 1 To MAX_PLAYER_SPELLS
 
-        If PlayerSpells(i) > 0 And PlayerSpells(i) <= MAX_PLAYER_SPELLS Then
+        If PlayerSpells(i) > 0 And PlayerSpells(i) <= MAX_SPELLS Then
 
             With tempRec
                 .top = SpellTop + ((SpellOffsetY + 32) * ((i - 1) \ SpellColumns))
