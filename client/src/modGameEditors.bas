@@ -602,6 +602,21 @@ Dim SoundSet As Boolean
     For i = 1 To UBound(soundCache)
         frmEditor_Item.cmbSound.AddItem soundCache(i)
     Next
+    ' Add Animations to the list.
+    frmEditor_Item.cmbAnimation.Clear
+    frmEditor_Item.cmbAnimation.AddItem "None."
+    For i = 1 To MAX_ANIMATIONS
+        frmEditor_Item.cmbAnimation.AddItem Trim$(Str$(i)) & ": " & Trim$(Animation(i).name)
+    Next
+    ' Add spells to the lists
+    frmEditor_Item.cmbSpellCast.Clear
+    frmEditor_Item.cmbSpellCast.AddItem "None."
+    frmEditor_Item.cmbSpell.Clear
+    frmEditor_Item.cmbSpell.AddItem "None."
+    For i = 1 To MAX_SPELLS
+        frmEditor_Item.cmbSpellCast.AddItem Trim$(Str$(i)) & ": " & Trim$(Spell(i).name)
+        frmEditor_Item.cmbSpell.AddItem Trim$(Str$(i)) & ": " & Trim$(Spell(i).name)
+    Next i
     ' finished populating
     
     With Item(EditorIndex)
@@ -609,12 +624,15 @@ Dim SoundSet As Boolean
         If .Pic > frmEditor_Item.scrlPic.max Then .Pic = 0
         frmEditor_Item.scrlPic.value = .Pic
         frmEditor_Item.cmbType.ListIndex = .Type
-        frmEditor_Item.scrlAnim.value = .Animation
+        frmEditor_Item.cmbAnimation.ListIndex = .Animation
         frmEditor_Item.scrlRed = .Red
         frmEditor_Item.scrlGreen = .Green
         frmEditor_Item.scrlBlue = .Blue
         frmEditor_Item.scrlAlpha = .Alpha
         frmEditor_Item.txtDesc.text = Trim$(.desc)
+        
+        ' Set a few things to none in case they get skipped later due to itemtype differences.
+        frmEditor_Item.cmbTool.ListIndex = 0
         
         ' find the sound we have set
         If frmEditor_Item.cmbSound.ListCount >= 0 Then
@@ -626,19 +644,19 @@ Dim SoundSet As Boolean
             Next
             If Not SoundSet Or frmEditor_Item.cmbSound.ListIndex = -1 Then frmEditor_Item.cmbSound.ListIndex = 0
         End If
-
+        
         ' Type specific settings
         If (frmEditor_Item.cmbType.ListIndex >= ItemTypeWeapon) And (frmEditor_Item.cmbType.ListIndex <= ItemTypeShield) Then
             frmEditor_Item.fraEquipment.Visible = True
-            frmEditor_Item.scrlDamage.value = .Data2
+            frmEditor_Item.txtDamage.text = Trim$(Str$(.Data2))
             frmEditor_Item.cmbTool.ListIndex = .Data3
 
             If .Speed < 100 Then .Speed = 100
-            frmEditor_Item.scrlSpeed.value = .Speed
+            frmEditor_Item.txtSpeed.text = Trim$(Str$(.Speed))
             
             ' loop for stats
             For i = 1 To Stats.Stat_Count - 1
-                frmEditor_Item.scrlStatBonus(i).value = .Add_Stat(i)
+                frmEditor_Item.txtAddStat(i).text = Trim$(Str$(.Add_Stat(i)))
             Next
             
             frmEditor_Item.scrlPaperdoll = .Paperdoll
@@ -648,10 +666,10 @@ Dim SoundSet As Boolean
 
         If frmEditor_Item.cmbType.ListIndex = ItemTypeConsume Then
             frmEditor_Item.fraVitals.Visible = True
-            frmEditor_Item.scrlAddHp.value = .AddHP
-            frmEditor_Item.scrlAddMP.value = .AddMP
-            frmEditor_Item.scrlAddExp.value = .AddEXP
-            frmEditor_Item.scrlCastSpell.value = .CastSpell
+            frmEditor_Item.txtAddHP.text = Trim$(Str$(.AddHP))
+            frmEditor_Item.txtAddMP.text = Trim$(Str$(.AddMP))
+            frmEditor_Item.txtAddExp.text = Trim$(Str$(.AddEXP))
+            frmEditor_Item.cmbSpellCast.ListIndex = .CastSpell
             frmEditor_Item.chkInstant.value = .instaCast
         Else
             frmEditor_Item.fraVitals.Visible = False
@@ -659,18 +677,18 @@ Dim SoundSet As Boolean
 
         If (frmEditor_Item.cmbType.ListIndex = ItemTypeSpell) Then
             frmEditor_Item.fraSpell.Visible = True
-            frmEditor_Item.scrlSpell.value = .Data1
+            frmEditor_Item.cmbSpell.ListIndex = .Data1
         Else
             frmEditor_Item.fraSpell.Visible = False
         End If
 
         ' Basic requirements
-        frmEditor_Item.scrlAccessReq.value = .AccessReq
-        frmEditor_Item.scrlLevelReq.value = .LevelReq
+        frmEditor_Item.cmbAccess.ListIndex = .AccessReq
+        frmEditor_Item.txtLevelReq.text = Trim$(Str$(.LevelReq))
         
         ' loop for stats
         For i = 1 To Stats.Stat_Count - 1
-            frmEditor_Item.scrlStatReq(i).value = .Stat_Req(i)
+            frmEditor_Item.txtStatReq(i).text = Trim$(Str$(.Stat_Req(i)))
         Next
         
         ' Build cmbClassReq
@@ -683,13 +701,29 @@ Dim SoundSet As Boolean
 
         frmEditor_Item.cmbClassReq.ListIndex = .ClassReq
         ' Info
-        frmEditor_Item.scrlPrice.value = .Price
+        frmEditor_Item.txtPrice.text = Trim$(Str$(.Price))
         frmEditor_Item.cmbBind.ListIndex = .BindType
-        frmEditor_Item.scrlRarity.value = .Rarity
+        frmEditor_Item.cmbRarity.ListIndex = .Rarity
+         
+        ' Make sure we have a few things set so nothing is out of the ordinary.
+        If .Type = ItemTypeWeapon Then
+            frmEditor_Item.lblDamage.Caption = "Damage:"
+            frmEditor_Item.cmbTool.Enabled = True
+        ElseIf .Type = ItemTypeHelmet Then
+            frmEditor_Item.lblDamage.Caption = "Defense:"
+            frmEditor_Item.cmbTool.Enabled = False
+        ElseIf .Type = ItemTypeArmor Then
+            frmEditor_Item.lblDamage.Caption = "Defense:"
+            frmEditor_Item.cmbTool.Enabled = False
+        ElseIf .Type = ItemTypeShield Then
+            frmEditor_Item.lblDamage.Caption = "Block:"
+            frmEditor_Item.cmbTool.Enabled = False
+        End If
          
         EditorIndex = frmEditor_Item.lstIndex.ListIndex + 1
     End With
-
+    
+    
     Item_Changed(EditorIndex) = True
     
     ' Error handler

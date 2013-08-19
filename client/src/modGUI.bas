@@ -1311,15 +1311,17 @@ Dim Width As Long, Height As Long, X As Long, Y As Long
     Call D3DDevice8.BeginScene
     
     ' Render the backdrop.
-    For X = 0 To (frmEditor_Item.picPaperdoll.ScaleWidth / PIC_X) - 1
-        For Y = 0 To (frmEditor_Item.picPaperdoll.ScaleHeight / PIC_Y) - 1
+    For X = 0 To (64 / 2)
+        For Y = 0 To (64 / 2)
             Call RenderGraphic(Tex_EditorBackDrop, X * PIC_X, Y * PIC_Y, PIC_X, PIC_Y, 0, 0, 0, 0)
         Next
     Next
     
     ' Calculate the locations and Render it.
-    Width = D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width
+    Width = D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Width / 4
     Height = D3DT_TEXTURE(Tex_Paperdoll(Sprite)).Height / 4
+    X = 32 - Width / 2
+    Y = 32 - Height / 2
     
     ' The Colors maaan!
     Red = Item(EditorIndex).Red
@@ -1327,22 +1329,22 @@ Dim Width As Long, Height As Long, X As Long, Y As Long
     Blue = Item(EditorIndex).Blue
     Alpha = Item(EditorIndex).Alpha
     
-    Call RenderGraphic(Tex_Paperdoll(Sprite), 0, 0, Width, Height, 0, 0, 0, 0, Red, Green, Blue, Alpha)
+    Call RenderGraphic(Tex_Paperdoll(Sprite), X, Y, Width, Height, 0, 0, 0, 0, Red, Green, Blue, Alpha)
     
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
     ' Of course, we also need to do a few calculations to make sure it appears where it should.
     With srcRect
         .X1 = 0
-        .X2 = frmEditor_Item.picPaperdoll.Width
+        .X2 = 64
         .Y1 = 0
-        .Y2 = frmEditor_Item.picPaperdoll.Height
+        .Y2 = 64
     End With
     
     With destRect
         .X1 = 0
-        .X2 = frmEditor_Item.picPaperdoll.Width
+        .X2 = frmEditor_Item.picPaperdoll.ScaleWidth
         .Y1 = 0
-        .Y2 = frmEditor_Item.picPaperdoll.Height
+        .Y2 = frmEditor_Item.picPaperdoll.ScaleHeight
     End With
     
     Call D3DDevice8.EndScene
