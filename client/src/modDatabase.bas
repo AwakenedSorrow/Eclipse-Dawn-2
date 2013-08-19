@@ -193,8 +193,8 @@ End Sub
 Public Sub SaveMap(ByVal MapNum As Long)
 Dim FileName As String
 Dim F As Long
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -217,16 +217,16 @@ Dim y As Long
     Put #F, , Map.MaxX
     Put #F, , Map.MaxY
 
-    For x = 0 To Map.MaxX
-        For y = 0 To Map.MaxY
-            Put #F, , Map.Tile(x, y)
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
+            Put #F, , Map.Tile(X, Y)
         Next
 
         DoEvents
     Next
 
-    For x = 1 To MAX_MAP_NPCS
-        Put #F, , Map.Npc(x)
+    For X = 1 To MAX_MAP_NPCS
+        Put #F, , Map.Npc(X)
     Next
 
     Close #F
@@ -242,8 +242,8 @@ End Sub
 Public Sub LoadMap(ByVal MapNum As Long)
 Dim FileName As String
 Dim F As Long
-Dim x As Long
-Dim y As Long
+Dim X As Long
+Dim Y As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -268,14 +268,14 @@ Dim y As Long
     ' have to set the tile()
     ReDim Map.Tile(0 To Map.MaxX, 0 To Map.MaxY)
 
-    For x = 0 To Map.MaxX
-        For y = 0 To Map.MaxY
-            Get #F, , Map.Tile(x, y)
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
+            Get #F, , Map.Tile(X, Y)
         Next
     Next
 
-    For x = 1 To MAX_MAP_NPCS
-        Get #F, , Map.Npc(x)
+    For X = 1 To MAX_MAP_NPCS
+        Get #F, , Map.Npc(X)
     Next
 
     Close #F
@@ -576,6 +576,16 @@ Sub ClearAnimation(ByVal Index As Long)
     Call ZeroMemory(ByVal VarPtr(Animation(Index)), LenB(Animation(Index)))
     Animation(Index).name = vbNullString
     Animation(Index).Sound = "None."
+    Animation(Index).Red(0) = 255
+    Animation(Index).Green(0) = 255
+    Animation(Index).Blue(0) = 255
+    Animation(Index).Alpha(0) = 255
+    Animation(Index).Red(1) = 255
+    Animation(Index).Green(1) = 255
+    Animation(Index).Blue(1) = 255
+    Animation(Index).Alpha(1) = 255
+    
+    
     
     ' Error handler
     Exit Sub
@@ -1183,7 +1193,7 @@ Function GetPlayerX(ByVal Index As Long) As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If Index > MAX_PLAYERS Then Exit Function
-    GetPlayerX = Player(Index).x
+    GetPlayerX = Player(Index).X
     
     ' Error handler
     Exit Function
@@ -1193,12 +1203,12 @@ errorhandler:
     Exit Function
 End Function
 
-Sub SetPlayerX(ByVal Index As Long, ByVal x As Long)
+Sub SetPlayerX(ByVal Index As Long, ByVal X As Long)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If Index > MAX_PLAYERS Then Exit Sub
-    Player(Index).x = x
+    Player(Index).X = X
     
     ' Error handler
     Exit Sub
@@ -1213,7 +1223,7 @@ Function GetPlayerY(ByVal Index As Long) As Long
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If Index > MAX_PLAYERS Then Exit Function
-    GetPlayerY = Player(Index).y
+    GetPlayerY = Player(Index).Y
     
     ' Error handler
     Exit Function
@@ -1223,12 +1233,12 @@ errorhandler:
     Exit Function
 End Function
 
-Sub SetPlayerY(ByVal Index As Long, ByVal y As Long)
+Sub SetPlayerY(ByVal Index As Long, ByVal Y As Long)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
     If Index > MAX_PLAYERS Then Exit Sub
-    Player(Index).y = y
+    Player(Index).Y = Y
     
     ' Error handler
     Exit Sub

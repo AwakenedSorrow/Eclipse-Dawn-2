@@ -328,6 +328,10 @@ Private Type AnimationRec
     Frames(0 To 1) As Long
     LoopCount(0 To 1) As Long
     looptime(0 To 1) As Long
+    Red(0 To 1) As Byte
+    Green(0 To 1) As Byte
+    Blue(0 To 1) As Byte
+    Alpha(0 To 1) As Byte
 End Type
 
 Private Type AnimInstanceRec

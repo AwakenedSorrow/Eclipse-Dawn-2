@@ -799,6 +799,10 @@ Dim SoundSet As Boolean
             frmEditor_Animation.scrlSprite(i).value = .Sprite(i)
             frmEditor_Animation.scrlFrameCount(i).value = .Frames(i)
             frmEditor_Animation.scrlLoopCount(i).value = .LoopCount(i)
+            frmEditor_Animation.scrlRed(i).value = .Red(i)
+            frmEditor_Animation.scrlGreen(i).value = .Green(i)
+            frmEditor_Animation.scrlBlue(i).value = .Blue(i)
+            frmEditor_Animation.scrlAlpha(i).value = .Alpha(i)
             
             If .looptime(i) > 0 Then
                 frmEditor_Animation.scrlLoopTime(i).value = .looptime(i)

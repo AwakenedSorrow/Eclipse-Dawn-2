@@ -30,14 +30,14 @@ Begin VB.Form frmEditor_Item
       Caption         =   "Graphics"
       Height          =   2535
       Left            =   9720
-      TabIndex        =   65
+      TabIndex        =   64
       Top             =   120
       Width           =   3255
       Begin VB.HScrollBar scrlAnim 
          Height          =   255
          Left            =   1800
          Max             =   5
-         TabIndex        =   83
+         TabIndex        =   82
          Top             =   2040
          Width           =   1335
       End
@@ -45,7 +45,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   1200
          Max             =   255
-         TabIndex        =   81
+         TabIndex        =   80
          Top             =   1680
          Width           =   1335
       End
@@ -53,7 +53,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   1200
          Max             =   255
-         TabIndex        =   79
+         TabIndex        =   78
          Top             =   1320
          Width           =   1335
       End
@@ -61,7 +61,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   1200
          Max             =   255
-         TabIndex        =   77
+         TabIndex        =   76
          Top             =   960
          Width           =   1335
       End
@@ -69,7 +69,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   1200
          Max             =   255
-         TabIndex        =   75
+         TabIndex        =   74
          Top             =   600
          Width           =   1335
       End
@@ -91,7 +91,7 @@ Begin VB.Form frmEditor_Item
          ScaleHeight     =   32
          ScaleMode       =   3  'Pixel
          ScaleWidth      =   32
-         TabIndex        =   67
+         TabIndex        =   66
          Top             =   840
          Width           =   480
       End
@@ -99,7 +99,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   1200
          Max             =   255
-         TabIndex        =   66
+         TabIndex        =   65
          Top             =   240
          Width           =   1335
       End
@@ -108,7 +108,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Anim: None"
          Height          =   180
          Left            =   120
-         TabIndex        =   84
+         TabIndex        =   83
          Top             =   2040
          Width           =   885
       End
@@ -117,7 +117,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Alpha: 255"
          Height          =   180
          Left            =   120
-         TabIndex        =   82
+         TabIndex        =   81
          Top             =   1680
          UseMnemonic     =   0   'False
          Width           =   855
@@ -127,7 +127,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Blue: 255"
          Height          =   180
          Left            =   120
-         TabIndex        =   80
+         TabIndex        =   79
          Top             =   1320
          UseMnemonic     =   0   'False
          Width           =   750
@@ -137,7 +137,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Green: 255"
          Height          =   180
          Left            =   120
-         TabIndex        =   78
+         TabIndex        =   77
          Top             =   960
          UseMnemonic     =   0   'False
          Width           =   870
@@ -147,7 +147,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Red: 255"
          Height          =   180
          Left            =   120
-         TabIndex        =   76
+         TabIndex        =   75
          Top             =   600
          UseMnemonic     =   0   'False
          Width           =   705
@@ -157,7 +157,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Pic: 0"
          Height          =   180
          Left            =   120
-         TabIndex        =   68
+         TabIndex        =   67
          Top             =   240
          UseMnemonic     =   0   'False
          Width           =   450
@@ -167,7 +167,7 @@ Begin VB.Form frmEditor_Item
       Caption         =   "Equipment Data"
       Height          =   2175
       Left            =   3360
-      TabIndex        =   27
+      TabIndex        =   26
       Top             =   3960
       Visible         =   0   'False
       Width           =   9615
@@ -189,14 +189,14 @@ Begin VB.Form frmEditor_Item
          ScaleHeight     =   64
          ScaleMode       =   3  'Pixel
          ScaleWidth      =   128
-         TabIndex        =   53
+         TabIndex        =   52
          Top             =   1080
          Width           =   1920
       End
       Begin VB.HScrollBar scrlPaperdoll 
          Height          =   255
          Left            =   7560
-         TabIndex        =   52
+         TabIndex        =   51
          Top             =   720
          Width           =   1935
       End
@@ -207,7 +207,7 @@ Begin VB.Form frmEditor_Item
          Max             =   3000
          Min             =   100
          SmallChange     =   100
-         TabIndex        =   35
+         TabIndex        =   34
          Top             =   360
          Value           =   100
          Width           =   1695
@@ -218,7 +218,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   2760
          Max             =   255
-         TabIndex        =   34
+         TabIndex        =   33
          Top             =   1440
          Width           =   855
       End
@@ -228,7 +228,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   2760
          Max             =   255
-         TabIndex        =   33
+         TabIndex        =   32
          Top             =   1080
          Width           =   855
       End
@@ -238,7 +238,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   960
          Max             =   255
-         TabIndex        =   32
+         TabIndex        =   31
          Top             =   1800
          Width           =   855
       End
@@ -248,7 +248,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   960
          Max             =   255
-         TabIndex        =   31
+         TabIndex        =   30
          Top             =   1440
          Width           =   855
       End
@@ -257,7 +257,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   1320
          Max             =   255
-         TabIndex        =   30
+         TabIndex        =   29
          Top             =   720
          Width           =   1815
       End
@@ -267,7 +267,7 @@ Begin VB.Form frmEditor_Item
          Left            =   1320
          List            =   "frmEditor_Item.frx":3342
          Style           =   2  'Dropdown List
-         TabIndex        =   29
+         TabIndex        =   28
          Top             =   360
          Width           =   4815
       End
@@ -277,7 +277,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   960
          Max             =   255
-         TabIndex        =   28
+         TabIndex        =   27
          Top             =   1080
          Width           =   855
       End
@@ -286,7 +286,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Paperdoll: 0"
          Height          =   180
          Left            =   6480
-         TabIndex        =   51
+         TabIndex        =   50
          Top             =   720
          Width           =   915
       End
@@ -295,7 +295,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Speed: 0.1 sec"
          Height          =   180
          Left            =   6360
-         TabIndex        =   43
+         TabIndex        =   42
          Top             =   360
          UseMnemonic     =   0   'False
          Width           =   1140
@@ -306,7 +306,7 @@ Begin VB.Form frmEditor_Item
          Height          =   180
          Index           =   5
          Left            =   1920
-         TabIndex        =   42
+         TabIndex        =   41
          Top             =   1440
          UseMnemonic     =   0   'False
          Width           =   630
@@ -317,7 +317,7 @@ Begin VB.Form frmEditor_Item
          Height          =   180
          Index           =   4
          Left            =   1920
-         TabIndex        =   41
+         TabIndex        =   40
          Top             =   1080
          UseMnemonic     =   0   'False
          Width           =   615
@@ -328,7 +328,7 @@ Begin VB.Form frmEditor_Item
          Height          =   180
          Index           =   3
          Left            =   120
-         TabIndex        =   40
+         TabIndex        =   39
          Top             =   1800
          UseMnemonic     =   0   'False
          Width           =   585
@@ -339,7 +339,7 @@ Begin VB.Form frmEditor_Item
          Height          =   180
          Index           =   2
          Left            =   120
-         TabIndex        =   39
+         TabIndex        =   38
          Top             =   1440
          UseMnemonic     =   0   'False
          Width           =   645
@@ -349,7 +349,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Damage: 0"
          Height          =   180
          Left            =   120
-         TabIndex        =   38
+         TabIndex        =   37
          Top             =   720
          UseMnemonic     =   0   'False
          Width           =   825
@@ -359,7 +359,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Object Tool:"
          Height          =   180
          Left            =   120
-         TabIndex        =   37
+         TabIndex        =   36
          Top             =   360
          Width           =   945
       End
@@ -369,7 +369,7 @@ Begin VB.Form frmEditor_Item
          Height          =   180
          Index           =   1
          Left            =   120
-         TabIndex        =   36
+         TabIndex        =   35
          Top             =   1080
          UseMnemonic     =   0   'False
          Width           =   585
@@ -379,14 +379,14 @@ Begin VB.Form frmEditor_Item
       Caption         =   "Info"
       Height          =   2535
       Left            =   3360
-      TabIndex        =   17
+      TabIndex        =   16
       Top             =   120
       Width           =   6255
       Begin VB.ComboBox cmbSound 
          Height          =   300
          Left            =   3720
          Style           =   2  'Dropdown List
-         TabIndex        =   64
+         TabIndex        =   63
          Top             =   1320
          Width           =   2415
       End
@@ -396,7 +396,7 @@ Begin VB.Form frmEditor_Item
          MaxLength       =   255
          MultiLine       =   -1  'True
          ScrollBars      =   2  'Vertical
-         TabIndex        =   55
+         TabIndex        =   54
          Top             =   840
          Width           =   2655
       End
@@ -404,7 +404,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   4200
          Max             =   5
-         TabIndex        =   22
+         TabIndex        =   21
          Top             =   960
          Width           =   1935
       End
@@ -414,7 +414,7 @@ Begin VB.Form frmEditor_Item
          Left            =   4200
          List            =   "frmEditor_Item.frx":3370
          Style           =   2  'Dropdown List
-         TabIndex        =   21
+         TabIndex        =   20
          Top             =   600
          Width           =   1935
       End
@@ -423,7 +423,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   100
          Left            =   4200
          Max             =   30000
-         TabIndex        =   20
+         TabIndex        =   19
          Top             =   240
          Width           =   1935
       End
@@ -433,14 +433,14 @@ Begin VB.Form frmEditor_Item
          Left            =   2880
          List            =   "frmEditor_Item.frx":33B8
          Style           =   2  'Dropdown List
-         TabIndex        =   19
+         TabIndex        =   18
          Top             =   2040
          Width           =   3255
       End
       Begin VB.TextBox txtName 
          Height          =   255
          Left            =   720
-         TabIndex        =   18
+         TabIndex        =   17
          Top             =   240
          Width           =   2055
       End
@@ -448,7 +448,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Item Type:"
          Height          =   255
          Left            =   2880
-         TabIndex        =   85
+         TabIndex        =   84
          Top             =   1800
          Width           =   855
       End
@@ -456,7 +456,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Sound:"
          Height          =   255
          Left            =   2880
-         TabIndex        =   63
+         TabIndex        =   62
          Top             =   1320
          Width           =   1455
       End
@@ -464,7 +464,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Description:"
          Height          =   255
          Left            =   120
-         TabIndex        =   54
+         TabIndex        =   53
          Top             =   600
          Width           =   975
       End
@@ -473,7 +473,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Rarity: 0"
          Height          =   180
          Left            =   2880
-         TabIndex        =   26
+         TabIndex        =   25
          Top             =   960
          Width           =   660
       End
@@ -482,7 +482,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Bind Type:"
          Height          =   180
          Left            =   2880
-         TabIndex        =   25
+         TabIndex        =   24
          Top             =   600
          Width           =   810
       End
@@ -491,7 +491,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Price: 0"
          Height          =   180
          Left            =   2880
-         TabIndex        =   24
+         TabIndex        =   23
          Top             =   240
          Width           =   600
       End
@@ -500,7 +500,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Name:"
          Height          =   180
          Left            =   120
-         TabIndex        =   23
+         TabIndex        =   22
          Top             =   240
          UseMnemonic     =   0   'False
          Width           =   495
@@ -510,14 +510,14 @@ Begin VB.Form frmEditor_Item
       Caption         =   "Requirements"
       Height          =   1095
       Left            =   3360
-      TabIndex        =   6
+      TabIndex        =   5
       Top             =   2760
       Width           =   9615
       Begin VB.ComboBox cmbClassReq 
          Height          =   300
          Left            =   1080
          Style           =   2  'Dropdown List
-         TabIndex        =   71
+         TabIndex        =   70
          Top             =   600
          Width           =   2295
       End
@@ -525,7 +525,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   4800
          Max             =   5
-         TabIndex        =   70
+         TabIndex        =   69
          Top             =   600
          Width           =   1695
       End
@@ -534,7 +534,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   7680
          Max             =   99
-         TabIndex        =   69
+         TabIndex        =   68
          Top             =   600
          Width           =   1695
       End
@@ -544,7 +544,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   1200
          Max             =   255
-         TabIndex        =   11
+         TabIndex        =   10
          Top             =   240
          Width           =   855
       End
@@ -554,7 +554,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   2880
          Max             =   255
-         TabIndex        =   10
+         TabIndex        =   9
          Top             =   240
          Width           =   855
       End
@@ -564,7 +564,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   4560
          Max             =   255
-         TabIndex        =   9
+         TabIndex        =   8
          Top             =   240
          Width           =   855
       End
@@ -574,7 +574,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   6120
          Max             =   255
-         TabIndex        =   8
+         TabIndex        =   7
          Top             =   240
          Width           =   855
       End
@@ -584,7 +584,7 @@ Begin VB.Form frmEditor_Item
          LargeChange     =   10
          Left            =   7920
          Max             =   255
-         TabIndex        =   7
+         TabIndex        =   6
          Top             =   240
          Width           =   855
       End
@@ -593,7 +593,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Level req: 0"
          Height          =   180
          Left            =   6600
-         TabIndex        =   74
+         TabIndex        =   73
          Top             =   600
          Width           =   900
       End
@@ -602,7 +602,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Class Req:"
          Height          =   180
          Left            =   120
-         TabIndex        =   73
+         TabIndex        =   72
          Top             =   600
          Width           =   825
       End
@@ -611,7 +611,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Access Req: 0"
          Height          =   180
          Left            =   3480
-         TabIndex        =   72
+         TabIndex        =   71
          Top             =   600
          Width           =   1110
       End
@@ -621,7 +621,7 @@ Begin VB.Form frmEditor_Item
          Height          =   180
          Index           =   1
          Left            =   600
-         TabIndex        =   16
+         TabIndex        =   15
          Top             =   240
          UseMnemonic     =   0   'False
          Width           =   435
@@ -632,7 +632,7 @@ Begin VB.Form frmEditor_Item
          Height          =   180
          Index           =   2
          Left            =   2160
-         TabIndex        =   15
+         TabIndex        =   14
          Top             =   240
          UseMnemonic     =   0   'False
          Width           =   495
@@ -643,7 +643,7 @@ Begin VB.Form frmEditor_Item
          Height          =   180
          Index           =   3
          Left            =   3840
-         TabIndex        =   14
+         TabIndex        =   13
          Top             =   240
          UseMnemonic     =   0   'False
          Width           =   435
@@ -654,7 +654,7 @@ Begin VB.Form frmEditor_Item
          Height          =   180
          Index           =   4
          Left            =   5520
-         TabIndex        =   13
+         TabIndex        =   12
          Top             =   240
          UseMnemonic     =   0   'False
          Width           =   465
@@ -665,25 +665,16 @@ Begin VB.Form frmEditor_Item
          Height          =   180
          Index           =   5
          Left            =   7200
-         TabIndex        =   12
+         TabIndex        =   11
          Top             =   240
          UseMnemonic     =   0   'False
          Width           =   480
       End
    End
-   Begin VB.CommandButton cmdArray 
-      Caption         =   "Change Array Size"
-      Enabled         =   0   'False
-      Height          =   375
-      Left            =   240
-      TabIndex        =   5
-      Top             =   6240
-      Width           =   2895
-   End
    Begin VB.CommandButton cmdSave 
       Caption         =   "Save"
       Height          =   375
-      Left            =   5640
+      Left            =   5520
       TabIndex        =   4
       Top             =   6240
       Width           =   1455
@@ -691,7 +682,7 @@ Begin VB.Form frmEditor_Item
    Begin VB.CommandButton cmdCancel 
       Caption         =   "Cancel"
       Height          =   375
-      Left            =   8760
+      Left            =   8880
       TabIndex        =   3
       Top             =   6240
       Width           =   1455
@@ -706,13 +697,13 @@ Begin VB.Form frmEditor_Item
    End
    Begin VB.Frame Frame3 
       Caption         =   "Item List"
-      Height          =   6015
+      Height          =   6495
       Left            =   120
       TabIndex        =   0
       Top             =   120
       Width           =   3135
       Begin VB.ListBox lstIndex 
-         Height          =   5640
+         Height          =   6180
          Left            =   120
          TabIndex        =   1
          Top             =   240
@@ -723,7 +714,7 @@ Begin VB.Form frmEditor_Item
       Caption         =   "Consume Data"
       Height          =   1935
       Left            =   4560
-      TabIndex        =   44
+      TabIndex        =   43
       Top             =   3960
       Visible         =   0   'False
       Width           =   7335
@@ -731,7 +722,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Instant Cast?"
          Height          =   255
          Left            =   3000
-         TabIndex        =   62
+         TabIndex        =   61
          Top             =   1560
          Visible         =   0   'False
          Width           =   1455
@@ -740,7 +731,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   3720
          Max             =   255
-         TabIndex        =   60
+         TabIndex        =   59
          Top             =   1200
          Visible         =   0   'False
          Width           =   3495
@@ -749,7 +740,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   120
          Max             =   255
-         TabIndex        =   58
+         TabIndex        =   57
          Top             =   1200
          Width           =   3495
       End
@@ -757,7 +748,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   3720
          Max             =   255
-         TabIndex        =   56
+         TabIndex        =   55
          Top             =   600
          Width           =   3495
       End
@@ -765,7 +756,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   120
          Max             =   255
-         TabIndex        =   45
+         TabIndex        =   44
          Top             =   600
          Width           =   3495
       End
@@ -774,7 +765,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Cast Spell: None"
          Height          =   180
          Left            =   3720
-         TabIndex        =   61
+         TabIndex        =   60
          Top             =   960
          UseMnemonic     =   0   'False
          Visible         =   0   'False
@@ -785,7 +776,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Add Exp: 0"
          Height          =   180
          Left            =   120
-         TabIndex        =   59
+         TabIndex        =   58
          Top             =   960
          UseMnemonic     =   0   'False
          Width           =   840
@@ -795,7 +786,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Add MP: 0"
          Height          =   180
          Left            =   3720
-         TabIndex        =   57
+         TabIndex        =   56
          Top             =   360
          UseMnemonic     =   0   'False
          Width           =   795
@@ -805,7 +796,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Add HP: 0"
          Height          =   180
          Left            =   120
-         TabIndex        =   46
+         TabIndex        =   45
          Top             =   360
          UseMnemonic     =   0   'False
          Width           =   780
@@ -815,7 +806,7 @@ Begin VB.Form frmEditor_Item
       Caption         =   "Spell Data"
       Height          =   1215
       Left            =   6240
-      TabIndex        =   47
+      TabIndex        =   46
       Top             =   3960
       Visible         =   0   'False
       Width           =   3735
@@ -823,7 +814,7 @@ Begin VB.Form frmEditor_Item
          Height          =   255
          Left            =   1080
          Max             =   255
-         TabIndex        =   48
+         TabIndex        =   47
          Top             =   720
          Width           =   2415
       End
@@ -832,7 +823,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Name: None"
          Height          =   180
          Left            =   240
-         TabIndex        =   50
+         TabIndex        =   49
          Top             =   360
          Width           =   930
       End
@@ -841,7 +832,7 @@ Begin VB.Form frmEditor_Item
          Caption         =   "Num: 0"
          Height          =   180
          Left            =   240
-         TabIndex        =   49
+         TabIndex        =   48
          Top             =   720
          Width           =   555
       End
@@ -1256,13 +1247,13 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlStatBonus_Change(index As Integer)
+Private Sub scrlStatBonus_Change(Index As Integer)
 Dim text As String
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    Select Case index
+    Select Case Index
         Case 1
             text = "+ Str: "
         Case 2
@@ -1275,8 +1266,8 @@ Dim text As String
             text = "+ Will: "
     End Select
             
-    lblStatBonus(index).Caption = text & scrlStatBonus(index).value
-    Item(EditorIndex).Add_Stat(index) = scrlStatBonus(index).value
+    lblStatBonus(Index).Caption = text & scrlStatBonus(Index).value
+    Item(EditorIndex).Add_Stat(Index) = scrlStatBonus(Index).value
     
     ' Error handler
     Exit Sub
@@ -1286,13 +1277,13 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlStatReq_Change(index As Integer)
+Private Sub scrlStatReq_Change(Index As Integer)
     Dim text As String
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    Select Case index
+    Select Case Index
         Case 1
             text = "Str: "
         Case 2
@@ -1305,8 +1296,8 @@ Private Sub scrlStatReq_Change(index As Integer)
             text = "Will: "
     End Select
     
-    lblStatReq(index).Caption = text & scrlStatReq(index).value
-    Item(EditorIndex).Stat_Req(index) = scrlStatReq(index).value
+    lblStatReq(Index).Caption = text & scrlStatReq(Index).value
+    Item(EditorIndex).Stat_Req(Index) = scrlStatReq(Index).value
     
     ' Error handler
     Exit Sub

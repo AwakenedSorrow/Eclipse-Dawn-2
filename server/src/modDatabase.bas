@@ -935,6 +935,15 @@ Sub ClearAnimation(ByVal index As Long)
     Call ZeroMemory(ByVal VarPtr(Animation(index)), LenB(Animation(index)))
     Animation(index).Name = vbNullString
     Animation(index).Sound = "None."
+    Animation(index).Red(0) = 255
+    Animation(index).Green(0) = 255
+    Animation(index).Blue(0) = 255
+    Animation(index).Alpha(0) = 255
+    Animation(index).Red(1) = 255
+    Animation(index).Green(1) = 255
+    Animation(index).Blue(1) = 255
+    Animation(index).Alpha(1) = 255
+    
 End Sub
 
 Sub ClearAnimations()
