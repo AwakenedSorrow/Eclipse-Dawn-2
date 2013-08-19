@@ -649,7 +649,7 @@ errorhandler:
 End Sub
 
 Public Sub RenderMapResource(ByVal Resource_num As Long)
-Dim Resource_master As Long
+Dim Resource_master As Long, Red As Byte, Blue As Byte, Green As Byte, Alpha As Byte
 Dim Resource_state As Long
 Dim Resource_sprite As Long
 Dim X As Long, Y As Long
@@ -684,12 +684,17 @@ Dim X As Long, Y As Long
         End If
     End If
     
+    Red = Resource(Resource_master).Red(Resource_state)
+    Green = Resource(Resource_master).Green(Resource_state)
+    Blue = Resource(Resource_master).Blue(Resource_state)
+    Alpha = Resource(Resource_master).Alpha(Resource_state)
+    
     ' Set base x + y, then the offset due to size
     X = (MapResource(Resource_num).X * PIC_X) - (D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Width / 2) + 16
     Y = (MapResource(Resource_num).Y * PIC_Y) - D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Height + 32
     
     ' render it
-    Call RenderResource(Resource_sprite, X, Y, D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Width, D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Height)
+    Call RenderResource(Resource_sprite, X, Y, D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Width, D3DT_TEXTURE(Tex_Resource(Resource_sprite)).Height, Red, Green, Blue, Alpha)
     
     ' Error handler
     Exit Sub
@@ -699,9 +704,8 @@ errorhandler:
     Exit Sub
 End Sub
 
-Public Sub RenderResource(ByVal Resource As Long, ByVal DX As Long, ByVal DY As Long, ByVal Width As Long, ByVal Height As Long)
-Dim X As Long
-Dim Y As Long
+Public Sub RenderResource(ByVal Resource As Long, ByVal DX As Long, ByVal DY As Long, ByVal Width As Long, ByVal Height As Long, ByVal Red As Byte, ByVal Blue As Byte, ByVal Green As Byte, ByVal Alpha As Byte)
+Dim X As Long, Y As Long
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -714,7 +718,7 @@ Dim Y As Long
     Y = ConvertMapY(DY)
     
     ' Render the actual resource on the map!
-    Call RenderGraphic(Tex_Resource(Resource), X, Y, Width, Height, 0, 0, 0, 0)
+    Call RenderGraphic(Tex_Resource(Resource), X, Y, Width, Height, 0, 0, 0, 0, Red, Green, Blue, Alpha)
     
     ' Error handler
     Exit Sub

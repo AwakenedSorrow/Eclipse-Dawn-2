@@ -1423,7 +1423,7 @@ errorhandler:
 End Sub
 
 Public Sub EditorResource_DrawNormalSprite()
-Dim Sprite As Long
+Dim Sprite As Long, Red As Byte, Green As Byte, Blue As Byte, Alpha As Byte
 Dim srcRect As D3DRECT, destRect As D3DRECT
 Dim X As Long, Y As Long, Height As Long, Width As Long
 
@@ -1450,7 +1450,12 @@ Dim X As Long, Y As Long, Height As Long, Width As Long
         Y = (frmEditor_Resource.picNormalPic.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Height / 2)
         Width = D3DT_TEXTURE(Tex_Resource(Sprite)).Width
         Height = D3DT_TEXTURE(Tex_Resource(Sprite)).Height
-        Call RenderGraphic(Tex_Resource(Sprite), X, Y, Width, Height, 0, 0, 0, 0)
+        Red = Resource(EditorIndex).Red(0)
+        Green = Resource(EditorIndex).Green(0)
+        Blue = Resource(EditorIndex).Blue(0)
+        Alpha = Resource(EditorIndex).Alpha(0)
+        
+        Call RenderGraphic(Tex_Resource(Sprite), X, Y, Width, Height, 0, 0, 0, 0, Red, Green, Blue, Alpha)
     End If
 
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
@@ -1481,7 +1486,7 @@ errorhandler:
 End Sub
 
 Public Sub EditorResource_DrawExhaustedSprite()
-Dim Sprite As Long
+Dim Sprite As Long, Red As Byte, Green As Byte, Blue As Byte, Alpha As Byte
 Dim srcRect As D3DRECT, destRect As D3DRECT
 Dim X As Long, Y As Long, Height As Long, Width As Long
 
@@ -1508,7 +1513,13 @@ Dim X As Long, Y As Long, Height As Long, Width As Long
         Y = (frmEditor_Resource.picExhaustedPic.ScaleHeight / 2) - (D3DT_TEXTURE(Tex_Resource(Sprite)).Height / 2)
         Width = D3DT_TEXTURE(Tex_Resource(Sprite)).Width
         Height = D3DT_TEXTURE(Tex_Resource(Sprite)).Height
-        Call RenderGraphic(Tex_Resource(Sprite), X, Y, Width, Height, 0, 0, 0, 0)
+        
+        Red = Resource(EditorIndex).Red(1)
+        Green = Resource(EditorIndex).Green(1)
+        Blue = Resource(EditorIndex).Blue(1)
+        Alpha = Resource(EditorIndex).Alpha(1)
+        
+        Call RenderGraphic(Tex_Resource(Sprite), X, Y, Width, Height, 0, 0, 0, 0, Red, Green, Blue, Alpha)
     End If
 
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!

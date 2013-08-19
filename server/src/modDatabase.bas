@@ -583,6 +583,7 @@ Sub CheckItems()
     For i = 1 To MAX_ITEMS
 
         If Not FileExist("\Data\Items\Item" & i & ".dat") Then
+            Call ClearItem(i)
             Call SaveItem(i)
         End If
 
@@ -654,6 +655,7 @@ Sub CheckShops()
     For i = 1 To MAX_SHOPS
 
         If Not FileExist("\Data\shops\shop" & i & ".dat") Then
+            Call ClearShop(i)
             Call SaveShop(i)
         End If
 
@@ -720,6 +722,7 @@ Sub CheckSpells()
     For i = 1 To MAX_SPELLS
 
         If Not FileExist("\Data\spells\spells" & i & ".dat") Then
+            Call ClearSpell(i)
             Call SaveSpell(i)
         End If
 
@@ -788,6 +791,7 @@ Sub CheckNpcs()
     For i = 1 To MAX_NPCS
 
         If Not FileExist("\Data\npcs\npc" & i & ".dat") Then
+            Call ClearNpc(i)
             Call SaveNpc(i)
         End If
 
@@ -856,6 +860,7 @@ Sub CheckResources()
 
     For i = 1 To MAX_RESOURCES
         If Not FileExist("\Data\Resources\Resource" & i & ".dat") Then
+            Call ClearResource(i)
             Call SaveResource(i)
         End If
     Next
@@ -868,6 +873,14 @@ Sub ClearResource(ByVal index As Long)
     Resource(index).SuccessMessage = vbNullString
     Resource(index).EmptyMessage = vbNullString
     Resource(index).Sound = "None."
+    Resource(index).Red(0) = 255
+    Resource(index).Red(1) = 255
+    Resource(index).Green(0) = 255
+    Resource(index).Green(1) = 255
+    Resource(index).Blue(0) = 255
+    Resource(index).Blue(1) = 255
+    Resource(index).Alpha(0) = 255
+    Resource(index).Alpha(1) = 255
 End Sub
 
 Sub ClearResources()
@@ -924,6 +937,7 @@ Sub CheckAnimations()
     For i = 1 To MAX_ANIMATIONS
 
         If Not FileExist("\Data\animations\animation" & i & ".dat") Then
+            Call ClearAnimation(i)
             Call SaveAnimation(i)
         End If
 
@@ -1056,6 +1070,7 @@ Sub CheckMaps()
     For i = 1 To MAX_MAPS
 
         If Not FileExist("\Data\maps\map" & i & ".dat") Then
+            Call ClearMap(i)
             Call SaveMap(i)
         End If
 

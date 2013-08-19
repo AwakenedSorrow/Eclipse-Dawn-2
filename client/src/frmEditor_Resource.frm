@@ -2,7 +2,7 @@ VERSION 5.00
 Begin VB.Form frmEditor_Resource 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Resource Editor"
-   ClientHeight    =   10515
+   ClientHeight    =   7590
    ClientLeft      =   45
    ClientTop       =   330
    ClientWidth     =   9630
@@ -20,7 +20,7 @@ Begin VB.Form frmEditor_Resource
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   701
+   ScaleHeight     =   506
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   642
    StartUpPosition =   2  'CenterScreen
@@ -29,54 +29,160 @@ Begin VB.Form frmEditor_Resource
       Caption         =   "Delete"
       Height          =   375
       Left            =   5760
-      TabIndex        =   28
-      Top             =   10080
+      TabIndex        =   23
+      Top             =   7080
       Width           =   1455
    End
    Begin VB.CommandButton cmdCancel 
       Caption         =   "Cancel"
       Height          =   375
       Left            =   8040
-      TabIndex        =   27
-      Top             =   10080
+      TabIndex        =   22
+      Top             =   7080
       Width           =   1455
    End
    Begin VB.CommandButton cmdSave 
       Caption         =   "Save"
       Height          =   375
       Left            =   3360
-      TabIndex        =   26
-      Top             =   10080
+      TabIndex        =   21
+      Top             =   7080
       Width           =   1455
    End
    Begin VB.Frame Frame1 
       Caption         =   "Resource Properties"
-      Height          =   9855
+      Height          =   6855
       Left            =   3360
-      TabIndex        =   3
+      TabIndex        =   2
       Top             =   120
       Width           =   6135
+      Begin VB.TextBox txtSpawn 
+         Height          =   270
+         Left            =   4800
+         TabIndex        =   47
+         Text            =   "0"
+         Top             =   6480
+         Width           =   1215
+      End
+      Begin VB.TextBox txtHealth 
+         Height          =   270
+         Left            =   1800
+         TabIndex        =   46
+         Text            =   "0"
+         Top             =   6480
+         Width           =   1215
+      End
+      Begin VB.ComboBox cmbTool 
+         Height          =   300
+         ItemData        =   "frmEditor_Resource.frx":3332
+         Left            =   4080
+         List            =   "frmEditor_Resource.frx":3342
+         Style           =   2  'Dropdown List
+         TabIndex        =   45
+         Top             =   5760
+         Width           =   1935
+      End
+      Begin VB.ComboBox cmbItem 
+         Height          =   300
+         Left            =   1200
+         Style           =   2  'Dropdown List
+         TabIndex        =   44
+         Top             =   6120
+         Width           =   1815
+      End
+      Begin VB.ComboBox cmbAnimation 
+         Height          =   300
+         Left            =   1200
+         Style           =   2  'Dropdown List
+         TabIndex        =   43
+         Top             =   5760
+         Width           =   1815
+      End
+      Begin VB.TextBox txtAlpha 
+         Height          =   270
+         Index           =   1
+         Left            =   5280
+         TabIndex        =   42
+         Text            =   "255"
+         Top             =   5280
+         Width           =   735
+      End
+      Begin VB.TextBox txtBlue 
+         Height          =   270
+         Index           =   1
+         Left            =   5280
+         TabIndex        =   40
+         Text            =   "255"
+         Top             =   4920
+         Width           =   735
+      End
+      Begin VB.TextBox txtGreen 
+         Height          =   270
+         Index           =   1
+         Left            =   3840
+         TabIndex        =   38
+         Text            =   "255"
+         Top             =   5280
+         Width           =   735
+      End
+      Begin VB.TextBox txtRed 
+         Height          =   270
+         Index           =   1
+         Left            =   3840
+         TabIndex        =   36
+         Text            =   "255"
+         Top             =   4920
+         Width           =   735
+      End
+      Begin VB.TextBox txtAlpha 
+         Height          =   270
+         Index           =   0
+         Left            =   2160
+         TabIndex        =   34
+         Text            =   "255"
+         Top             =   5280
+         Width           =   735
+      End
+      Begin VB.TextBox txtBlue 
+         Height          =   270
+         Index           =   0
+         Left            =   2160
+         TabIndex        =   32
+         Text            =   "255"
+         Top             =   4920
+         Width           =   735
+      End
+      Begin VB.TextBox txtGreen 
+         Height          =   270
+         Index           =   0
+         Left            =   720
+         TabIndex        =   30
+         Text            =   "255"
+         Top             =   5280
+         Width           =   735
+      End
+      Begin VB.TextBox txtRed 
+         Height          =   270
+         Index           =   0
+         Left            =   720
+         TabIndex        =   28
+         Text            =   "255"
+         Top             =   4920
+         Width           =   735
+      End
       Begin VB.ComboBox cmbSound 
          Height          =   300
-         Left            =   960
+         Left            =   4080
          Style           =   2  'Dropdown List
-         TabIndex        =   32
-         Top             =   9360
-         Width           =   5055
-      End
-      Begin VB.HScrollBar scrlAnimation 
-         Height          =   255
-         Left            =   120
-         Max             =   6000
-         TabIndex        =   29
-         Top             =   9000
-         Width           =   5895
+         TabIndex        =   26
+         Top             =   6120
+         Width           =   1935
       End
       Begin VB.HScrollBar scrlExhaustedPic 
          Height          =   255
          Left            =   3240
-         TabIndex        =   24
-         Top             =   1920
+         TabIndex        =   19
+         Top             =   1200
          Width           =   2775
       End
       Begin VB.PictureBox picExhaustedPic 
@@ -93,61 +199,38 @@ Begin VB.Form frmEditor_Resource
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   3960
+         Height          =   3240
          Left            =   3240
-         ScaleHeight     =   264
+         ScaleHeight     =   216
          ScaleMode       =   3  'Pixel
          ScaleWidth      =   184
-         TabIndex        =   23
-         Top             =   2280
+         TabIndex        =   18
+         Top             =   1560
          Width           =   2760
       End
       Begin VB.TextBox txtName 
          Height          =   285
          Left            =   960
-         TabIndex        =   13
+         TabIndex        =   8
          Top             =   240
-         Width           =   5055
+         Width           =   2055
       End
       Begin VB.ComboBox cmbType 
          Height          =   300
-         ItemData        =   "frmEditor_Resource.frx":3332
-         Left            =   960
-         List            =   "frmEditor_Resource.frx":3342
+         ItemData        =   "frmEditor_Resource.frx":3364
+         Left            =   3960
+         List            =   "frmEditor_Resource.frx":3374
          Style           =   2  'Dropdown List
-         TabIndex        =   12
-         Top             =   1320
-         Width           =   5055
+         TabIndex        =   7
+         Top             =   240
+         Width           =   2055
       End
       Begin VB.HScrollBar scrlNormalPic 
          Height          =   255
          Left            =   120
-         TabIndex        =   11
-         Top             =   1920
+         TabIndex        =   6
+         Top             =   1200
          Width           =   2775
-      End
-      Begin VB.HScrollBar scrlReward 
-         Height          =   255
-         Left            =   120
-         TabIndex        =   10
-         Top             =   6600
-         Width           =   5895
-      End
-      Begin VB.HScrollBar scrlTool 
-         Height          =   255
-         Left            =   120
-         Max             =   3
-         TabIndex        =   9
-         Top             =   7200
-         Width           =   5895
-      End
-      Begin VB.HScrollBar scrlHealth 
-         Height          =   255
-         Left            =   120
-         Max             =   255
-         TabIndex        =   8
-         Top             =   7800
-         Width           =   5895
       End
       Begin VB.PictureBox picNormalPic 
          AutoRedraw      =   -1  'True
@@ -163,70 +246,141 @@ Begin VB.Form frmEditor_Resource
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         Height          =   3960
+         Height          =   3240
          Left            =   120
-         ScaleHeight     =   264
+         ScaleHeight     =   216
          ScaleMode       =   3  'Pixel
          ScaleWidth      =   184
-         TabIndex        =   7
-         Top             =   2280
+         TabIndex        =   5
+         Top             =   1560
          Width           =   2760
-      End
-      Begin VB.HScrollBar scrlRespawn 
-         Height          =   255
-         Left            =   120
-         Max             =   6000
-         TabIndex        =   6
-         Top             =   8400
-         Width           =   5895
       End
       Begin VB.TextBox txtMessage 
          Height          =   285
          Left            =   960
-         TabIndex        =   5
+         TabIndex        =   4
          Top             =   600
-         Width           =   5055
+         Width           =   2055
       End
       Begin VB.TextBox txtMessage2 
          Height          =   285
-         Left            =   960
-         TabIndex        =   4
-         Top             =   960
-         Width           =   5055
+         Left            =   3960
+         TabIndex        =   3
+         Top             =   600
+         Width           =   2055
+      End
+      Begin VB.Label Label13 
+         Caption         =   "Alpha:"
+         Height          =   255
+         Left            =   4680
+         TabIndex        =   41
+         Top             =   5280
+         Width           =   735
+      End
+      Begin VB.Label Label12 
+         Caption         =   "Blue:"
+         Height          =   255
+         Left            =   4680
+         TabIndex        =   39
+         Top             =   4920
+         Width           =   735
+      End
+      Begin VB.Label Label11 
+         Caption         =   "Green:"
+         Height          =   255
+         Left            =   3240
+         TabIndex        =   37
+         Top             =   5280
+         Width           =   735
+      End
+      Begin VB.Label Label10 
+         Caption         =   "Red:"
+         Height          =   255
+         Left            =   3240
+         TabIndex        =   35
+         Top             =   4920
+         Width           =   735
+      End
+      Begin VB.Line Line1 
+         X1              =   3045
+         X2              =   3045
+         Y1              =   960
+         Y2              =   5520
+      End
+      Begin VB.Label Label9 
+         Caption         =   "Alpha:"
+         Height          =   255
+         Left            =   1560
+         TabIndex        =   33
+         Top             =   5280
+         Width           =   735
+      End
+      Begin VB.Label Label8 
+         Caption         =   "Blue:"
+         Height          =   255
+         Left            =   1560
+         TabIndex        =   31
+         Top             =   4920
+         Width           =   735
+      End
+      Begin VB.Label Label7 
+         Caption         =   "Green:"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   29
+         Top             =   5280
+         Width           =   735
+      End
+      Begin VB.Label Label6 
+         Caption         =   "Red:"
+         Height          =   255
+         Left            =   120
+         TabIndex        =   27
+         Top             =   4920
+         Width           =   735
       End
       Begin VB.Label Label5 
          Caption         =   "Sound:"
          Height          =   255
-         Left            =   120
-         TabIndex        =   31
-         Top             =   9360
+         Left            =   3120
+         TabIndex        =   25
+         Top             =   6130
          Width           =   1455
       End
       Begin VB.Label lblAnim 
          AutoSize        =   -1  'True
-         Caption         =   "Animation: None"
+         Caption         =   "Animation:"
          Height          =   180
          Left            =   120
-         TabIndex        =   30
-         Top             =   8760
-         Width           =   1260
+         TabIndex        =   24
+         Top             =   5770
+         Width           =   825
       End
       Begin VB.Label lblExhaustedPic 
          Alignment       =   2  'Center
          AutoSize        =   -1  'True
          Caption         =   "Exhausted Image: 0"
-         Height          =   180
+         BeginProperty Font 
+            Name            =   "Verdana"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   195
          Left            =   3240
-         TabIndex        =   25
-         Top             =   1680
-         Width           =   2730
+         TabIndex        =   20
+         Top             =   960
+         Width           =   2700
       End
       Begin VB.Label Label1 
          AutoSize        =   -1  'True
          Caption         =   "Name:"
          Height          =   180
          Left            =   120
-         TabIndex        =   22
+         TabIndex        =   17
          Top             =   240
          Width           =   495
       End
@@ -234,9 +388,9 @@ Begin VB.Form frmEditor_Resource
          AutoSize        =   -1  'True
          Caption         =   "Type:"
          Height          =   180
-         Left            =   120
-         TabIndex        =   21
-         Top             =   1320
+         Left            =   3120
+         TabIndex        =   16
+         Top             =   240
          Width           =   435
       End
       Begin VB.Label lblNormalPic 
@@ -254,52 +408,52 @@ Begin VB.Form frmEditor_Resource
          EndProperty
          Height          =   195
          Left            =   120
-         TabIndex        =   20
-         Top             =   1680
+         TabIndex        =   15
+         Top             =   960
          Width           =   2775
       End
       Begin VB.Label lblReward 
          AutoSize        =   -1  'True
-         Caption         =   "Item Reward: None"
+         Caption         =   "Item Reward:"
          Height          =   180
          Left            =   120
-         TabIndex        =   19
-         Top             =   6360
-         Width           =   1440
+         TabIndex        =   14
+         Top             =   6130
+         Width           =   1005
       End
       Begin VB.Label lblTool 
          AutoSize        =   -1  'True
-         Caption         =   "Tool Required: None"
+         Caption         =   "Req. Tool:"
          Height          =   180
-         Left            =   120
-         TabIndex        =   18
-         Top             =   6960
-         Width           =   1530
+         Left            =   3120
+         TabIndex        =   13
+         Top             =   5770
+         Width           =   765
       End
       Begin VB.Label lblHealth 
          AutoSize        =   -1  'True
-         Caption         =   "Health: 0"
+         Caption         =   "Health Pool:"
          Height          =   180
          Left            =   120
-         TabIndex        =   17
-         Top             =   7560
-         Width           =   705
+         TabIndex        =   12
+         Top             =   6480
+         Width           =   930
       End
       Begin VB.Label lblRespawn 
          AutoSize        =   -1  'True
-         Caption         =   "Respawn Time (Seconds): 0"
+         Caption         =   "Respawn Time (Sec):"
          Height          =   180
-         Left            =   120
-         TabIndex        =   16
-         Top             =   8160
-         Width           =   2100
+         Left            =   3120
+         TabIndex        =   11
+         Top             =   6480
+         Width           =   1590
       End
       Begin VB.Label Label3 
          AutoSize        =   -1  'True
          Caption         =   "Success:"
          Height          =   180
          Left            =   120
-         TabIndex        =   15
+         TabIndex        =   10
          Top             =   600
          Width           =   705
       End
@@ -308,30 +462,21 @@ Begin VB.Form frmEditor_Resource
          BackStyle       =   0  'Transparent
          Caption         =   "Empty:"
          Height          =   180
-         Left            =   120
-         TabIndex        =   14
-         Top             =   960
+         Left            =   3120
+         TabIndex        =   9
+         Top             =   600
          Width           =   540
       End
    End
-   Begin VB.CommandButton cmdArray 
-      Caption         =   "Change Array Size"
-      Enabled         =   0   'False
-      Height          =   375
-      Left            =   120
-      TabIndex        =   2
-      Top             =   10080
-      Width           =   2895
-   End
    Begin VB.Frame Frame3 
       Caption         =   "Resource List"
-      Height          =   9855
+      Height          =   7335
       Left            =   120
       TabIndex        =   0
       Top             =   120
       Width           =   3135
       Begin VB.ListBox lstIndex 
-         Height          =   9420
+         Height          =   6900
          Left            =   120
          TabIndex        =   1
          Top             =   240
@@ -345,6 +490,52 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
+
+
+Private Sub cmbAnimation_Click()
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    Resource(EditorIndex).Animation = cmbAnimation.ListIndex
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "cmbType_Click", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+
+
+Private Sub cmbItem_Click()
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    Resource(EditorIndex).ItemReward = cmbItem.ListIndex
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "cmbItem_Click", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Private Sub cmbTool_Click()
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    Resource(EditorIndex).ToolRequired = cmbTool.ListIndex
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "cmbTool_Click", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
 
 Private Sub cmbType_Click()
     ' If debug mode, handle error then exit out
@@ -401,10 +592,8 @@ Private Sub Form_Load()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    scrlReward.max = MAX_ITEMS
     scrlExhaustedPic.max = NumResources
     scrlNormalPic.max = NumResources
-    scrlAnimation.max = MAX_ANIMATIONS
     
     ' Error handler
     Exit Sub
@@ -442,23 +631,6 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlAnimation_Change()
-Dim sString As String
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-    
-    If scrlAnimation.value = 0 Then sString = "None" Else sString = Trim$(Animation(scrlAnimation.value).name)
-    lblAnim.Caption = "Animation: " & sString
-    Resource(EditorIndex).Animation = scrlAnimation.value
-    
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "scrlAnimation_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
-
 Private Sub scrlExhaustedPic_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -471,21 +643,6 @@ Private Sub scrlExhaustedPic_Change()
     Exit Sub
 errorhandler:
     HandleError "scrlExhaustedPic_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
-
-Private Sub scrlHealth_Change()
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-    
-    lblHealth.Caption = "Health: " & scrlHealth.value
-    Resource(EditorIndex).health = scrlHealth.value
-    
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "scrlHealth_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
@@ -506,66 +663,18 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub scrlRespawn_Change()
+Private Sub txtHealth_Change()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    lblRespawn.Caption = "Respawn Time (Seconds): " & scrlRespawn.value
-    Resource(EditorIndex).RespawnTime = scrlRespawn.value
+    If Val(Trim$(txtHealth.text)) < 0 Then txtHealth.text = "0"
+    
+    Resource(EditorIndex).health = Val(Trim$(txtHealth.text))
     
     ' Error handler
     Exit Sub
 errorhandler:
-    HandleError "scrlRespawn_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
-
-Private Sub scrlReward_Change()
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-    
-    If scrlReward.value > 0 Then
-        lblReward.Caption = "Item Reward: " & Trim$(Item(scrlReward.value).name)
-    Else
-        lblReward.Caption = "Item Reward: None"
-    End If
-    
-    Resource(EditorIndex).ItemReward = scrlReward.value
-
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "scrlReward_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
-
-Private Sub scrlTool_Change()
-    Dim name As String
-    
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-
-    Select Case scrlTool.value
-        Case 0
-            name = "None"
-        Case 1
-            name = "Hatchet"
-        Case 2
-            name = "Rod"
-        Case 3
-            name = "Pickaxe"
-    End Select
-
-    lblTool.Caption = "Tool Required: " & name
-    
-    Resource(EditorIndex).ToolRequired = scrlTool.value
-    
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "scrlTool_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    HandleError "txthealthe_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
@@ -633,6 +742,90 @@ Private Sub cmbSound_Click()
     Exit Sub
 errorhandler:
     HandleError "cmdSound_Click", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Private Sub txtRed_Change(index As Integer)
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    If Val(Trim$(txtRed(index).text)) < 0 Then txtRed(index).text = "0"
+    If Val(Trim$(txtRed(index).text)) > 255 Then txtRed(index).text = "255"
+    
+    Resource(EditorIndex).Red(index) = Val(Trim$(txtRed(index).text))
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "txtRed_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Private Sub txtGreen_Change(index As Integer)
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    If Val(Trim$(txtGreen(index).text)) < 0 Then txtGreen(index).text = "0"
+    If Val(Trim$(txtGreen(index).text)) > 255 Then txtGreen(index).text = "255"
+    
+    Resource(EditorIndex).Green(index) = Val(Trim$(txtGreen(index).text))
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "txtGreen_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Private Sub txtBlue_Change(index As Integer)
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    If Val(Trim$(txtBlue(index).text)) < 0 Then txtBlue(index).text = "0"
+    If Val(Trim$(txtBlue(index).text)) > 255 Then txtBlue(index).text = "255"
+    
+    Resource(EditorIndex).Blue(index) = Val(Trim$(txtBlue(index).text))
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "txtBlue_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Private Sub txtAlpha_Change(index As Integer)
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    If Val(Trim$(txtAlpha(index).text)) < 0 Then txtAlpha(index).text = "0"
+    If Val(Trim$(txtAlpha(index).text)) > 255 Then txtAlpha(index).text = "255"
+    
+    Resource(EditorIndex).Alpha(index) = Val(Trim$(txtAlpha(index).text))
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "txtAlpha_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Private Sub txtSpawn_Change()
+        ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    If Val(Trim$(txtSpawn.text)) < 0 Then txtSpawn.text = "0"
+    
+    Resource(EditorIndex).RespawnTime = Val(Trim$(txtSpawn.text))
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "txtSpawn_Change", "frmEditor_Resource", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub

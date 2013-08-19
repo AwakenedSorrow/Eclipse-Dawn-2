@@ -1062,6 +1062,18 @@ Dim SoundSet As Boolean
     For i = 1 To UBound(soundCache)
         frmEditor_Resource.cmbSound.AddItem soundCache(i)
     Next
+    ' Add Animations to the list.
+    frmEditor_Resource.cmbAnimation.Clear
+    frmEditor_Resource.cmbAnimation.AddItem "None."
+    For i = 1 To MAX_ANIMATIONS
+        frmEditor_Resource.cmbAnimation.AddItem Trim$(Str$(i)) & ": " & Trim$(Animation(i).name)
+    Next
+    ' Add Items to the list.
+    frmEditor_Resource.cmbItem.Clear
+    frmEditor_Resource.cmbItem.AddItem "None."
+    For i = 1 To MAX_ITEMS
+        frmEditor_Resource.cmbItem.AddItem Trim$(Str$(i)) & ": " & Trim$(Item(i).name)
+    Next
     ' finished populating
     
     With frmEditor_Resource
@@ -1071,11 +1083,18 @@ Dim SoundSet As Boolean
         .cmbType.ListIndex = Resource(EditorIndex).ResourceType
         .scrlNormalPic.value = Resource(EditorIndex).ResourceImage
         .scrlExhaustedPic.value = Resource(EditorIndex).ExhaustedImage
-        .scrlReward.value = Resource(EditorIndex).ItemReward
-        .scrlTool.value = Resource(EditorIndex).ToolRequired
-        .scrlHealth.value = Resource(EditorIndex).health
-        .scrlRespawn.value = Resource(EditorIndex).RespawnTime
-        .scrlAnimation.value = Resource(EditorIndex).Animation
+        .cmbItem.ListIndex = Resource(EditorIndex).ItemReward
+        .cmbTool.ListIndex = Resource(EditorIndex).ToolRequired
+        .txtHealth = Trim$(Str$(Resource(EditorIndex).health))
+        .txtSpawn = Trim$(Str$(Resource(EditorIndex).RespawnTime))
+        .cmbAnimation.ListIndex = Resource(EditorIndex).Animation
+        
+        For i = 0 To 1
+            .txtRed(i) = Trim$(Str$(Resource(EditorIndex).Red(i)))
+            .txtGreen(i) = Trim$(Str$(Resource(EditorIndex).Green(i)))
+            .txtBlue(i) = Trim$(Str$(Resource(EditorIndex).Blue(i)))
+            .txtAlpha(i) = Trim$(Str$(Resource(EditorIndex).Alpha(i)))
+        Next i
         
         ' find the sound we have set
         If .cmbSound.ListCount >= 0 Then

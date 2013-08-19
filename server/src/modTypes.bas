@@ -361,6 +361,10 @@ Private Type ResourceRec
     RespawnTime As Long
     Walkthrough As Boolean
     Animation As Long
+    Red(0 To 1) As Byte
+    Green(0 To 1) As Byte
+    Blue(0 To 1) As Byte
+    Alpha(0 To 1) As Byte
 End Type
 
 Private Type AnimationRec
