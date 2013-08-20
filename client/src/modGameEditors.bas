@@ -29,14 +29,19 @@ Dim smusic() As String
     MapEditorTileScroll
     
     ' set shops for the shop attribute
+    frmEditor_Map.cmbShop.Clear
     frmEditor_Map.cmbShop.AddItem "None"
     For i = 1 To MAX_SHOPS
         frmEditor_Map.cmbShop.AddItem i & ": " & Shop(i).name
     Next
     
+    frmEditor_Map.cmbMapKey.Clear
+    For i = 1 To MAX_ITEMS
+        frmEditor_Map.cmbMapKey.AddItem i & ": " & Item(i).name
+        frmEditor_Map.cmbMapItem.AddItem i & ": " & Item(i).name
+    Next
+    
     ' Set limits for scrollbars
-    frmEditor_Map.scrlMapItem.max = MAX_ITEMS
-    frmEditor_Map.scrlMapKey.max = MAX_ITEMS
     frmEditor_Map.scrlMapWarp = MAX_MAPS
     frmEditor_Map.scrlResource.max = MAX_RESOURCES
     

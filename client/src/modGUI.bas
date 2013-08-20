@@ -1024,7 +1024,7 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' What image are we using?
-    itemnum = Item(frmEditor_Map.scrlMapItem.value).Pic
+    itemnum = Item(frmEditor_Map.cmbMapItem.ListIndex + 1).Pic
     ' Is it a valid one?
     If itemnum < 1 Or itemnum > NumItems Then
         Exit Sub
@@ -1038,13 +1038,13 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
     Call RenderGraphic(Tex_EditorBackDrop, 0, 0, PIC_X, PIC_Y, 0, 0, 0, 0)
     
     ' See what frame we need to use.
-    AnimFrame = ItemAnimFrame(frmEditor_Map.scrlMapItem.value) * PIC_X
+    AnimFrame = ItemAnimFrame(frmEditor_Map.cmbMapItem.ListIndex + 1) * PIC_X
     
     ' The Colors maaan!
-    Red = Item(frmEditor_Map.scrlMapItem.value).Red
-    Green = Item(frmEditor_Map.scrlMapItem.value).Green
-    Blue = Item(frmEditor_Map.scrlMapItem.value).Blue
-    Alpha = Item(frmEditor_Map.scrlMapItem.value).Alpha
+    Red = Item(frmEditor_Map.cmbMapItem.ListIndex + 1).Red
+    Green = Item(frmEditor_Map.cmbMapItem.ListIndex + 1).Green
+    Blue = Item(frmEditor_Map.cmbMapItem.ListIndex + 1).Blue
+    Alpha = Item(frmEditor_Map.cmbMapItem.ListIndex + 1).Alpha
     
     ' Render the actual graphic to the screen.
     Call RenderGraphic(Tex_Item(itemnum), 0, 0, PIC_X, PIC_Y, 0, 0, AnimFrame, 0, Red, Green, Blue, Alpha)
@@ -1077,14 +1077,14 @@ errorhandler:
 End Sub
 
 Public Sub EditorMap_DrawKey()
-Dim itempic As Long, AnimFrame As Long
+Dim itempic As Long, AnimFrame As Long, Red As Byte, Green As Byte, Blue As Byte, Alpha As Byte
 Dim srcRect As D3DRECT, destRect As D3DRECT
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
-    
+        
     ' Retrieve what picture we'll be using.
-    itempic = Item(frmEditor_Map.scrlMapKey.value).Pic
+    itempic = Item(frmEditor_Map.cmbMapKey.ListIndex + 1).Pic
 
     ' Is it valid?
     If itempic < 1 Or itempic > NumItems Then
@@ -1100,10 +1100,15 @@ Dim srcRect As D3DRECT, destRect As D3DRECT
 
     
     ' See what frame we need to use.
-    AnimFrame = ItemAnimFrame(frmEditor_Map.scrlMapKey.value) * PIC_X
+    AnimFrame = ItemAnimFrame(frmEditor_Map.cmbMapKey.ListIndex + 1) * PIC_X
+    
+    Red = Item(frmEditor_Map.cmbMapKey.ListIndex + 1).Red
+    Green = Item(frmEditor_Map.cmbMapKey.ListIndex + 1).Green
+    Blue = Item(frmEditor_Map.cmbMapKey.ListIndex + 1).Blue
+    Alpha = Item(frmEditor_Map.cmbMapKey.ListIndex + 1).Alpha
     
     ' Render the actual graphic to the screen.
-    Call RenderGraphic(Tex_Item(itempic), 0, 0, PIC_X, PIC_Y, 0, 0, AnimFrame, 0)
+    Call RenderGraphic(Tex_Item(itempic), 0, 0, PIC_X, PIC_Y, 0, 0, AnimFrame, 0, Red, Green, Blue, Alpha)
     
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
     ' Of course, we also need to do a few calculations to make sure it appears where it should.

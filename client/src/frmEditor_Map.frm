@@ -48,8 +48,8 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Slide"
          Height          =   1455
          Left            =   1800
-         TabIndex        =   86
-         Top             =   3000
+         TabIndex        =   81
+         Top             =   2880
          Visible         =   0   'False
          Width           =   3375
          Begin VB.ComboBox cmbSlide 
@@ -58,7 +58,7 @@ Begin VB.Form frmEditor_Map
             Left            =   240
             List            =   "frmEditor_Map.frx":3342
             Style           =   2  'Dropdown List
-            TabIndex        =   88
+            TabIndex        =   83
             Top             =   360
             Width           =   2895
          End
@@ -66,7 +66,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Okay"
             Height          =   375
             Left            =   960
-            TabIndex        =   87
+            TabIndex        =   82
             Top             =   840
             Width           =   1455
          End
@@ -75,15 +75,15 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Trap"
          Height          =   1575
          Left            =   1800
-         TabIndex        =   82
-         Top             =   3000
+         TabIndex        =   77
+         Top             =   2880
          Visible         =   0   'False
          Width           =   3375
          Begin VB.HScrollBar scrlTrap 
             Height          =   255
             Left            =   240
             Max             =   10000
-            TabIndex        =   84
+            TabIndex        =   79
             Top             =   600
             Width           =   2895
          End
@@ -91,7 +91,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Okay"
             Height          =   375
             Left            =   960
-            TabIndex        =   83
+            TabIndex        =   78
             Top             =   960
             Width           =   1455
          End
@@ -99,7 +99,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Amount: 0"
             Height          =   255
             Left            =   240
-            TabIndex        =   85
+            TabIndex        =   80
             Top             =   360
             Width           =   2535
          End
@@ -108,8 +108,8 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Heal"
          Height          =   1815
          Left            =   1800
-         TabIndex        =   77
-         Top             =   2880
+         TabIndex        =   72
+         Top             =   2640
          Visible         =   0   'False
          Width           =   3375
          Begin VB.ComboBox cmbHeal 
@@ -118,7 +118,7 @@ Begin VB.Form frmEditor_Map
             Left            =   240
             List            =   "frmEditor_Map.frx":3367
             Style           =   2  'Dropdown List
-            TabIndex        =   81
+            TabIndex        =   76
             Top             =   240
             Width           =   2895
          End
@@ -126,7 +126,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Okay"
             Height          =   375
             Left            =   960
-            TabIndex        =   79
+            TabIndex        =   74
             Top             =   1200
             Width           =   1455
          End
@@ -134,7 +134,7 @@ Begin VB.Form frmEditor_Map
             Height          =   255
             Left            =   240
             Max             =   10000
-            TabIndex        =   78
+            TabIndex        =   73
             Top             =   840
             Width           =   2895
          End
@@ -142,7 +142,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Amount: 0"
             Height          =   255
             Left            =   240
-            TabIndex        =   80
+            TabIndex        =   75
             Top             =   600
             Width           =   2535
          End
@@ -192,7 +192,7 @@ Begin VB.Form frmEditor_Map
          Height          =   1695
          Left            =   1800
          TabIndex        =   30
-         Top             =   3000
+         Top             =   2760
          Visible         =   0   'False
          Width           =   3375
          Begin VB.CommandButton cmdResourceOk 
@@ -226,29 +226,29 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Map Warp"
          Height          =   2775
          Left            =   1800
-         TabIndex        =   59
-         Top             =   2040
+         TabIndex        =   54
+         Top             =   2400
          Visible         =   0   'False
          Width           =   3375
          Begin VB.CommandButton cmdMapWarp 
             Caption         =   "Accept"
             Height          =   375
             Left            =   1080
-            TabIndex        =   66
+            TabIndex        =   61
             Top             =   2160
             Width           =   1215
          End
          Begin VB.HScrollBar scrlMapWarpY 
             Height          =   255
             Left            =   120
-            TabIndex        =   65
+            TabIndex        =   60
             Top             =   1680
             Width           =   3135
          End
          Begin VB.HScrollBar scrlMapWarpX 
             Height          =   255
             Left            =   120
-            TabIndex        =   63
+            TabIndex        =   58
             Top             =   1080
             Width           =   3135
          End
@@ -256,7 +256,7 @@ Begin VB.Form frmEditor_Map
             Height          =   255
             Left            =   120
             Min             =   1
-            TabIndex        =   61
+            TabIndex        =   56
             Top             =   480
             Value           =   1
             Width           =   3135
@@ -265,7 +265,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Y: 0"
             Height          =   255
             Left            =   120
-            TabIndex        =   64
+            TabIndex        =   59
             Top             =   1440
             Width           =   3135
          End
@@ -273,7 +273,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "X: 0"
             Height          =   255
             Left            =   120
-            TabIndex        =   62
+            TabIndex        =   57
             Top             =   840
             Width           =   3135
          End
@@ -281,7 +281,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Map: 1"
             Height          =   255
             Left            =   120
-            TabIndex        =   60
+            TabIndex        =   55
             Top             =   240
             Width           =   3135
          End
@@ -290,7 +290,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Shop"
          Height          =   1335
          Left            =   1920
-         TabIndex        =   67
+         TabIndex        =   62
          Top             =   3000
          Visible         =   0   'False
          Width           =   3135
@@ -298,7 +298,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Accept"
             Height          =   375
             Left            =   960
-            TabIndex        =   69
+            TabIndex        =   64
             Top             =   720
             Width           =   1215
          End
@@ -306,7 +306,7 @@ Begin VB.Form frmEditor_Map
             Height          =   300
             Left            =   120
             Style           =   2  'Dropdown List
-            TabIndex        =   68
+            TabIndex        =   63
             Top             =   240
             Width           =   2895
          End
@@ -315,29 +315,29 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Key Open"
          Height          =   2055
          Left            =   1800
-         TabIndex        =   53
-         Top             =   2400
+         TabIndex        =   48
+         Top             =   2760
          Visible         =   0   'False
          Width           =   3375
          Begin VB.CommandButton cmdKeyOpen 
             Caption         =   "Accept"
             Height          =   375
             Left            =   1080
-            TabIndex        =   58
+            TabIndex        =   53
             Top             =   1440
             Width           =   1215
          End
          Begin VB.HScrollBar scrlKeyY 
             Height          =   255
             Left            =   120
-            TabIndex        =   57
+            TabIndex        =   52
             Top             =   1080
             Width           =   3015
          End
          Begin VB.HScrollBar scrlKeyX 
             Height          =   255
             Left            =   120
-            TabIndex        =   55
+            TabIndex        =   50
             Top             =   480
             Width           =   3015
          End
@@ -345,7 +345,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Y: 0"
             Height          =   255
             Left            =   120
-            TabIndex        =   56
+            TabIndex        =   51
             Top             =   840
             Width           =   3015
          End
@@ -353,7 +353,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "X: 0"
             Height          =   255
             Left            =   120
-            TabIndex        =   54
+            TabIndex        =   49
             Top             =   240
             Width           =   3015
          End
@@ -362,10 +362,18 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Map Key"
          Height          =   1815
          Left            =   1800
-         TabIndex        =   47
-         Top             =   2520
+         TabIndex        =   44
+         Top             =   2880
          Visible         =   0   'False
          Width           =   3375
+         Begin VB.ComboBox cmbMapKey 
+            Height          =   300
+            Left            =   120
+            Style           =   2  'Dropdown List
+            TabIndex        =   84
+            Top             =   600
+            Width           =   2175
+         End
          Begin VB.PictureBox picMapKey 
             Appearance      =   0  'Flat
             AutoRedraw      =   -1  'True
@@ -386,7 +394,7 @@ Begin VB.Form frmEditor_Map
             ScaleHeight     =   32
             ScaleMode       =   3  'Pixel
             ScaleWidth      =   32
-            TabIndex        =   52
+            TabIndex        =   47
             Top             =   600
             Width           =   480
          End
@@ -394,7 +402,7 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Accept"
             Height          =   375
             Left            =   1080
-            TabIndex        =   51
+            TabIndex        =   46
             Top             =   1320
             Width           =   1215
          End
@@ -402,28 +410,10 @@ Begin VB.Form frmEditor_Map
             Caption         =   "Take key away upon use."
             Height          =   255
             Left            =   120
-            TabIndex        =   50
+            TabIndex        =   45
             Top             =   960
             Value           =   1  'Checked
             Width           =   2535
-         End
-         Begin VB.HScrollBar scrlMapKey 
-            Height          =   255
-            Left            =   120
-            Max             =   5
-            Min             =   1
-            TabIndex        =   49
-            Top             =   600
-            Value           =   1
-            Width           =   2535
-         End
-         Begin VB.Label lblMapKey 
-            Caption         =   "Item: None"
-            Height          =   255
-            Left            =   120
-            TabIndex        =   48
-            Top             =   240
-            Width           =   3135
          End
       End
       Begin VB.Frame fraMapItem 
@@ -431,35 +421,32 @@ Begin VB.Form frmEditor_Map
          Height          =   1815
          Left            =   1800
          TabIndex        =   41
-         Top             =   2520
+         Top             =   2640
          Visible         =   0   'False
          Width           =   3375
+         Begin VB.TextBox txtMapItemVal 
+            Height          =   270
+            Left            =   960
+            TabIndex        =   87
+            Text            =   "0"
+            Top             =   840
+            Width           =   1695
+         End
+         Begin VB.ComboBox cmbMapItem 
+            Height          =   300
+            Left            =   120
+            Style           =   2  'Dropdown List
+            TabIndex        =   85
+            Top             =   480
+            Width           =   2535
+         End
          Begin VB.CommandButton cmdMapItem 
             Caption         =   "Accept"
             Height          =   375
             Left            =   1200
-            TabIndex        =   46
+            TabIndex        =   43
             Top             =   1200
             Width           =   1215
-         End
-         Begin VB.HScrollBar scrlMapItemValue 
-            Height          =   255
-            Left            =   120
-            Min             =   1
-            TabIndex        =   45
-            Top             =   840
-            Value           =   1
-            Width           =   2535
-         End
-         Begin VB.HScrollBar scrlMapItem 
-            Height          =   255
-            Left            =   120
-            Max             =   10
-            Min             =   1
-            TabIndex        =   44
-            Top             =   480
-            Value           =   1
-            Width           =   2535
          End
          Begin VB.PictureBox picMapItem 
             Appearance      =   0  'Flat
@@ -481,17 +468,17 @@ Begin VB.Form frmEditor_Map
             ScaleHeight     =   32
             ScaleMode       =   3  'Pixel
             ScaleWidth      =   32
-            TabIndex        =   43
+            TabIndex        =   42
             Top             =   600
             Width           =   480
          End
-         Begin VB.Label lblMapItem 
-            Caption         =   "Item: None x0"
+         Begin VB.Label Label2 
+            Caption         =   "Amount:"
             Height          =   255
             Left            =   120
-            TabIndex        =   42
-            Top             =   240
-            Width           =   3135
+            TabIndex        =   86
+            Top             =   840
+            Width           =   855
          End
       End
    End
@@ -523,7 +510,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Block"
          Height          =   255
          Left            =   480
-         TabIndex        =   72
+         TabIndex        =   67
          Top             =   720
          Width           =   735
       End
@@ -643,7 +630,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Slide"
          Height          =   270
          Left            =   120
-         TabIndex        =   76
+         TabIndex        =   71
          Top             =   3360
          Width           =   1215
       End
@@ -651,7 +638,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Trap"
          Height          =   270
          Left            =   120
-         TabIndex        =   75
+         TabIndex        =   70
          Top             =   3120
          Width           =   1215
       End
@@ -659,7 +646,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Heal"
          Height          =   270
          Left            =   120
-         TabIndex        =   74
+         TabIndex        =   69
          Top             =   2880
          Width           =   1215
       End
@@ -667,7 +654,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Bank"
          Height          =   270
          Left            =   120
-         TabIndex        =   73
+         TabIndex        =   68
          Top             =   2640
          Width           =   1215
       End
@@ -675,7 +662,7 @@ Begin VB.Form frmEditor_Map
          Caption         =   "Shop"
          Height          =   270
          Left            =   120
-         TabIndex        =   70
+         TabIndex        =   65
          Top             =   2400
          Width           =   1215
       End
@@ -846,7 +833,7 @@ Begin VB.Form frmEditor_Map
       EndProperty
       Height          =   255
       Left            =   120
-      TabIndex        =   71
+      TabIndex        =   66
       Top             =   5760
       Width           =   5535
    End
@@ -857,6 +844,26 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
+
+Private Sub cmbMapItem_click()
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+
+    If Item(cmbMapItem.ListIndex + 1).Type <> ItemTypeCurrency Then
+        txtMapItemVal.Enabled = False
+        txtMapItemVal.text = "0"
+    Else
+        txtMapItemVal.Enabled = True
+        txtMapItemVal.text = "0"
+    End If
+
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "cmdMapItem_Click", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
 
 Private Sub cmdHeal_Click()
     ' If debug mode, handle error then exit out
@@ -896,8 +903,8 @@ Private Sub cmdMapItem_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    ItemEditorNum = scrlMapItem.value
-    ItemEditorValue = scrlMapItemValue.value
+    ItemEditorNum = cmbMapItem.ListIndex + 1
+    ItemEditorValue = Val(txtMapItemVal.text)
     picAttributes.Visible = False
     fraMapItem.Visible = False
     
@@ -913,7 +920,7 @@ Private Sub cmdMapKey_Click()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    KeyEditorNum = scrlMapKey.value
+    KeyEditorNum = cmbMapKey.ListIndex + 1
     KeyEditorTake = chkMapKey.value
     picAttributes.Visible = False
     fraMapKey.Visible = False
@@ -1315,10 +1322,9 @@ Private Sub optItem_Click()
     ClearAttributeDialogue
     picAttributes.Visible = True
     fraMapItem.Visible = True
-
-    scrlMapItem.max = MAX_ITEMS
-    scrlMapItem.value = 1
-    lblMapItem.Caption = Trim$(Item(scrlMapItem.value).name) & " x" & scrlMapItemValue.value
+    
+    cmbMapItem.ListIndex = 0
+    txtMapItemVal.text = "0"
     
     ' Error handler
     Exit Sub
@@ -1336,10 +1342,8 @@ Private Sub optKey_Click()
     picAttributes.Visible = True
     fraMapKey.Visible = True
     
-    scrlMapKey.max = MAX_ITEMS
-    scrlMapKey.value = 1
+    cmbMapKey.ListIndex = 0
     chkMapKey.value = 1
-    lblMapKey.Caption = "Item: " & Trim$(Item(scrlMapKey.value).name)
     
     ' Error handler
     Exit Sub
@@ -1492,99 +1496,6 @@ Private Sub scrlTrap_Change()
     Exit Sub
 errorhandler:
     HandleError "scrlTrap_Change", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
-
-Private Sub scrlMapItem_Change()
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-        
-    If Item(scrlMapItem.value).Type = ItemTypeCurrency Then
-        scrlMapItemValue.Enabled = True
-    Else
-        scrlMapItemValue.value = 1
-        scrlMapItemValue.Enabled = False
-    End If
-        
-    EditorMap_DrawMapItem
-    lblMapItem.Caption = Trim$(Item(scrlMapItem.value).name) & " x" & scrlMapItemValue.value
-    
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "scrlMapItem_Change", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
-
-Private Sub scrlMapItem_Scroll()
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-    
-    scrlMapItem_Change
-    
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "scrlMapItem_Scroll", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
-
-Private Sub scrlMapItemValue_Change()
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-    
-    lblMapItem.Caption = Trim$(Item(scrlMapItem.value).name) & " x" & scrlMapItemValue.value
-    
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "scrlMapItemValue_change", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
-
-Private Sub scrlMapItemValue_Scroll()
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-    
-    scrlMapItemValue_Change
-    
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "scrlMapItemValue_Scroll", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
-
-Private Sub scrlMapKey_Change()
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-    
-    lblMapKey.Caption = "Item #" & Trim$(Str$(scrlMapKey.value)) & ": " & Trim$(Item(scrlMapKey.value).name)
-    Call EditorMap_DrawKey
-    
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "scrlMapKey_Change", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
-End Sub
-
-Private Sub scrlMapKey_Scroll()
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-    
-    scrlMapKey_Change
-    
-    ' Error handler
-    Exit Sub
-errorhandler:
-    HandleError "scrlMapKey_Scroll", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
@@ -1832,4 +1743,10 @@ errorhandler:
     HandleError "scrlTileSet_Scroll", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
+End Sub
+
+Private Sub txtMapItemVal_Change()
+
+    If Val(txtMapItemVal.text) < 0 Then txtMapItemVal.text = "0"
+
 End Sub
