@@ -17,7 +17,6 @@ Attribute VB_Exposed = False
 Option Explicit
 
 ' Declaring some lovely things we need for our scripting commands.
-Private Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal hWnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
 Private Declare Function WritePrivateProfileString Lib "kernel32" Alias "WritePrivateProfileStringA" (ByVal lpApplicationname As String, ByVal lpKeyname As Any, ByVal lpString As String, ByVal lpfilename As String) As Long
 Private Declare Function GetPrivateProfileString Lib "kernel32" Alias "GetPrivateProfileStringA" (ByVal lpApplicationname As String, ByVal lpKeyname As Any, ByVal lpdefault As String, ByVal lpreturnedstring As String, ByVal nsize As Long, ByVal lpfilename As String) As Long
 
@@ -43,7 +42,7 @@ Public Sub SetGlobalSpawnPoint(ByVal Map As Long, ByVal X As Long, ByVal Y As Lo
         START_X = 5
         START_Y = 5
         
-        Call SetStatus("[SCRIPT FAULT] SetSpawnPoint() references a false map.")
+        Call SetStatus("[SCRIPT ERROR] SetSpawnPoint() references a false map.")
         Call SetStatus("Using default values of Map: 1 X: 5 Y: 5")
     Else
         ' We're using a correct value. Let's set it!
@@ -53,4 +52,115 @@ Public Sub SetGlobalSpawnPoint(ByVal Map As Long, ByVal X As Long, ByVal Y As Lo
         
         Call SetStatus("[SCRIPT] Global Spawnpoint has been set to Map: " & Trim$(STR$(Map)) & " X: " & Trim$(STR$(X)) & " Y: " & Trim$(STR$(Y)))
     End If
+End Sub
+
+Public Sub ShowServerText(ByVal Text As String)
+    Call TextAdd(Text)
+End Sub
+
+Public Sub GlobalMessage(ByVal Text As String, ByVal Color As Byte)
+    Call GlobalMsg(Text, Color)
+    Call TextAdd("[SCRIPT] Global Message: " & Trim$(Text))
+End Sub
+
+Public Function GetPlayerName(ByVal Index As Long) As String
+    GetPlayerName = Trim$(Player(Index).Name)
+End Function
+
+Public Sub SetPlayerName(ByVal Index As Long, ByVal Name As String)
+Dim F As Long
+    
+    ' Remove old name from file
+    Call DeleteName(Trim$(Player(Index).Name))
+    
+    Player(Index).Name = Trim$(Name)
+    
+    ' Append name to file
+    F = FreeFile
+    Open App.Path & "\data\accounts\charlist.txt" For Append As #F
+    Print #F, Name
+    Close #F
+    Call SavePlayer(Index)
+    Call SendPlayerData(Index)
+End Sub
+
+Public Function GetPlayerStr(ByVal Index As Long) As Byte
+    GetPlayerStr = GetPlayerStat(Index, Strength)
+End Function
+
+Public Function GetPlayerRawStr(ByVal Index As Long) As Byte
+    GetPlayerRawStr = GetPlayerRawStatNoClass(Index, Strength)
+End Function
+
+Public Function GetPlayerEnd(ByVal Index As Long) As Byte
+    GetPlayerEnd = GetPlayerStat(Index, Endurance)
+End Function
+
+Public Function GetPlayerRawEnd(ByVal Index As Long) As Byte
+    GetPlayerRawEnd = GetPlayerRawStatNoClass(Index, Endurance)
+End Function
+
+Public Function GetPlayerAgi(ByVal Index As Long) As Byte
+    GetPlayerAgi = GetPlayerStat(Index, Agility)
+End Function
+
+Public Function GetPlayerRawAgi(ByVal Index As Long) As Byte
+    GetPlayerRawAgi = GetPlayerRawStatNoClass(Index, Agility)
+End Function
+
+Public Function GetPlayerInt(ByVal Index As Long) As Byte
+    GetPlayerInt = GetPlayerStat(Index, Intelligence)
+End Function
+
+Public Function GetPlayerRawInt(ByVal Index As Long) As Byte
+    GetPlayerRawInt = GetPlayerRawStatNoClass(Index, Intelligence)
+End Function
+
+Public Function GetPlayerWill(ByVal Index As Long) As Byte
+    GetPlayerWill = GetPlayerStat(Index, Willpower)
+End Function
+
+Public Function GetPlayerRawWill(ByVal Index As Long) As Byte
+    GetPlayerRawWill = GetPlayerRawStatNoClass(Index, Willpower)
+End Function
+
+Public Sub SetPlayerStr(ByVal Index As Long, ByVal Value As Byte)
+    Player(Index).Stat(Strength) = Value
+End Sub
+
+Public Sub SetPlayerAgi(ByVal Index As Long, ByVal Value As Byte)
+    Player(Index).Stat(Agility) = Value
+End Sub
+
+Public Sub SetPlayerEnd(ByVal Index As Long, ByVal Value As Byte)
+    Player(Index).Stat(Endurance) = Value
+End Sub
+
+Public Sub SetPlayerInt(ByVal Index As Long, ByVal Value As Byte)
+    Player(Index).Stat(Intelligence) = Value
+End Sub
+
+Public Sub SetPlayerWill(ByVal Index As Long, ByVal Value As Byte)
+    Player(Index).Stat(Willpower) = Value
+End Sub
+
+Public Sub PlayerMessage(ByVal Index As Long, ByVal Text As String, ByVal Color As Byte)
+    Call PlayerMsg(Index, Text, Color)
+End Sub
+
+Public Function GetPlayerLevel(ByVal Index As Long) As Long
+    GetPlayerLevel = Player(Index).Level
+End Function
+
+Public Sub SetPlayerLevel(ByVal Index As Long, ByVal Level As Long)
+    Player(Index).Level = Level
+End Sub
+
+Public Function GetPlayerClass(ByVal Index As Long) As Long
+    GetPlayerClass = Player(Index).Class
+End Function
+
+Public Sub SetPlayerClass(ByVal Index As Long, ByVal Class As Long)
+    Player(Index).Class = Class
+    Call SendPlayerData(Index)
 End Sub

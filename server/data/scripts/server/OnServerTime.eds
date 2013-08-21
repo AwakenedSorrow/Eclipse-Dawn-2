@@ -1,0 +1,7 @@
+Sub OnServerTime(Hours, Minutes, Seconds)
+	
+	' Just a test.
+	If Seconds = 0 then
+		Call GlobalMessage("This is a demo script running inside Eclipse Dawn!", Yellow)
+	End If	
+End Sub

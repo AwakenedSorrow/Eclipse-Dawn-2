@@ -5,7 +5,7 @@ Option Explicit
 Public Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
 
 Sub ServerLoop()
-    Dim i As Long, x As Long
+    Dim i As Long, X As Long
     Dim Tick As Long, TickCPS As Long, CPS As Long, FrameTime As Long
     Dim tmr25 As Long, tmr500 As Long, tmr1000 As Long
     Dim LastUpdateSavePlayers, LastUpdateMapSpawnItems As Long, LastUpdatePlayerVitals As Long
@@ -46,9 +46,9 @@ Sub ServerLoop()
                         End If
                     End If
                     ' HoT and DoT logic
-                    For x = 1 To MAX_DOTS
-                        HandleDoT_Player i, x
-                        HandleHoT_Player i, x
+                    For X = 1 To MAX_DOTS
+                        HandleDoT_Player i, X
+                        HandleHoT_Player i, X
                     Next
                 End If
             Next
@@ -71,6 +71,11 @@ Sub ServerLoop()
             If isShuttingDown Then
                 Call HandleShutdown
             End If
+            
+            ' If scripting is enabled, run our little OnServerTime script.
+            ' It'll let people run things on specific seconds, minutes and hours.
+            If Options.Scripting = 1 Then MyScript.ExecuteStatement "main.eds", "OnServerTime " & Trim$(Hour(Now)) & "," & Trim$(Minute(Now)) & "," & Trim$(Second(Now))
+            
             tmr1000 = GetTickCount + 1000
         End If
 
@@ -91,7 +96,7 @@ Sub ServerLoop()
             UpdateSavePlayers
             LastUpdateSavePlayers = GetTickCount + 300000
         End If
-
+        
         If Not CPSUnlock Then Sleep 1
         DoEvents
         
@@ -107,25 +112,25 @@ Sub ServerLoop()
 End Sub
 
 Private Sub UpdateMapSpawnItems()
-    Dim x As Long
-    Dim y As Long
+    Dim X As Long
+    Dim Y As Long
 
     ' ///////////////////////////////////////////
     ' // This is used for respawning map items //
     ' ///////////////////////////////////////////
-    For y = 1 To MAX_MAPS
+    For Y = 1 To MAX_MAPS
 
         ' Make sure no one is on the map when it respawns
-        If Not PlayersOnMap(y) Then
+        If Not PlayersOnMap(Y) Then
 
             ' Clear out unnecessary junk
-            For x = 1 To MAX_MAP_ITEMS
-                Call ClearMapItem(x, y)
+            For X = 1 To MAX_MAP_ITEMS
+                Call ClearMapItem(X, Y)
             Next
 
             ' Spawn the items
-            Call SpawnMapItems(y)
-            Call SendMapItemsToAll(y)
+            Call SpawnMapItems(Y)
+            Call SendMapItemsToAll(Y)
         End If
 
         DoEvents
@@ -134,7 +139,7 @@ Private Sub UpdateMapSpawnItems()
 End Sub
 
 Private Sub UpdateMapLogic()
-    Dim i As Long, x As Long, mapNum As Long, n As Long, x1 As Long, y1 As Long
+    Dim i As Long, X As Long, mapNum As Long, n As Long, x1 As Long, y1 As Long
     Dim TickCount As Long, Damage As Long, DistanceX As Long, DistanceY As Long, npcNum As Long
     Dim target As Long, targetType As Byte, DidWalk As Boolean, Buffer As clsBuffer, Resource_index As Long
     Dim TargetX As Long, TargetY As Long, target_verify As Boolean
@@ -180,9 +185,9 @@ Private Sub UpdateMapLogic()
         ' check for DoTs + hots
         For i = 1 To MAX_MAP_NPCS
             If MapNpc(mapNum).Npc(i).Num > 0 Then
-                For x = 1 To MAX_DOTS
-                    HandleDoT_Npc mapNum, i, x
-                    HandleHoT_Npc mapNum, i, x
+                For X = 1 To MAX_DOTS
+                    HandleDoT_Npc mapNum, i, X
+                    HandleHoT_Npc mapNum, i, X
                 Next
             End If
         Next
@@ -190,7 +195,7 @@ Private Sub UpdateMapLogic()
         ' Respawning Resources
         If ResourceCache(mapNum).Resource_Count > 0 Then
             For i = 0 To ResourceCache(mapNum).Resource_Count
-                Resource_index = Map(mapNum).Tile(ResourceCache(mapNum).ResourceData(i).x, ResourceCache(mapNum).ResourceData(i).y).Data1
+                Resource_index = Map(mapNum).Tile(ResourceCache(mapNum).ResourceData(i).X, ResourceCache(mapNum).ResourceData(i).Y).Data1
 
                 If Resource_index > 0 Then
                     If ResourceCache(mapNum).ResourceData(i).ResourceState = 1 Or ResourceCache(mapNum).ResourceData(i).cur_health < 1 Then  ' dead or fucked up
@@ -209,27 +214,27 @@ Private Sub UpdateMapLogic()
         If PlayersOnMap(mapNum) = YES Then
             TickCount = GetTickCount
             
-            For x = 1 To MAX_MAP_NPCS
-                npcNum = MapNpc(mapNum).Npc(x).Num
+            For X = 1 To MAX_MAP_NPCS
+                npcNum = MapNpc(mapNum).Npc(X).Num
 
                 ' /////////////////////////////////////////
                 ' // This is used for ATTACKING ON SIGHT //
                 ' /////////////////////////////////////////
                 ' Make sure theres a npc with the map
-                If Map(mapNum).Npc(x) > 0 And MapNpc(mapNum).Npc(x).Num > 0 Then
+                If Map(mapNum).Npc(X) > 0 And MapNpc(mapNum).Npc(X).Num > 0 Then
 
                     ' If the npc is a attack on sight, search for a player on the map
                     If Npc(npcNum).Behaviour = NPCTypeAggressive Or Npc(npcNum).Behaviour = NPCTypeProtectAllies Then
                     
                         ' make sure it's not stunned
-                        If Not MapNpc(mapNum).Npc(x).StunDuration > 0 Then
+                        If Not MapNpc(mapNum).Npc(X).StunDuration > 0 Then
     
                             For i = 1 To Player_HighIndex
                                 If IsPlaying(i) Then
-                                    If GetPlayerMap(i) = mapNum And MapNpc(mapNum).Npc(x).target = 0 And GetPlayerAccess(i) <= RankModerator Then
+                                    If GetPlayerMap(i) = mapNum And MapNpc(mapNum).Npc(X).target = 0 And GetPlayerAccess(i) <= RankModerator Then
                                         n = Npc(npcNum).Range
-                                        DistanceX = MapNpc(mapNum).Npc(x).x - GetPlayerX(i)
-                                        DistanceY = MapNpc(mapNum).Npc(x).y - GetPlayerY(i)
+                                        DistanceX = MapNpc(mapNum).Npc(X).X - GetPlayerX(i)
+                                        DistanceY = MapNpc(mapNum).Npc(X).Y - GetPlayerY(i)
     
                                         ' Make sure we get a positive value
                                         If DistanceX < 0 Then DistanceX = DistanceX * -1
@@ -241,8 +246,8 @@ Private Sub UpdateMapLogic()
                                                 If Len(Trim$(Npc(npcNum).AttackSay)) > 0 Then
                                                     Call PlayerMsg(i, Trim$(Npc(npcNum).Name) & " says: " & Trim$(Npc(npcNum).AttackSay), SayColor)
                                                 End If
-                                                MapNpc(mapNum).Npc(x).targetType = 1 ' player
-                                                MapNpc(mapNum).Npc(x).target = i
+                                                MapNpc(mapNum).Npc(X).targetType = 1 ' player
+                                                MapNpc(mapNum).Npc(X).target = i
                                             End If
                                         End If
                                     End If
@@ -258,17 +263,17 @@ Private Sub UpdateMapLogic()
                 ' // This is used for NPC walking/targetting //
                 ' /////////////////////////////////////////////
                 ' Make sure theres a npc with the map
-                If Map(mapNum).Npc(x) > 0 And MapNpc(mapNum).Npc(x).Num > 0 Then
-                    If MapNpc(mapNum).Npc(x).StunDuration > 0 Then
+                If Map(mapNum).Npc(X) > 0 And MapNpc(mapNum).Npc(X).Num > 0 Then
+                    If MapNpc(mapNum).Npc(X).StunDuration > 0 Then
                         ' check if we can unstun them
-                        If GetTickCount > MapNpc(mapNum).Npc(x).StunTimer + (MapNpc(mapNum).Npc(x).StunDuration * 1000) Then
-                            MapNpc(mapNum).Npc(x).StunDuration = 0
-                            MapNpc(mapNum).Npc(x).StunTimer = 0
+                        If GetTickCount > MapNpc(mapNum).Npc(X).StunTimer + (MapNpc(mapNum).Npc(X).StunDuration * 1000) Then
+                            MapNpc(mapNum).Npc(X).StunDuration = 0
+                            MapNpc(mapNum).Npc(X).StunTimer = 0
                         End If
                     Else
                             
-                        target = MapNpc(mapNum).Npc(x).target
-                        targetType = MapNpc(mapNum).Npc(x).targetType
+                        target = MapNpc(mapNum).Npc(X).target
+                        targetType = MapNpc(mapNum).Npc(X).targetType
     
                         ' Check to see if its time for the npc to walk
                         If Npc(npcNum).Behaviour <> NPCTypeStationary Then
@@ -285,8 +290,8 @@ Private Sub UpdateMapLogic()
                                         TargetY = GetPlayerY(target)
                                         TargetX = GetPlayerX(target)
                                     Else
-                                        MapNpc(mapNum).Npc(x).targetType = 0 ' clear
-                                        MapNpc(mapNum).Npc(x).target = 0
+                                        MapNpc(mapNum).Npc(X).targetType = 0 ' clear
+                                        MapNpc(mapNum).Npc(X).target = 0
                                     End If
                                 End If
                             
@@ -297,11 +302,11 @@ Private Sub UpdateMapLogic()
                                     If MapNpc(mapNum).Npc(target).Num > 0 Then
                                         DidWalk = False
                                         target_verify = True
-                                        TargetY = MapNpc(mapNum).Npc(target).y
-                                        TargetX = MapNpc(mapNum).Npc(target).x
+                                        TargetY = MapNpc(mapNum).Npc(target).Y
+                                        TargetX = MapNpc(mapNum).Npc(target).X
                                     Else
-                                        MapNpc(mapNum).Npc(x).targetType = 0 ' clear
-                                        MapNpc(mapNum).Npc(x).target = 0
+                                        MapNpc(mapNum).Npc(X).targetType = 0 ' clear
+                                        MapNpc(mapNum).Npc(X).target = 0
                                     End If
                                 End If
                             End If
@@ -315,33 +320,33 @@ Private Sub UpdateMapLogic()
                                     Case 0
     
                                         ' Up
-                                        If MapNpc(mapNum).Npc(x).y > TargetY And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, North) Then
-                                                Call NpcMove(mapNum, x, North, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).Y > TargetY And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, North) Then
+                                                Call NpcMove(mapNum, X, North, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Down
-                                        If MapNpc(mapNum).Npc(x).y < TargetY And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, South) Then
-                                                Call NpcMove(mapNum, x, South, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).Y < TargetY And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, South) Then
+                                                Call NpcMove(mapNum, X, South, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Left
-                                        If MapNpc(mapNum).Npc(x).x > TargetX And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, West) Then
-                                                Call NpcMove(mapNum, x, West, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).X > TargetX And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, West) Then
+                                                Call NpcMove(mapNum, X, West, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Right
-                                        If MapNpc(mapNum).Npc(x).x < TargetX And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, East) Then
-                                                Call NpcMove(mapNum, x, East, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).X < TargetX And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, East) Then
+                                                Call NpcMove(mapNum, X, East, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
@@ -349,33 +354,33 @@ Private Sub UpdateMapLogic()
                                     Case 1
     
                                         ' Right
-                                        If MapNpc(mapNum).Npc(x).x < TargetX And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, East) Then
-                                                Call NpcMove(mapNum, x, East, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).X < TargetX And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, East) Then
+                                                Call NpcMove(mapNum, X, East, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Left
-                                        If MapNpc(mapNum).Npc(x).x > TargetX And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, West) Then
-                                                Call NpcMove(mapNum, x, West, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).X > TargetX And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, West) Then
+                                                Call NpcMove(mapNum, X, West, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Down
-                                        If MapNpc(mapNum).Npc(x).y < TargetY And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, South) Then
-                                                Call NpcMove(mapNum, x, South, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).Y < TargetY And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, South) Then
+                                                Call NpcMove(mapNum, X, South, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Up
-                                        If MapNpc(mapNum).Npc(x).y > TargetY And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, North) Then
-                                                Call NpcMove(mapNum, x, North, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).Y > TargetY And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, North) Then
+                                                Call NpcMove(mapNum, X, North, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
@@ -383,33 +388,33 @@ Private Sub UpdateMapLogic()
                                     Case 2
     
                                         ' Down
-                                        If MapNpc(mapNum).Npc(x).y < TargetY And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, South) Then
-                                                Call NpcMove(mapNum, x, South, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).Y < TargetY And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, South) Then
+                                                Call NpcMove(mapNum, X, South, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Up
-                                        If MapNpc(mapNum).Npc(x).y > TargetY And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, North) Then
-                                                Call NpcMove(mapNum, x, North, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).Y > TargetY And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, North) Then
+                                                Call NpcMove(mapNum, X, North, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Right
-                                        If MapNpc(mapNum).Npc(x).x < TargetX And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, East) Then
-                                                Call NpcMove(mapNum, x, East, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).X < TargetX And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, East) Then
+                                                Call NpcMove(mapNum, X, East, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Left
-                                        If MapNpc(mapNum).Npc(x).x > TargetX And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, West) Then
-                                                Call NpcMove(mapNum, x, West, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).X > TargetX And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, West) Then
+                                                Call NpcMove(mapNum, X, West, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
@@ -417,33 +422,33 @@ Private Sub UpdateMapLogic()
                                     Case 3
     
                                         ' Left
-                                        If MapNpc(mapNum).Npc(x).x > TargetX And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, West) Then
-                                                Call NpcMove(mapNum, x, West, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).X > TargetX And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, West) Then
+                                                Call NpcMove(mapNum, X, West, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Right
-                                        If MapNpc(mapNum).Npc(x).x < TargetX And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, East) Then
-                                                Call NpcMove(mapNum, x, East, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).X < TargetX And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, East) Then
+                                                Call NpcMove(mapNum, X, East, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Up
-                                        If MapNpc(mapNum).Npc(x).y > TargetY And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, North) Then
-                                                Call NpcMove(mapNum, x, North, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).Y > TargetY And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, North) Then
+                                                Call NpcMove(mapNum, X, North, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
     
                                         ' Down
-                                        If MapNpc(mapNum).Npc(x).y < TargetY And Not DidWalk Then
-                                            If CanNpcMove(mapNum, x, South) Then
-                                                Call NpcMove(mapNum, x, South, MOVING_WALKING)
+                                        If MapNpc(mapNum).Npc(X).Y < TargetY And Not DidWalk Then
+                                            If CanNpcMove(mapNum, X, South) Then
+                                                Call NpcMove(mapNum, X, South, MOVING_WALKING)
                                                 DidWalk = True
                                             End If
                                         End If
@@ -452,33 +457,33 @@ Private Sub UpdateMapLogic()
     
                                 ' Check if we can't move and if Target is behind something and if we can just switch dirs
                                 If Not DidWalk Then
-                                    If MapNpc(mapNum).Npc(x).x - 1 = TargetX And MapNpc(mapNum).Npc(x).y = TargetY Then
-                                        If MapNpc(mapNum).Npc(x).Dir <> West Then
-                                            Call NpcDir(mapNum, x, West)
+                                    If MapNpc(mapNum).Npc(X).X - 1 = TargetX And MapNpc(mapNum).Npc(X).Y = TargetY Then
+                                        If MapNpc(mapNum).Npc(X).Dir <> West Then
+                                            Call NpcDir(mapNum, X, West)
                                         End If
     
                                         DidWalk = True
                                     End If
     
-                                    If MapNpc(mapNum).Npc(x).x + 1 = TargetX And MapNpc(mapNum).Npc(x).y = TargetY Then
-                                        If MapNpc(mapNum).Npc(x).Dir <> East Then
-                                            Call NpcDir(mapNum, x, East)
+                                    If MapNpc(mapNum).Npc(X).X + 1 = TargetX And MapNpc(mapNum).Npc(X).Y = TargetY Then
+                                        If MapNpc(mapNum).Npc(X).Dir <> East Then
+                                            Call NpcDir(mapNum, X, East)
                                         End If
     
                                         DidWalk = True
                                     End If
     
-                                    If MapNpc(mapNum).Npc(x).x = TargetX And MapNpc(mapNum).Npc(x).y - 1 = TargetY Then
-                                        If MapNpc(mapNum).Npc(x).Dir <> North Then
-                                            Call NpcDir(mapNum, x, North)
+                                    If MapNpc(mapNum).Npc(X).X = TargetX And MapNpc(mapNum).Npc(X).Y - 1 = TargetY Then
+                                        If MapNpc(mapNum).Npc(X).Dir <> North Then
+                                            Call NpcDir(mapNum, X, North)
                                         End If
     
                                         DidWalk = True
                                     End If
     
-                                    If MapNpc(mapNum).Npc(x).x = TargetX And MapNpc(mapNum).Npc(x).y + 1 = TargetY Then
-                                        If MapNpc(mapNum).Npc(x).Dir <> South Then
-                                            Call NpcDir(mapNum, x, South)
+                                    If MapNpc(mapNum).Npc(X).X = TargetX And MapNpc(mapNum).Npc(X).Y + 1 = TargetY Then
+                                        If MapNpc(mapNum).Npc(X).Dir <> South Then
+                                            Call NpcDir(mapNum, X, South)
                                         End If
     
                                         DidWalk = True
@@ -491,8 +496,8 @@ Private Sub UpdateMapLogic()
                                         If i = 1 Then
                                             i = Int(Rnd * 4)
     
-                                            If CanNpcMove(mapNum, x, i) Then
-                                                Call NpcMove(mapNum, x, i, MOVING_WALKING)
+                                            If CanNpcMove(mapNum, X, i) Then
+                                                Call NpcMove(mapNum, X, i, MOVING_WALKING)
                                             End If
                                         End If
                                     End If
@@ -504,8 +509,8 @@ Private Sub UpdateMapLogic()
                                 If i = 1 Then
                                     i = Int(Rnd * 4)
     
-                                    If CanNpcMove(mapNum, x, i) Then
-                                        Call NpcMove(mapNum, x, i, MOVING_WALKING)
+                                    If CanNpcMove(mapNum, X, i) Then
+                                        Call NpcMove(mapNum, X, i, MOVING_WALKING)
                                     End If
                                 End If
                             End If
@@ -517,9 +522,9 @@ Private Sub UpdateMapLogic()
                 ' // This is used for npcs to attack targets //
                 ' /////////////////////////////////////////////
                 ' Make sure theres a npc with the map
-                If Map(mapNum).Npc(x) > 0 And MapNpc(mapNum).Npc(x).Num > 0 Then
-                    target = MapNpc(mapNum).Npc(x).target
-                    targetType = MapNpc(mapNum).Npc(x).targetType
+                If Map(mapNum).Npc(X) > 0 And MapNpc(mapNum).Npc(X).Num > 0 Then
+                    target = MapNpc(mapNum).Npc(X).target
+                    targetType = MapNpc(mapNum).Npc(X).targetType
 
                     ' Check if the npc can attack the targeted player player
                     If target > 0 Then
@@ -528,11 +533,11 @@ Private Sub UpdateMapLogic()
 
                             ' Is the target playing and on the same map?
                             If IsPlaying(target) And GetPlayerMap(target) = mapNum Then
-                                TryNpcAttackPlayer x, target
+                                TryNpcAttackPlayer X, target
                             Else
                                 ' Player left map or game, set target to 0
-                                MapNpc(mapNum).Npc(x).target = 0
-                                MapNpc(mapNum).Npc(x).targetType = 0 ' clear
+                                MapNpc(mapNum).Npc(X).target = 0
+                                MapNpc(mapNum).Npc(X).targetType = 0 ' clear
                             End If
                         Else
                             ' lol no npc combat :(
@@ -544,14 +549,14 @@ Private Sub UpdateMapLogic()
                 ' // This is used for regenerating NPC's HP //
                 ' ////////////////////////////////////////////
                 ' Check to see if we want to regen some of the npc's hp
-                If Not MapNpc(mapNum).Npc(x).stopRegen Then
-                    If MapNpc(mapNum).Npc(x).Num > 0 And TickCount > GiveNPCHPTimer + 10000 Then
-                        If MapNpc(mapNum).Npc(x).Vital(Vitals.HP) > 0 Then
-                            MapNpc(mapNum).Npc(x).Vital(Vitals.HP) = MapNpc(mapNum).Npc(x).Vital(Vitals.HP) + GetNpcVitalRegen(npcNum, Vitals.HP)
+                If Not MapNpc(mapNum).Npc(X).stopRegen Then
+                    If MapNpc(mapNum).Npc(X).Num > 0 And TickCount > GiveNPCHPTimer + 10000 Then
+                        If MapNpc(mapNum).Npc(X).Vital(Vitals.HP) > 0 Then
+                            MapNpc(mapNum).Npc(X).Vital(Vitals.HP) = MapNpc(mapNum).Npc(X).Vital(Vitals.HP) + GetNpcVitalRegen(npcNum, Vitals.HP)
     
                             ' Check if they have more then they should and if so just set it to max
-                            If MapNpc(mapNum).Npc(x).Vital(Vitals.HP) > GetNpcMaxVital(npcNum, Vitals.HP) Then
-                                MapNpc(mapNum).Npc(x).Vital(Vitals.HP) = GetNpcMaxVital(npcNum, Vitals.HP)
+                            If MapNpc(mapNum).Npc(X).Vital(Vitals.HP) > GetNpcMaxVital(npcNum, Vitals.HP) Then
+                                MapNpc(mapNum).Npc(X).Vital(Vitals.HP) = GetNpcMaxVital(npcNum, Vitals.HP)
                             End If
                         End If
                     End If
@@ -572,9 +577,9 @@ Private Sub UpdateMapLogic()
                 ' // This is used for spawning an NPC //
                 ' //////////////////////////////////////
                 ' Check if we are supposed to spawn an npc or not
-                If MapNpc(mapNum).Npc(x).Num = 0 And Map(mapNum).Npc(x) > 0 Then
-                    If TickCount > MapNpc(mapNum).Npc(x).SpawnWait + (Npc(Map(mapNum).Npc(x)).SpawnSecs * 1000) Then
-                        Call SpawnNpc(x, mapNum)
+                If MapNpc(mapNum).Npc(X).Num = 0 And Map(mapNum).Npc(X) > 0 Then
+                    If TickCount > MapNpc(mapNum).Npc(X).SpawnWait + (Npc(Map(mapNum).Npc(X)).SpawnSecs * 1000) Then
+                        Call SpawnNpc(X, mapNum)
                     End If
                 End If
 
