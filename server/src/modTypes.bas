@@ -27,6 +27,7 @@ Private Type OptionsRec
     MOTD As String
     Port As Long
     Website As String
+    Scripting As Byte
 End Type
 
 Public Type PartyRec
@@ -87,8 +88,8 @@ Private Type PlayerRec
     
     ' Position
     Map As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     Dir As Byte
 End Type
 
@@ -142,8 +143,8 @@ Public Type TempPlayerRec
 End Type
 
 Private Type TileDataRec
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Tileset As Long
 End Type
 
@@ -233,8 +234,8 @@ End Type
 Private Type MapItemRec
     Num As Long
     Value As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     ' ownership + despawn
     playerName As String
     playerTimer As Long
@@ -267,8 +268,8 @@ Private Type MapNpcRec
     target As Long
     targetType As Byte
     Vital(1 To Vitals.Vital_Count - 1) As Long
-    x As Byte
-    y As Byte
+    X As Byte
+    Y As Byte
     Dir As Byte
     ' For server use only
     SpawnWait As Long
@@ -310,8 +311,8 @@ Private Type SpellRec
     CDTime As Long
     Icon As Long
     Map As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     Dir As Byte
     Vital As Long
     Duration As Long
@@ -336,8 +337,8 @@ End Type
 Private Type MapResourceRec
     ResourceState As Byte
     ResourceTimer As Long
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
     cur_health As Long
 End Type
 

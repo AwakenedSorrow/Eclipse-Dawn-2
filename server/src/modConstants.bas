@@ -73,11 +73,5 @@ Public Const MAX_MAPY As Byte = 11
 Public Const MOVING_WALKING As Byte = 1
 Public Const MOVING_RUNNING As Byte = 2
 
-' ********************************************
-' Default starting location [Server Only]
-Public Const START_MAP As Long = 1
-Public Const START_X As Long = 5
-Public Const START_Y As Long = 5
-
 ' Do Events
 Public Const nLng As Long = (&H80 Or &H1 Or &H4 Or &H20) + (&H8 Or &H40)

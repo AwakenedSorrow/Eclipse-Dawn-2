@@ -79,9 +79,10 @@ End Function
 Public Sub SaveOptions()
     
     PutVar App.Path & "\data\options.ini", "OPTIONS", "Game_Name", Options.Game_Name
-    PutVar App.Path & "\data\options.ini", "OPTIONS", "Port", STR(Options.Port)
+    PutVar App.Path & "\data\options.ini", "OPTIONS", "Port", STR$(Options.Port)
     PutVar App.Path & "\data\options.ini", "OPTIONS", "MOTD", Options.MOTD
     PutVar App.Path & "\data\options.ini", "OPTIONS", "Website", Options.Website
+    PutVar App.Path & "\data\options.ini", "OPTIONS", "Scripting", STR$(Options.Scripting)
     
 End Sub
 
@@ -91,6 +92,7 @@ Public Sub LoadOptions()
     Options.Port = GetVar(App.Path & "\data\options.ini", "OPTIONS", "Port")
     Options.MOTD = GetVar(App.Path & "\data\options.ini", "OPTIONS", "MOTD")
     Options.Website = GetVar(App.Path & "\data\options.ini", "OPTIONS", "Website")
+    Options.Scripting = GetVar(App.Path & "\data\options.ini", "OPTIONS", "Scripting")
     
 End Sub
 
@@ -270,8 +272,8 @@ Sub AddChar(ByVal index As Long, ByVal Name As String, ByVal Sex As Byte, ByVal 
 
         Player(index).Dir = South
         Player(index).Map = START_MAP
-        Player(index).x = START_X
-        Player(index).y = START_Y
+        Player(index).X = START_X
+        Player(index).Y = START_Y
         Player(index).Dir = South
         Player(index).Vital(Vitals.HP) = GetPlayerMaxVital(index, Vitals.HP)
         Player(index).Vital(Vitals.MP) = GetPlayerMaxVital(index, Vitals.MP)
@@ -415,7 +417,7 @@ Sub LoadClasses()
     Dim tmpSprite As String
     Dim tmpArray() As String
     Dim startItemCount As Long, startSpellCount As Long
-    Dim x As Long
+    Dim X As Long
 
     If CheckClasses Then
         ReDim Class(1 To Max_Classes)
@@ -468,9 +470,9 @@ Sub LoadClasses()
         ' loop for items & values
         Class(i).startItemCount = startItemCount
         If startItemCount >= 1 And startItemCount <= MAX_INV Then
-            For x = 1 To startItemCount
-                Class(i).StartItem(x) = Val(GetVar(filename, "CLASS" & i, "StartItem" & x))
-                Class(i).StartValue(x) = Val(GetVar(filename, "CLASS" & i, "StartValue" & x))
+            For X = 1 To startItemCount
+                Class(i).StartItem(X) = Val(GetVar(filename, "CLASS" & i, "StartItem" & X))
+                Class(i).StartValue(X) = Val(GetVar(filename, "CLASS" & i, "StartValue" & X))
             Next
         End If
         
@@ -481,8 +483,8 @@ Sub LoadClasses()
         ' loop for spells
         Class(i).startSpellCount = startSpellCount
         If startSpellCount >= 1 And startSpellCount <= MAX_PLAYER_SPELLS Then
-            For x = 1 To startSpellCount
-                Class(i).StartSpell(x) = Val(GetVar(filename, "CLASS" & i, "StartSpell" & x))
+            For X = 1 To startSpellCount
+                Class(i).StartSpell(X) = Val(GetVar(filename, "CLASS" & i, "StartSpell" & X))
             Next
         End If
     Next
@@ -492,7 +494,7 @@ End Sub
 Sub SaveClasses()
     Dim filename As String
     Dim i As Long
-    Dim x As Long
+    Dim X As Long
     
     filename = App.Path & "\data\classes.ini"
 
@@ -506,13 +508,13 @@ Sub SaveClasses()
         Call PutVar(filename, "CLASS" & i, "Agility", STR(Class(i).Stat(Stats.Agility)))
         Call PutVar(filename, "CLASS" & i, "Willpower", STR(Class(i).Stat(Stats.Willpower)))
         ' loop for items & values
-        For x = 1 To UBound(Class(i).StartItem)
-            Call PutVar(filename, "CLASS" & i, "StartItem" & x, STR(Class(i).StartItem(x)))
-            Call PutVar(filename, "CLASS" & i, "StartValue" & x, STR(Class(i).StartValue(x)))
+        For X = 1 To UBound(Class(i).StartItem)
+            Call PutVar(filename, "CLASS" & i, "StartItem" & X, STR(Class(i).StartItem(X)))
+            Call PutVar(filename, "CLASS" & i, "StartValue" & X, STR(Class(i).StartValue(X)))
         Next
         ' loop for spells
-        For x = 1 To UBound(Class(i).StartSpell)
-            Call PutVar(filename, "CLASS" & i, "StartSpell" & x, STR(Class(i).StartSpell(x)))
+        For X = 1 To UBound(Class(i).StartSpell)
+            Call PutVar(filename, "CLASS" & i, "StartSpell" & X, STR(Class(i).StartSpell(X)))
         Next
     Next
 
@@ -974,8 +976,8 @@ End Sub
 Sub SaveMap(ByVal mapNum As Long)
     Dim filename As String
     Dim F As Long
-    Dim x As Long
-    Dim y As Long
+    Dim X As Long
+    Dim Y As Long
     filename = App.Path & "\data\maps\map" & mapNum & ".dat"
     F = FreeFile
     
@@ -994,14 +996,14 @@ Sub SaveMap(ByVal mapNum As Long)
     Put #F, , Map(mapNum).MaxX
     Put #F, , Map(mapNum).MaxY
 
-    For x = 0 To Map(mapNum).MaxX
-        For y = 0 To Map(mapNum).MaxY
-            Put #F, , Map(mapNum).Tile(x, y)
+    For X = 0 To Map(mapNum).MaxX
+        For Y = 0 To Map(mapNum).MaxY
+            Put #F, , Map(mapNum).Tile(X, Y)
         Next
     Next
 
-    For x = 1 To MAX_MAP_NPCS
-        Put #F, , Map(mapNum).Npc(x)
+    For X = 1 To MAX_MAP_NPCS
+        Put #F, , Map(mapNum).Npc(X)
     Next
     Close #F
     
@@ -1021,8 +1023,8 @@ Sub LoadMaps()
     Dim filename As String
     Dim i As Long
     Dim F As Long
-    Dim x As Long
-    Dim y As Long
+    Dim X As Long
+    Dim Y As Long
     Call CheckMaps
 
     For i = 1 To MAX_MAPS
@@ -1045,15 +1047,15 @@ Sub LoadMaps()
         ' have to set the tile()
         ReDim Map(i).Tile(0 To Map(i).MaxX, 0 To Map(i).MaxY)
 
-        For x = 0 To Map(i).MaxX
-            For y = 0 To Map(i).MaxY
-                Get #F, , Map(i).Tile(x, y)
+        For X = 0 To Map(i).MaxX
+            For Y = 0 To Map(i).MaxY
+                Get #F, , Map(i).Tile(X, Y)
             Next
         Next
 
-        For x = 1 To MAX_MAP_NPCS
-            Get #F, , Map(i).Npc(x)
-            MapNpc(i).Npc(x).Num = Map(i).Npc(x)
+        For X = 1 To MAX_MAP_NPCS
+            Get #F, , Map(i).Npc(X)
+            MapNpc(i).Npc(X).Num = Map(i).Npc(X)
         Next
 
         Close #F
@@ -1084,12 +1086,12 @@ Sub ClearMapItem(ByVal index As Long, ByVal mapNum As Long)
 End Sub
 
 Sub ClearMapItems()
-    Dim x As Long
-    Dim y As Long
+    Dim X As Long
+    Dim Y As Long
 
-    For y = 1 To MAX_MAPS
-        For x = 1 To MAX_MAP_ITEMS
-            Call ClearMapItem(x, y)
+    For Y = 1 To MAX_MAPS
+        For X = 1 To MAX_MAP_ITEMS
+            Call ClearMapItem(X, Y)
         Next
     Next
 
@@ -1101,12 +1103,12 @@ Sub ClearMapNpc(ByVal index As Long, ByVal mapNum As Long)
 End Sub
 
 Sub ClearMapNpcs()
-    Dim x As Long
-    Dim y As Long
+    Dim X As Long
+    Dim Y As Long
 
-    For y = 1 To MAX_MAPS
-        For x = 1 To MAX_MAP_NPCS
-            Call ClearMapNpc(x, y)
+    For Y = 1 To MAX_MAPS
+        For X = 1 To MAX_MAP_NPCS
+            Call ClearMapNpc(X, Y)
         Next
     Next
 

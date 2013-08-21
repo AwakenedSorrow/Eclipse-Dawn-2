@@ -1,0 +1,7 @@
+' Include our Declaration files.
+#include <declarations\enumerations.eds>
+#include <declarations\globals.eds>
+#include <declarations\constants.eds>
+
+' Include our Server action files.
+#include <server\onserverload.eds>

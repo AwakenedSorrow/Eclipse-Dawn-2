@@ -41,9 +41,26 @@ Public Sub InitServer()
         Options.Port = 7001
         Options.MOTD = "Welcome to Eclipse Origins."
         Options.Website = "http://www.touchofdeathforums.com/smf/"
+        Options.Scripting = 1
         SaveOptions
     Else
         LoadOptions
+    End If
+    
+    ' Check for Main.txt
+    If Not FileExist(App.Path & "\data\scripts\main.eds", True) Then
+        Call SetStatus("[SCRIPT ERROR] Main.eds could not be located, disabling scripting.")
+        Options.Scripting = 0
+        SaveOptions
+    End If
+    
+    ' Set up the scripting engine.
+    If Options.Scripting = 1 Then
+        Set MyScript = New clsSadScript
+        Set clsScriptCommands = New clsCommands
+        MyScript.ReadInCode App.Path & "\data\scripts\main.eds", "main.eds", MyScript.SControl
+        MyScript.SControl.AddObject "ScriptHardCode", clsScriptCommands, True
+        Call SetStatus("[SCRIPT] Scripting has been enabled and initialized.")
     End If
     
     ' Get the listening socket ready to go
@@ -76,7 +93,18 @@ Public Sub InitServer()
         Open App.Path & "\data\accounts\charlist.txt" For Output As #F
         Close #F
     End If
-
+    
+    ' Let the scripting engine do a few things after everything else has been loaded into the server.
+    If Options.Scripting = 1 Then
+        ' Scripting enabled, so let's run this bugger!
+        MyScript.ExecuteStatement "main.eds", "OnServerLoad"
+    Else
+        ' Scripting is disabled, so we'll just do this the old fashion way.
+        START_MAP = 1
+        START_X = 7
+        START_Y = 6
+    End If
+    
     ' Start listening
     frmServer.Socket(0).Listen
     Call UpdateCaption

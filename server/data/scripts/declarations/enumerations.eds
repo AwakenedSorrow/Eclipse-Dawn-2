@@ -1,0 +1,21 @@
+' Colors
+Public Enum Colors
+    Black = 0
+    Blue
+    Green
+    Cyan
+    Red
+    Magenta
+    Brown
+    Grey
+    DarkGrey
+    BrightBlue
+    BrightGreen
+    BrightCyan
+    BrightRed
+    Pink
+    Yellow
+    White
+    DarkBrown
+    Orange
+End Enum

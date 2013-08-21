@@ -36,3 +36,12 @@ Public Player_HighIndex As Long
 
 ' lock the CPS?
 Public CPSUnlock As Boolean
+
+' Default starting location [Server Only]
+Public START_MAP As Long
+Public START_X As Long
+Public START_Y As Long
+
+' Our lovely scripting Globals
+Global MyScript As clsSadScript
+Public clsScriptCommands As clsCommands
