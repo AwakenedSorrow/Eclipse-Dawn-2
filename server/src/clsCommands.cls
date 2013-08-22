@@ -39,11 +39,11 @@ Public Sub SetGlobalSpawnPoint(ByVal Map As Long, ByVal X As Long, ByVal Y As Lo
     If Map < 0 Or Map > MAX_MAPS Then
         ' It's not, we're using the default values and notify the server.
         START_MAP = 1
-        START_X = 5
-        START_Y = 5
+        START_X = 7
+        START_Y = 6
         
         Call SetStatus("[SCRIPT ERROR] SetSpawnPoint() references a false map.")
-        Call SetStatus("Using default values of Map: 1 X: 5 Y: 5")
+        Call SetStatus("Using default values of Map: 1 X: 7 Y: 6")
     Else
         ' We're using a correct value. Let's set it!
         START_MAP = Map
@@ -162,5 +162,111 @@ End Function
 
 Public Sub SetPlayerClass(ByVal Index As Long, ByVal Class As Long)
     Player(Index).Class = Class
+    Call SendPlayerData(Index)
+End Sub
+
+Public Function GetPlayerPoints(ByVal Index As Long) As Byte
+    GetPlayerPoints = Player(Index).Points
+End Function
+
+Public Sub SetPlayerPoints(ByVal Index As Long, ByVal Points As Byte)
+    Player(Index).Points = Points
+    Call SendPlayerData(Index)
+End Sub
+
+Public Function GetPlayerMap(ByVal Index As Long) As Long
+    GetPlayerMap = Player(Index).Map
+End Function
+
+Public Function GetPlayerSex(ByVal Index As Long) As Byte
+    GetPlayerSex = Player(Index).Sex
+End Function
+
+Public Sub WarpPlayer(ByVal Index As Long, ByVal Map As Long, ByVal X As Long, ByVal Y As Long)
+    Call PlayerWarp(Index, Map, X, Y)
+End Sub
+
+Public Function GetPlayerSprite(ByVal Index As Long) As Long
+    GetPlayerSprite = Player(Index).Sprite
+End Function
+
+Public Sub SetPlayerSprite(ByVal Index As Long, ByVal Sprite As Long)
+    Player(Index).Sprite = Sprite
+    Call SendPlayerData(Index)
+End Sub
+
+Public Function PlayerHasItem(ByVal Index As Long, ByVal Num As Long, ByVal Value As Long) As Boolean
+Dim i As Byte
+
+    PlayerHasItem = False
+    
+    For i = 1 To MAX_INV
+        If Player(Index).Inv(i).Num = Num Then
+            If Item(Num).Type = ItemTypeCurrency Then
+                If Player(Index).Inv(i).Value >= Value Then
+                    PlayerHasItem = True
+                    Exit Function
+                End If
+            Else
+                PlayerHasItem = True
+                Exit Function
+            End If
+        End If
+    Next
+    
+End Function
+
+Public Function GetInvItemSlot(ByVal Index As Long, ByVal Item As Long) As Byte
+Dim i As Byte
+
+    GetInvItemSlot = 0
+    
+    For i = 1 To MAX_INV
+        If Player(Index).Inv(i).Num = Item Then
+            GetInvItemSlot = i
+            Exit Function
+        End If
+    Next
+
+End Function
+
+Public Sub SetInvItemSlot(ByVal Index As Long, ByVal Slot As Long, ByVal Item As Long)
+    Player(Index).Inv(Slot).Num = Item
+End Sub
+
+Public Function GetInvItemVal(ByVal Index As Long, ByVal Slot As Long) As Long
+    GetInvItemVal = Player(Index).Inv(Slot).Value
+End Function
+
+Public Sub SetInvItemVal(ByVal Index As Long, ByVal Slot As Long, ByVal Value As Long)
+    Player(Index).Inv(Slot).Value = Value
+End Sub
+
+Public Function TakePlayerItem(ByVal Index As Long, ByVal Item As Long, ByVal Value As Long) As Boolean
+    TakePlayerItem = TakeInvItem(Index, Item, Value)
+End Function
+
+Public Function GivePlayerItem(ByVal Index As Long, ByVal Item As Long, ByVal Value As Long) As Boolean
+    GivePlayerItem = GiveInvItem(Index, Item, Value, True)
+End Function
+
+Public Sub MapMessage(ByVal MapNum As Long, ByVal Text As String, ByVal Color As Byte)
+    Call MapMsg(MapNum, Text, Color)
+End Sub
+
+Public Function GetPlayerX(ByVal Index As Long) As Long
+    GetPlayerX = Player(Index).X
+End Function
+
+Public Function GetPlayerY(ByVal Index As Long) As Long
+    GetPlayerY = Player(Index).Y
+End Function
+
+Public Function GetPlayerDir(ByVal Index As Long) As Byte
+    GetPlayerDir = Player(Index).Dir
+End Function
+
+Public Sub SetPlayerDir(ByVal Index As Long, Dir As Byte)
+    Player(Index).Dir = Dir
     Call SendPlayerData(Index)
 End Sub
