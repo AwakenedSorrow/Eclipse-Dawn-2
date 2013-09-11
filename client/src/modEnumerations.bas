@@ -294,6 +294,7 @@ Public Enum ItemTypes
     ItemTypeKey
     ItemTypeCurrency
     ItemTypeSpell
+    ItemTypeScripted
 End Enum
 
 Public Enum Genders
@@ -371,11 +372,11 @@ Public Enum Colors
     Grey
     DarkGrey
     BrightBlue
-    BrightGreen
+    brightgreen
     BrightCyan
     BrightRed
     Pink
-    Yellow
+    yellow
     White
     DarkBrown
     Orange

@@ -441,7 +441,7 @@ Begin VB.Form frmEditor_Item
          Height          =   300
          ItemData        =   "frmEditor_Item.frx":33E2
          Left            =   1440
-         List            =   "frmEditor_Item.frx":3401
+         List            =   "frmEditor_Item.frx":3404
          Style           =   2  'Dropdown List
          TabIndex        =   13
          Top             =   2040
@@ -533,9 +533,9 @@ Begin VB.Form frmEditor_Item
       End
       Begin VB.ComboBox cmbAccess 
          Height          =   300
-         ItemData        =   "frmEditor_Item.frx":3449
+         ItemData        =   "frmEditor_Item.frx":3456
          Left            =   1920
-         List            =   "frmEditor_Item.frx":345C
+         List            =   "frmEditor_Item.frx":3469
          Style           =   2  'Dropdown List
          TabIndex        =   67
          Top             =   600
@@ -1079,6 +1079,12 @@ Private Sub cmbType_Click()
         fraSpell.Visible = False
     End If
     
+    If (cmbType.ListIndex = ItemTypeScripted) Then
+        fraEquipment.Visible = False
+        fraVitals.Visible = False
+        fraSpell.Visible = False
+    End If
+    
     Item(EditorIndex).Type = cmbType.ListIndex
 
     ' Error handler
@@ -1199,14 +1205,14 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub txtAddStat_Change(Index As Integer)
+Private Sub txtAddStat_Change(index As Integer)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
-    If Val(Trim$(txtAddStat(Index).text)) < 0 Then txtAddStat(Index).text = "0"
-    If Val(Trim$(txtAddStat(Index).text)) > 255 Then txtAddStat(Index).text = "255"
+    If Val(Trim$(txtAddStat(index).text)) < 0 Then txtAddStat(index).text = "0"
+    If Val(Trim$(txtAddStat(index).text)) > 255 Then txtAddStat(index).text = "255"
     
-    Item(EditorIndex).Add_Stat(Index) = Val(Trim$(txtAddStat(Index).text))
+    Item(EditorIndex).Add_Stat(index) = Val(Trim$(txtAddStat(index).text))
     
     ' Error handler
     Exit Sub
@@ -1313,16 +1319,16 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub txtStatReq_Change(Index As Integer)
+Private Sub txtStatReq_Change(index As Integer)
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
     
     ' Check if we're not going out of bounds, and if we are set it back to amounts we can handle.
-    If Val(Trim$(txtStatReq(Index).text)) < 0 Then txtStatReq(Index).text = "0"
-    If Val(Trim$(txtStatReq(Index).text)) > 255 Then txtStatReq(Index).text = "255"
+    If Val(Trim$(txtStatReq(index).text)) < 0 Then txtStatReq(index).text = "0"
+    If Val(Trim$(txtStatReq(index).text)) > 255 Then txtStatReq(index).text = "255"
     
-    Item(EditorIndex).Stat_Req(Index) = Val(Trim$(txtStatReq(Index).text))
+    Item(EditorIndex).Stat_Req(index) = Val(Trim$(txtStatReq(index).text))
     
     ' Error handler
     Exit Sub
