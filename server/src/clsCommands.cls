@@ -58,8 +58,8 @@ Public Sub ShowServerText(ByVal Text As String)
     Call TextAdd(Text)
 End Sub
 
-Public Sub GlobalMessage(ByVal Text As String, ByVal Color As Byte)
-    Call GlobalMsg(Text, Color)
+Public Sub GlobalMsg(ByVal Text As String, ByVal Color As Byte)
+    Call modServerTCP.GlobalMsg(Text, Color)
     Call TextAdd("[SCRIPT] Global Message: " & Trim$(Text))
 End Sub
 
@@ -131,7 +131,7 @@ Public Sub SetPlayerWill(ByVal Index As Long, ByVal Value As Byte)
     modPlayer.SetPlayerStat Index, Willpower, Value
 End Sub
 
-Public Sub PlayerMessage(ByVal Index As Long, ByVal Text As String, ByVal Color As Byte)
+Public Sub PlayerMsg(ByVal Index As Long, ByVal Text As String, ByVal Color As Byte)
     modServerTCP.PlayerMsg Index, Text, Color
 End Sub
 

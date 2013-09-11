@@ -1,5 +1,5 @@
 ' Note that ALL Constant and Public declarations have to be made BEFORE the include lines!
-' Anything after them will -NOT- function.
+' Anything after or inside them will -NOT- function.
 
 ' ***
 ' Color Constants
@@ -36,18 +36,34 @@ Public Const TargetTypeNone = 0
 Public Const TargetTypePlayer = 1
 Public Const TargetTypeNPC = 2
 
+' ***
+' Spawn Constants
+' ***
+Public Const StartMap = 1
+Public Const StartX = 6
+Public Const StartY = 8
+
+' *****************************************************************************
+' *****************************************************************************
+
+' ***
 ' Include our Server Event files.
+' ***
 #include <Server\OnServerLoad.eds>
 #include <Server\OnServerTime.eds>
 
+' ***
 ' Include Interact Scripts.
+' ***
 #include <Interact\OnUseItem.eds>
 #include <Interact\OnUseSpell.eds>
 #include <Interact\OnUseNPC.eds>
 #include <Interact\OnUseTile.eds>
 #include <Interact\OnUseResource.eds>
 
+' ***
 ' Include Player Event Scripts.
+' ***
 #include <Player\OnPlayerWarp.eds>
 #include <Player\OnPlayerLevelUp.eds>
 #include <Player\OnPlayerUsePoint.eds>
@@ -58,7 +74,9 @@ Public Const TargetTypeNPC = 2
 #include <Player\OnPlayerKillNPC.eds>
 #include <Player\OnPlayerKillPlayer.eds>
 
+' ***
 ' Include NPC Event Scripts.
+' ***
 #include <NPC\OnNPCSpawn.eds>
 #include <NPC\OnNPCDeath.eds>
 #include <NPC\OnNPCHurt.eds>

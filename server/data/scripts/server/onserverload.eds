@@ -1,4 +1,4 @@
 Sub OnServerLoad()
 	' The server is loading, we should probably set up our player's spawnpoint.
-	Call SetGlobalSpawnPoint(1, 7, 6)
+	Call SetGlobalSpawnPoint(StartMap, StartX, StartY)
 End Sub

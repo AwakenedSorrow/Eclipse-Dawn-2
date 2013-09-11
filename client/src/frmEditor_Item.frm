@@ -1270,7 +1270,7 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub txtName_Change()
+Private Sub txtName_Validate(Cancel As Boolean)
 Dim tmpIndex As Long
 
     ' If debug mode, handle error then exit out
@@ -1278,7 +1278,7 @@ Dim tmpIndex As Long
     
     If EditorIndex = 0 Or EditorIndex > MAX_ITEMS Then Exit Sub
     tmpIndex = lstIndex.ListIndex
-    Item(EditorIndex).name = Trim$(txtName.text)
+    Item(EditorIndex).name = txtName.text
     lstIndex.RemoveItem EditorIndex - 1
     lstIndex.AddItem EditorIndex & ": " & Item(EditorIndex).name, EditorIndex - 1
     lstIndex.ListIndex = tmpIndex
@@ -1286,7 +1286,7 @@ Dim tmpIndex As Long
     ' Error handler
     Exit Sub
 errorhandler:
-    HandleError "txtName_Change", "frmEditor_Item", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    HandleError "txtName_Validate", "frmEditor_Item", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub

@@ -2,8 +2,10 @@ Sub OnUseItem(Index, ItemNum, InventorySlot)
 
 	Select Case ItemNum
 
-		Case 1 ' Gold
-			Call PlayerMsg(Index, "Stop clicking the gold man!", Yellow)
+		Case 7 ' Scripted Item Demo
+			Call PlayerMsg(Index, "Hello there, I'm a scripted item.", Yellow)
+			Call PlayerMsg(Index, "As you can see my messages are passed on just fine from the server side.", Green)
+			Call PlayerMsg(Index, "Colors appear to be functional as well!", Cyan)
 		
 	End Select
 
