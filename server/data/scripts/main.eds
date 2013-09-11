@@ -23,6 +23,44 @@ Public Const White = 15
 Public Const DarkBrown = 16
 Public Const Orange = 17
 
+' ***
+' Gender Constants
+' ***
+Public Const SexMale = 0
+Public Const SexFemale = 1
+
+' ***
+' Targetting Constants
+' ***
+Public Const TargetTypeNone = 0
+Public Const TargetTypePlayer = 1
+Public Const TargetTypeNPC = 2
+
 ' Include our Server Event files.
 #include <Server\OnServerLoad.eds>
 #include <Server\OnServerTime.eds>
+
+' Include Interact Scripts.
+#include <Interact\OnUseItem.eds>
+#include <Interact\OnUseSpell.eds>
+#include <Interact\OnUseNPC.eds>
+#include <Interact\OnUseTile.eds>
+#include <Interact\OnUseResource.eds>
+
+' Include Player Event Scripts.
+#include <Player\OnPlayerWarp.eds>
+#include <Player\OnPlayerLevelUp.eds>
+#include <Player\OnPlayerUsePoint.eds>
+#include <Player\OnPlayerDeath.eds>
+#include <Player\OnPlayerAttackNPC.eds>
+#include <Player\OnPlayerAttackPlayer.eds>
+#include <Player\OnPlayerHurt.eds>
+#include <Player\OnPlayerKillNPC.eds>
+#include <Player\OnPlayerKillPlayer.eds>
+
+' Include NPC Event Scripts.
+#include <NPC\OnNPCSpawn.eds>
+#include <NPC\OnNPCDeath.eds>
+#include <NPC\OnNPCHurt.eds>
+#include <NPC\OnNPCAttackPlayer.eds>
+#include <NPC\OnNPCKillPlayer.eds>

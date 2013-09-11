@@ -1,0 +1,10 @@
+Sub OnUseItem(Index, ItemNum, InventorySlot)
+
+	Select Case ItemNum
+
+		Case 1 ' Gold
+			Call PlayerMsg(Index, "Stop clicking the gold man!", Yellow)
+		
+	End Select
+
+End Sub

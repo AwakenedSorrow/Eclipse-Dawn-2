@@ -64,135 +64,120 @@ Public Sub GlobalMessage(ByVal Text As String, ByVal Color As Byte)
 End Sub
 
 Public Function GetPlayerName(ByVal Index As Long) As String
-    GetPlayerName = Trim$(Player(Index).Name)
+    GetPlayerName = modPlayer.GetPlayerName(Index)
 End Function
 
 Public Sub SetPlayerName(ByVal Index As Long, ByVal Name As String)
-Dim F As Long
-    
-    ' Remove old name from file
-    Call DeleteName(Trim$(Player(Index).Name))
-    
-    Player(Index).Name = Trim$(Name)
-    
-    ' Append name to file
-    F = FreeFile
-    Open App.Path & "\data\accounts\charlist.txt" For Append As #F
-    Print #F, Name
-    Close #F
-    Call SavePlayer(Index)
-    Call SendPlayerData(Index)
+    modPlayer.SetPlayerName Index, Name
 End Sub
 
 Public Function GetPlayerStr(ByVal Index As Long) As Byte
-    GetPlayerStr = GetPlayerStat(Index, Strength)
+    GetPlayerStr = modPlayer.GetPlayerStat(Index, Strength)
 End Function
 
 Public Function GetPlayerRawStr(ByVal Index As Long) As Byte
-    GetPlayerRawStr = GetPlayerRawStatNoClass(Index, Strength)
+    GetPlayerRawStr = modPlayer.GetPlayerRawStatNoClass(Index, Strength)
 End Function
 
 Public Function GetPlayerEnd(ByVal Index As Long) As Byte
-    GetPlayerEnd = GetPlayerStat(Index, Endurance)
+    GetPlayerEnd = modPlayer.GetPlayerStat(Index, Endurance)
 End Function
 
 Public Function GetPlayerRawEnd(ByVal Index As Long) As Byte
-    GetPlayerRawEnd = GetPlayerRawStatNoClass(Index, Endurance)
+    modPlayer.GetPlayerRawEnd = GetPlayerRawStatNoClass(Index, Endurance)
 End Function
 
 Public Function GetPlayerAgi(ByVal Index As Long) As Byte
-    GetPlayerAgi = GetPlayerStat(Index, Agility)
+    GetPlayerAgi = modPlayer.GetPlayerStat(Index, Agility)
 End Function
 
 Public Function GetPlayerRawAgi(ByVal Index As Long) As Byte
-    GetPlayerRawAgi = GetPlayerRawStatNoClass(Index, Agility)
+    GetPlayerRawAgi = modPlayer.GetPlayerRawStatNoClass(Index, Agility)
 End Function
 
 Public Function GetPlayerInt(ByVal Index As Long) As Byte
-    GetPlayerInt = GetPlayerStat(Index, Intelligence)
+    GetPlayerInt = modPlayer.GetPlayerStat(Index, Intelligence)
 End Function
 
 Public Function GetPlayerRawInt(ByVal Index As Long) As Byte
-    GetPlayerRawInt = GetPlayerRawStatNoClass(Index, Intelligence)
+    GetPlayerRawInt = modPlayer.GetPlayerRawStatNoClass(Index, Intelligence)
 End Function
 
 Public Function GetPlayerWill(ByVal Index As Long) As Byte
-    GetPlayerWill = GetPlayerStat(Index, Willpower)
+    GetPlayerWill = modPlayer.GetPlayerStat(Index, Willpower)
 End Function
 
 Public Function GetPlayerRawWill(ByVal Index As Long) As Byte
-    GetPlayerRawWill = GetPlayerRawStatNoClass(Index, Willpower)
+    GetPlayerRawWill = modPlayer.GetPlayerRawStatNoClass(Index, Willpower)
 End Function
 
 Public Sub SetPlayerStr(ByVal Index As Long, ByVal Value As Byte)
-    Player(Index).Stat(Strength) = Value
+    modPlayer.SetPlayerStat Index, Strength, Value
 End Sub
 
 Public Sub SetPlayerAgi(ByVal Index As Long, ByVal Value As Byte)
-    Player(Index).Stat(Agility) = Value
+    modPlayer.SetPlayerStat Index, Agility, Value
 End Sub
 
 Public Sub SetPlayerEnd(ByVal Index As Long, ByVal Value As Byte)
-    Player(Index).Stat(Endurance) = Value
+    modPlayer.SetPlayerStat Index, Endurance, Value
 End Sub
 
 Public Sub SetPlayerInt(ByVal Index As Long, ByVal Value As Byte)
-    Player(Index).Stat(Intelligence) = Value
+    modPlayer.SetPlayerStat Index, Intelligence, Value
 End Sub
 
 Public Sub SetPlayerWill(ByVal Index As Long, ByVal Value As Byte)
-    Player(Index).Stat(Willpower) = Value
+    modPlayer.SetPlayerStat Index, Willpower, Value
 End Sub
 
 Public Sub PlayerMessage(ByVal Index As Long, ByVal Text As String, ByVal Color As Byte)
-    Call PlayerMsg(Index, Text, Color)
+    modServerTCP.PlayerMsg Index, Text, Color
 End Sub
 
 Public Function GetPlayerLevel(ByVal Index As Long) As Long
-    GetPlayerLevel = Player(Index).Level
+    GetPlayerLevel = modPlayer.GetPlayerLevel(Index)
 End Function
 
 Public Sub SetPlayerLevel(ByVal Index As Long, ByVal Level As Long)
-    Player(Index).Level = Level
+    modPlayer.SetPlayerLevel Index, Level
 End Sub
 
 Public Function GetPlayerClass(ByVal Index As Long) As Long
-    GetPlayerClass = Player(Index).Class
+    
+    GetPlayerClass = modPlayer.GetPlayerClass(Index)
 End Function
 
 Public Sub SetPlayerClass(ByVal Index As Long, ByVal Class As Long)
-    Player(Index).Class = Class
-    Call SendPlayerData(Index)
+    modPlayer.SetPlayerClass Index, Class
 End Sub
 
 Public Function GetPlayerPoints(ByVal Index As Long) As Byte
-    GetPlayerPoints = Player(Index).Points
+    GetPlayerPoints = modPlayer.GetPlayerPoints(Index)
 End Function
 
 Public Sub SetPlayerPoints(ByVal Index As Long, ByVal Points As Byte)
-    Player(Index).Points = Points
-    Call SendPlayerData(Index)
+    modPlayer.SetPlayerPoints Index, Points
 End Sub
 
 Public Function GetPlayerMap(ByVal Index As Long) As Long
-    GetPlayerMap = Player(Index).Map
+    GetPlayerMap = modPlayer.GetPlayerMap(Index)
 End Function
 
 Public Function GetPlayerSex(ByVal Index As Long) As Byte
     GetPlayerSex = Player(Index).Sex
 End Function
 
-Public Sub WarpPlayer(ByVal Index As Long, ByVal Map As Long, ByVal X As Long, ByVal Y As Long)
-    Call PlayerWarp(Index, Map, X, Y)
+Public Sub WarpPlayer(ByVal Index As Long, ByVal MapNum As Long, ByVal X As Long, ByVal Y As Long)
+    Call PlayerWarp(Index, MapNum, X, Y)
 End Sub
 
 Public Function GetPlayerSprite(ByVal Index As Long) As Long
-    GetPlayerSprite = Player(Index).Sprite
+    GetPlayerSprite = modPlayer.GetPlayerSprite(Index)
 End Function
 
 Public Sub SetPlayerSprite(ByVal Index As Long, ByVal Sprite As Long)
-    Player(Index).Sprite = Sprite
-    Call SendPlayerData(Index)
+    modPlayer.SetPlayerSprite Index, Sprite
 End Sub
 
 Public Function PlayerHasItem(ByVal Index As Long, ByVal Num As Long, ByVal Value As Long) As Boolean
@@ -231,6 +216,11 @@ Dim i As Byte
 End Function
 
 Public Sub SetInvItemSlot(ByVal Index As Long, ByVal Slot As Long, ByVal Item As Long)
+    If Index < 1 Or Index > Player_HighIndex Then Exit Sub
+    If Not IsPlaying(Index) Then Exit Sub
+    If Item < 1 Or Item > MAX_ITEMS Then Exit Sub
+    If Slot < 1 Or Slot > MAX_INV Then Exit Sub
+    
     Player(Index).Inv(Slot).Num = Item
 End Sub
 
@@ -239,6 +229,10 @@ Public Function GetInvItemVal(ByVal Index As Long, ByVal Slot As Long) As Long
 End Function
 
 Public Sub SetInvItemVal(ByVal Index As Long, ByVal Slot As Long, ByVal Value As Long)
+    If Index < 1 Or Index > Player_HighIndex Then Exit Sub
+    If Not IsPlaying(Index) Then Exit Sub
+    If Slot < 1 Or Slot > MAX_INV Then Exit Sub
+    
     Player(Index).Inv(Slot).Value = Value
 End Sub
 
@@ -251,22 +245,55 @@ Public Function GivePlayerItem(ByVal Index As Long, ByVal Item As Long, ByVal Va
 End Function
 
 Public Sub MapMessage(ByVal MapNum As Long, ByVal Text As String, ByVal Color As Byte)
+    If Index < 1 Or Index > Player_HighIndex Then Exit Sub
+    If Not IsPlaying(Index) Then Exit Sub
+    If MapNum < 1 Or MapNum > MAX_MAPS Then Exit Sub
+    
     Call MapMsg(MapNum, Text, Color)
 End Sub
 
 Public Function GetPlayerX(ByVal Index As Long) As Long
-    GetPlayerX = Player(Index).X
+    GetPlayerX = modPlayer.GetPlayerX(Index)
 End Function
 
 Public Function GetPlayerY(ByVal Index As Long) As Long
-    GetPlayerY = Player(Index).Y
+    GetPlayerY = modPlayer.GetPlayerY(Index)
 End Function
 
 Public Function GetPlayerDir(ByVal Index As Long) As Byte
-    GetPlayerDir = Player(Index).Dir
+    GetPlayerDir = modPlayer.GetPlayerDir(Index)
 End Function
 
 Public Sub SetPlayerDir(ByVal Index As Long, Dir As Byte)
-    Player(Index).Dir = Dir
-    Call SendPlayerData(Index)
+    modPlayer.SetPlayerDir Index, Dir
+End Sub
+
+Public Function GetPlayerTarget(ByVal Index As Long) As Long
+    If Index < 1 Or Index > MAX_PLAYERS Then Exit Function
+    
+    GetPlayerTarget = TempPlayer(Index).target
+End Function
+
+Public Function GetPlayerTargetType(ByVal Index As Long) As Byte
+    If Index < 1 Or Index > MAX_PLAYERS Then Exit Function
+    
+    GetPlayerTargetType = TempPlayer(Index).targetType
+End Function
+
+Public Function GetNPCX(ByVal Map As Long, ByVal MapNPCNum As Long) As Long
+    If Map < 1 Or Map > MAX_MAPS Then Exit Sub
+    If MapNPCNum < 1 Or MapNPCNum > MAX_MAP_NPCS Then Exit Sub
+    
+    GetNPCX = MapNpc(Map).Npc(MapNPCNum).X
+End Function
+
+Public Function GetNPCY(ByVal Map As Long, ByVal MapNPCNum As Long) As Long
+    If Map < 1 Or Map > MAX_MAPS Then Exit Function
+    If MapNPCNum < 1 Or MapNPCNum > MAX_MAP_NPCS Then Exit Function
+    
+    GetNPCY = MapNpc(Map).Npc(MapNPCNum).Y
+End Function
+
+Public Sub SendAnimation(ByVal Map As Long, ByVal X As Long, ByVal Y As Long, ByVal Animation As Long)
+    modServerTCP.SendAnimation Map, Animation, X, Y
 End Sub

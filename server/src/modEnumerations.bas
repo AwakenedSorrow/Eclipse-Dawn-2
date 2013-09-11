@@ -264,6 +264,7 @@ Public Enum ItemTypes
     ItemTypeKey
     ItemTypeCurrency
     ItemTypeSpell
+    ItemTypeScripted
 End Enum
 
 Public Enum Genders
