@@ -358,7 +358,7 @@ Begin VB.Form frmEditor_Spell
             Height          =   300
             ItemData        =   "frmEditor_Spell.frx":0000
             Left            =   120
-            List            =   "frmEditor_Spell.frx":0013
+            List            =   "frmEditor_Spell.frx":0016
             Style           =   2  'Dropdown List
             TabIndex        =   11
             Top             =   1080

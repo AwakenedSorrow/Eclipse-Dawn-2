@@ -1,0 +1,10 @@
+Sub OnUseSpell(Index, SpellNum, Target, TargetType)
+
+	Select Case SpellNum
+
+		Case 3
+			Call PlayerMsg(Index, "This is a test scripted spell!", Cyan)
+		
+	End Select
+	
+End Sub

@@ -301,6 +301,7 @@ Public Enum SpellTypes
     SpellTypeHealHP
     SpellTypeHealMP
     SpellTypeWarp
+    SpellTypeScripted
 End Enum
 
 Public Enum ActionMessages
