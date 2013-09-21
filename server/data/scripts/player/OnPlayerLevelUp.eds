@@ -1,0 +1,11 @@
+Sub OnPlayerLevelUp(Index, Level, LevelCount)
+	
+	If LevelCount = 1 Then
+        	'singular
+                Call GlobalMsg(GetPlayerName(Index) & " has gained " & LevelCount & " level!", Brown)
+        Else
+                'plural
+                Call GlobalMsg(GetPlayerName(Index) & " has gained " & LevelCount & " levels!", Brown)
+        End If
+
+End Sub

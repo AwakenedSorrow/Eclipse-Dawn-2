@@ -277,6 +277,7 @@ Public Enum TileTypes
     TileTypeHeal
     TileTypeTrap
     TileTypeSlide
+    TileTypeScripted
 End Enum
 
 Public Enum MapMorals
@@ -323,6 +324,7 @@ Public Enum NPCTypes
     NPCTypeFriendly
     NPCTypeStationary
     NPCTypeProtectAllies
+    NPCTypeScripted
 End Enum
 
 Public Enum SpellTypes

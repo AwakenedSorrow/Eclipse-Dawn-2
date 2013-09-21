@@ -1,0 +1,10 @@
+Sub OnUseNPC(Index, Map, MapNPCNum, NPCNum)
+
+	Select Case NPCNum
+
+		Case 2
+			Call PlayerMsg(Index, "This is a test scripted NPC!", Cyan)
+		
+	End Select
+	
+End Sub

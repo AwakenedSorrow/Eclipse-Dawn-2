@@ -209,7 +209,7 @@ End Function
 
 Sub PlayerWarp(ByVal Index As Long, ByVal MapNum As Long, ByVal X As Long, ByVal Y As Long)
     Dim shopNum As Long
-    Dim OldMap As Long
+    Dim OldMap As Long, OldX As Long, OldY As Long
     Dim i As Long
     Dim Buffer As clsBuffer
 
@@ -240,7 +240,9 @@ Sub PlayerWarp(ByVal Index As Long, ByVal MapNum As Long, ByVal X As Long, ByVal
     If OldMap <> MapNum Then
         Call SendLeaveMap(Index, OldMap)
     End If
-
+    
+    OldX = GetPlayerX(Index)
+    OldY = GetPlayerY(Index)
     Call SetPlayerMap(Index, MapNum)
     Call SetPlayerX(Index, X)
     Call SetPlayerY(Index, Y)
@@ -259,6 +261,9 @@ Sub PlayerWarp(ByVal Index As Long, ByVal MapNum As Long, ByVal X As Long, ByVal
         Next
     End If
 
+    ' Run the script if needed.
+     If Options.Scripting = 1 Then MyScript.ExecuteStatement "main.eds", "OnPlayerWarp " & Trim$(STR$(Index)) & "," & Trim$(STR$(OldMap)) & "," & Trim$(STR$(OldX)) & "," & Trim$(STR$(OldY)) & "," & Trim$(STR$(MapNum)) & "," & Trim$(STR$(X)) & "," & Trim$(STR$(Y))
+    
     ' Now we check if there were any players left on the map the player just left, and if not stop processing npcs
     If GetTotalMapPlayers(OldMap) = 0 Then
         PlayersOnMap(OldMap) = NO
@@ -539,8 +544,14 @@ Sub PlayerMove(ByVal Index As Long, ByVal Dir As Long, ByVal movement As Long, O
             ForcePlayerMove Index, MOVING_WALKING, .Data1
             Moved = YES
         End If
+        
+         ' Scripted
+        If .Type = TileTypeScripted Then
+            If Options.Scripting = 1 Then MyScript.ExecuteStatement "main.eds", "OnUseTile " & Trim$(STR$(Index)) & "," & Trim$(STR$(GetPlayerMap(Index))) & "," & Trim$(STR$(.Data1))
+        End If
     End With
 
+    
     ' They tried to hack
     If Moved = NO Then
         PlayerWarp Index, GetPlayerMap(Index), GetPlayerX(Index), GetPlayerY(Index)
@@ -953,13 +964,19 @@ Sub CheckPlayerLevelUp(ByVal Index As Long)
     Loop
     
     If level_count > 0 Then
-        If level_count = 1 Then
-            'singular
-            GlobalMsg GetPlayerName(Index) & " has gained " & level_count & " level!", Brown
+        ' Scripting or not?
+        If Options.Scripting <> 1 Then
+            If level_count = 1 Then
+                'singular
+                GlobalMsg GetPlayerName(Index) & " has gained " & level_count & " level!", Brown
+            Else
+                'plural
+                GlobalMsg GetPlayerName(Index) & " has gained " & level_count & " levels!", Brown
+            End If
         Else
-            'plural
-            GlobalMsg GetPlayerName(Index) & " has gained " & level_count & " levels!", Brown
+            MyScript.ExecuteStatement "main.eds", "OnPlayerLevelUp " & Trim$(STR$(Index)) & "," & Trim$(STR$(GetPlayerLevel(Index))) & "," & Trim$(STR$(level_count))
         End If
+        
         SendEXP Index
         SendPlayerData Index
         For i = 1 To Vitals.Vital_Count - 1

@@ -127,7 +127,7 @@ Begin VB.Form frmEditor_NPC
          Height          =   300
          ItemData        =   "frmEditor_NPC.frx":3332
          Left            =   1320
-         List            =   "frmEditor_NPC.frx":3345
+         List            =   "frmEditor_NPC.frx":3348
          Style           =   2  'Dropdown List
          TabIndex        =   29
          Top             =   1680

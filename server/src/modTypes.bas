@@ -74,7 +74,7 @@ Private Type PlayerRec
     
     ' Stats
     Stat(1 To Stats.Stat_Count - 1) As Byte
-    POINTS As Long
+    Points As Long
     
     ' Worn equipment
     Equipment(1 To Equipment.Equipment_Count - 1) As Long

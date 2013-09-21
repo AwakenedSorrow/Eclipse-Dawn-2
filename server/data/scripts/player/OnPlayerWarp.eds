@@ -1,0 +1,20 @@
+Sub OnPlayerWarp(Index, OldMap, OldX, OldY, NewMap, NewX, NewY)
+	
+	' The old maps
+	Select Case OldMap
+
+		Case 1 
+			Call PlayerMsg(Index, "You have just left Map 1!", Cyan)
+
+	End Select
+	
+	' The new maps
+	Select Case NewMap
+
+		Case 2 
+			Call PlayerMsg(Index, "You have just entered Map 2!", Cyan)
+
+	End Select
+
+
+End Sub

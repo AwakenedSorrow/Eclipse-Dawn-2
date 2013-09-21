@@ -296,7 +296,7 @@ Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal MapNPCNum As Lo
         ' exit out early
         If IsSpell Then
              If npcNum > 0 Then
-                If Npc(npcNum).Behaviour <> NPCTypeFriendly And Npc(npcNum).Behaviour <> NPCTypeStationary Then
+                If Npc(npcNum).Behaviour <> NPCTypeFriendly And Npc(npcNum).Behaviour <> NPCTypeStationary And Npc(npcNum).Behaviour <> NPCTypeScripted Then
                     CanPlayerAttackNpc = True
                     Exit Function
                 End If
@@ -329,12 +329,15 @@ Public Function CanPlayerAttackNpc(ByVal attacker As Long, ByVal MapNPCNum As Lo
 
             If NpcX = GetPlayerX(attacker) Then
                 If NpcY = GetPlayerY(attacker) Then
-                    If Npc(npcNum).Behaviour <> NPCTypeFriendly And Npc(npcNum).Behaviour <> NPCTypeStationary Then
+                    If Npc(npcNum).Behaviour <> NPCTypeFriendly And Npc(npcNum).Behaviour <> NPCTypeStationary And Npc(npcNum).Behaviour <> NPCTypeScripted Then
                         CanPlayerAttackNpc = True
                     Else
                         If Len(Trim$(Npc(npcNum).AttackSay)) > 0 Then
                             PlayerMsg attacker, Trim$(Npc(npcNum).Name) & ": " & Trim$(Npc(npcNum).AttackSay), White
                         End If
+                        
+                        If Options.Scripting = 1 And Npc(npcNum).Behaviour = NPCTypeScripted Then MyScript.ExecuteStatement "main.eds", "OnUseNPC " & Trim$(STR$(attacker)) & "," & Trim$(STR$(MapNum)) & "," & Trim$(STR$(MapNPCNum)) & "," & Trim$(STR$(npcNum))
+                        
                         ' Reset attack timer
                         TempPlayer(attacker).AttackTimer = GetTickCount
                     End If

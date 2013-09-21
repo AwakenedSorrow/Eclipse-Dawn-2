@@ -309,17 +309,19 @@ Public Function DrawMapAttributes()
                             Case TileTypeDoor
                                 RenderText MainFont, "D", tx, ty, Brown, 200
                             Case TileTypeNPCSpawn
-                                RenderText MainFont, "Ns", tx, ty, Yellow, 200
+                                RenderText MainFont, "Ns", tx, ty, yellow, 200
                             Case TileTypeShop
                                 RenderText MainFont, "Sh", tx, ty, BrightBlue, 200
                             Case TileTypeBank
                                 RenderText MainFont, "Ba", tx, ty, Blue, 200
                             Case TileTypeHeal
-                                RenderText MainFont, "H", tx, ty, BrightGreen, 200
+                                RenderText MainFont, "H", tx, ty, brightgreen, 200
                             Case TileTypeTrap
                                 RenderText MainFont, "T", tx, ty, BrightRed, 200
                             Case TileTypeSlide
                                 RenderText MainFont, "Sl", tx, ty, BrightCyan, 200
+                            Case TileTypeScripted
+                                RenderText MainFont, "Sc", tx, ty, Pink, 200
                         End Select
                     End With
                 End If
@@ -425,9 +427,9 @@ Dim name As String
             Case 2
                 color = Cyan
             Case 3
-                color = BrightGreen
+                color = brightgreen
             Case 4
-                color = Yellow
+                color = yellow
         End Select
 
     Else
@@ -471,11 +473,11 @@ Dim npcNum As Long
         Case NPCTypeAggressive
             color = BrightRed
         Case NPCTypeNeutral
-            color = Yellow
+            color = yellow
         Case NPCTypeProtectAllies
             color = Grey
         Case Else
-            color = BrightGreen
+            color = brightgreen
     End Select
 
     name = Trim$(Npc(npcNum).name)

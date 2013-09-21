@@ -186,6 +186,7 @@ Public ResourceEditorNum As Long
 Public MapEditorHealType As Long
 Public MapEditorHealAmount As Long
 Public MapEditorSlideDir As Long
+Public MapEditorScript As Long
 
 ' Maximum classes
 Public Max_Classes As Long

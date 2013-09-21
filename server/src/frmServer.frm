@@ -1,7 +1,7 @@
 VERSION 5.00
-Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "Mswinsck.ocx"
-Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "Tabctl32.ocx"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL32.ocx"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
+Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "TABCTL32.OCX"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
 Begin VB.Form frmServer 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Loading..."
@@ -72,8 +72,8 @@ Begin VB.Form frmServer
       TabCaption(2)   =   "Control "
       TabPicture(2)   =   "frmServer.frx":170C2
       Tab(2).ControlEnabled=   0   'False
-      Tab(2).Control(0)=   "fraDatabase"
-      Tab(2).Control(1)=   "fraServer"
+      Tab(2).Control(0)=   "fraServer"
+      Tab(2).Control(1)=   "fraDatabase"
       Tab(2).ControlCount=   2
       Begin VB.Frame fraServer 
          Caption         =   "Server"
@@ -114,6 +114,14 @@ Begin VB.Form frmServer
          TabIndex        =   8
          Top             =   360
          Width           =   2895
+         Begin VB.CommandButton cmdReloadScripts 
+            Caption         =   "Scripts"
+            Height          =   375
+            Left            =   1440
+            TabIndex        =   19
+            Top             =   1680
+            Width           =   1215
+         End
          Begin VB.CommandButton cmdReloadAnimations 
             Caption         =   "Animations"
             Height          =   375
@@ -292,6 +300,24 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Sub cmdReloadScripts_Click()
+    If Options.Scripting <> 1 Then Exit Sub
+    
+    Set MyScript = Nothing
+    Set clsScriptCommands = Nothing
+
+    Set MyScript = New clsSadScript
+    Set clsScriptCommands = New clsCommands
+
+    MyScript.ReadInCode App.Path & "\data\scripts\main.eds", "main.eds", MyScript.SControl
+        MyScript.SControl.AddObject "ScriptHardCode", clsScriptCommands, True
+
+    MyScript.ExecuteStatement "main.eds", "OnScriptReload"
+
+    Call TextAdd("[SCRIPT] Scripts reloaded.")
+    Call AdminMsg("The scripts were reloaded by the server.", Cyan)
+End Sub
+
 Private Sub lblCPSLock_Click()
     If CPSUnlock Then
         CPSUnlock = False
@@ -305,24 +331,24 @@ End Sub
 ' ********************
 ' ** Winsock object **
 ' ********************
-Private Sub Socket_ConnectionRequest(index As Integer, ByVal requestID As Long)
-    Call AcceptConnection(index, requestID)
+Private Sub Socket_ConnectionRequest(Index As Integer, ByVal requestID As Long)
+    Call AcceptConnection(Index, requestID)
 End Sub
 
-Private Sub Socket_Accept(index As Integer, SocketId As Integer)
-    Call AcceptConnection(index, SocketId)
+Private Sub Socket_Accept(Index As Integer, SocketId As Integer)
+    Call AcceptConnection(Index, SocketId)
 End Sub
 
-Private Sub Socket_DataArrival(index As Integer, ByVal bytesTotal As Long)
+Private Sub Socket_DataArrival(Index As Integer, ByVal bytesTotal As Long)
 
-    If IsConnected(index) Then
-        Call IncomingData(index, bytesTotal)
+    If IsConnected(Index) Then
+        Call IncomingData(Index, bytesTotal)
     End If
 
 End Sub
 
-Private Sub Socket_Close(index As Integer)
-    Call CloseSocket(index)
+Private Sub Socket_Close(Index As Integer)
+    Call CloseSocket(Index)
 End Sub
 
 ' ********************
@@ -466,7 +492,7 @@ Private Sub lvwInfo_ColumnClick(ByVal ColumnHeader As MSComctlLib.ColumnHeader)
         lvwInfo.SortOrder = lvwAscending
     End If
 
-    lvwInfo.SortKey = ColumnHeader.index - 1
+    lvwInfo.SortKey = ColumnHeader.Index - 1
     lvwInfo.Sorted = True
 End Sub
 
@@ -509,7 +535,7 @@ Sub UsersOnline_Start()
 
 End Sub
 
-Private Sub lvwInfo_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub lvwInfo_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
 
     If Button = vbRightButton Then
         PopupMenu mnuKick
@@ -571,9 +597,9 @@ Sub mnuRemoveAdmin_click()
 
 End Sub
 
-Private Sub Form_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub Form_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
     Dim lmsg As Long
-    lmsg = x / Screen.TwipsPerPixelX
+    lmsg = X / Screen.TwipsPerPixelX
 
     Select Case lmsg
         Case WM_LBUTTONDBLCLK

@@ -298,6 +298,13 @@ Dim tmpDir As Byte
                     .Data2 = 0
                     .Data3 = 0
                 End If
+                ' Scripted
+                If frmEditor_Map.optScript.value Then
+                    .Type = TileTypeScripted
+                    .Data1 = MapEditorScript
+                    .Data2 = 0
+                    .Data3 = 0
+                End If
             End With
         ElseIf frmEditor_Map.optBlock.value Then
             If movedMouse Then Exit Sub
@@ -445,15 +452,15 @@ errorhandler:
 End Sub
 
 Public Sub MapEditorCancel()
-Dim Buffer As clsBuffer
+Dim buffer As clsBuffer
 
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong CNeedMap
-    Buffer.WriteLong 1
-    SendData Buffer.ToArray()
+    Set buffer = New clsBuffer
+    buffer.WriteLong CNeedMap
+    buffer.WriteLong 1
+    SendData buffer.ToArray()
     InMapEditor = False
     Unload frmEditor_Map
     

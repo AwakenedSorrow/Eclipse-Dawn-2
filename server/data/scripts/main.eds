@@ -43,6 +43,14 @@ Public Const StartMap = 1
 Public Const StartX = 6
 Public Const StartY = 8
 
+' ***
+' Player Direction Constants
+' ***
+Public Const North = 0
+Public Const South = 1
+Public Const West = 2
+Public Const East = 3
+
 ' *****************************************************************************
 ' *****************************************************************************
 
@@ -51,6 +59,7 @@ Public Const StartY = 8
 ' ***
 #include <Server\OnServerLoad.eds>
 #include <Server\OnServerTime.eds>
+#include <Server\OnScriptReload.eds>
 
 ' ***
 ' Include Interact Scripts.
@@ -59,7 +68,6 @@ Public Const StartY = 8
 #include <Interact\OnUseSpell.eds>
 #include <Interact\OnUseNPC.eds>
 #include <Interact\OnUseTile.eds>
-#include <Interact\OnUseResource.eds>
 
 ' ***
 ' Include Player Event Scripts.

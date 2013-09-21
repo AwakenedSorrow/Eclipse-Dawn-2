@@ -297,3 +297,7 @@ End Function
 Public Sub SendAnimation(ByVal Map As Long, ByVal X As Long, ByVal Y As Long, ByVal Animation As Long)
     modServerTCP.SendAnimation Map, Animation, X, Y
 End Sub
+
+Public Function GetOriginNPCNum(ByVal MapNum As Long, ByVal Num As Long) As Long
+    GetOriginNPCNum = Map(MapNum).Npc(Num)
+End Function

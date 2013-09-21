@@ -44,6 +44,30 @@ Begin VB.Form frmEditor_Map
       Top             =   120
       Visible         =   0   'False
       Width           =   7095
+      Begin VB.Frame fraScript 
+         Caption         =   "Script"
+         Height          =   1455
+         Left            =   1800
+         TabIndex        =   89
+         Top             =   3000
+         Visible         =   0   'False
+         Width           =   3375
+         Begin VB.TextBox txtScript 
+            Height          =   270
+            Left            =   360
+            TabIndex        =   91
+            Top             =   360
+            Width           =   2655
+         End
+         Begin VB.CommandButton cmdScript 
+            Caption         =   "Okay"
+            Height          =   375
+            Left            =   960
+            TabIndex        =   90
+            Top             =   840
+            Width           =   1455
+         End
+      End
       Begin VB.Frame fraSlide 
          Caption         =   "Slide"
          Height          =   1455
@@ -626,6 +650,14 @@ Begin VB.Form frmEditor_Map
       Top             =   120
       Visible         =   0   'False
       Width           =   1455
+      Begin VB.OptionButton optScript 
+         Caption         =   "Script"
+         Height          =   270
+         Left            =   120
+         TabIndex        =   88
+         Top             =   3600
+         Width           =   1215
+      End
       Begin VB.OptionButton optSlide 
          Caption         =   "Slide"
          Height          =   270
@@ -1032,6 +1064,22 @@ errorhandler:
     Exit Sub
 End Sub
 
+Private Sub cmdScript_Click()
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    MapEditorScript = Val(txtScript.text)
+    picAttributes.Visible = False
+    fraScript.Visible = False
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "cmdScript_Click", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
 Private Sub Form_Load()
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
@@ -1167,6 +1215,23 @@ Private Sub optResource_Click()
     Exit Sub
 errorhandler:
     HandleError "optResource_Click", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
+    Err.Clear
+    Exit Sub
+End Sub
+
+Private Sub optScript_Click()
+    ' If debug mode, handle error then exit out
+    If Options.Debug = 1 Then On Error GoTo errorhandler
+    
+    ClearAttributeDialogue
+    txtScript.text = "0"
+    picAttributes.Visible = True
+    fraScript.Visible = True
+    
+    ' Error handler
+    Exit Sub
+errorhandler:
+    HandleError "optScript_Click", "frmEditor_Map", Err.Number, Err.Description, Err.Source, Err.HelpContext
     Err.Clear
     Exit Sub
 End Sub
@@ -1750,3 +1815,4 @@ Private Sub txtMapItemVal_Change()
     If Val(txtMapItemVal.text) < 0 Then txtMapItemVal.text = "0"
 
 End Sub
+

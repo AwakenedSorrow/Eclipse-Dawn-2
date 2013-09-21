@@ -1,0 +1,10 @@
+Sub OnUseTile(Index, MapNum, ScriptNum)
+
+	Select Case ScriptNum
+
+		Case 1
+			Call PlayerMsg(Index, "This is a test scripted Tile!", Cyan)
+		
+	End Select
+	
+End Sub
