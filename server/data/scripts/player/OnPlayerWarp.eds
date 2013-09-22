@@ -1,5 +1,8 @@
 Sub OnPlayerWarp(Index, OldMap, OldX, OldY, NewMap, NewX, NewY)
 	
+	' Prevent messages from appearing on login and porting around the same map.
+	If OldMap = NewMap then Exit Sub	
+
 	' The old maps
 	Select Case OldMap
 

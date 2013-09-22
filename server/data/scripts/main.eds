@@ -51,6 +51,36 @@ Public Const South = 1
 Public Const West = 2
 Public Const East = 3
 
+' ***
+' Player Stat Constants
+' ***
+Public Const Strength = 1
+Public Const Endurance = 2
+Public Const Intelligence = 3
+Public Const Agility = 4
+Public Const Willpower = 5
+
+' ***
+' Player Vital Constants
+' ***
+Public Const HP = 1
+Public Const MP = 2
+
+' ***
+' Action Message Constants
+' ***
+Public Const ActionMsgStatic = 0
+Public Const ActionMsgScroll = 1
+Public Const ActionMsgScreen = 2
+
+' ***
+' Equipment Constants
+' ***
+Public Const Weapon = 1
+Public Const Armor = 2
+Public Const Helmet = 3
+Public Const Shield = 4
+
 ' *****************************************************************************
 ' *****************************************************************************
 

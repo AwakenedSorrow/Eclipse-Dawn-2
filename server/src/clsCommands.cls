@@ -71,64 +71,20 @@ Public Sub SetPlayerName(ByVal Index As Long, ByVal Name As String)
     modPlayer.SetPlayerName Index, Name
 End Sub
 
-Public Function GetPlayerStr(ByVal Index As Long) As Byte
-    GetPlayerStr = modPlayer.GetPlayerStat(Index, Strength)
+Public Function GetPlayerStat(ByVal Index As Long, ByVal Stat As Byte) As Long
+    GetPlayerStat = modPlayer.GetPlayerStat(Index, Stat)
 End Function
 
-Public Function GetPlayerRawStr(ByVal Index As Long) As Byte
-    GetPlayerRawStr = modPlayer.GetPlayerRawStatNoClass(Index, Strength)
+Public Function GetPlayerRawStat(ByVal Index As Long, ByVal Stat As Byte) As Long
+    GetPlayerRawStat = modPlayer.GetPlayerRawStat(Index, Stat)
 End Function
 
-Public Function GetPlayerEnd(ByVal Index As Long) As Byte
-    GetPlayerEnd = modPlayer.GetPlayerStat(Index, Endurance)
+Public Function GetPlayerRawStatNoClass(ByVal Index As Long, ByVal Stat As Byte) As Long
+    GetPlayerRawStatNoClass = modPlayer.GetPlayerRawStatNoClass(Index, Stat)
 End Function
 
-Public Function GetPlayerRawEnd(ByVal Index As Long) As Byte
-    modPlayer.GetPlayerRawEnd = GetPlayerRawStatNoClass(Index, Endurance)
-End Function
-
-Public Function GetPlayerAgi(ByVal Index As Long) As Byte
-    GetPlayerAgi = modPlayer.GetPlayerStat(Index, Agility)
-End Function
-
-Public Function GetPlayerRawAgi(ByVal Index As Long) As Byte
-    GetPlayerRawAgi = modPlayer.GetPlayerRawStatNoClass(Index, Agility)
-End Function
-
-Public Function GetPlayerInt(ByVal Index As Long) As Byte
-    GetPlayerInt = modPlayer.GetPlayerStat(Index, Intelligence)
-End Function
-
-Public Function GetPlayerRawInt(ByVal Index As Long) As Byte
-    GetPlayerRawInt = modPlayer.GetPlayerRawStatNoClass(Index, Intelligence)
-End Function
-
-Public Function GetPlayerWill(ByVal Index As Long) As Byte
-    GetPlayerWill = modPlayer.GetPlayerStat(Index, Willpower)
-End Function
-
-Public Function GetPlayerRawWill(ByVal Index As Long) As Byte
-    GetPlayerRawWill = modPlayer.GetPlayerRawStatNoClass(Index, Willpower)
-End Function
-
-Public Sub SetPlayerStr(ByVal Index As Long, ByVal Value As Byte)
-    modPlayer.SetPlayerStat Index, Strength, Value
-End Sub
-
-Public Sub SetPlayerAgi(ByVal Index As Long, ByVal Value As Byte)
-    modPlayer.SetPlayerStat Index, Agility, Value
-End Sub
-
-Public Sub SetPlayerEnd(ByVal Index As Long, ByVal Value As Byte)
-    modPlayer.SetPlayerStat Index, Endurance, Value
-End Sub
-
-Public Sub SetPlayerInt(ByVal Index As Long, ByVal Value As Byte)
-    modPlayer.SetPlayerStat Index, Intelligence, Value
-End Sub
-
-Public Sub SetPlayerWill(ByVal Index As Long, ByVal Value As Byte)
-    modPlayer.SetPlayerStat Index, Willpower, Value
+Public Sub SetPlayerStat(ByVal Index As Long, ByVal Stat As Byte, ByVal Value As Long)
+    modPlayer.SetPlayerStat Index, Stat, Value
 End Sub
 
 Public Sub PlayerMsg(ByVal Index As Long, ByVal Text As String, ByVal Color As Byte)
@@ -144,7 +100,6 @@ Public Sub SetPlayerLevel(ByVal Index As Long, ByVal Level As Long)
 End Sub
 
 Public Function GetPlayerClass(ByVal Index As Long) As Long
-    
     GetPlayerClass = modPlayer.GetPlayerClass(Index)
 End Function
 
@@ -169,7 +124,7 @@ Public Function GetPlayerSex(ByVal Index As Long) As Byte
 End Function
 
 Public Sub WarpPlayer(ByVal Index As Long, ByVal MapNum As Long, ByVal X As Long, ByVal Y As Long)
-    Call PlayerWarp(Index, MapNum, X, Y)
+    Call modPlayer.PlayerWarp(Index, MapNum, X, Y)
 End Sub
 
 Public Function GetPlayerSprite(ByVal Index As Long) As Long
@@ -300,4 +255,48 @@ End Sub
 
 Public Function GetOriginNPCNum(ByVal MapNum As Long, ByVal Num As Long) As Long
     GetOriginNPCNum = Map(MapNum).Npc(Num)
+End Function
+
+Public Function GetPlayerVital(ByVal Index As Long, ByVal Vital As Byte) As Long
+    GetPlayerVital = modPlayer.GetPlayerVital(Index, Vital)
+End Function
+
+Public Function GetPlayerMaxVital(ByVal Index As Long, ByVal Vital As Byte) As Long
+    GetPlayerMaxVital = modCombat.GetPlayerMaxVital(Index, Vital)
+End Function
+
+Public Sub SetPlayerVital(ByVal Index As Long, ByVal Vital As Byte, ByVal Value As Long)
+    modPlayer.SetPlayerVital Index, Vital, Value
+End Sub
+
+Public Sub SendPlayerData(ByVal Index As Long)
+    modServerTCP.SendPlayerData Index
+End Sub
+
+Public Sub SendActionMsg(ByVal Map As Long, ByVal Text As String, ByVal Color As Byte, ByVal MsgType As Byte, ByVal X As Long, ByVal Y As Long)
+    modServerTCP.SendActionMsg Map, Text, Color, MsgType, X, Y
+End Sub
+
+Public Function GetPlayerEquipment(ByVal Index As Long, ByVal Slot As Byte) As Long
+    GetPlayerEquipment = modPlayer.GetPlayerEquipment(Index, Slot)
+End Function
+
+Public Sub SetPlayerEquipment(ByVal Index As Long, ByVal Slot As Byte, ByVal InvSlot As Long)
+    modPlayer.SetPlayerEquipment Index, InvSlot, Slot
+End Sub
+
+Public Sub PlayerMapDropItem(ByVal Index As Long, InvSlot As Long, Value As Long)
+    modPlayer.PlayerMapDropItem Index, InvSlot, Value
+End Sub
+
+Public Function GetMapBootMap(ByVal MapNum As Long) As Long
+    GetMapBootMap = Map(MapNum).BootMap
+End Function
+
+Public Function GetMapBootX(ByVal MapNum As Long) As Long
+    GetMapBootX = Map(MapNum).BootX
+End Function
+
+Public Function GetMapBootY(ByVal MapNum As Long) As Long
+    GetMapBootY = Map(MapNum).BootY
 End Function

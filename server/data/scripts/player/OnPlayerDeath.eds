@@ -1,0 +1,30 @@
+Sub OnPlayerDeath(Index)
+Dim n
+Dim Map
+Dim Item
+
+	' Drop all worn items
+	For n = 1 To Shield
+		If GetPlayerEquipment(Index, n) > 0 Then
+			' Retrieve the item ID and remove the equipped version.
+			Item = GetPlayerEquipment(Index, n)
+			SetPlayerEquipment Index, n, 0
+			
+			' Give the player a new copy of the item.
+			GivePlayerItem Index, Item, 0
+
+			' Drop the item.
+			PlayerMapDropItem Index, GetInvItemSlot(Index, Item), 0
+		End If
+	Next
+
+    ' Teleport the player to the spawnpoint(Or bootmap, if available).
+    SetPlayerDir Index, South
+    
+    Map = GetPlayerMap(Index)
+    If GetMapBootMap(Map) > 0 Then
+        WarpPlayer Index, GetMapBootMap(Map), GetMapBootX(Map), GetMapBootY(Map)
+    Else
+        WarpPlayer Index, StartMap, StartX, StartY
+    End If
+End Sub

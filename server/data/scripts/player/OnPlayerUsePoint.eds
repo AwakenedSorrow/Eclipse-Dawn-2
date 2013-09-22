@@ -1,0 +1,23 @@
+Sub OnPlayerUsePoint(Index, PointType)
+Dim sMes	
+
+	Select Case PointType
+                Case Strength
+                    Call SetPlayerStat(Index, Strength, GetPlayerRawStatNoClass(Index, Strength) + 1)
+                    sMes = "Strength"
+                Case Endurance
+                    Call SetPlayerStat(Index, Endurance, GetPlayerRawStatNoClass(Index, Endurance) + 1)
+                    sMes = "Endurance"
+                Case Intelligence
+                    Call SetPlayerStat(Index, Intelligence, GetPlayerRawStatNoClass(Index, Intelligence) + 1)
+                    sMes = "Intelligence"
+                Case Agility
+                    Call SetPlayerStat(Index, Agility, GetPlayerRawStatNoClass(Index, Agility) + 1)
+                    sMes = "Agility"
+                Case Willpower
+                    Call SetPlayerStat(Index, Willpower, GetPlayerRawStatNoClass(Index, Willpower) + 1)
+                    sMes = "Willpower"
+	End Select
+        
+        SendActionMsg GetPlayerMap(Index), "+1 " & sMes, White, 1, (GetPlayerX(Index) * 32), (GetPlayerY(Index) * 32)
+End Sub

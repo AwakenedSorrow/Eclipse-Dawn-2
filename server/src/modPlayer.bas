@@ -733,7 +733,7 @@ Function TakeInvItem(ByVal Index As Long, ByVal itemnum As Long, ByVal ItemVal A
 
 End Function
 
-Function TakeInvSlot(ByVal Index As Long, ByVal invSlot As Long, ByVal ItemVal As Long) As Boolean
+Function TakeInvSlot(ByVal Index As Long, ByVal InvSlot As Long, ByVal ItemVal As Long) As Boolean
     Dim i As Long
     Dim n As Long
     Dim itemnum
@@ -741,27 +741,27 @@ Function TakeInvSlot(ByVal Index As Long, ByVal invSlot As Long, ByVal ItemVal A
     TakeInvSlot = False
 
     ' Check for subscript out of range
-    If IsPlaying(Index) = False Or invSlot <= 0 Or invSlot > MAX_ITEMS Then
+    If IsPlaying(Index) = False Or InvSlot <= 0 Or InvSlot > MAX_ITEMS Then
         Exit Function
     End If
     
-    itemnum = GetPlayerInvItemNum(Index, invSlot)
+    itemnum = GetPlayerInvItemNum(Index, InvSlot)
 
     If Item(itemnum).Type = ItemTypeCurrency Then
 
         ' Is what we are trying to take away more then what they have?  If so just set it to zero
-        If ItemVal >= GetPlayerInvItemValue(Index, invSlot) Then
+        If ItemVal >= GetPlayerInvItemValue(Index, InvSlot) Then
             TakeInvSlot = True
         Else
-            Call SetPlayerInvItemValue(Index, invSlot, GetPlayerInvItemValue(Index, invSlot) - ItemVal)
+            Call SetPlayerInvItemValue(Index, InvSlot, GetPlayerInvItemValue(Index, InvSlot) - ItemVal)
         End If
     Else
         TakeInvSlot = True
     End If
 
     If TakeInvSlot Then
-        Call SetPlayerInvItemNum(Index, invSlot, 0)
-        Call SetPlayerInvItemValue(Index, invSlot, 0)
+        Call SetPlayerInvItemNum(Index, InvSlot, 0)
+        Call SetPlayerInvItemValue(Index, InvSlot, 0)
         Exit Function
     End If
 
@@ -1206,25 +1206,25 @@ Function GetPlayerIP(ByVal Index As Long) As String
     GetPlayerIP = frmServer.Socket(Index).RemoteHostIP
 End Function
 
-Function GetPlayerInvItemNum(ByVal Index As Long, ByVal invSlot As Long) As Long
+Function GetPlayerInvItemNum(ByVal Index As Long, ByVal InvSlot As Long) As Long
     If Index > MAX_PLAYERS Then Exit Function
-    If invSlot = 0 Then Exit Function
+    If InvSlot = 0 Then Exit Function
     
-    GetPlayerInvItemNum = Player(Index).Inv(invSlot).Num
+    GetPlayerInvItemNum = Player(Index).Inv(InvSlot).Num
 End Function
 
-Sub SetPlayerInvItemNum(ByVal Index As Long, ByVal invSlot As Long, ByVal itemnum As Long)
-    Player(Index).Inv(invSlot).Num = itemnum
+Sub SetPlayerInvItemNum(ByVal Index As Long, ByVal InvSlot As Long, ByVal itemnum As Long)
+    Player(Index).Inv(InvSlot).Num = itemnum
 End Sub
 
-Function GetPlayerInvItemValue(ByVal Index As Long, ByVal invSlot As Long) As Long
+Function GetPlayerInvItemValue(ByVal Index As Long, ByVal InvSlot As Long) As Long
 
     If Index > MAX_PLAYERS Then Exit Function
-    GetPlayerInvItemValue = Player(Index).Inv(invSlot).Value
+    GetPlayerInvItemValue = Player(Index).Inv(InvSlot).Value
 End Function
 
-Sub SetPlayerInvItemValue(ByVal Index As Long, ByVal invSlot As Long, ByVal ItemValue As Long)
-    Player(Index).Inv(invSlot).Value = ItemValue
+Sub SetPlayerInvItemValue(ByVal Index As Long, ByVal InvSlot As Long, ByVal ItemValue As Long)
+    Player(Index).Inv(InvSlot).Value = ItemValue
 End Sub
 
 Function GetPlayerSpell(ByVal Index As Long, ByVal spellslot As Long) As Long
@@ -1251,6 +1251,8 @@ End Sub
 ' ToDo
 Sub OnDeath(ByVal Index As Long)
     Dim i As Long
+    Dim Item As Long
+    Dim Slot As Long
     
     ' Set HP to nothing
     Call SetPlayerVital(Index, Vitals.HP, 0)
@@ -1270,24 +1272,36 @@ Sub OnDeath(ByVal Index As Long)
         End If
     Next
     
-    ' Drop all worn items
-    For i = 1 To Equipment.Equipment_Count - 1
-        If GetPlayerEquipment(Index, i) > 0 Then
-            PlayerMapDropItem Index, GetPlayerEquipment(Index, i), 0
-        End If
-    Next
+    ' Is scripting enabled?
+    If Options.Scripting = 1 Then
+        MyScript.ExecuteStatement "main.eds", "OnPlayerDeath " & Trim$(STR$(Index))
+    Else
+        ' Drop all worn items
+        For i = 1 To Equipment.Equipment_Count - 1
+            If GetPlayerEquipment(Index, i) > 0 Then
+                Item = GetPlayerEquipment(Index, i)
+                
+                Slot = 0
+                For i = 1 To MAX_INV
+                    If Player(Index).Inv(i).Num = Item Then Slot = i
+                Next
+                
+                If Slot > 0 Then PlayerMapDropItem Index, Slot, 0
+            End If
+        Next
 
-    ' Warp player away
-    Call SetPlayerDir(Index, South)
+        ' Warp player away
+        Call SetPlayerDir(Index, South)
     
-    With Map(GetPlayerMap(Index))
-        ' to the bootmap if it is set
-        If .BootMap > 0 Then
-            PlayerWarp Index, .BootMap, .BootX, .BootY
-        Else
-            Call PlayerWarp(Index, START_MAP, START_X, START_Y)
-        End If
-    End With
+        With Map(GetPlayerMap(Index))
+            ' to the bootmap if it is set
+            If .BootMap > 0 Then
+                PlayerWarp Index, .BootMap, .BootX, .BootY
+            Else
+                Call PlayerWarp(Index, START_MAP, START_X, START_Y)
+            End If
+        End With
+    End If
     
     ' clear all DoTs and HoTs
     For i = 1 To MAX_DOTS
@@ -1442,37 +1456,37 @@ Sub SetPlayerBankItemValue(ByVal Index As Long, ByVal BankSlot As Long, ByVal It
     Bank(Index).Item(BankSlot).Value = ItemValue
 End Sub
 
-Sub GiveBankItem(ByVal Index As Long, ByVal invSlot As Long, ByVal amount As Long)
+Sub GiveBankItem(ByVal Index As Long, ByVal InvSlot As Long, ByVal amount As Long)
 Dim BankSlot
 
-    If invSlot < 0 Or invSlot > MAX_INV Then
+    If InvSlot < 0 Or InvSlot > MAX_INV Then
         Exit Sub
     End If
     
-    If amount < 0 Or amount > GetPlayerInvItemValue(Index, invSlot) Then
+    If amount < 0 Or amount > GetPlayerInvItemValue(Index, InvSlot) Then
         Exit Sub
     End If
     
-    BankSlot = FindOpenBankSlot(Index, GetPlayerInvItemNum(Index, invSlot))
+    BankSlot = FindOpenBankSlot(Index, GetPlayerInvItemNum(Index, InvSlot))
         
     If BankSlot > 0 Then
-        If Item(GetPlayerInvItemNum(Index, invSlot)).Type = ItemTypeCurrency Then
-            If GetPlayerBankItemNum(Index, BankSlot) = GetPlayerInvItemNum(Index, invSlot) Then
+        If Item(GetPlayerInvItemNum(Index, InvSlot)).Type = ItemTypeCurrency Then
+            If GetPlayerBankItemNum(Index, BankSlot) = GetPlayerInvItemNum(Index, InvSlot) Then
                 Call SetPlayerBankItemValue(Index, BankSlot, GetPlayerBankItemValue(Index, BankSlot) + amount)
-                Call TakeInvItem(Index, GetPlayerInvItemNum(Index, invSlot), amount)
+                Call TakeInvItem(Index, GetPlayerInvItemNum(Index, InvSlot), amount)
             Else
-                Call SetPlayerBankItemNum(Index, BankSlot, GetPlayerInvItemNum(Index, invSlot))
+                Call SetPlayerBankItemNum(Index, BankSlot, GetPlayerInvItemNum(Index, InvSlot))
                 Call SetPlayerBankItemValue(Index, BankSlot, amount)
-                Call TakeInvItem(Index, GetPlayerInvItemNum(Index, invSlot), amount)
+                Call TakeInvItem(Index, GetPlayerInvItemNum(Index, InvSlot), amount)
             End If
         Else
-            If GetPlayerBankItemNum(Index, BankSlot) = GetPlayerInvItemNum(Index, invSlot) Then
+            If GetPlayerBankItemNum(Index, BankSlot) = GetPlayerInvItemNum(Index, InvSlot) Then
                 Call SetPlayerBankItemValue(Index, BankSlot, GetPlayerBankItemValue(Index, BankSlot) + 1)
-                Call TakeInvItem(Index, GetPlayerInvItemNum(Index, invSlot), 0)
+                Call TakeInvItem(Index, GetPlayerInvItemNum(Index, InvSlot), 0)
             Else
-                Call SetPlayerBankItemNum(Index, BankSlot, GetPlayerInvItemNum(Index, invSlot))
+                Call SetPlayerBankItemNum(Index, BankSlot, GetPlayerInvItemNum(Index, InvSlot))
                 Call SetPlayerBankItemValue(Index, BankSlot, 1)
-                Call TakeInvItem(Index, GetPlayerInvItemNum(Index, invSlot), 0)
+                Call TakeInvItem(Index, GetPlayerInvItemNum(Index, InvSlot), 0)
             End If
         End If
     End If
@@ -1484,7 +1498,7 @@ Dim BankSlot
 End Sub
 
 Sub TakeBankItem(ByVal Index As Long, ByVal BankSlot As Long, ByVal amount As Long)
-Dim invSlot
+Dim InvSlot
 
     If BankSlot < 0 Or BankSlot > MAX_BANK Then
         Exit Sub
@@ -1494,9 +1508,9 @@ Dim invSlot
         Exit Sub
     End If
     
-    invSlot = FindOpenInvSlot(Index, GetPlayerBankItemNum(Index, BankSlot))
+    InvSlot = FindOpenInvSlot(Index, GetPlayerBankItemNum(Index, BankSlot))
         
-    If invSlot > 0 Then
+    If InvSlot > 0 Then
         If Item(GetPlayerBankItemNum(Index, BankSlot)).Type = ItemTypeCurrency Then
             Call GiveInvItem(Index, GetPlayerBankItemNum(Index, BankSlot), amount)
             Call SetPlayerBankItemValue(Index, BankSlot, GetPlayerBankItemValue(Index, BankSlot) - amount)
