@@ -18,13 +18,13 @@ Dim Item
 		End If
 	Next
 
-    ' Teleport the player to the spawnpoint(Or bootmap, if available).
-    SetPlayerDir Index, South
+	' Teleport the player to the spawnpoint(Or bootmap, if available).
+    	SetPlayerDir Index, South
     
-    Map = GetPlayerMap(Index)
-    If GetMapBootMap(Map) > 0 Then
-        WarpPlayer Index, GetMapBootMap(Map), GetMapBootX(Map), GetMapBootY(Map)
-    Else
-        WarpPlayer Index, StartMap, StartX, StartY
-    End If
+    	Map = GetPlayerMap(Index)
+    	If GetMapBootMap(Map) > 0 Then
+        	WarpPlayer Index, GetMapBootMap(Map), GetMapBootX(Map), GetMapBootY(Map)
+    	Else
+        	WarpPlayer Index, StartMap, StartX, StartY
+    	End If
 End Sub

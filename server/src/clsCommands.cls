@@ -64,7 +64,7 @@ Public Sub GlobalMsg(ByVal Text As String, ByVal Color As Byte)
 End Sub
 
 Public Function GetPlayerName(ByVal Index As Long) As String
-    GetPlayerName = modPlayer.GetPlayerName(Index)
+    GetPlayerName = Trim$(modPlayer.GetPlayerName(Index))
 End Function
 
 Public Sub SetPlayerName(ByVal Index As Long, ByVal Name As String)
@@ -200,8 +200,6 @@ Public Function GivePlayerItem(ByVal Index As Long, ByVal Item As Long, ByVal Va
 End Function
 
 Public Sub MapMessage(ByVal MapNum As Long, ByVal Text As String, ByVal Color As Byte)
-    If Index < 1 Or Index > Player_HighIndex Then Exit Sub
-    If Not IsPlaying(Index) Then Exit Sub
     If MapNum < 1 Or MapNum > MAX_MAPS Then Exit Sub
     
     Call MapMsg(MapNum, Text, Color)
@@ -226,18 +224,18 @@ End Sub
 Public Function GetPlayerTarget(ByVal Index As Long) As Long
     If Index < 1 Or Index > MAX_PLAYERS Then Exit Function
     
-    GetPlayerTarget = TempPlayer(Index).target
+    GetPlayerTarget = TempPlayer(Index).Target
 End Function
 
 Public Function GetPlayerTargetType(ByVal Index As Long) As Byte
     If Index < 1 Or Index > MAX_PLAYERS Then Exit Function
     
-    GetPlayerTargetType = TempPlayer(Index).targetType
+    GetPlayerTargetType = TempPlayer(Index).TargetType
 End Function
 
 Public Function GetNPCX(ByVal Map As Long, ByVal MapNPCNum As Long) As Long
-    If Map < 1 Or Map > MAX_MAPS Then Exit Sub
-    If MapNPCNum < 1 Or MapNPCNum > MAX_MAP_NPCS Then Exit Sub
+    If Map < 1 Or Map > MAX_MAPS Then Exit Function
+    If MapNPCNum < 1 Or MapNPCNum > MAX_MAP_NPCS Then Exit Function
     
     GetNPCX = MapNpc(Map).Npc(MapNPCNum).X
 End Function
@@ -249,12 +247,16 @@ Public Function GetNPCY(ByVal Map As Long, ByVal MapNPCNum As Long) As Long
     GetNPCY = MapNpc(Map).Npc(MapNPCNum).Y
 End Function
 
+Public Function GetNPCName(ByVal MapNum As Long, ByVal MapNPCNum As Long) As String
+    GetNPCName = Trim$(Npc(MapNpc(MapNum).Npc(MapNPCNum).Num).Name)
+End Function
+
 Public Sub SendAnimation(ByVal Map As Long, ByVal X As Long, ByVal Y As Long, ByVal Animation As Long)
     modServerTCP.SendAnimation Map, Animation, X, Y
 End Sub
 
 Public Function GetOriginNPCNum(ByVal MapNum As Long, ByVal Num As Long) As Long
-    GetOriginNPCNum = Map(MapNum).Npc(Num)
+    GetOriginNPCNum = MapNpc(MapNum).Npc(Num).Num
 End Function
 
 Public Function GetPlayerVital(ByVal Index As Long, ByVal Vital As Byte) As Long

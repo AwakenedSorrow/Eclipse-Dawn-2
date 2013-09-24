@@ -80,10 +80,10 @@ Sub LeftGame(ByVal Index As Long)
         For i = 1 To Player_HighIndex
             If IsPlaying(i) And IsConnected(i) Then
                 If GetPlayerMap(i) = GetPlayerMap(Index) Then
-                    If TempPlayer(i).targetType = TargetTypePlayer Then
-                        If TempPlayer(i).target = Index Then
-                            TempPlayer(i).target = 0
-                            TempPlayer(i).targetType = TargetTypeNone
+                    If TempPlayer(i).TargetType = TargetTypePlayer Then
+                        If TempPlayer(i).Target = Index Then
+                            TempPlayer(i).Target = 0
+                            TempPlayer(i).TargetType = TargetTypeNone
                             SendTarget i
                         End If
                     End If
@@ -93,10 +93,10 @@ Sub LeftGame(ByVal Index As Long)
         
         'Loop through the mapnpcs to remove the player from their targets
         For i = 1 To MAX_MAP_NPCS
-            If MapNpc(GetPlayerMap(Index)).Npc(i).targetType = TargetTypePlayer Then
-                If MapNpc(GetPlayerMap(Index)).Npc(i).target = Index Then
-                    MapNpc(GetPlayerMap(Index)).Npc(i).target = 0
-                    MapNpc(GetPlayerMap(Index)).Npc(i).targetType = TargetTypeNone
+            If MapNpc(GetPlayerMap(Index)).Npc(i).TargetType = TargetTypePlayer Then
+                If MapNpc(GetPlayerMap(Index)).Npc(i).Target = Index Then
+                    MapNpc(GetPlayerMap(Index)).Npc(i).Target = 0
+                    MapNpc(GetPlayerMap(Index)).Npc(i).TargetType = TargetTypeNone
                 End If
             End If
         Next
@@ -230,8 +230,8 @@ Sub PlayerWarp(ByVal Index As Long, ByVal MapNum As Long, ByVal X As Long, ByVal
     End If
     
     ' clear target
-    TempPlayer(Index).target = 0
-    TempPlayer(Index).targetType = TargetTypeNone
+    TempPlayer(Index).Target = 0
+    TempPlayer(Index).TargetType = TargetTypeNone
     SendTarget Index
 
     ' Save old map to send erase player data to
@@ -335,8 +335,8 @@ Sub PlayerMove(ByVal Index As Long, ByVal Dir As Long, ByVal movement As Long, O
                     Call PlayerWarp(Index, Map(GetPlayerMap(Index)).Up, GetPlayerX(Index), NewMapY)
                     Moved = YES
                     ' clear their target
-                    TempPlayer(Index).target = 0
-                    TempPlayer(Index).targetType = TargetTypeNone
+                    TempPlayer(Index).Target = 0
+                    TempPlayer(Index).TargetType = TargetTypeNone
                     SendTarget Index
                 End If
             End If
@@ -368,8 +368,8 @@ Sub PlayerMove(ByVal Index As Long, ByVal Dir As Long, ByVal movement As Long, O
                     Call PlayerWarp(Index, Map(GetPlayerMap(Index)).Down, GetPlayerX(Index), 0)
                     Moved = YES
                     ' clear their target
-                    TempPlayer(Index).target = 0
-                    TempPlayer(Index).targetType = TargetTypeNone
+                    TempPlayer(Index).Target = 0
+                    TempPlayer(Index).TargetType = TargetTypeNone
                     SendTarget Index
                 End If
             End If
@@ -402,8 +402,8 @@ Sub PlayerMove(ByVal Index As Long, ByVal Dir As Long, ByVal movement As Long, O
                     Call PlayerWarp(Index, Map(GetPlayerMap(Index)).Left, NewMapX, GetPlayerY(Index))
                     Moved = YES
                     ' clear their target
-                    TempPlayer(Index).target = 0
-                    TempPlayer(Index).targetType = TargetTypeNone
+                    TempPlayer(Index).Target = 0
+                    TempPlayer(Index).TargetType = TargetTypeNone
                     SendTarget Index
                 End If
             End If
@@ -433,8 +433,8 @@ Sub PlayerMove(ByVal Index As Long, ByVal Dir As Long, ByVal movement As Long, O
                     Call PlayerWarp(Index, Map(GetPlayerMap(Index)).Right, 0, GetPlayerY(Index))
                     Moved = YES
                     ' clear their target
-                    TempPlayer(Index).target = 0
-                    TempPlayer(Index).targetType = TargetTypeNone
+                    TempPlayer(Index).Target = 0
+                    TempPlayer(Index).TargetType = TargetTypeNone
                     SendTarget Index
                 End If
             End If
@@ -791,12 +791,12 @@ Function GiveInvItem(ByVal Index As Long, ByVal itemnum As Long, ByVal ItemVal A
 
 End Function
 
-Function HasSpell(ByVal Index As Long, ByVal spellnum As Long) As Boolean
+Function HasSpell(ByVal Index As Long, ByVal SpellNum As Long) As Boolean
     Dim i As Long
 
     For i = 1 To MAX_PLAYER_SPELLS
 
-        If GetPlayerSpell(Index, i) = spellnum Then
+        If GetPlayerSpell(Index, i) = SpellNum Then
             HasSpell = True
             Exit Function
         End If
@@ -1233,8 +1233,8 @@ Function GetPlayerSpell(ByVal Index As Long, ByVal spellslot As Long) As Long
     GetPlayerSpell = Player(Index).Spell(spellslot)
 End Function
 
-Sub SetPlayerSpell(ByVal Index As Long, ByVal spellslot As Long, ByVal spellnum As Long)
-    Player(Index).Spell(spellslot) = spellnum
+Sub SetPlayerSpell(ByVal Index As Long, ByVal spellslot As Long, ByVal SpellNum As Long)
+    Player(Index).Spell(spellslot) = SpellNum
 End Sub
 
 Function GetPlayerEquipment(ByVal Index As Long, ByVal EquipmentSlot As Equipment) As Long
@@ -1250,7 +1250,7 @@ End Sub
 
 ' ToDo
 Sub OnDeath(ByVal Index As Long)
-    Dim i As Long
+    Dim i As Long, n As Long
     Dim Item As Long
     Dim Slot As Long
     
@@ -1261,10 +1261,10 @@ Sub OnDeath(ByVal Index As Long)
     For i = 1 To Player_HighIndex
         If IsPlaying(i) And IsConnected(i) Then
             If GetPlayerMap(i) = GetPlayerMap(Index) Then
-                If TempPlayer(i).targetType = TargetTypePlayer Then
-                    If TempPlayer(i).target = Index Then
-                        TempPlayer(i).target = 0
-                        TempPlayer(i).targetType = TargetTypeNone
+                If TempPlayer(i).TargetType = TargetTypePlayer Then
+                    If TempPlayer(i).Target = Index Then
+                        TempPlayer(i).Target = 0
+                        TempPlayer(i).TargetType = TargetTypeNone
                         SendTarget i
                     End If
                 End If
@@ -1282,7 +1282,7 @@ Sub OnDeath(ByVal Index As Long)
                 Item = GetPlayerEquipment(Index, i)
                 
                 Slot = 0
-                For i = 1 To MAX_INV
+                For n = 1 To MAX_INV
                     If Player(Index).Inv(i).Num = Item Then Slot = i
                 Next
                 
@@ -1325,7 +1325,7 @@ Sub OnDeath(ByVal Index As Long)
     ' Clear spell casting
     TempPlayer(Index).spellBuffer.Spell = 0
     TempPlayer(Index).spellBuffer.Timer = 0
-    TempPlayer(Index).spellBuffer.target = 0
+    TempPlayer(Index).spellBuffer.Target = 0
     TempPlayer(Index).spellBuffer.tType = 0
     Call SendClearSpellBuffer(Index)
     

@@ -106,11 +106,9 @@ Public Const Shield = 4
 #include <Player\OnPlayerLevelUp.eds>
 #include <Player\OnPlayerUsePoint.eds>
 #include <Player\OnPlayerDeath.eds>
-#include <Player\OnPlayerAttackNPC.eds>
-#include <Player\OnPlayerAttackPlayer.eds>
+#include <Player\OnPlayerHit.eds>
 #include <Player\OnPlayerHurt.eds>
-#include <Player\OnPlayerKillNPC.eds>
-#include <Player\OnPlayerKillPlayer.eds>
+#include <Player\OnPlayerKill.eds>
 
 ' ***
 ' Include NPC Event Scripts.
@@ -118,5 +116,5 @@ Public Const Shield = 4
 #include <NPC\OnNPCSpawn.eds>
 #include <NPC\OnNPCDeath.eds>
 #include <NPC\OnNPCHurt.eds>
-#include <NPC\OnNPCAttackPlayer.eds>
-#include <NPC\OnNPCKillPlayer.eds>
+#include <NPC\OnNPCHit.eds>
+#include <NPC\OnNPCKill.eds>
