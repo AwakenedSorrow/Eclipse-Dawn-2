@@ -1,0 +1,17 @@
+Sub OnPlayerKill(Index, Target, TargetType, SpellNum, Damage)
+    
+    Select Case TargetType
+        
+        Case TargetTypePlayer
+            ' This is just an example. It is commented out by default.
+    		' PlayerMsg Target, "Hey dude, " & GetPlayerName(Index) & " has killed you!", Yellow
+        
+        Case TargetTypeNPC
+        	' This is just an example. It is commented out by default.
+    		' PlayerMsg Index, "Woah there, stop killing innocent creatures!", Yellow
+            
+    End Select
+
+End Sub
+
+

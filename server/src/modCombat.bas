@@ -417,11 +417,6 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal MapNPCNum As Long, ByVa
         If n = 1 Then
             Call SpawnItem(Npc(NPCNum).DropItem, Npc(NPCNum).DropItemValue, MapNum, MapNpc(MapNum).Npc(MapNPCNum).X, MapNpc(MapNum).Npc(MapNPCNum).Y)
         End If
-
-        ' Now set HP to 0 so we know to actually kill them in the server loop (this prevents subscript out of range)
-        MapNpc(MapNum).Npc(MapNPCNum).Num = 0
-        MapNpc(MapNum).Npc(MapNPCNum).SpawnWait = GetTickCount
-        MapNpc(MapNum).Npc(MapNPCNum).Vital(Vitals.HP) = 0
         
         ' clear DoTs and HoTs
         For i = 1 To MAX_DOTS
@@ -463,6 +458,17 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal MapNPCNum As Long, ByVa
                 End If
             End If
         Next
+        
+        ' OnPlayerKill
+        If Options.Scripting = 1 Then MyScript.ExecuteStatement "main.eds", "OnPlayerKill " & Trim$(attacker) & "," & Trim$(MapNPCNum) & "," & Trim$(TargetTypeNPC) & "," & Trim$(SpellNum) & "," & Trim$(Damage)
+        
+        ' OnNPCDeath
+        If Options.Scripting = 1 Then MyScript.ExecuteStatement "main.eds", "OnNPCDeath " & Trim$(MapNum) & "," & Trim$(MapNPCNum) & "," & Trim$(attacker) & "," & Trim$(TargetTypePlayer)
+    
+        ' Now set HP to 0 so we know to actually kill them in the server loop (this prevents subscript out of range)
+        MapNpc(MapNum).Npc(MapNPCNum).Num = 0
+        MapNpc(MapNum).Npc(MapNPCNum).SpawnWait = GetTickCount
+        MapNpc(MapNum).Npc(MapNPCNum).Vital(Vitals.HP) = 0
     Else
         ' NPC not dead, just do the damage
         MapNpc(MapNum).Npc(MapNPCNum).Vital(Vitals.HP) = MapNpc(MapNum).Npc(MapNPCNum).Vital(Vitals.HP) - Damage
@@ -510,8 +516,11 @@ Public Sub PlayerAttackNpc(ByVal attacker As Long, ByVal MapNPCNum As Long, ByVa
         
         SendMapNpcVitals MapNum, MapNPCNum
         
-        ' Run our lovely little script.
+        ' OnPlayerHit
         If Options.Scripting = 1 Then MyScript.ExecuteStatement "main.eds", "OnPlayerHit " & Trim$(attacker) & "," & Trim$(MapNPCNum) & "," & Trim$(TargetTypeNPC) & "," & Trim$(SpellNum) & "," & Trim$(Damage)
+    
+        ' OnNPCHurt
+        If Options.Scripting = 1 Then MyScript.ExecuteStatement "main.eds", "OnNPCHurt " & Trim$(MapNum) & "," & Trim$(MapNPCNum) & "," & Trim$(attacker) & "," & Trim$(TargetTypePlayer)
     End If
 
     If SpellNum = 0 Then
@@ -677,7 +686,10 @@ Dim i As Long
         
         ' Player is dead
         Call GlobalMsg(GetPlayerName(victim) & " has been killed by " & Name, BrightRed)
-
+        
+        ' OnNPCHit
+        If Options.Scripting = 1 Then MyScript.ExecuteStatement "main.eds", "OnNPCKill " & Trim$(MapNum) & "," & Trim$(MapNPCNum) & "," & Trim$(victim) & "," & Trim$(TargetTypePlayer)
+        
         ' Set NPC target to 0
         MapNpc(MapNum).Npc(MapNPCNum).Target = 0
         MapNpc(MapNum).Npc(MapNPCNum).TargetType = 0
@@ -699,6 +711,9 @@ Dim i As Long
         
         ' OnPlayerHurt
         If Options.Scripting = 1 Then MyScript.ExecuteStatement "main.eds", "OnPlayerHurt " & Trim$(victim) & "," & Trim$(MapNPCNum) & "," & Trim$(TargetTypeNPC) & "," & Trim$(Damage)
+        
+        ' OnNPCHit
+        If Options.Scripting = 1 Then MyScript.ExecuteStatement "main.eds", "OnNPCHit " & Trim$(MapNum) & "," & Trim$(MapNPCNum) & "," & Trim$(victim) & "," & Trim$(TargetTypePlayer)
         
         ' set the regen timer
         TempPlayer(victim).stopRegen = True
@@ -922,6 +937,9 @@ Sub PlayerAttackPlayer(ByVal attacker As Long, ByVal victim As Long, ByVal Damag
         End If
 
         Call OnDeath(victim)
+        
+        ' OnPlayerKill
+        MyScript.ExecuteStatement "main.eds", "OnPlayerKill " & Trim$(attacker) & "," & Trim$(victim) & "," & Trim$(TargetTypePlayer) & "," & Trim$(SpellNum) & "," & Trim$(Damage)
     Else
         ' Player not dead, just do the damage
         Call SetPlayerVital(victim, Vitals.HP, GetPlayerVital(victim, Vitals.HP) - Damage)

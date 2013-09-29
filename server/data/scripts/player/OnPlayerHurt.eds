@@ -4,11 +4,11 @@ Sub OnPlayerHurt(Index, Attacker, AttackerType, Damage)
 		
 		Case TargetTypePlayer
 			' The message below is merely a test, and commented out by default.
-			PlayerMsg Index, GetPlayerName(Attacker) & " has hit you for " & Damage & " amount of damage!", Yellow
+			' PlayerMsg Index, GetPlayerName(Attacker) & " has hit you for " & Damage & " amount of damage!", Yellow
 			
 		Case TargetTypeNPC
 			' The message below is merely a test, and commented out by default.
-			PlayerMsg Index, GetNPCName(GetPlayerMap(Index), Attacker) & " has hit you for " & Damage & " amount of damage!", Yellow
+			' PlayerMsg Index, GetNPCName(GetPlayerMap(Index), Attacker) & " has hit you for " & Damage & " amount of damage!", Yellow
 			
 	End Select
 	

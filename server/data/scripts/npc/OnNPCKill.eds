@@ -1,0 +1,13 @@
+Sub OnNPCKill(Map, NPCNum, Victim, VictimType)
+Dim NpcID
+	
+	NpcID = GetOriginNPCNum(Map, NPCNum)
+	
+	Select Case NpcID
+	
+		Case 1 ' Angel
+			' This is simply a demo script, it's commented out by default.
+			' GlobalMsg GetPlayerName(Victim) & " has been killed by an angel, how pathetic!", BrightRed
+	
+	End Select
+End Sub

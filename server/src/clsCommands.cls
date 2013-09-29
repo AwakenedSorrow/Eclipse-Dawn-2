@@ -302,3 +302,27 @@ End Function
 Public Function GetMapBootY(ByVal MapNum As Long) As Long
     GetMapBootY = Map(MapNum).BootY
 End Function
+
+Public Function RAND(ByVal Num1 As Long, ByVal Num2 As Long) As Long
+    RAND = modGameLogic.RAND(Num1, Num2)
+End Function
+
+Public Function GetNPCTarget(ByVal MapNum As Long, ByVal NPCNum As Long) As Long
+    GetNPCTarget = MapNpc(MapNum).Npc(NPCNum).Target
+End Function
+
+Public Function GetNPCTargetType(ByVal MapNum As Long, ByVal NPCNum As Long) As Long
+    GetNPCTargetType = MapNpc(MapNum).Npc(NPCNum).TargetType
+End Function
+
+Public Function GetNPCMaxVital(ByVal MapNum As Long, ByVal NPCNum As Long, ByVal Vital As Byte) As Long
+    GetNPCMaxVital = modCombat.GetNPCMaxVital(Map(MapNum).Npc(NPCNum), Vital)
+End Function
+
+Public Function GetNPCVital(ByVal MapNum As Long, ByVal NPCNum As Long, ByVal Vital As Byte) As Long
+    GetNPCVital = MapNpc(MapNum).Npc(NPCNum).Vital(Vital)
+End Function
+
+Public Sub SetNPCVital(ByVal MapNum As Long, ByVal NPCNum As Long, ByVal Vital As Byte, ByVal Num As Long)
+    MapNpc(MapNum).Npc(NPCNum).Vital(Vital) = Num
+End Sub

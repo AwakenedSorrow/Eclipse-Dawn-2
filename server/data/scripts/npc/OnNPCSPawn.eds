@@ -1,0 +1,14 @@
+Sub OnNPCSpawn(Map, NPCNum)
+Dim NpcID
+
+	NpcID = GetOriginNPCNum(Map, NPCNum)
+	
+	Select Case NpcID
+	
+		Case 1 ' Angel
+			' This is simply a demo script, it's commented out by default.
+			' GlobalMsg "An Angel has dawned upon our realm!", BrightCyan
+	
+	End Select
+	
+End Sub

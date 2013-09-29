@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCN.OCX"
-Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "Richtx32.ocx"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "RICHTX32.OCX"
 Begin VB.Form frmMain 
    BackColor       =   &H00E0E0E0&
    BorderStyle     =   1  'Fixed Single
@@ -1930,7 +1930,7 @@ errorhandler:
 End Sub
 
 Private Sub imgButton_Click(index As Integer)
-Dim Buffer As clsBuffer
+Dim buffer As clsBuffer
 Dim i As Long
     
     ' If debug mode, handle error then exit out
@@ -1951,10 +1951,10 @@ Dim i As Long
         Case 2
             If Not picSpells.Visible Then
                 ' send packet
-                Set Buffer = New clsBuffer
-                Buffer.WriteLong CSpells
-                SendData Buffer.ToArray()
-                Set Buffer = Nothing
+                Set buffer = New clsBuffer
+                buffer.WriteLong CSpells
+                SendData buffer.ToArray()
+                Set buffer = Nothing
                 ' show the window
                 picSpells.Visible = True
                 picInventory.Visible = False
@@ -2106,18 +2106,18 @@ errorhandler:
 End Sub
 
 Private Sub imgLeaveShop_Click()
-Dim Buffer As clsBuffer
+Dim buffer As clsBuffer
     
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler
 
-    Set Buffer = New clsBuffer
+    Set buffer = New clsBuffer
     
-    Buffer.WriteLong CCloseShop
+    buffer.WriteLong CCloseShop
     
-    SendData Buffer.ToArray()
+    SendData buffer.ToArray()
     
-    Set Buffer = Nothing
+    Set buffer = Nothing
     
     picCover.Visible = False
     picShop.Visible = False
