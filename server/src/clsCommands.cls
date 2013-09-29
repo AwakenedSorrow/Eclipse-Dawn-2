@@ -24,14 +24,20 @@ Public Function GetVar(File As String, Header As String, Var As String) As Strin
     Dim sSpaces As String   ' Max string length
     Dim szReturn As String  ' Return default value if not found
     szReturn = vbNullString
-    sSpaces = Space$(5000)
-    Call GetPrivateProfileString$(Header, Var, szReturn, sSpaces, Len(sSpaces), File)
+    sSpaces = Space(5000)
+    File = App.Path & "\" & File
+    Call GetPrivateProfileString(Header, Var, szReturn, sSpaces, Len(sSpaces), File)
     GetVar = RTrim$(sSpaces)
     GetVar = Left$(GetVar, Len(GetVar) - 1)
 End Function
 
 Public Sub PutVar(File As String, Header As String, Var As String, Value As String)
-    Call WritePrivateProfileString$(Header, Var, Value, File)
+    Dim fpath As String
+    fpath = App.Path & "\" & File
+    Call WritePrivateProfileString(Header, Var, Value, fpath)
+
+    On Error GoTo 0
+    Exit Sub
 End Sub
 
 Public Sub SetGlobalSpawnPoint(ByVal Map As Long, ByVal X As Long, ByVal Y As Long)
@@ -199,10 +205,8 @@ Public Function GivePlayerItem(ByVal Index As Long, ByVal Item As Long, ByVal Va
     GivePlayerItem = GiveInvItem(Index, Item, Value, True)
 End Function
 
-Public Sub MapMessage(ByVal MapNum As Long, ByVal Text As String, ByVal Color As Byte)
-    If MapNum < 1 Or MapNum > MAX_MAPS Then Exit Sub
-    
-    Call MapMsg(MapNum, Text, Color)
+Public Sub MapMsg(ByVal MapNum As Long, ByVal Text As String, ByVal Color As Byte)
+    modServerTCP.MapMsg MapNum, Text, Color
 End Sub
 
 Public Function GetPlayerX(ByVal Index As Long) As Long
