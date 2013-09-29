@@ -272,7 +272,7 @@ Sub PlayerWarp(ByVal Index As Long, ByVal MapNum As Long, ByVal X As Long, ByVal
         For i = 1 To MAX_MAP_NPCS
 
             If MapNpc(OldMap).Npc(i).Num > 0 Then
-                MapNpc(OldMap).Npc(i).Vital(Vitals.HP) = GetNpcMaxVital(MapNpc(OldMap).Npc(i).Num, Vitals.HP)
+                MapNpc(OldMap).Npc(i).Vital(Vitals.HP) = GetNPCMaxVital(MapNpc(OldMap).Npc(i).Num, Vitals.HP)
             End If
 
         Next
@@ -775,19 +775,52 @@ Function GiveInvItem(ByVal Index As Long, ByVal itemnum As Long, ByVal ItemVal A
         GiveInvItem = False
         Exit Function
     End If
+    
+    If Item(itemnum).Type = ItemTypeCurrency Or ItemVal <= 1 Then
+        ' A single item, or a currency item.
+        i = FindOpenInvSlot(Index, itemnum)
 
-    i = FindOpenInvSlot(Index, itemnum)
-
-    ' Check to see if inventory is full
-    If i <> 0 Then
-        Call SetPlayerInvItemNum(Index, i, itemnum)
-        Call SetPlayerInvItemValue(Index, i, GetPlayerInvItemValue(Index, i) + ItemVal)
-        If sendUpdate Then Call SendInventoryUpdate(Index, i)
-        GiveInvItem = True
+        ' Check to see if inventory is full
+        If i <> 0 Then
+            Call SetPlayerInvItemNum(Index, i, itemnum)
+            Call SetPlayerInvItemValue(Index, i, GetPlayerInvItemValue(Index, i) + ItemVal)
+            If sendUpdate Then Call SendInventoryUpdate(Index, i)
+            GiveInvItem = True
+        Else
+            Call PlayerMsg(Index, "Your inventory is full.", BrightRed)
+            GiveInvItem = False
+        End If
+    
     Else
-        Call PlayerMsg(Index, "Your inventory is full.", BrightRed)
-        GiveInvItem = False
+        ' Multiple Items.
+        If GetOpenInvSlots(Index) < ItemVal Then
+            Call PlayerMsg(Index, "Your inventory is full.", BrightRed)
+            GiveInvItem = False
+        Else
+            For i = 1 To ItemVal
+                i = FindOpenInvSlot(Index, itemnum)
+                
+                Call SetPlayerInvItemNum(Index, i, itemnum)
+                Call SetPlayerInvItemValue(Index, i, 0)
+                If sendUpdate Then Call SendInventoryUpdate(Index, i)
+            Next i
+            
+            GiveInvItem = True
+        End If
+        
     End If
+
+End Function
+
+Public Function GetOpenInvSlots(ByVal Index As Long)
+Dim i As Long
+    
+    GetOpenInvSlots = 0
+    For i = 1 To MAX_INV
+        If Player(Index).Inv(i).Num < 1 Then
+            GetOpenInvSlots = GetOpenInvSlots + 1
+        End If
+    Next
 
 End Function
 

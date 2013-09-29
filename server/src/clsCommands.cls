@@ -197,6 +197,18 @@ Public Sub SetInvItemVal(ByVal Index As Long, ByVal Slot As Long, ByVal Value As
     Player(Index).Inv(Slot).Value = Value
 End Sub
 
+Public Function GetOpenInvSlots(ByVal Index As Long) As Long
+    GetOpenInvSlots = modPlayer.GetOpenInvSlots(Index)
+End Function
+
+Public Function GetInvItemNum(ByVal Index As Long, ByVal Slot As Byte) As Long
+    GetInvItemNum = modPlayer.GetPlayerInvItemNum(Index, Slot)
+End Function
+
+Public Sub SetInvItemNum(ByVal Index As Long, ByVal Slot As Byte, ByVal Num As Long)
+    Player(Index).Inv(Slot).Num = Num
+End Sub
+
 Public Function TakePlayerItem(ByVal Index As Long, ByVal Item As Long, ByVal Value As Long) As Boolean
     TakePlayerItem = TakeInvItem(Index, Item, Value)
 End Function
