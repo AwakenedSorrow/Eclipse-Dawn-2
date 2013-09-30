@@ -342,3 +342,7 @@ End Function
 Public Sub SetNPCVital(ByVal MapNum As Long, ByVal NPCNum As Long, ByVal Vital As Byte, ByVal Num As Long)
     MapNpc(MapNum).Npc(NPCNum).Vital(Vital) = Num
 End Sub
+
+Public Function GetItemType(ByVal ItemNum As Long) As Byte
+    GetItemType = Item(ItemNum).Type
+End Function

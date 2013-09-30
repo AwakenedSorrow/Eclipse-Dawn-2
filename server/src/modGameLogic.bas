@@ -71,38 +71,38 @@ Function FindPlayer(ByVal Name As String) As Long
     FindPlayer = 0
 End Function
 
-Sub SpawnItem(ByVal itemnum As Long, ByVal ItemVal As Long, ByVal MapNum As Long, ByVal X As Long, ByVal Y As Long, Optional ByVal playerName As String = vbNullString)
+Sub SpawnItem(ByVal ItemNum As Long, ByVal ItemVal As Long, ByVal MapNum As Long, ByVal X As Long, ByVal Y As Long, Optional ByVal playerName As String = vbNullString)
     Dim i As Long
 
     ' Check for subscript out of range
-    If itemnum < 1 Or itemnum > MAX_ITEMS Or MapNum <= 0 Or MapNum > MAX_MAPS Then
+    If ItemNum < 1 Or ItemNum > MAX_ITEMS Or MapNum <= 0 Or MapNum > MAX_MAPS Then
         Exit Sub
     End If
 
     ' Find open map item slot
     i = FindOpenMapItemSlot(MapNum)
-    Call SpawnItemSlot(i, itemnum, ItemVal, MapNum, X, Y, playerName)
+    Call SpawnItemSlot(i, ItemNum, ItemVal, MapNum, X, Y, playerName)
 End Sub
 
-Sub SpawnItemSlot(ByVal MapItemSlot As Long, ByVal itemnum As Long, ByVal ItemVal As Long, ByVal MapNum As Long, ByVal X As Long, ByVal Y As Long, Optional ByVal playerName As String = vbNullString, Optional ByVal canDespawn As Boolean = True)
+Sub SpawnItemSlot(ByVal MapItemSlot As Long, ByVal ItemNum As Long, ByVal ItemVal As Long, ByVal MapNum As Long, ByVal X As Long, ByVal Y As Long, Optional ByVal playerName As String = vbNullString, Optional ByVal canDespawn As Boolean = True)
     Dim packet As String
     Dim i As Long
     Dim Buffer As clsBuffer
 
     ' Check for subscript out of range
-    If MapItemSlot <= 0 Or MapItemSlot > MAX_MAP_ITEMS Or itemnum < 0 Or itemnum > MAX_ITEMS Or MapNum <= 0 Or MapNum > MAX_MAPS Then
+    If MapItemSlot <= 0 Or MapItemSlot > MAX_MAP_ITEMS Or ItemNum < 0 Or ItemNum > MAX_ITEMS Or MapNum <= 0 Or MapNum > MAX_MAPS Then
         Exit Sub
     End If
 
     i = MapItemSlot
 
     If i <> 0 Then
-        If itemnum >= 0 And itemnum <= MAX_ITEMS Then
+        If ItemNum >= 0 And ItemNum <= MAX_ITEMS Then
             MapItem(MapNum, i).playerName = playerName
             MapItem(MapNum, i).playerTimer = GetTickCount + ITEM_SPAWN_TIME
             MapItem(MapNum, i).canDespawn = canDespawn
             MapItem(MapNum, i).despawnTimer = GetTickCount + ITEM_DESPAWN_TIME
-            MapItem(MapNum, i).Num = itemnum
+            MapItem(MapNum, i).Num = ItemNum
             MapItem(MapNum, i).Value = ItemVal
             MapItem(MapNum, i).X = X
             MapItem(MapNum, i).Y = Y
@@ -173,8 +173,8 @@ Public Sub SpawnNpc(ByVal MapNPCNum As Long, ByVal MapNum As Long)
         MapNpc(MapNum).Npc(MapNPCNum).Target = 0
         MapNpc(MapNum).Npc(MapNPCNum).TargetType = 0 ' clear
         
-        MapNpc(MapNum).Npc(MapNPCNum).Vital(Vitals.HP) = GetNpcMaxVital(NPCNum, Vitals.HP)
-        MapNpc(MapNum).Npc(MapNPCNum).Vital(Vitals.MP) = GetNpcMaxVital(NPCNum, Vitals.MP)
+        MapNpc(MapNum).Npc(MapNPCNum).Vital(Vitals.HP) = GetNPCMaxVital(NPCNum, Vitals.HP)
+        MapNpc(MapNum).Npc(MapNPCNum).Vital(Vitals.MP) = GetNPCMaxVital(NPCNum, Vitals.MP)
         
         MapNpc(MapNum).Npc(MapNPCNum).Dir = Int(Rnd * 4)
         

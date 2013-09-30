@@ -81,6 +81,34 @@ Public Const Armor = 2
 Public Const Helmet = 3
 Public Const Shield = 4
 
+' ***
+' Item Type Constants
+' ***
+Public Const ItemTypeNone = 0
+Public Const ItemTypeWeapon = 1
+Public Const ItemTypeArmor = 2
+Public Const ItemTypeHelmet = 3
+Public Const ItemTypeShield = 4
+Public Const ItemTypeConsume = 5
+Public Const ItemTypeKey = 6
+Public Const ItemTypeCurrency = 7
+Public Const ItemTypeSpell = 8
+Public Const ItemTypeScripted = 9
+
+' ***
+' Limit Constants
+' ***
+' Note that changing the values below will not impact the values inside the server.
+' You'll need to adjust both accordingly, these are just here for the ease of access.
+Public Const MAX_INV = 35
+Public Const MAX_LEVELS = 100
+Public Const MAX_MAP_NPCS = 30
+Public Const MAX_BANK = 99
+Public Const MAX_PLAYER_SPELLS = 35
+Public Const MAX_ITEMS = 255
+Public Const MAX_ANIMATIONS = 255
+Public Const MAX_SPELLS = 255
+
 ' *****************************************************************************
 ' *****************************************************************************
 
