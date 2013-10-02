@@ -65,7 +65,7 @@ Public Sub ShowServerText(ByVal Text As String)
 End Sub
 
 Public Sub GlobalMsg(ByVal Text As String, ByVal Color As Byte)
-    Call modServerTCP.GlobalMsg(Text, Color)
+    Call modServerClientTCP.GlobalMsg(Text, Color)
     Call TextAdd("[SCRIPT] Global Message: " & Trim$(Text))
 End Sub
 

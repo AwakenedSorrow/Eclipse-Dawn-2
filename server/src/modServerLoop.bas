@@ -63,6 +63,11 @@ Sub ServerLoop()
                     Call CloseSocket(i)
                 End If
             Next
+            For i = 1 To MAX_EDITORS
+                If frmServer.EditorSocket(i).State > sckConnected Then
+                    Call CloseEditorSocket(i)
+                End If
+            Next
             UpdateMapLogic
             tmr500 = GetTickCount + 500
         End If
@@ -555,8 +560,8 @@ Private Sub UpdateMapLogic()
                             MapNpc(MapNum).Npc(X).Vital(Vitals.HP) = MapNpc(MapNum).Npc(X).Vital(Vitals.HP) + GetNpcVitalRegen(NPCNum, Vitals.HP)
     
                             ' Check if they have more then they should and if so just set it to max
-                            If MapNpc(MapNum).Npc(X).Vital(Vitals.HP) > GetNpcMaxVital(NPCNum, Vitals.HP) Then
-                                MapNpc(MapNum).Npc(X).Vital(Vitals.HP) = GetNpcMaxVital(NPCNum, Vitals.HP)
+                            If MapNpc(MapNum).Npc(X).Vital(Vitals.HP) > GetNPCMaxVital(NPCNum, Vitals.HP) Then
+                                MapNpc(MapNum).Npc(X).Vital(Vitals.HP) = GetNPCMaxVital(NPCNum, Vitals.HP)
                             End If
                         End If
                     End If

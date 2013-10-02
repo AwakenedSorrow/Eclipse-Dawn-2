@@ -21,11 +21,28 @@ Public Resource(1 To MAX_RESOURCES) As ResourceRec
 Public Animation(1 To MAX_ANIMATIONS) As AnimationRec
 Public Party(1 To MAX_PARTYS) As PartyRec
 Public Options As OptionsRec
+Public Editor(MAX_EDITORS) As EditorRec
+Public TempEditor(MAX_EDITORS) As TempEditorRec
+
+Private Type EditorRec
+    Username As String
+    Password As String
+End Type
+
+Private Type TempEditorRec
+    InEditor As Byte
+    OnIndex As Long
+    DataTimer As Long
+    DataBytes As Long
+    DataPackets As Long
+    Buffer As clsBuffer
+End Type
 
 Private Type OptionsRec
     Game_Name As String
     MOTD As String
     Port As Long
+    EditorPort As Long
     Website As String
     Scripting As Byte
 End Type
@@ -96,7 +113,7 @@ End Type
 Public Type SpellBufferRec
     Spell As Long
     Timer As Long
-    target As Long
+    Target As Long
     tType As Byte
 End Type
 
@@ -116,8 +133,8 @@ Public Type TempPlayerRec
     DataTimer As Long
     DataBytes As Long
     DataPackets As Long
-    targetType As Byte
-    target As Long
+    TargetType As Byte
+    Target As Long
     GettingMap As Byte
     SpellCD(1 To MAX_PLAYER_SPELLS) As Long
     InShop As Long
@@ -265,8 +282,8 @@ End Type
 
 Private Type MapNpcRec
     Num As Long
-    target As Long
-    targetType As Byte
+    Target As Long
+    TargetType As Byte
     Vital(1 To Vitals.Vital_Count - 1) As Long
     X As Byte
     Y As Byte

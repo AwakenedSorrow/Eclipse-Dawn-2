@@ -14,6 +14,7 @@ Public Sub InitServer()
     Dim time1 As Long
     Dim time2 As Long
     Call InitMessages
+    Call InitEditorMessages
     time1 = GetTickCount
     frmServer.Show
     ' Initialize the random-number generator
@@ -42,6 +43,7 @@ Public Sub InitServer()
         Options.MOTD = "Welcome to Eclipse Origins."
         Options.Website = "http://www.touchofdeathforums.com/smf/"
         Options.Scripting = 1
+        Options.EditorPort = 8001
         SaveOptions
     Else
         LoadOptions
@@ -67,6 +69,10 @@ Public Sub InitServer()
     frmServer.Socket(0).RemoteHost = frmServer.Socket(0).LocalIP
     frmServer.Socket(0).LocalPort = Options.Port
     
+    ' And the editor listening socket
+    frmServer.EditorSocket(0).RemoteHost = frmServer.EditorSocket(0).LocalIP
+    frmServer.EditorSocket(0).LocalPort = Options.EditorPort
+    
     ' Init all the player sockets
     Call SetStatus("Initializing player array...")
 
@@ -74,7 +80,14 @@ Public Sub InitServer()
         Call ClearPlayer(i)
         Load frmServer.Socket(i)
     Next
+    
+    Call SetStatus("Initializing editor array...")
 
+    For i = 1 To MAX_EDITORS
+        Call ClearEditor(i)
+        Load frmServer.EditorSocket(i)
+    Next
+    
     ' Serves as a constructor
     Call ClearGameData
     Call LoadGameData
@@ -107,6 +120,7 @@ Public Sub InitServer()
     
     ' Start listening
     frmServer.Socket(0).Listen
+    frmServer.EditorSocket(0).Listen
     Call UpdateCaption
     time2 = GetTickCount
     Call SetStatus("Initialization complete. Server loaded in " & time2 - time1 & "ms.")

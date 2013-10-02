@@ -1,7 +1,7 @@
 VERSION 5.00
-Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
-Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "TABCTL32.OCX"
-Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL.OCX"
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCN.OCX"
+Object = "{BDC217C8-ED16-11CD-956C-0000C04E4C0A}#1.1#0"; "Tabctl32.ocx"
+Object = "{831FDD16-0C5C-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCTL32.OCX"
 Begin VB.Form frmServer 
    BorderStyle     =   1  'Fixed Single
    Caption         =   "Loading..."
@@ -273,6 +273,14 @@ Begin VB.Form frmServer
          Width           =   1815
       End
    End
+   Begin MSWinsockLib.Winsock EditorSocket 
+      Index           =   0
+      Left            =   480
+      Top             =   0
+      _ExtentX        =   741
+      _ExtentY        =   741
+      _Version        =   393216
+   End
    Begin VB.Menu mnuKick 
       Caption         =   "&Kick"
       Visible         =   0   'False
@@ -316,6 +324,24 @@ Private Sub cmdReloadScripts_Click()
 
     Call TextAdd("[SCRIPT] Scripts reloaded.")
     Call AdminMsg("The scripts were reloaded by the server.", Cyan)
+End Sub
+
+Private Sub EditorSocket_Close(Index As Integer)
+    Call CloseEditorSocket(Index)
+End Sub
+
+Private Sub EditorSocket_ConnectionRequest(Index As Integer, ByVal requestID As Long)
+    Call AcceptEditorConnection(Index, requestID)
+End Sub
+
+Private Sub EditorSocket_Accept(Index As Integer, ByVal requestID As Long)
+    Call AcceptEditorConnection(Index, requestID)
+End Sub
+
+Private Sub EditorSocket_DataArrival(Index As Integer, ByVal bytesTotal As Long)
+    If IsEditorConnected(Index) Then
+        Call IncomingEditorData(Index, bytesTotal)
+    End If
 End Sub
 
 Private Sub lblCPSLock_Click()

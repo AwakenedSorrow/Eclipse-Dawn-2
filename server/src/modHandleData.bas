@@ -1,4 +1,4 @@
-Attribute VB_Name = "modHandleData"
+Attribute VB_Name = "modHandleClientData"
 Option Explicit
 
 Private Function GetAddress(FunAddr As Long) As Long
@@ -1389,7 +1389,7 @@ End Sub
 ' :: Save npc packet ::
 ' :::::::::::::::::::::
 Private Sub HandleSaveNpc(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim npcNum As Long
+    Dim NPCNum As Long
     Dim Buffer As clsBuffer
     Dim NPCSize As Long
     Dim NPCData() As Byte
@@ -1401,21 +1401,21 @@ Private Sub HandleSaveNpc(ByVal Index As Long, ByRef Data() As Byte, ByVal Start
 
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
-    npcNum = Buffer.ReadLong
+    NPCNum = Buffer.ReadLong
 
     ' Prevent hacking
-    If npcNum < 0 Or npcNum > MAX_NPCS Then
+    If NPCNum < 0 Or NPCNum > MAX_NPCS Then
         Exit Sub
     End If
 
-    NPCSize = LenB(Npc(npcNum))
+    NPCSize = LenB(Npc(NPCNum))
     ReDim NPCData(NPCSize - 1)
     NPCData = Buffer.ReadBytes(NPCSize)
-    CopyMemory ByVal VarPtr(Npc(npcNum)), ByVal VarPtr(NPCData(0)), NPCSize
+    CopyMemory ByVal VarPtr(Npc(NPCNum)), ByVal VarPtr(NPCData(0)), NPCSize
     ' Save it
-    Call SendUpdateNpcToAll(npcNum)
-    Call SaveNpc(npcNum)
-    Call AddLog(GetPlayerName(Index) & " saved Npc #" & npcNum & ".", ADMIN_LOG)
+    Call SendUpdateNpcToAll(NPCNum)
+    Call SaveNpc(NPCNum)
+    Call AddLog(GetPlayerName(Index) & " saved Npc #" & NPCNum & ".", ADMIN_LOG)
 End Sub
 
 ' :::::::::::::::::::::::::::::
@@ -1542,7 +1542,7 @@ End Sub
 ' :: Save spell packet ::
 ' :::::::::::::::::::::::
 Sub HandleSaveSpell(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-    Dim spellnum As Long
+    Dim SpellNum As Long
     Dim Buffer As clsBuffer
     Dim SpellSize As Long
     Dim SpellData() As Byte
@@ -1554,21 +1554,21 @@ Sub HandleSaveSpell(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr A
 
     Set Buffer = New clsBuffer
     Buffer.WriteBytes Data()
-    spellnum = Buffer.ReadLong
+    SpellNum = Buffer.ReadLong
 
     ' Prevent hacking
-    If spellnum < 0 Or spellnum > MAX_SPELLS Then
+    If SpellNum < 0 Or SpellNum > MAX_SPELLS Then
         Exit Sub
     End If
 
-    SpellSize = LenB(Spell(spellnum))
+    SpellSize = LenB(Spell(SpellNum))
     ReDim SpellData(SpellSize - 1)
     SpellData = Buffer.ReadBytes(SpellSize)
-    CopyMemory ByVal VarPtr(Spell(spellnum)), ByVal VarPtr(SpellData(0)), SpellSize
+    CopyMemory ByVal VarPtr(Spell(SpellNum)), ByVal VarPtr(SpellData(0)), SpellSize
     ' Save it
-    Call SendUpdateSpellToAll(spellnum)
-    Call SaveSpell(spellnum)
-    Call AddLog(GetPlayerName(Index) & " saved Spell #" & spellnum & ".", ADMIN_LOG)
+    Call SendUpdateSpellToAll(SpellNum)
+    Call SaveSpell(SpellNum)
+    Call AddLog(GetPlayerName(Index) & " saved Spell #" & SpellNum & ".", ADMIN_LOG)
 End Sub
 
 ' :::::::::::::::::::::::
@@ -1675,14 +1675,14 @@ Sub HandleSearch(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As L
                 If GetPlayerX(i) = X Then
                     If GetPlayerY(i) = Y Then
                         ' Change target
-                        If TempPlayer(Index).targetType = TargetTypePlayer And TempPlayer(Index).target = i Then
-                            TempPlayer(Index).target = 0
-                            TempPlayer(Index).targetType = TargetTypeNone
+                        If TempPlayer(Index).TargetType = TargetTypePlayer And TempPlayer(Index).Target = i Then
+                            TempPlayer(Index).Target = 0
+                            TempPlayer(Index).TargetType = TargetTypeNone
                             ' send target to player
                             SendTarget Index
                         Else
-                            TempPlayer(Index).target = i
-                            TempPlayer(Index).targetType = TargetTypePlayer
+                            TempPlayer(Index).Target = i
+                            TempPlayer(Index).TargetType = TargetTypePlayer
                             ' send target to player
                             SendTarget Index
                         End If
@@ -1698,16 +1698,16 @@ Sub HandleSearch(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As L
         If MapNpc(GetPlayerMap(Index)).Npc(i).Num > 0 Then
             If MapNpc(GetPlayerMap(Index)).Npc(i).X = X Then
                 If MapNpc(GetPlayerMap(Index)).Npc(i).Y = Y Then
-                    If TempPlayer(Index).target = i And TempPlayer(Index).targetType = TargetTypeNPC Then
+                    If TempPlayer(Index).Target = i And TempPlayer(Index).TargetType = TargetTypeNPC Then
                         ' Change target
-                        TempPlayer(Index).target = 0
-                        TempPlayer(Index).targetType = TargetTypeNone
+                        TempPlayer(Index).Target = 0
+                        TempPlayer(Index).TargetType = TargetTypeNone
                         ' send target to player
                         SendTarget Index
                     Else
                         ' Change target
-                        TempPlayer(Index).target = i
-                        TempPlayer(Index).targetType = TargetTypeNPC
+                        TempPlayer(Index).Target = i
+                        TempPlayer(Index).TargetType = TargetTypeNPC
                         ' send target to player
                         SendTarget Index
                         Exit Sub
@@ -1949,7 +1949,7 @@ End Sub
 Sub HandleSellItem(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     Dim Buffer As clsBuffer
     Dim InvSlot As Long
-    Dim itemnum As Long
+    Dim ItemNum As Long
     Dim price As Long
     Dim multiplier As Double
     Dim amount As Long
@@ -1966,11 +1966,11 @@ Sub HandleSellItem(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As
     If GetPlayerInvItemNum(Index, InvSlot) < 1 Or GetPlayerInvItemNum(Index, InvSlot) > MAX_ITEMS Then Exit Sub
     
     ' seems to be valid
-    itemnum = GetPlayerInvItemNum(Index, InvSlot)
+    ItemNum = GetPlayerInvItemNum(Index, InvSlot)
     
     ' work out price
     multiplier = Shop(TempPlayer(Index).InShop).BuyRate / 100
-    price = Item(itemnum).price * multiplier
+    price = Item(ItemNum).price * multiplier
     
     ' item has cost?
     If price <= 0 Then
@@ -1980,7 +1980,7 @@ Sub HandleSellItem(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As
     End If
 
     ' take item and give gold
-    TakeInvItem Index, itemnum, 1
+    TakeInvItem Index, ItemNum, 1
     GiveInvItem Index, 1, price
     
     ' send confirmation message & reset their shop action
@@ -2076,10 +2076,10 @@ End Sub
 Sub HandleTradeRequest(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
 Dim tradeTarget As Long, sX As Long, sY As Long, tX As Long, tY As Long
     ' can't trade npcs
-    If TempPlayer(Index).targetType <> TargetTypePlayer Then Exit Sub
+    If TempPlayer(Index).TargetType <> TargetTypePlayer Then Exit Sub
 
     ' find the target
-    tradeTarget = TempPlayer(Index).target
+    tradeTarget = TempPlayer(Index).Target
     
     ' make sure we don't error
     If tradeTarget <= 0 Or tradeTarget > MAX_PLAYERS Then Exit Sub
@@ -2163,7 +2163,7 @@ Sub HandleAcceptTrade(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr
     Dim i As Long
     Dim tmpTradeItem(1 To MAX_INV) As PlayerInvRec
     Dim tmpTradeItem2(1 To MAX_INV) As PlayerInvRec
-    Dim itemnum As Long
+    Dim ItemNum As Long
     
     TempPlayer(Index).AcceptTrade = True
     
@@ -2180,10 +2180,10 @@ Sub HandleAcceptTrade(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr
     For i = 1 To MAX_INV
         ' player
         If TempPlayer(Index).TradeOffer(i).Num > 0 Then
-            itemnum = Player(Index).Inv(TempPlayer(Index).TradeOffer(i).Num).Num
-            If itemnum > 0 Then
+            ItemNum = Player(Index).Inv(TempPlayer(Index).TradeOffer(i).Num).Num
+            If ItemNum > 0 Then
                 ' store temp
-                tmpTradeItem(i).Num = itemnum
+                tmpTradeItem(i).Num = ItemNum
                 tmpTradeItem(i).Value = TempPlayer(Index).TradeOffer(i).Value
                 ' take item
                 TakeInvSlot Index, TempPlayer(Index).TradeOffer(i).Num, tmpTradeItem(i).Value
@@ -2191,10 +2191,10 @@ Sub HandleAcceptTrade(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr
         End If
         ' target
         If TempPlayer(tradeTarget).TradeOffer(i).Num > 0 Then
-            itemnum = GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)
-            If itemnum > 0 Then
+            ItemNum = GetPlayerInvItemNum(tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num)
+            If ItemNum > 0 Then
                 ' store temp
-                tmpTradeItem2(i).Num = itemnum
+                tmpTradeItem2(i).Num = ItemNum
                 tmpTradeItem2(i).Value = TempPlayer(tradeTarget).TradeOffer(i).Value
                 ' take item
                 TakeInvSlot tradeTarget, TempPlayer(tradeTarget).TradeOffer(i).Num, tmpTradeItem2(i).Value
@@ -2265,7 +2265,7 @@ Sub HandleTradeItem(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr A
     Dim InvSlot As Long
     Dim amount As Long
     Dim EmptySlot As Long
-    Dim itemnum As Long
+    Dim ItemNum As Long
     Dim i As Long
     
     Set Buffer = New clsBuffer
@@ -2278,15 +2278,15 @@ Sub HandleTradeItem(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr A
     
     If InvSlot <= 0 Or InvSlot > MAX_INV Then Exit Sub
     
-    itemnum = GetPlayerInvItemNum(Index, InvSlot)
-    If itemnum <= 0 Or itemnum > MAX_ITEMS Then Exit Sub
+    ItemNum = GetPlayerInvItemNum(Index, InvSlot)
+    If ItemNum <= 0 Or ItemNum > MAX_ITEMS Then Exit Sub
     
     ' make sure they have the amount they offer
     If amount < 0 Or amount > GetPlayerInvItemValue(Index, InvSlot) Then
         Exit Sub
     End If
 
-    If Item(itemnum).Type = ItemTypeCurrency Then
+    If Item(ItemNum).Type = ItemTypeCurrency Then
         ' check if already offering same currency item
         For i = 1 To MAX_INV
             If TempPlayer(Index).TradeOffer(i).Num = InvSlot Then
@@ -2434,15 +2434,15 @@ End Sub
 
 Sub HandlePartyRequest(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
     ' make sure it's a valid target
-    If TempPlayer(Index).targetType <> TargetTypePlayer Then Exit Sub
-    If TempPlayer(Index).target = Index Then Exit Sub
+    If TempPlayer(Index).TargetType <> TargetTypePlayer Then Exit Sub
+    If TempPlayer(Index).Target = Index Then Exit Sub
     
     ' make sure they're connected and on the same map
-    If Not IsConnected(TempPlayer(Index).target) Or Not IsPlaying(TempPlayer(Index).target) Then Exit Sub
-    If GetPlayerMap(TempPlayer(Index).target) <> GetPlayerMap(Index) Then Exit Sub
+    If Not IsConnected(TempPlayer(Index).Target) Or Not IsPlaying(TempPlayer(Index).Target) Then Exit Sub
+    If GetPlayerMap(TempPlayer(Index).Target) <> GetPlayerMap(Index) Then Exit Sub
     
     ' init the request
-    Party_Invite Index, TempPlayer(Index).target
+    Party_Invite Index, TempPlayer(Index).Target
 End Sub
 
 Sub HandleAcceptParty(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)

@@ -1,4 +1,4 @@
-Attribute VB_Name = "modServerTCP"
+Attribute VB_Name = "modServerClientTCP"
 Option Explicit
 
 Sub UpdateCaption()
@@ -982,37 +982,37 @@ Sub SendPlayerXYToMap(ByVal Index As Long)
     Set Buffer = Nothing
 End Sub
 
-Sub SendUpdateItemToAll(ByVal itemnum As Long)
+Sub SendUpdateItemToAll(ByVal ItemNum As Long)
     Dim packet As String
     Dim Buffer As clsBuffer
     Dim ItemSize As Long
     Dim ItemData() As Byte
     Set Buffer = New clsBuffer
-    ItemSize = LenB(Item(itemnum))
+    ItemSize = LenB(Item(ItemNum))
     
     ReDim ItemData(ItemSize - 1)
     
-    CopyMemory ItemData(0), ByVal VarPtr(Item(itemnum)), ItemSize
+    CopyMemory ItemData(0), ByVal VarPtr(Item(ItemNum)), ItemSize
     
     Buffer.WriteLong SUpdateItem
-    Buffer.WriteLong itemnum
+    Buffer.WriteLong ItemNum
     Buffer.WriteBytes ItemData
     
     SendDataToAll Buffer.ToArray()
     Set Buffer = Nothing
 End Sub
 
-Sub SendUpdateItemTo(ByVal Index As Long, ByVal itemnum As Long)
+Sub SendUpdateItemTo(ByVal Index As Long, ByVal ItemNum As Long)
     Dim packet As String
     Dim Buffer As clsBuffer
     Dim ItemSize As Long
     Dim ItemData() As Byte
     Set Buffer = New clsBuffer
-    ItemSize = LenB(Item(itemnum))
+    ItemSize = LenB(Item(ItemNum))
     ReDim ItemData(ItemSize - 1)
-    CopyMemory ItemData(0), ByVal VarPtr(Item(itemnum)), ItemSize
+    CopyMemory ItemData(0), ByVal VarPtr(Item(ItemNum)), ItemSize
     Buffer.WriteLong SUpdateItem
-    Buffer.WriteLong itemnum
+    Buffer.WriteLong ItemNum
     Buffer.WriteBytes ItemData
     SendDataTo Index, Buffer.ToArray()
     Set Buffer = Nothing
@@ -1298,12 +1298,12 @@ Sub SendDoorAnimation(ByVal MapNum As Long, ByVal X As Long, ByVal Y As Long)
     Set Buffer = Nothing
 End Sub
 
-Sub SendActionMsg(ByVal MapNum As Long, ByVal message As String, ByVal Color As Long, ByVal MsgType As Long, ByVal X As Long, ByVal Y As Long, Optional PlayerOnlyNum As Long = 0)
+Sub SendActionMsg(ByVal MapNum As Long, ByVal Message As String, ByVal Color As Long, ByVal MsgType As Long, ByVal X As Long, ByVal Y As Long, Optional PlayerOnlyNum As Long = 0)
     Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
     Buffer.WriteLong SActionMsg
-    Buffer.WriteString message
+    Buffer.WriteString Message
     Buffer.WriteLong Color
     Buffer.WriteLong MsgType
     Buffer.WriteLong X
@@ -1370,7 +1370,7 @@ Sub SendClearSpellBuffer(ByVal Index As Long)
     Set Buffer = Nothing
 End Sub
 
-Sub SayMsg_Map(ByVal MapNum As Long, ByVal Index As Long, ByVal message As String, ByVal saycolour As Long)
+Sub SayMsg_Map(ByVal MapNum As Long, ByVal Index As Long, ByVal Message As String, ByVal saycolour As Long)
     Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
@@ -1378,7 +1378,7 @@ Sub SayMsg_Map(ByVal MapNum As Long, ByVal Index As Long, ByVal message As Strin
     Buffer.WriteString GetPlayerName(Index)
     Buffer.WriteLong GetPlayerAccess(Index)
     Buffer.WriteLong GetPlayerPK(Index)
-    Buffer.WriteString message
+    Buffer.WriteString Message
     Buffer.WriteString "[Map] "
     Buffer.WriteLong saycolour
     
@@ -1387,7 +1387,7 @@ Sub SayMsg_Map(ByVal MapNum As Long, ByVal Index As Long, ByVal message As Strin
     Set Buffer = Nothing
 End Sub
 
-Sub SayMsg_Global(ByVal Index As Long, ByVal message As String, ByVal saycolour As Long)
+Sub SayMsg_Global(ByVal Index As Long, ByVal Message As String, ByVal saycolour As Long)
     Dim Buffer As clsBuffer
     
     Set Buffer = New clsBuffer
@@ -1395,7 +1395,7 @@ Sub SayMsg_Global(ByVal Index As Long, ByVal message As String, ByVal saycolour 
     Buffer.WriteString GetPlayerName(Index)
     Buffer.WriteLong GetPlayerAccess(Index)
     Buffer.WriteLong GetPlayerPK(Index)
-    Buffer.WriteString message
+    Buffer.WriteString Message
     Buffer.WriteString "[Global] "
     Buffer.WriteLong saycolour
     

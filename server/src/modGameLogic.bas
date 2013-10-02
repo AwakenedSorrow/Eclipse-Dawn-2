@@ -16,6 +16,21 @@ Function FindOpenPlayerSlot() As Long
 
 End Function
 
+Function FindOpenEditorSlot() As Long
+    Dim i As Long
+    FindOpenEditorSlot = 0
+
+    For i = 1 To MAX_EDITORS
+
+        If Not IsEditorConnected(i) Then
+            FindOpenPlayerSlot = i
+            Exit Function
+        End If
+
+    Next
+
+End Function
+
 Function FindOpenMapItemSlot(ByVal MapNum As Long) As Long
     Dim i As Long
     FindOpenMapItemSlot = 0

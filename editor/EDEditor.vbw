@@ -1,0 +1,15 @@
+frmLogin = 105, 235, 1442, 925, , 26, 26, 1363, 716, C
+modGeneral = 156, 340, 1493, 1030, 
+frmLoad = 130, 130, 1467, 820, , 87, 161, 1424, 851, C
+modGlobals = 684, 194, 2021, 884, 
+modDatabase = 141, 146, 1478, 836, 
+modTypes = 188, 280, 1525, 970, 
+modConstants = 573, 233, 1910, 923, 
+modEditorTCP = 89, 168, 1426, 858, 
+modHandleData = 148, 111, 1485, 801, 
+modEnumerations = 592, 172, 1929, 862, 
+clsBuffer = 104, 104, 1534, 733, 
+modAudio = 104, 104, 1441, 794, 
+modBASS = 0, 0, 0, 0, C
+modDirectX8 = 247, 158, 1584, 848, 
+frmEditor = 0, 0, 0, 0, C, 234, 234, 1571, 924, C
