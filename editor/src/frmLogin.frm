@@ -88,6 +88,8 @@ Private Sub cmdLogin_Click()
     End If
     
     ' Handle the actual log in sequence from here.
+    Load frmEditor
+    frmEditor.Visible = True
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
