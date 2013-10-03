@@ -194,7 +194,7 @@ Dim i As Long
     
     ' Clear the textures
     For i = 0 To TextureNum
-        Set D3DT_TEXTURE(i).Texture = Nothing
+        If i > 0 Then Set D3DT_TEXTURE(i).Texture = Nothing
     Next
     
     ' Clear the master object

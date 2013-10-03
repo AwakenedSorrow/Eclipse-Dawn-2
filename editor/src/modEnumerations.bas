@@ -16,3 +16,22 @@ Public Enum CE_EditorPackets
 End Enum
 
 Public HandleDataSub(SE_MSG_COUNT) As Long
+
+Public Enum EditorRights
+    CanEditMaps = 1
+    CanUseChat
+    CanOpenDatabase
+    CanChangeOwnDetails
+    CanEditNPC
+    CanEditMap
+    CanEditShop
+    CanEditItem
+    CanEditSpell
+    CanEditResource
+    CanEditPlayer
+    CanEditAnimation
+    CanEditScript
+    CanEditEditor
+    ' Always below everything else!
+    Editor_MaxRights
+End Enum

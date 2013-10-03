@@ -2,6 +2,7 @@ Attribute VB_Name = "modTypes"
 Option Explicit
 
 Public Options As OptionsRec
+Public Editor As EditorRec
 
 '  **************************************
 '  **************************************
@@ -17,5 +18,12 @@ Type OptionsRec
     Username As String
     
     ' Debug
-    Device As Byte
+    device As Byte
+End Type
+
+Private Type EditorRec
+    Username As String
+    Password As String
+    
+    HasRight(Editor_MaxRights) As Byte
 End Type

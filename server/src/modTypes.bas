@@ -22,11 +22,13 @@ Public Animation(1 To MAX_ANIMATIONS) As AnimationRec
 Public Party(1 To MAX_PARTYS) As PartyRec
 Public Options As OptionsRec
 Public Editor(MAX_EDITORS) As EditorRec
-Public TempEditor(MAX_EDITORS) As TempEditorRec
+Public TempEditor(1 To MAX_EDITORS) As TempEditorRec
 
 Private Type EditorRec
     Username As String
     Password As String
+    
+    HasRight(Editor_MaxRights) As Byte
 End Type
 
 Private Type TempEditorRec

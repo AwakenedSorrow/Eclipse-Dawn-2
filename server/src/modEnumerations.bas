@@ -353,3 +353,22 @@ Public Enum Colors
     DarkBrown
     Orange
 End Enum
+
+Public Enum EditorRights
+    CanEditMaps = 1
+    CanUseChat
+    CanOpenDatabase
+    CanChangeOwnDetails
+    CanEditNPC
+    CanEditMap
+    CanEditShop
+    CanEditItem
+    CanEditSpell
+    CanEditResource
+    CanEditPlayer
+    CanEditAnimation
+    CanEditScript
+    CanEditEditor
+    ' Always below everything else!
+    Editor_MaxRights
+End Enum
