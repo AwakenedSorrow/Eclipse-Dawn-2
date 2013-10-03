@@ -275,9 +275,6 @@ End Sub
 
 Public Sub SetTexture(ByVal Texture As Long)
 
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-
     If Texture <> CurrentTexture Then
         ' Find the texture and make sure ti exists
         If Texture > UBound(D3DT_TEXTURE) Then Texture = UBound(D3DT_TEXTURE)
@@ -307,12 +304,13 @@ Dim i As Long
         NumTileSets = NumTileSets + 1
     Loop
     NumTileSets = NumTileSets - 1
+    ReDim Options.TileSetName(1 To NumTileSets)
 
     ' Cache the Characters
     NumCharacters = 1
     Do While FileExist(App.Path & GFX_PATH & "characters\" & NumCharacters & GFX_EXT, True)
         ReDim Preserve Tex_Character(0 To NumCharacters)
-        Tex_Character(NumCharacters) = SetTexturePath(App.Path & GFX_PATH & "characters\" & NumCharacters & GFX_EXT)
+        Tex_Character(NumCharacters) = SetTexturePath(App.Path & GFX_PATH & "Characters\" & NumCharacters & GFX_EXT)
         NumCharacters = NumCharacters + 1
     Loop
     NumCharacters = NumCharacters - 1
@@ -390,10 +388,7 @@ End Sub
 Public Sub RenderGraphic(ByVal Texture As Long, X As Long, Y As Long, DW As Long, DH As Long, Optional TW As Long, Optional TH As Long, _
 Optional OX As Long, Optional OY As Long, Optional R As Byte = 255, Optional G As Byte = 255, Optional B As Byte = 255, Optional A As Byte = 255)
 Dim Box(0 To 3) As TLVERTEX, i As Long, TextureWidth As Long, TextureHeight As Long
-    
-    ' If debug mode, handle error then exit out
-    If Options.Debug = 1 Then On Error GoTo errorhandler
-    
+        
     ' set the texture
     Call SetTexture(Texture)
     
@@ -434,11 +429,5 @@ Dim Box(0 To 3) As TLVERTEX, i As Long, TextureWidth As Long, TextureHeight As L
     Call D3DDevice8.DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, Box(0), FVF_Size)
     D3DT_TEXTURE(Texture).UnloadTimer = GetTickCount
     
-' Do not put any code beyond this line, this is the error handler.
-    Exit Sub
-errorhandler:
-    HandleError "RenderGraphic", "modDirectX8", Err.Number, Err.Description, Err.Source, Err.HelpContext
-    Err.Clear
-    Exit Sub
 End Sub
 

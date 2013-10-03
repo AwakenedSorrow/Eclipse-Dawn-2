@@ -126,3 +126,21 @@ Public Sub SendEditorVersionOK(ByVal Index As Byte)
     
     Set Buffer = Nothing
 End Sub
+
+Public Sub SendEditorLoginOK(ByVal Index As Byte)
+Dim Buffer As clsBuffer, i As Long
+
+    Set Buffer = New clsBuffer
+    
+    Buffer.WriteLong SE_LoginOK
+    
+    Buffer.WriteString Editor(Index).Username
+    For i = 1 To Editor_MaxRights - 1
+        Buffer.WriteByte Editor(Index).HasRight(i)
+    Next i
+    
+    SendEditorDataTo Index, Buffer.ToArray()
+    
+    Set Buffer = Nothing
+    
+End Sub

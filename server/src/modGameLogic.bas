@@ -23,7 +23,7 @@ Function FindOpenEditorSlot() As Long
     For i = 1 To MAX_EDITORS
 
         If Not IsEditorConnected(i) Then
-            FindOpenPlayerSlot = i
+            FindOpenEditorSlot = i
             Exit Function
         End If
 

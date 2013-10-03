@@ -74,15 +74,15 @@ Dim pLength As Long
     
     EditorBuffer.WriteBytes Buffer()
     
-    If EditorBuffer.length >= 4 Then pLength = EditorBuffer.ReadLong(False)
-    Do While pLength > 0 And pLength <= EditorBuffer.length - 4
-        If pLength <= EditorBuffer.length - 4 Then
+    If EditorBuffer.Length >= 4 Then pLength = EditorBuffer.ReadLong(False)
+    Do While pLength > 0 And pLength <= EditorBuffer.Length - 4
+        If pLength <= EditorBuffer.Length - 4 Then
             EditorBuffer.ReadLong
             HandleData EditorBuffer.ReadBytes(pLength)
         End If
 
         pLength = 0
-        If EditorBuffer.length >= 4 Then pLength = EditorBuffer.ReadLong(False)
+        If EditorBuffer.Length >= 4 Then pLength = EditorBuffer.ReadLong(False)
     Loop
     EditorBuffer.Trim
     DoEvents
@@ -103,7 +103,20 @@ End Sub
 
 Public Sub SendSaveDeveloper()
 Dim Buffer As clsBuffer, i As Long, Hash As String
-
+    
+    ' Do we have permissions to do this?
+    If LCase(Trim$(frmDatabase.txtUsername.Text)) = Trim$(Editor.Username) Then
+        If Editor.HasRight(CanEditOwnDetails) <> 1 Then
+            MsgBox "Insufficient Permissions, can not change own details.", vbInformation
+            Exit Sub
+        End If
+    Else
+        If Editor.HasRight(CanEditDeveloper) <> 1 Then
+            MsgBox "Insufficient Permissions, can not edit other developers.", vbInformation
+            Exit Sub
+        End If
+    End If
+    
     Set Buffer = New clsBuffer
     Buffer.WriteLong CE_SaveDeveloper
     
@@ -136,7 +149,7 @@ Dim Buffer As clsBuffer, i As Long, Hash As String
     i = InitCrc32()
     i = AddCrc32(frmLogin.txtPassword.Text, i)
     Hash = CStr(i)
-    frmLogin.txtPassword.Text = Hash
+    frmLogin.txtPassword.Text = vbNullString
     
     Buffer.WriteString Hash
     

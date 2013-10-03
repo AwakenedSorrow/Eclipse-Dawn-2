@@ -84,7 +84,7 @@ End Sub
 
 Private Sub cmdLogin_Click()
 Dim Wait As Long
-    frmDatabase.Visible = True
+    
     ' Check if we need to save our user to the file.
     If Options.RememberUser = 1 And Options.Username <> Trim(txtUsername.Text) Then
         Options.Username = Trim(txtUsername.Text)
@@ -94,6 +94,7 @@ Dim Wait As Long
     ' Handle the actual log in sequence from here.
     If Len(Trim$(txtUsername.Text)) > 0 And Len(Trim$(txtPassword.Text)) > 0 Then
         SendUserLogin
+        frmLogin.Visible = False
         LoggingIn = True
         
         '  Little countdown loop again.
@@ -109,6 +110,24 @@ Dim Wait As Long
             MsgBox "The server could not be reached in time.", vbOKOnly, "Connection Timeout"
             DestroyEditor
         End If
+        
+        ' Successfully logged in!
+        
+        ' Load the settings once more, to make sure we get the tileset names.
+        LoadOptions App.Path & "\" & OPTIONS_FILE
+        
+        ' Initialize the map editor.
+        InitMapEditor
+        
+        ' Hide old forms
+        frmLoad.Visible = False
+        
+        ' Show the map editor screen.
+        frmEditor.Show
+        
+        ' Start the editor loop
+        EditorLooping = True
+        EditorLoop
     Else
         MsgBox "Your username/password entry can not be empty!", vbInformation
     End If

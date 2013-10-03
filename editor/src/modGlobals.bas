@@ -1,6 +1,9 @@
 Attribute VB_Name = "modGlobals"
 Option Explicit
 
+' Main Loop Global(s)
+Public EditorLooping As Boolean
+
 '  Loading Bar Globals
 Public LoadBarPerc As Byte
 Public LoadBarWidth As Long
@@ -14,3 +17,6 @@ Public EditorBuffer As clsBuffer
 ' Misc Stuff
 Public CheckingVersion As Boolean
 Public LoggingIn As Boolean
+
+'  Render Location Globals
+Public RenderHeightTileSet As Long

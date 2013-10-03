@@ -18,13 +18,15 @@ Type OptionsRec
     RememberUser As Byte
     Username As String
     
+    ' Tileset Options
+    TileSetName() As String
+    
     ' Debug
     device As Byte
 End Type
 
 Private Type EditorRec
     Username As String
-    Password As String
     
     HasRight(Editor_MaxRights - 1) As Byte
 End Type

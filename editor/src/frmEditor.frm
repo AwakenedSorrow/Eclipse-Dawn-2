@@ -11,15 +11,29 @@ Begin VB.Form frmEditor
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   800
    StartUpPosition =   3  'Windows Default
+   Begin VB.PictureBox picTileSelect 
+      Appearance      =   0  'Flat
+      BackColor       =   &H00000000&
+      BorderStyle     =   0  'None
+      ForeColor       =   &H80000008&
+      Height          =   4695
+      Left            =   240
+      ScaleHeight     =   313
+      ScaleMode       =   3  'Pixel
+      ScaleWidth      =   257
+      TabIndex        =   12
+      Top             =   1440
+      Width           =   3855
+   End
    Begin VB.ComboBox cmbLayerSelect 
       Height          =   315
       ItemData        =   "frmEditor.frx":0000
       Left            =   5040
       List            =   "frmEditor.frx":0013
       Style           =   2  'Dropdown List
-      TabIndex        =   12
+      TabIndex        =   11
       Top             =   240
-      Width           =   1815
+      Width           =   2175
    End
    Begin VB.PictureBox picLayerSelect 
       Appearance      =   0  'Flat
@@ -32,7 +46,7 @@ Begin VB.Form frmEditor
       ScaleHeight     =   33
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   33
-      TabIndex        =   11
+      TabIndex        =   10
       Top             =   120
       Width           =   495
    End
@@ -42,7 +56,7 @@ Begin VB.Form frmEditor
       Left            =   1320
       Picture         =   "frmEditor.frx":0542
       Style           =   1  'Graphical
-      TabIndex        =   10
+      TabIndex        =   9
       Top             =   0
       Width           =   1215
    End
@@ -52,7 +66,7 @@ Begin VB.Form frmEditor
       Left            =   120
       Picture         =   "frmEditor.frx":09EC
       Style           =   1  'Graphical
-      TabIndex        =   9
+      TabIndex        =   8
       Top             =   0
       Width           =   1215
    End
@@ -62,7 +76,7 @@ Begin VB.Form frmEditor
       ItemData        =   "frmEditor.frx":0F19
       Left            =   240
       List            =   "frmEditor.frx":0F1B
-      TabIndex        =   8
+      TabIndex        =   7
       Top             =   6480
       Width           =   4070
    End
@@ -70,30 +84,17 @@ Begin VB.Form frmEditor
       Caption         =   "Map List"
       Height          =   2415
       Left            =   120
-      TabIndex        =   7
+      TabIndex        =   6
       Top             =   6240
       Width           =   4305
    End
    Begin VB.VScrollBar scrlTileSelect 
       Height          =   4695
       Left            =   4080
-      TabIndex        =   6
-      Top             =   1440
-      Width           =   255
-   End
-   Begin VB.PictureBox picTileSelect 
-      Appearance      =   0  'Flat
-      BackColor       =   &H00000000&
-      BorderStyle     =   0  'None
-      ForeColor       =   &H80000008&
-      Height          =   4695
-      Left            =   240
-      ScaleHeight     =   313
-      ScaleMode       =   3  'Pixel
-      ScaleWidth      =   256
+      Max             =   2
       TabIndex        =   5
       Top             =   1440
-      Width           =   3845
+      Width           =   255
    End
    Begin VB.Frame frmTileSelect 
       Caption         =   "Tile Selector"
@@ -178,3 +179,10 @@ Private Sub Form_Resize()
     lstMapList.Height = (frmEditor.ScaleHeight * 0.25) - (frmEditor.ScaleHeight * 0.25) / 9.9
 End Sub
 
+Private Sub Form_Unload(Cancel As Integer)
+    DestroyEditor
+End Sub
+
+Private Sub scrlTileSelect_Change()
+    ' MapEditor_DrawTileset
+End Sub

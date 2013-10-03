@@ -45,7 +45,7 @@ Dim Buffer As clsBuffer, Username As String, Password As String
         LoadEditor Index, Trim$(Username)
         
         If Trim$(Editor(Index).Password) = Trim$(Password) Then
-            
+            SendEditorLoginOK Index
         Else
             ClearEditor (Index)
             SendEditorAlertMsg Index, "This password is incorrect, you are not authorized to access this editor."

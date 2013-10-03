@@ -8,7 +8,7 @@ Public Declare Sub Sleep Lib "Kernel32" (ByVal dwMilliseconds As Long)
 Public Declare Function GetTickCount Lib "Kernel32" () As Long
 
 'For Clear functions
-Public Declare Sub ZeroMemory Lib "kernel32.dll" Alias "RtlZeroMemory" (Destination As Any, ByVal length As Long)
+Public Declare Sub ZeroMemory Lib "Kernel32.dll" Alias "RtlZeroMemory" (Destination As Any, ByVal length As Long)
 
 Public Sub Main()
 Dim TempPerc As Byte, Wait As Long
@@ -121,7 +121,41 @@ Public Sub DestroyEditor()
     
     ' Unload all Forms
     Unload frmLogin
+    Unload frmEditor
+    Unload frmDatabase
     Unload frmLoad
-    
     End
+End Sub
+
+Public Sub InitMapEditor()
+Dim i As Long
+
+    ' Populate the tileset list.
+    frmEditor.cmbTileSet.Clear
+    For i = 1 To NumTileSets
+        frmEditor.cmbTileSet.AddItem CStr(i) & ": " & CStr(Options.TileSetName(i))
+    Next
+    frmEditor.cmbTileSet.ListIndex = 0
+    
+    ' Select the Ground layer
+    frmEditor.cmbLayerSelect.ListIndex = 0
+End Sub
+
+Public Sub EditorLoop()
+Dim Tick As Long
+    Do While EditorLooping = True
+        Tick = GetTickCount
+        
+        ' Render the graphics on our displays.
+        RenderGraphics
+        
+        ' Handle the forms and whatnot
+        DoEvents
+        
+        ' Lock the FPS. I mean it's just an editor for christ's sake.
+        Do While GetTickCount < Tick + 15
+            DoEvents
+            Sleep 1
+        Loop
+    Loop
 End Sub

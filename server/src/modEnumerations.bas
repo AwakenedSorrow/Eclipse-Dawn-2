@@ -181,6 +181,7 @@ End Enum
 Public Enum SE_EditorPackets
     SE_AlertMsg = 1
     SE_VersionOK
+    SE_LoginOK
     ' Make sure SE_MSG_COUNT is below everything else
     SE_MSG_COUNT
 End Enum

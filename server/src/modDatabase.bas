@@ -795,7 +795,7 @@ End Sub
 Sub SaveEditor(ByVal EditorNum As Long)
     Dim filename As String
     Dim F As Long
-    filename = App.Path & "\data\developers\" & Trim$(Editor(EditorNum).Username) & ".dat"
+    filename = App.Path & "\data\developers\" & Trim$(Editor(EditorNum).Username) & ".bin"
     F = FreeFile
     Open filename For Binary As #F
     Put #F, , Editor(EditorNum)

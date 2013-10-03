@@ -48,6 +48,7 @@ Public Sub PutVar(file As String, Header As String, Var As String, value As Stri
 End Sub
 
 Public Sub LoadOptions(ByVal FileName As String)
+Dim i As Long
 
     ' Reset the option loading percentage to 0.
     SetLoadStatus LoadStateOptions, 0
@@ -66,6 +67,14 @@ Public Sub LoadOptions(ByVal FileName As String)
         Options.Username = GetVar(FileName, "ACCOUNT", "Username")
         SetLoadStatus LoadStateOptions, 66
         
+        ' Load Tileset Settings
+        If NumTileSets > 0 Then
+            ReDim Preserve Options.TileSetName(1 To NumTileSets)
+            For i = 1 To NumTileSets
+                Options.TileSetName(i) = GetVar(FileName, "TILESET", "Name" & CStr(i))
+            Next i
+        End If
+        
         '  Load Debug Settings
         Options.device = CByte(GetVar(FileName, "DEBUG", "Device"))
         SetLoadStatus LoadStateOptions, 100
@@ -76,6 +85,13 @@ Public Sub LoadOptions(ByVal FileName As String)
         
         Options.RememberUser = 0
         Options.Username = vbNullString
+        
+        If NumTileSets > 0 Then
+            ReDim Preserve Options.TileSetName(1 To NumTileSets)
+            For i = 1 To NumTileSets
+                Options.TileSetName(i) = ""
+            Next i
+        End If
         
         Options.device = 2
         SetLoadStatus LoadStateOptions, 50
@@ -93,7 +109,24 @@ Public Sub SaveOptions(ByVal FileName As String)
     ' Load Account Settings
     PutVar FileName, "ACCOUNT", "RememberUser", Trim$(CStr(Options.RememberUser))
     PutVar FileName, "ACCOUNT", "Username", Trim$(Options.Username)
+    
+    If NumTileSets > 0 Then
+        ReDim Preserve Options.TileSetName(1 To NumTileSets)
+        For i = 1 To NumTileSets
+            PutVar FileName, "TILESET", "Name" & CStr(i), Options.TileSetName(i)
+        Next i
+    End If
         
     '  Load Debug Settings
     PutVar FileName, "DEBUG", "Device", Trim$(CStr(Options.device))
+End Sub
+
+Public Sub ClearEditor()
+Dim i As Long
+
+    Editor.Username = vbNullString
+    For i = 1 To Editor_MaxRights - 1
+        Editor.HasRight(i) = 0
+    Next
+
 End Sub
