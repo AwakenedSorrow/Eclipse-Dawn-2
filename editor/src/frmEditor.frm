@@ -14,12 +14,12 @@ Begin VB.Form frmEditor
    Begin VB.ComboBox cmbLayerSelect 
       Height          =   315
       ItemData        =   "frmEditor.frx":0000
-      Left            =   3720
+      Left            =   5040
       List            =   "frmEditor.frx":0013
       Style           =   2  'Dropdown List
       TabIndex        =   12
       Top             =   240
-      Width           =   1695
+      Width           =   1815
    End
    Begin VB.PictureBox picLayerSelect 
       Appearance      =   0  'Flat
@@ -27,7 +27,7 @@ Begin VB.Form frmEditor
       BorderStyle     =   0  'None
       ForeColor       =   &H80000008&
       Height          =   495
-      Left            =   3120
+      Left            =   4440
       Picture         =   "frmEditor.frx":008E
       ScaleHeight     =   33
       ScaleMode       =   3  'Pixel

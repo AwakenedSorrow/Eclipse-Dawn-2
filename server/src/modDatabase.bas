@@ -376,6 +376,17 @@ Sub LoadPlayer(ByVal Index As Long, ByVal Name As String)
     Close #F
 End Sub
 
+Sub LoadEditor(ByVal Index As Long, ByVal Name As String)
+    Dim filename As String
+    Dim F As Long
+    Call ClearEditor(Index)
+    filename = App.Path & "\data\developers\" & Trim(Name) & ".bin"
+    F = FreeFile
+    Open filename For Binary As #F
+    Get #F, , Editor(Index)
+    Close #F
+End Sub
+
 Sub ClearPlayer(ByVal Index As Long)
     Dim i As Long
     
@@ -778,6 +789,16 @@ Sub SaveNpc(ByVal NPCNum As Long)
     F = FreeFile
     Open filename For Binary As #F
     Put #F, , Npc(NPCNum)
+    Close #F
+End Sub
+
+Sub SaveEditor(ByVal EditorNum As Long)
+    Dim filename As String
+    Dim F As Long
+    filename = App.Path & "\data\developers\" & Trim$(Editor(EditorNum).Username) & ".dat"
+    F = FreeFile
+    Open filename For Binary As #F
+    Put #F, , Editor(EditorNum)
     Close #F
 End Sub
 

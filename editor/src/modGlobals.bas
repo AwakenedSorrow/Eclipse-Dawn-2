@@ -13,3 +13,4 @@ Public EditorBuffer As clsBuffer
 
 ' Misc Stuff
 Public CheckingVersion As Boolean
+Public LoggingIn As Boolean

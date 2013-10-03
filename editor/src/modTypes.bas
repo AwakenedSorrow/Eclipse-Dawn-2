@@ -3,6 +3,7 @@ Option Explicit
 
 Public Options As OptionsRec
 Public Editor As EditorRec
+Public TempEditor As EditorRec
 
 '  **************************************
 '  **************************************
@@ -25,5 +26,5 @@ Private Type EditorRec
     Username As String
     Password As String
     
-    HasRight(Editor_MaxRights) As Byte
+    HasRight(Editor_MaxRights - 1) As Byte
 End Type

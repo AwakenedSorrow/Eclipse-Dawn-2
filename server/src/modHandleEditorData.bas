@@ -8,6 +8,7 @@ End Function
 Public Sub InitEditorMessages()
     HandleEditorDataSub(CE_LoginUser) = GetAddress(AddressOf HandleEditorLogin)
     HandleEditorDataSub(CE_VersionCheck) = GetAddress(AddressOf HandleEditorVersionCheck)
+    HandleEditorDataSub(CE_SaveDeveloper) = GetAddress(AddressOf HandleEditorSaveDeveloper)
 End Sub
 
 Public Sub HandleEditorData(ByVal Index As Long, ByRef Data() As Byte)
@@ -31,7 +32,48 @@ Dim MsgType As Long
 End Sub
 
 Private Sub HandleEditorLogin(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim Buffer As clsBuffer, Username As String, Password As String
 
+    Set Buffer = New clsBuffer
+    Buffer.WriteBytes Data()
+    
+    Username = Buffer.ReadString()
+    
+    If FileExist("data\developers\" & Trim$(Username) & ".bin") Then
+        Password = Buffer.ReadString
+        
+        LoadEditor Index, Trim$(Username)
+        
+        If Trim$(Editor(Index).Password) = Trim$(Password) Then
+            
+        Else
+            ClearEditor (Index)
+            SendEditorAlertMsg Index, "This password is incorrect, you are not authorized to access this editor."
+        End If
+    Else
+        SendEditorAlertMsg Index, "This account does not exist, you are not authorized to access this editor."
+    End If
+    
+    Set Buffer = Nothing
+End Sub
+
+Private Sub HandleEditorSaveDeveloper(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim Buffer As clsBuffer, i As Long, FilePath As String, Name As String
+
+    Set Buffer = New clsBuffer
+    Buffer.WriteBytes Data()
+    
+    Editor(0).Username = Buffer.ReadString()
+    Editor(0).Password = Buffer.ReadString()
+    
+    For i = 1 To Editor_MaxRights - 1
+        Editor(0).HasRight(i) = Buffer.ReadByte()
+    Next
+    
+    SaveEditor 0
+    
+    Set Buffer = Nothing
+    
 End Sub
 
 Private Sub HandleEditorVersionCheck(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)

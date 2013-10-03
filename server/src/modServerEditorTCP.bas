@@ -49,13 +49,15 @@ Sub AcceptEditorConnection(ByVal Index As Long, ByVal SocketId As Long)
     Dim i As Long
 
     If (Index = 0) Then
-        i = FindOpenPlayerSlot
+        i = FindOpenEditorSlot
 
         If i <> 0 Then
             ' we can connect them
             frmServer.EditorSocket(i).Close
             frmServer.EditorSocket(i).Accept SocketId
             Call TextAdd("Received connection from " & GetEditorIP(Index) & ".")
+        Else
+            SendEditorAlertMsg Index, "The server appears to be full, try again later."
         End If
     End If
 

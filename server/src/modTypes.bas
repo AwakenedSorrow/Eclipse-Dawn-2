@@ -25,10 +25,10 @@ Public Editor(MAX_EDITORS) As EditorRec
 Public TempEditor(1 To MAX_EDITORS) As TempEditorRec
 
 Private Type EditorRec
-    Username As String
-    Password As String
+    Username As String * 20
+    Password As String * 20
     
-    HasRight(Editor_MaxRights) As Byte
+    HasRight(Editor_MaxRights - 1) As Byte
 End Type
 
 Private Type TempEditorRec
@@ -37,7 +37,7 @@ Private Type TempEditorRec
     DataTimer As Long
     DataBytes As Long
     DataPackets As Long
-    Buffer As clsBuffer
+    buffer As clsBuffer
 End Type
 
 Private Type OptionsRec
@@ -129,7 +129,7 @@ End Type
 
 Public Type TempPlayerRec
     ' Non saved local vars
-    Buffer As clsBuffer
+    buffer As clsBuffer
     InGame As Boolean
     AttackTimer As Long
     DataTimer As Long

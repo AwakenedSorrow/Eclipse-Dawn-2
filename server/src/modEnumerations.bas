@@ -188,6 +188,7 @@ End Enum
 Public Enum CE_EditorPackets
     CE_LoginUser = 1
     CE_VersionCheck
+    CE_SaveDeveloper
     ' Make sure CE_MSG_COUNT is below everything else
     CE_MSG_COUNT
 End Enum
@@ -368,7 +369,9 @@ Public Enum EditorRights
     CanEditPlayer
     CanEditAnimation
     CanEditScript
-    CanEditEditor
+    CanEditDeveloper
+    CanAddDeveloper
+    CanRemoveDeveloper
     ' Always below everything else!
     Editor_MaxRights
 End Enum

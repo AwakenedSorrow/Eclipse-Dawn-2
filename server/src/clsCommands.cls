@@ -66,7 +66,6 @@ End Sub
 
 Public Sub GlobalMsg(ByVal Text As String, ByVal Color As Byte)
     Call modServerClientTCP.GlobalMsg(Text, Color)
-    Call TextAdd("[SCRIPT] Global Message: " & Trim$(Text))
 End Sub
 
 Public Function GetPlayerName(ByVal Index As Long) As String

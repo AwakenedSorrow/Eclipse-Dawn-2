@@ -37,7 +37,9 @@ Begin VB.Form frmLogin
       End
       Begin VB.TextBox txtPassword 
          Height          =   285
+         IMEMode         =   3  'DISABLE
          Left            =   120
+         PasswordChar    =   "#"
          TabIndex        =   4
          Top             =   1080
          Width           =   2055
@@ -81,6 +83,8 @@ Private Sub chkRemember_Click()
 End Sub
 
 Private Sub cmdLogin_Click()
+Dim Wait As Long
+    frmDatabase.Visible = True
     ' Check if we need to save our user to the file.
     If Options.RememberUser = 1 And Options.Username <> Trim(txtUsername.Text) Then
         Options.Username = Trim(txtUsername.Text)
@@ -88,8 +92,26 @@ Private Sub cmdLogin_Click()
     End If
     
     ' Handle the actual log in sequence from here.
-    Load frmEditor
-    frmEditor.Visible = True
+    If Len(Trim$(txtUsername.Text)) > 0 And Len(Trim$(txtPassword.Text)) > 0 Then
+        SendUserLogin
+        LoggingIn = True
+        
+        '  Little countdown loop again.
+        Wait = GetTickCount
+        Do While (GetTickCount <= Wait + 3000) And LoggingIn <> False
+            TempPerc = LoadBarPerc * (((Wait + 3000) - GetTickCount) / 1500)
+            SetLoadStatus LoadStateLogin, TempPerc
+            DoEvents
+        Loop
+        
+        ' If Checking Version hasn't been changed, we haven't received a response. So assuming a timeout.
+        If LoggingIn = True Then
+            MsgBox "The server could not be reached in time.", vbOKOnly, "Connection Timeout"
+            DestroyEditor
+        End If
+    Else
+        MsgBox "Your username/password entry can not be empty!", vbInformation
+    End If
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)

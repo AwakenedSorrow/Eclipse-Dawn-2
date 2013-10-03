@@ -19,7 +19,7 @@ Public Sub TcpInit()
 End Sub
 
 Public Sub DestroyTCP()
-    frmLoad.Socket.Close
+    frmLoad.Socket.close
 End Sub
 
 Function IsConnected() As Boolean
@@ -39,7 +39,7 @@ Dim Wait As Long, TempPerc As Long
     End If
     
     Wait = GetTickCount
-    frmLoad.Socket.Close
+    frmLoad.Socket.close
     frmLoad.Socket.Connect
     
     SetLoadStatus LoadStateConnecting, 0
@@ -55,24 +55,24 @@ Dim Wait As Long, TempPerc As Long
 End Function
 
 Sub SendData(ByRef data() As Byte)
-Dim buffer As clsBuffer
+Dim Buffer As clsBuffer
     
     If IsConnected Then
-        Set buffer = New clsBuffer
+        Set Buffer = New clsBuffer
                 
-        buffer.WriteLong (UBound(data) - LBound(data)) + 1
-        buffer.WriteBytes data()
-        frmLoad.Socket.SendData buffer.ToArray()
+        Buffer.WriteLong (UBound(data) - LBound(data)) + 1
+        Buffer.WriteBytes data()
+        frmLoad.Socket.SendData Buffer.ToArray()
     End If
 End Sub
 
 Public Sub IncomingData(ByVal DataLength As Long)
-Dim buffer() As Byte
+Dim Buffer() As Byte
 Dim pLength As Long
 
-    frmLoad.Socket.GetData buffer, vbUnicode, DataLength
+    frmLoad.Socket.GetData Buffer, vbUnicode, DataLength
     
-    EditorBuffer.WriteBytes buffer()
+    EditorBuffer.WriteBytes Buffer()
     
     If EditorBuffer.length >= 4 Then pLength = EditorBuffer.ReadLong(False)
     Do While pLength > 0 And pLength <= EditorBuffer.length - 4
@@ -89,14 +89,58 @@ Dim pLength As Long
 End Sub
 
 Public Sub SendVersionCheck()
-Dim buffer As clsBuffer
+Dim Buffer As clsBuffer
 
-    Set buffer = New clsBuffer
-    buffer.WriteLong CE_VersionCheck
+    Set Buffer = New clsBuffer
+    Buffer.WriteLong CE_VersionCheck
     
-    buffer.WriteString EDITOR_VERSION
+    Buffer.WriteString EDITOR_VERSION
     
-    SendData buffer.ToArray
+    SendData Buffer.ToArray
     
-    Set buffer = Nothing
+    Set Buffer = Nothing
+End Sub
+
+Public Sub SendSaveDeveloper()
+Dim Buffer As clsBuffer, i As Long, Hash As String
+
+    Set Buffer = New clsBuffer
+    Buffer.WriteLong CE_SaveDeveloper
+    
+    Buffer.WriteString LCase(Trim$(frmDatabase.txtUsername.Text))
+    
+    i = InitCrc32()
+    i = AddCrc32(frmDatabase.txtPassword.Text, i)
+    Hash = CStr(i)
+    frmDatabase.txtPassword.Text = Hash
+    
+    Buffer.WriteString Hash
+    
+    For i = 1 To Editor_MaxRights - 1
+        Buffer.WriteByte 1
+    Next
+    
+    SendData Buffer.ToArray()
+    
+    Set Buffer = Nothing
+End Sub
+
+Public Sub SendUserLogin()
+Dim Buffer As clsBuffer, i As Long, Hash As String
+    
+    Set Buffer = New clsBuffer
+    Buffer.WriteLong CE_LoginUser
+    
+    Buffer.WriteString LCase(Trim$(frmLogin.txtUsername.Text))
+    
+    i = InitCrc32()
+    i = AddCrc32(frmLogin.txtPassword.Text, i)
+    Hash = CStr(i)
+    frmLogin.txtPassword.Text = Hash
+    
+    Buffer.WriteString Hash
+    
+    SendData Buffer.ToArray
+    
+    Set Buffer = Nothing
 End Sub
