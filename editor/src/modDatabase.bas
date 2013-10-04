@@ -102,6 +102,7 @@ Dim i As Long
 End Sub
 
 Public Sub SaveOptions(ByVal FileName As String)
+Dim i As Long
     '  Save Server Settings
     PutVar FileName, "SERVER", "ServerIP", Options.ServerIP
     PutVar FileName, "SERVER", "ServerPort", Trim$(CStr(Options.ServerPort))

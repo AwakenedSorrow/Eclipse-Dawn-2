@@ -182,6 +182,7 @@ Public Enum SE_EditorPackets
     SE_AlertMsg = 1
     SE_VersionOK
     SE_LoginOK
+    SE_MapNames
     ' Make sure SE_MSG_COUNT is below everything else
     SE_MSG_COUNT
 End Enum

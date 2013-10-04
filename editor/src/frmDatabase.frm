@@ -15,17 +15,153 @@ Begin VB.Form frmDatabase
    StartUpPosition =   3  'Windows Default
    Begin VB.Frame frmDeveloper 
       Caption         =   "Developer - (Name)"
-      Height          =   3255
+      Height          =   3855
       Left            =   2880
       TabIndex        =   5
       Top             =   120
-      Width           =   4695
+      Width           =   6615
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Remove Developers"
+         Height          =   255
+         Index           =   14
+         Left            =   2640
+         TabIndex        =   25
+         Top             =   1680
+         Width           =   2175
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Add Developers"
+         Height          =   255
+         Index           =   13
+         Left            =   2640
+         TabIndex        =   24
+         Top             =   1440
+         Width           =   1815
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Edit Developers"
+         Height          =   255
+         Index           =   12
+         Left            =   3240
+         TabIndex        =   23
+         Top             =   3120
+         Width           =   1815
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Edit Animations"
+         Height          =   255
+         Index           =   11
+         Left            =   3240
+         TabIndex        =   22
+         Top             =   2880
+         Width           =   1815
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Edit Players"
+         Height          =   255
+         Index           =   10
+         Left            =   3240
+         TabIndex        =   21
+         Top             =   2640
+         Width           =   1695
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Edit Resources"
+         Height          =   255
+         Index           =   9
+         Left            =   3240
+         TabIndex        =   20
+         Top             =   2400
+         Width           =   1815
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Edit Spells"
+         Height          =   255
+         Index           =   8
+         Left            =   3240
+         TabIndex        =   19
+         Top             =   2160
+         Width           =   1455
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Edit Items"
+         Height          =   255
+         Index           =   7
+         Left            =   720
+         TabIndex        =   18
+         Top             =   3600
+         Width           =   1335
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Edit Shops"
+         Height          =   255
+         Index           =   6
+         Left            =   720
+         TabIndex        =   17
+         Top             =   3360
+         Width           =   1455
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Edit Maps"
+         Height          =   255
+         Index           =   5
+         Left            =   720
+         TabIndex        =   16
+         Top             =   3120
+         Width           =   1335
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Edit NPCs"
+         Height          =   255
+         Index           =   4
+         Left            =   720
+         TabIndex        =   15
+         Top             =   2880
+         Width           =   1455
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Change Own Details"
+         Height          =   255
+         Index           =   3
+         Left            =   720
+         TabIndex        =   14
+         Top             =   2640
+         Width           =   2295
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Use Chat"
+         Height          =   255
+         Index           =   2
+         Left            =   720
+         TabIndex        =   13
+         Top             =   2400
+         Width           =   1335
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Can Edit Maps"
+         Height          =   255
+         Index           =   1
+         Left            =   720
+         TabIndex        =   12
+         Top             =   2160
+         Width           =   1335
+      End
+      Begin VB.CheckBox chkHasRight 
+         Caption         =   "Check1"
+         Height          =   255
+         Index           =   0
+         Left            =   5280
+         TabIndex        =   11
+         Top             =   120
+         Visible         =   0   'False
+         Width           =   1335
+      End
       Begin VB.CommandButton cmdSaveDeveloper 
          Caption         =   "Save Changes"
          Height          =   255
-         Left            =   3120
+         Left            =   5040
          TabIndex        =   10
-         Top             =   2880
+         Top             =   3360
          Width           =   1455
       End
       Begin VB.TextBox txtPassword 

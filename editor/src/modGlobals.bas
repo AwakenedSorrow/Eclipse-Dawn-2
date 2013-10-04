@@ -19,4 +19,22 @@ Public CheckingVersion As Boolean
 Public LoggingIn As Boolean
 
 '  Render Location Globals
-Public RenderHeightTileSet As Long
+Public RecTileSelectWindow As D3DRECT
+Public TileSelectHeight As Long
+Public MapViewWindow As D3DRECT
+Public MapViewHeight As Long
+Public MapViewWidth As Long
+Public MapViewTileOffSetX As Long
+Public MapViewTileOffSetY As Long
+
+' Map Editor GLobals
+Public EditorTileWidth As Long
+Public EditorTileHeight As Long
+Public EditorTileX As Long
+Public EditorTileY As Long
+Public OldMouseX As Long
+Public OldMouseY As Long
+
+' MAX Globals
+Public MAX_MAPS As Long
+

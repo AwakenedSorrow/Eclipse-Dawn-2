@@ -12,13 +12,13 @@ Public Sub InitEditorMessages()
 End Sub
 
 Public Sub HandleEditorData(ByVal Index As Long, ByRef Data() As Byte)
-Dim Buffer As clsBuffer
+Dim buffer As clsBuffer
 Dim MsgType As Long
         
-    Set Buffer = New clsBuffer
-    Buffer.WriteBytes Data()
+    Set buffer = New clsBuffer
+    buffer.WriteBytes Data()
     
-    MsgType = Buffer.ReadLong
+    MsgType = buffer.ReadLong
     
     If MsgType < 0 Then
         Exit Sub
@@ -28,24 +28,26 @@ Dim MsgType As Long
         Exit Sub
     End If
     
-    CallWindowProc HandleEditorDataSub(MsgType), Index, Buffer.ReadBytes(Buffer.Length), 0, 0
+    CallWindowProc HandleEditorDataSub(MsgType), Index, buffer.ReadBytes(buffer.Length), 0, 0
 End Sub
 
 Private Sub HandleEditorLogin(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim Buffer As clsBuffer, Username As String, Password As String
+Dim buffer As clsBuffer, Username As String, Password As String
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteBytes Data()
+    Set buffer = New clsBuffer
+    buffer.WriteBytes Data()
     
-    Username = Buffer.ReadString()
+    Username = buffer.ReadString()
     
     If FileExist("data\developers\" & Trim$(Username) & ".bin") Then
-        Password = Buffer.ReadString
+        Password = buffer.ReadString
         
         LoadEditor Index, Trim$(Username)
         
         If Trim$(Editor(Index).Password) = Trim$(Password) Then
             SendEditorLoginOK Index
+            ' If the user has the rights, he'll get the map data.
+            If Editor(Index).HasRight(CanEditMap) <> 0 Then SendMapEditorNames Index
         Else
             ClearEditor (Index)
             SendEditorAlertMsg Index, "This password is incorrect, you are not authorized to access this editor."
@@ -54,40 +56,40 @@ Dim Buffer As clsBuffer, Username As String, Password As String
         SendEditorAlertMsg Index, "This account does not exist, you are not authorized to access this editor."
     End If
     
-    Set Buffer = Nothing
+    Set buffer = Nothing
 End Sub
 
 Private Sub HandleEditorSaveDeveloper(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim Buffer As clsBuffer, i As Long, FilePath As String, Name As String
+Dim buffer As clsBuffer, i As Long, FilePath As String, Name As String
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteBytes Data()
+    Set buffer = New clsBuffer
+    buffer.WriteBytes Data()
     
-    Editor(0).Username = Buffer.ReadString()
-    Editor(0).Password = Buffer.ReadString()
+    Editor(0).Username = buffer.ReadString()
+    Editor(0).Password = buffer.ReadString()
     
     For i = 1 To Editor_MaxRights - 1
-        Editor(0).HasRight(i) = Buffer.ReadByte()
+        Editor(0).HasRight(i) = buffer.ReadByte()
     Next
     
     SaveEditor 0
     
-    Set Buffer = Nothing
+    Set buffer = Nothing
     
 End Sub
 
 Private Sub HandleEditorVersionCheck(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim Buffer As clsBuffer
+Dim buffer As clsBuffer
 Dim TempVer As String
     
     '  Make sure our editor is actually connected.
     If IsEditorConnected(Index) Then
         '  Write the data to the local buffer so we can extract the required data.
-        Set Buffer = New clsBuffer
-        Buffer.WriteBytes Data()
+        Set buffer = New clsBuffer
+        buffer.WriteBytes Data()
         
         '  Retrieve the version of the editor client.
-        TempVer = Buffer.ReadString()
+        TempVer = buffer.ReadString()
         
         ' Does it match? If not, disconnect them with a warning.
         If Trim$(TempVer) <> EDITOR_VERSION Then

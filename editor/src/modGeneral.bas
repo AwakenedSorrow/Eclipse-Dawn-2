@@ -140,22 +140,3 @@ Dim i As Long
     ' Select the Ground layer
     frmEditor.cmbLayerSelect.ListIndex = 0
 End Sub
-
-Public Sub EditorLoop()
-Dim Tick As Long
-    Do While EditorLooping = True
-        Tick = GetTickCount
-        
-        ' Render the graphics on our displays.
-        RenderGraphics
-        
-        ' Handle the forms and whatnot
-        DoEvents
-        
-        ' Lock the FPS. I mean it's just an editor for christ's sake.
-        Do While GetTickCount < Tick + 15
-            DoEvents
-            Sleep 1
-        Loop
-    Loop
-End Sub

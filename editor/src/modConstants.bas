@@ -3,7 +3,7 @@ Option Explicit
 
 ' API Declares
 Public Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hWnd As Long, ByRef Msg() As Byte, ByVal wParam As Long, ByVal lparam As Long) As Long
-Public Declare Sub CopyMemory Lib "Kernel32.dll" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal Length As Long)
+Public Declare Sub CopyMemory Lib "Kernel32.dll" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal length As Long)
 
 '  Versioning
 Public Const EDITOR_VERSION As String = "0.0.1"
@@ -16,6 +16,13 @@ Public Const GFX_PATH As String = "\Data Files\graphics\"
 Public Const GFX_EXT As String = ".png"
 Public Const PIC_X As Long = 32
 Public Const PIC_Y As Long = 32
+Public Const TEXTURE_WIDTH = 256
+
+' Render Location nonsense
+Public Const TileSetWindowOffSetX As Long = 8
+Public Const TileSetWindowOffSetY As Long = 97
+Public Const MapViewWindowOffSetX As Long = 286
+Public Const MapViewWindowOffSetY As Long = 56
 
 '  Loading states
 Public Const LoadStateOptions As String = "Loading Options"
