@@ -25,7 +25,49 @@ Dim X1 As Long, X2 As Long, Y1 As Long, Y2 As Long
             Call RenderGraphic(Tex_EditorBackDrop, X * PIC_X, Y * PIC_Y, PIC_X, PIC_Y, 0, 0, 0, 0)
         Next
     Next
-       
+    
+    If Map.Revision <> 0 Then
+        '  Shows us where we can edit on empty maps.
+        For X = 0 To Map.MaxX
+            For Y = 0 To Map.MaxY
+                Call RenderGraphic(Tex_Blank, (X * PIC_X) + (MapViewTileOffSetX * PIC_X), (Y * PIC_Y) + (MapViewTileOffSetY * PIC_Y), PIC_X, PIC_Y, 0, 0, 0, 0)
+            Next
+        Next
+        
+        '  Tiles
+        If NumTileSets > 0 Then
+            For X = 0 To Map.MaxX
+                For Y = 0 To Map.MaxY
+                    If IsValidMapPoint(X, Y) Then
+                        Call RenderMapTile(X, Y)
+                    End If
+                Next
+            Next
+        End If
+        
+        '  Now for the resources
+        For Y = 0 To Map.MaxY
+            For X = 0 To Map.MaxX
+                If IsValidMapPoint(X, Y) Then
+                    ' Check if there's a resource on this tile.
+                    If Map.Tile(X, Y).Type = TileTypeResource Then
+                        DrawResource Map.Tile(X, Y).Data1, X, Y
+                    End If
+                End If
+            Next
+        Next
+        
+        '  Attribute Labels
+        If frmEditor.cmbLayerSelect.ListIndex + 1 = Layer_Count Then DrawMapAttributes
+    End If
+    
+    ' Render the mouse outline.
+    If ShowMouse = True Then
+        X = (MouseX / PIC_X)
+        Y = (MouseY / PIC_Y)
+        RenderTileOutline X, Y
+    End If
+    
     ' We're done for now, so we can close the lovely little rendering device and present it to our user!
     ' Of course, we also need to do a few calculations to make sure it appears where it should.
     With srcRect
@@ -45,6 +87,15 @@ Dim X1 As Long, X2 As Long, Y1 As Long, Y2 As Long
     Call D3DDevice8.EndScene
     Call D3DDevice8.Present(srcRect, destRect, frmEditor.hWnd, ByVal 0)
     
+End Sub
+
+Public Sub DrawResource(ByVal ResourceNum As Long, ByVal X As Long, ByVal Y As Long)
+Dim ResourcePic As Long
+    
+    ResourcePic = Resource(ResourceNum).ResourceImage
+    X = ((X * PIC_X) + (MapViewTileOffSetX * PIC_X)) - (D3DT_TEXTURE(Tex_Resource(ResourcePic)).Width / 2) + 16
+    Y = ((Y * PIC_Y) + (MapViewTileOffSetY * PIC_Y) + PIC_Y) - D3DT_TEXTURE(Tex_Resource(ResourcePic)).Height
+    Call RenderGraphic(Tex_Resource(ResourcePic), X, Y, D3DT_TEXTURE(Tex_Resource(ResourcePic)).Width, D3DT_TEXTURE(Tex_Resource(ResourcePic)).Height, 0, 0, 0, 0, Resource(ResourceNum).Red(1), Resource(ResourceNum).Green(1), Resource(ResourceNum).Blue(1), Resource(ResourceNum).Alpha(1))
 End Sub
 
 Public Sub MapEditor_DrawTileSet()
@@ -133,4 +184,25 @@ Dim Width As Long, Height As Long, X As Long, Y As Long
         Call RenderGraphic(Tex_Select, X, Y + Height - 3, Width, 3, 0, 0, 0, 0, 255, 0, 255)    'Bottom Bar
         Call RenderGraphic(Tex_Select, X + Width - 3, Y, 3, Height, 0, 0, 0, 0, 255, 0, 255)    'Right Bar
     End If
+End Sub
+
+Public Sub RenderMapTile(ByVal X As Long, ByVal Y As Long)
+Dim i As Long
+
+    With Map.Tile(X, Y)
+        ' Time to loop through our layers for this tile.
+        For i = MapLayer.Ground To MapLayer.Fringe2
+            ' Should we skip the tile?
+            If (.Layer(i).Tileset > 0 And .Layer(i).Tileset <= NumTileSets) And (.Layer(i).X > 0 Or .Layer(i).Y > 0) Then
+                Call RenderGraphic(Tex_TileSet(.Layer(i).Tileset), (X * PIC_X) + (MapViewTileOffSetX * PIC_X), (Y * PIC_Y) + (MapViewTileOffSetY * PIC_Y), PIC_X, PIC_Y, 0, 0, .Layer(i).X * PIC_X, .Layer(i).Y * PIC_Y)
+            End If
+        Next
+    End With
+
+End Sub
+
+Public Sub RenderTileOutline(ByVal X As Long, ByVal Y As Long)
+    If ShowMouse = False Then Exit Sub
+    
+    Call RenderGraphic(Tex_Outline, X * PIC_X, Y * PIC_Y, PIC_X, PIC_Y, 0, 0, 0, 0)
 End Sub

@@ -9,6 +9,7 @@ Public Sub InitEditorMessages()
     HandleEditorDataSub(CE_LoginUser) = GetAddress(AddressOf HandleEditorLogin)
     HandleEditorDataSub(CE_VersionCheck) = GetAddress(AddressOf HandleEditorVersionCheck)
     HandleEditorDataSub(CE_SaveDeveloper) = GetAddress(AddressOf HandleEditorSaveDeveloper)
+    HandleEditorDataSub(CE_RequestMap) = GetAddress(AddressOf HandleEditorRequestMap)
 End Sub
 
 Public Sub HandleEditorData(ByVal Index As Long, ByRef Data() As Byte)
@@ -32,12 +33,21 @@ Dim MsgType As Long
 End Sub
 
 Private Sub HandleEditorLogin(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim buffer As clsBuffer, Username As String, Password As String
+Dim buffer As clsBuffer, Username As String, Password As String, i As Long
 
     Set buffer = New clsBuffer
     buffer.WriteBytes Data()
     
     Username = buffer.ReadString()
+    
+    ' Already logged in?
+    For i = 1 To MAX_EDITORS
+        If Trim$(Editor(i).Username) = Trim$(Username) Then
+            SendEditorAlertMsg Index, "Multiple logins on the same account are not permitted.", True
+            Set buffer = Nothing
+            Exit Sub
+        End If
+    Next
     
     If FileExist("data\developers\" & Trim$(Username) & ".bin") Then
         Password = buffer.ReadString
@@ -46,14 +56,14 @@ Dim buffer As clsBuffer, Username As String, Password As String
         
         If Trim$(Editor(Index).Password) = Trim$(Password) Then
             SendEditorLoginOK Index
-            ' If the user has the rights, he'll get the map data.
-            If Editor(Index).HasRight(CanEditMap) <> 0 Then SendMapEditorNames Index
+            SendMapEditorNames Index
+            SendEditorResources Index
         Else
             ClearEditor (Index)
-            SendEditorAlertMsg Index, "This password is incorrect, you are not authorized to access this editor."
+            SendEditorAlertMsg Index, "This password is incorrect, you are not authorized to access this editor.", True
         End If
     Else
-        SendEditorAlertMsg Index, "This account does not exist, you are not authorized to access this editor."
+        SendEditorAlertMsg Index, "This account does not exist, you are not authorized to access this editor.", True
     End If
     
     Set buffer = Nothing
@@ -93,9 +103,43 @@ Dim TempVer As String
         
         ' Does it match? If not, disconnect them with a warning.
         If Trim$(TempVer) <> EDITOR_VERSION Then
-            SendEditorAlertMsg Index, "Your editor appears to be outdated, please request the latest version from your server administrator!"
+            SendEditorAlertMsg Index, "Your editor appears to be outdated, please request the latest version from your server administrator!", True
         Else
             SendEditorVersionOK Index
         End If
     End If
+End Sub
+
+Private Sub HandleEditorRequestMap(ByVal Index As Long, ByRef Data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim buffer As clsBuffer, MapNum As Long, i As Long
+
+    If Editor(Index).HasRight(CanEditMap) = 0 Then
+        SendEditorAlertMsg Index, "Insufficient permissions, you are now allowed to edit any maps.", False
+        Exit Sub
+    End If
+
+    Set buffer = New clsBuffer
+    buffer.WriteBytes Data()
+    
+    MapNum = buffer.ReadLong()
+    
+    ' Is any other dev editing said map?
+    For i = 1 To MAX_EDITORS
+        If TempEditor(i).InEditor = EditorMap And i <> Index Then
+            If TempEditor(i).OnIndex = MapNum Then
+                SendEditorAlertMsg Index, "This map is locked, someone else is currently editing it.", False
+                Set buffer = Nothing
+                Exit Sub
+            End If
+        End If
+    Next
+    
+    ' Send the map data to the editor.
+    SendEditorMap Index, MapNum
+    
+    ' Set editor nonsense.
+    TempEditor(Index).InEditor = EditorMap
+    TempEditor(Index).OnIndex = MapNum
+    
+    Set buffer = Nothing
 End Sub

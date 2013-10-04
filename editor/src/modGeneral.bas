@@ -51,6 +51,7 @@ Dim TempPerc As Byte, Wait As Long
     
     ' Initialie the Rendering engine.
     InitDirect3D8
+    EngineInitFontTextures
     
     '  We're done loading, we can actually connect to the server and check our version now!
     If ConnectToServer() = True Then
@@ -88,6 +89,10 @@ Dim TempPerc As Byte, Wait As Long
         MsgBox "The server could not be reached in time.", vbOKOnly, "Connection Timeout"
         DestroyEditor
     End If
+End Sub
+
+Public Sub SetStatus(ByVal Status As String)
+    frmEditor.stBar.SimpleText = Status
 End Sub
 
 Public Sub SetLoadStatus(ByVal Status As String, ByVal Percentage As Long)

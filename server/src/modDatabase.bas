@@ -391,7 +391,7 @@ Sub ClearPlayer(ByVal Index As Long)
     Dim i As Long
     
     Call ZeroMemory(ByVal VarPtr(TempPlayer(Index)), LenB(TempPlayer(Index)))
-    Set TempPlayer(Index).Buffer = New clsBuffer
+    Set TempPlayer(Index).buffer = New clsBuffer
     
     Call ZeroMemory(ByVal VarPtr(Player(Index)), LenB(Player(Index)))
     Player(Index).Login = vbNullString
@@ -406,7 +406,7 @@ End Sub
 
 Sub ClearEditor(ByVal Index As Long)
     Call ZeroMemory(ByVal VarPtr(TempEditor(Index)), LenB(TempEditor(Index)))
-    Set TempEditor(Index).Buffer = New clsBuffer
+    Set TempEditor(Index).buffer = New clsBuffer
     
     Call ZeroMemory(ByVal VarPtr(Editor(Index)), LenB(Editor(Index)))
     Editor(Index).Username = vbNullString
@@ -1148,6 +1148,7 @@ End Sub
 Sub ClearMap(ByVal MapNum As Long)
     Call ZeroMemory(ByVal VarPtr(Map(MapNum)), LenB(Map(MapNum)))
     Map(MapNum).Name = vbNullString
+    Map(MapNum).Revision = 1
     Map(MapNum).MaxX = MAX_MAPX
     Map(MapNum).MaxY = MAX_MAPY
     ReDim Map(MapNum).Tile(0 To Map(MapNum).MaxX, 0 To Map(MapNum).MaxY)

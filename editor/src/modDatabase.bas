@@ -27,6 +27,22 @@ Public Function FileExist(ByVal FileName As String, Optional RAW As Boolean = Fa
     
 End Function
 
+Sub ClearResource(ByVal Index As Long)
+    Call ZeroMemory(ByVal VarPtr(Resource(Index)), LenB(Resource(Index)))
+    Resource(Index).Name = vbNullString
+    Resource(Index).SuccessMessage = vbNullString
+    Resource(Index).EmptyMessage = vbNullString
+    Resource(Index).Sound = "None."
+    Resource(Index).Red(0) = 255
+    Resource(Index).Red(1) = 255
+    Resource(Index).Green(0) = 255
+    Resource(Index).Green(1) = 255
+    Resource(Index).Blue(0) = 255
+    Resource(Index).Blue(1) = 255
+    Resource(Index).Alpha(0) = 255
+    Resource(Index).Alpha(1) = 255
+End Sub
+
 ' gets a string from a text file
 Public Function GetVar(file As String, Header As String, Var As String) As String
 Dim sSpaces As String   ' Max string length

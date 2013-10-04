@@ -183,6 +183,8 @@ Public Enum SE_EditorPackets
     SE_VersionOK
     SE_LoginOK
     SE_MapNames
+    SE_MapData
+    SE_ResourceData
     ' Make sure SE_MSG_COUNT is below everything else
     SE_MSG_COUNT
 End Enum
@@ -191,6 +193,7 @@ Public Enum CE_EditorPackets
     CE_LoginUser = 1
     CE_VersionCheck
     CE_SaveDeveloper
+    CE_RequestMap
     ' Make sure CE_MSG_COUNT is below everything else
     CE_MSG_COUNT
 End Enum
@@ -376,4 +379,16 @@ Public Enum EditorRights
     CanRemoveDeveloper
     ' Always below everything else!
     Editor_MaxRights
+End Enum
+
+Public Enum EditorTypes
+    EditorMap = 1
+    EditorNPC
+    EditorPlayer
+    EditorResource
+    EditorSpell
+    EditorItem
+    EditorShop
+    EditorAnimation
+    EditorDeveloper
 End Enum

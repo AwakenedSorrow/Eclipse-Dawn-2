@@ -6,6 +6,8 @@ Public Sub InitMessages()
     HandleDataSub(SE_VersionOK) = GetAddress(AddressOf HandleVersionOK)
     HandleDataSub(SE_LoginOK) = GetAddress(AddressOf HandleLoginOK)
     HandleDataSub(SE_MapNames) = GetAddress(AddressOf HandleMapNames)
+    HandleDataSub(SE_MapData) = GetAddress(AddressOf HandleMapData)
+    HandleDataSub(SE_ResourceData) = GetAddress(AddressOf HandleUpdateResource)
 End Sub
 
 Public Function GetAddress(FunAddr As Long) As Long
@@ -36,19 +38,19 @@ Dim MsgType As Long
 End Sub
 
 Private Sub HandleAlertMsg(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
-Dim Msg As String
+Dim Msg As String, Disc As Byte
 Dim buffer As clsBuffer
     
     Set buffer = New clsBuffer
     buffer.WriteBytes data()
         
     Msg = buffer.ReadString
+    Disc = buffer.ReadByte
     
     Set buffer = Nothing
-    MsgBox Msg, vbOKOnly, "Error"
+    MsgBox Msg, vbOKOnly
     
-    '  An Alert Message means something went horribly wrong and we can't continue.
-    DestroyEditor
+    If Disc = 1 Then DestroyEditor
     
 End Sub
 
@@ -71,6 +73,8 @@ Dim buffer As clsBuffer, i As Long, TempName As String, TempRev As Long
         frmEditor.lstMapList.AddItem CStr(i) & ": " & Trim$(TempName) & " | Rev." & Trim(CStr(TempRev))
     Next
     
+    SetStatus "Received Map Names and applied them to the list."
+    
     Set buffer = Nothing
     
 End Sub
@@ -90,5 +94,87 @@ Dim buffer As clsBuffer, i As Long
     Next
     
     Set buffer = Nothing
+    
+End Sub
+
+Private Sub HandleMapData(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim n As Long
+Dim X As Long
+Dim Y As Long
+Dim i As Long
+Dim buffer As clsBuffer
+Dim MapNum As Long
+    
+    Set buffer = New clsBuffer
+    
+    buffer.WriteBytes data()
+
+    MapNum = buffer.ReadLong
+    Map.name = buffer.ReadString
+    Map.Music = buffer.ReadString
+    Map.Revision = buffer.ReadLong
+    Map.Moral = buffer.ReadByte
+    Map.Up = buffer.ReadLong
+    Map.Down = buffer.ReadLong
+    Map.Left = buffer.ReadLong
+    Map.Right = buffer.ReadLong
+    Map.BootMap = buffer.ReadLong
+    Map.BootX = buffer.ReadByte
+    Map.BootY = buffer.ReadByte
+    Map.MaxX = buffer.ReadByte
+    Map.MaxY = buffer.ReadByte
+    
+    ReDim Map.Tile(0 To Map.MaxX, 0 To Map.MaxY)
+
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
+            For i = 1 To MapLayer.Layer_Count - 1
+                Map.Tile(X, Y).Layer(i).X = buffer.ReadLong
+                Map.Tile(X, Y).Layer(i).Y = buffer.ReadLong
+                Map.Tile(X, Y).Layer(i).Tileset = buffer.ReadLong
+            Next
+            Map.Tile(X, Y).Type = buffer.ReadByte
+            Map.Tile(X, Y).Data1 = buffer.ReadLong
+            Map.Tile(X, Y).Data2 = buffer.ReadLong
+            Map.Tile(X, Y).Data3 = buffer.ReadLong
+            Map.Tile(X, Y).DirBlock = buffer.ReadByte
+        Next
+    Next
+
+    For X = 1 To MAX_MAP_NPCS
+        Map.Npc(X) = buffer.ReadLong
+        n = n + 1
+    Next
+        
+    Set buffer = Nothing
+    
+    SetStatus "Received map data for Map " & Trim$(CStr(MapNum))
+    MapViewTileOffSetX = 0
+    MapViewTileOffSetY = 0
+    HasMapChanged = False
+End Sub
+
+Private Sub HandleUpdateResource(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim ResourceNum As Long
+Dim buffer As clsBuffer
+Dim ResourceSize As Long
+Dim ResourceData() As Byte
+        
+    Set buffer = New clsBuffer
+    buffer.WriteBytes data()
+    
+    ResourceNum = buffer.ReadLong
+    
+    ResourceSize = LenB(Resource(ResourceNum))
+    ReDim ResourceData(ResourceSize - 1)
+    ResourceData = buffer.ReadBytes(ResourceSize)
+    
+    ClearResource ResourceNum
+    
+    CopyMemory ByVal VarPtr(Resource(ResourceNum)), ByVal VarPtr(ResourceData(0)), ResourceSize
+    
+    Set buffer = Nothing
+    
+    SetStatus "Received Resource Data."
     
 End Sub

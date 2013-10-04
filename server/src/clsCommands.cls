@@ -93,7 +93,7 @@ Public Sub SetPlayerStat(ByVal Index As Long, ByVal Stat As Byte, ByVal Value As
 End Sub
 
 Public Sub PlayerMsg(ByVal Index As Long, ByVal Text As String, ByVal Color As Byte)
-    modServerTCP.PlayerMsg Index, Text, Color
+    modServerClientTCP.PlayerMsg Index, Text, Color
 End Sub
 
 Public Function GetPlayerLevel(ByVal Index As Long) As Long

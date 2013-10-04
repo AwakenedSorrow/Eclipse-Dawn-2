@@ -55,54 +55,54 @@ Dim Wait As Long, TempPerc As Long
 End Function
 
 Sub SendData(ByRef data() As Byte)
-Dim Buffer As clsBuffer
+Dim buffer As clsBuffer
     
     If IsConnected Then
-        Set Buffer = New clsBuffer
+        Set buffer = New clsBuffer
                 
-        Buffer.WriteLong (UBound(data) - LBound(data)) + 1
-        Buffer.WriteBytes data()
-        frmLoad.Socket.SendData Buffer.ToArray()
+        buffer.WriteLong (UBound(data) - LBound(data)) + 1
+        buffer.WriteBytes data()
+        frmLoad.Socket.SendData buffer.ToArray()
     End If
 End Sub
 
 Public Sub IncomingData(ByVal DataLength As Long)
-Dim Buffer() As Byte
+Dim buffer() As Byte
 Dim pLength As Long
 
-    frmLoad.Socket.GetData Buffer, vbUnicode, DataLength
+    frmLoad.Socket.GetData buffer, vbUnicode, DataLength
     
-    EditorBuffer.WriteBytes Buffer()
+    EditorBuffer.WriteBytes buffer()
     
-    If EditorBuffer.Length >= 4 Then pLength = EditorBuffer.ReadLong(False)
-    Do While pLength > 0 And pLength <= EditorBuffer.Length - 4
-        If pLength <= EditorBuffer.Length - 4 Then
+    If EditorBuffer.length >= 4 Then pLength = EditorBuffer.ReadLong(False)
+    Do While pLength > 0 And pLength <= EditorBuffer.length - 4
+        If pLength <= EditorBuffer.length - 4 Then
             EditorBuffer.ReadLong
             HandleData EditorBuffer.ReadBytes(pLength)
         End If
 
         pLength = 0
-        If EditorBuffer.Length >= 4 Then pLength = EditorBuffer.ReadLong(False)
+        If EditorBuffer.length >= 4 Then pLength = EditorBuffer.ReadLong(False)
     Loop
     EditorBuffer.Trim
     DoEvents
 End Sub
 
 Public Sub SendVersionCheck()
-Dim Buffer As clsBuffer
+Dim buffer As clsBuffer
 
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong CE_VersionCheck
+    Set buffer = New clsBuffer
+    buffer.WriteLong CE_VersionCheck
     
-    Buffer.WriteString EDITOR_VERSION
+    buffer.WriteString EDITOR_VERSION
     
-    SendData Buffer.ToArray
+    SendData buffer.ToArray
     
-    Set Buffer = Nothing
+    Set buffer = Nothing
 End Sub
 
 Public Sub SendSaveDeveloper()
-Dim Buffer As clsBuffer, i As Long, Hash As String
+Dim buffer As clsBuffer, i As Long, Hash As String
     
     ' Do we have permissions to do this?
     If LCase(Trim$(frmDatabase.txtUsername.Text)) = Trim$(Editor.Username) Then
@@ -117,43 +117,58 @@ Dim Buffer As clsBuffer, i As Long, Hash As String
         End If
     End If
     
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong CE_SaveDeveloper
+    Set buffer = New clsBuffer
+    buffer.WriteLong CE_SaveDeveloper
     
-    Buffer.WriteString LCase(Trim$(frmDatabase.txtUsername.Text))
+    buffer.WriteString LCase(Trim$(frmDatabase.txtUsername.Text))
     
     i = InitCrc32()
     i = AddCrc32(frmDatabase.txtPassword.Text, i)
     Hash = CStr(i)
     frmDatabase.txtPassword.Text = Hash
     
-    Buffer.WriteString Hash
+    buffer.WriteString Hash
     
     For i = 1 To Editor_MaxRights - 1
-        Buffer.WriteByte 1
+        buffer.WriteByte 1
     Next
     
-    SendData Buffer.ToArray()
+    SendData buffer.ToArray()
     
-    Set Buffer = Nothing
+    Set buffer = Nothing
 End Sub
 
 Public Sub SendUserLogin()
-Dim Buffer As clsBuffer, i As Long, Hash As String
+Dim buffer As clsBuffer, i As Long, Hash As String
     
-    Set Buffer = New clsBuffer
-    Buffer.WriteLong CE_LoginUser
+    Set buffer = New clsBuffer
+    buffer.WriteLong CE_LoginUser
     
-    Buffer.WriteString LCase(Trim$(frmLogin.txtUsername.Text))
+    buffer.WriteString LCase(Trim$(frmLogin.txtUsername.Text))
     
     i = InitCrc32()
     i = AddCrc32(frmLogin.txtPassword.Text, i)
     Hash = CStr(i)
     frmLogin.txtPassword.Text = vbNullString
     
-    Buffer.WriteString Hash
+    buffer.WriteString Hash
     
-    SendData Buffer.ToArray
+    SendData buffer.ToArray
     
-    Set Buffer = Nothing
+    Set buffer = Nothing
+End Sub
+
+Public Sub SendRequestMap(ByVal MapNum As Long)
+Dim buffer As clsBuffer
+
+    Set buffer = New clsBuffer
+    buffer.WriteLong CE_RequestMap
+    
+    buffer.WriteLong MapNum
+    
+    SendData buffer.ToArray
+    
+    SetStatus "Sent out a request for data on Map " & Trim$(CStr(MapNum))
+    Set buffer = Nothing
+
 End Sub

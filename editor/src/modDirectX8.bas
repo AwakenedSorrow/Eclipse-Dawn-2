@@ -60,6 +60,7 @@ Public Tex_DirBlock As Long
 Public Tex_Outline As Long
 Public Tex_Select As Long
 Public Tex_EditorBackDrop As Long
+Public Tex_Blank As Long
 
 ' Texture counts
 Public NumTileSets As Long
@@ -382,6 +383,9 @@ Dim i As Long
     
     Tex_EditorBackDrop = SetTexturePath(App.Path & GFX_PATH & "backdrop" & GFX_EXT)
     Call LoadTexture(Tex_EditorBackDrop)
+    
+    Tex_Blank = SetTexturePath(App.Path & GFX_PATH & "blank" & GFX_EXT)
+    Call LoadTexture(Tex_Blank)
         
 End Sub
 

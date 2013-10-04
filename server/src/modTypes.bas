@@ -25,8 +25,8 @@ Public Editor(MAX_EDITORS) As EditorRec
 Public TempEditor(1 To MAX_EDITORS) As TempEditorRec
 
 Private Type EditorRec
-    Username As String * 20
-    Password As String * 20
+    Username As String * NAME_LENGTH
+    Password As String * NAME_LENGTH
     
     HasRight(Editor_MaxRights - 1) As Byte
 End Type

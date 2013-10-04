@@ -32,8 +32,13 @@ Public EditorTileWidth As Long
 Public EditorTileHeight As Long
 Public EditorTileX As Long
 Public EditorTileY As Long
-Public OldMouseX As Long
-Public OldMouseY As Long
+Public MouseX As Long
+Public MouseY As Long
+Public MouseXMove As Long
+Public MouseYMove As Long
+Public CurrentMap As Long
+Public HasMapChanged As Boolean
+Public ShowMouse As Boolean
 
 ' MAX Globals
 Public MAX_MAPS As Long

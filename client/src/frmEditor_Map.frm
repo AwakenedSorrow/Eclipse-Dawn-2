@@ -1284,10 +1284,6 @@ errorhandler:
     Exit Sub
 End Sub
 
-Private Sub picBack_Click()
-
-End Sub
-
 Private Sub picBackSelect_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
     ' If debug mode, handle error then exit out
     If Options.Debug = 1 Then On Error GoTo errorhandler

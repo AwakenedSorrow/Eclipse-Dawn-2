@@ -27,6 +27,7 @@ Public Sub MapEditorChooseTile(Button As Integer, X As Single, Y As Single)
         EditorTileX = X \ PIC_X
         EditorTileY = Y \ PIC_Y
         
+        SetStatus "Selected a tile at location X" & Trim$(CStr(EditorTileX)) & " Y" & Trim$(CStr(EditorTileY))
     End If
     
 End Sub
@@ -49,6 +50,19 @@ Public Sub MapEditorDrag(Button As Integer, X As Single, Y As Single)
         If Y > EditorTileY Then ' drag down
             EditorTileHeight = Y - EditorTileY
         End If
+        SetStatus "Selected a tile at location X" & Trim$(CStr(EditorTileX)) & " Y" & Trim$(CStr(EditorTileY))
     End If
 
 End Sub
+
+Public Function IsValidMapPoint(ByVal X As Long, ByVal Y As Long) As Boolean
+
+    IsValidMapPoint = False
+
+    If X < 0 Then Exit Function
+    If Y < 0 Then Exit Function
+    If X > Map.MaxX Then Exit Function
+    If Y > Map.MaxY Then Exit Function
+    IsValidMapPoint = True
+        
+End Function

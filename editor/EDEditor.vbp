@@ -1,6 +1,6 @@
 Type=Exe
-Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#..\..\..\..\..\..\Windows\SysWOW64\stdole2.tlb#OLE Automation
-Reference=*\G{E1211242-8E94-11D1-8808-00C04FC2C603}#1.0#0#..\..\..\..\..\..\Program Files (x86)\Eclipse Origins Runtime Files\Runtimes\dx8vb.dll#DirectX 8 for Visual Basic Type Library
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\Windows\SysWOW64\stdole2.tlb#OLE Automation
+Reference=*\G{E1211242-8E94-11D1-8808-00C04FC2C603}#1.0#0#C:\Windows\SysWow64\dx8vb.dll#DirectX 8 for Visual Basic Type Library
 Object={248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0; MSWINSCN.OCX
 Form=src\frmLogin.frm
 Module=modGeneral; src\modGeneral.bas
@@ -24,6 +24,7 @@ Form=src\frmDatabase.frm
 Module=modCrc32; src\modCrc32.bas
 Module=modRendering; src\modRendering.bas
 Module=modEditorLogic; src\modEditorLogic.bas
+Module=modText; src\modText.bas
 IconForm="frmLogin"
 Startup="Sub Main"
 HelpFile=""

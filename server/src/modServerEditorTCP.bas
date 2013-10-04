@@ -57,7 +57,7 @@ Sub AcceptEditorConnection(ByVal Index As Long, ByVal SocketId As Long)
             frmServer.EditorSocket(i).Accept SocketId
             Call TextAdd("Received connection from " & GetEditorIP(Index) & ".")
         Else
-            SendEditorAlertMsg Index, "The server appears to be full, try again later."
+            SendEditorAlertMsg Index, "The server appears to be full, try again later.", True
         End If
     End If
 
@@ -101,18 +101,35 @@ Dim TempData() As Byte
     End If
 End Sub
 
-Public Sub SendEditorAlertMsg(ByVal Index As Byte, ByVal Message As String)
+Public Sub SendEditorAlertMsg(ByVal Index As Byte, ByVal Message As String, Disconnect As Boolean)
 Dim buffer As clsBuffer
 
     Set buffer = New clsBuffer
     
     buffer.WriteLong SE_AlertMsg
     buffer.WriteString Message
+    If Disconnect Then
+        buffer.WriteByte 1
+    Else
+        buffer.WriteByte 0
+    End If
     
     SendEditorDataTo Index, buffer.ToArray()
     
     Set buffer = Nothing
 
+End Sub
+
+Sub SendEditorMap(ByVal Index As Long, ByVal MapNum As Long)
+    Dim buffer As clsBuffer
+    Set buffer = New clsBuffer
+    
+    buffer.PreAllocate (UBound(MapCache(MapNum).Data) - LBound(MapCache(MapNum).Data)) + 5
+    buffer.WriteLong SE_MapData
+    buffer.WriteBytes MapCache(MapNum).Data()
+    SendEditorDataTo Index, buffer.ToArray()
+    
+    Set buffer = Nothing
 End Sub
 
 Public Sub SendEditorVersionOK(ByVal Index As Byte)
@@ -162,3 +179,36 @@ Dim buffer As clsBuffer, i As Long
     Set buffer = Nothing
     
 End Sub
+
+Sub SendEditorResources(ByVal Index As Long)
+    Dim i As Long
+
+    For i = 1 To MAX_RESOURCES
+
+        If LenB(Trim$(Resource(i).Name)) > 0 Then
+            Call SendEditorUpdateResourceTo(Index, i)
+        End If
+
+    Next
+
+End Sub
+
+Sub SendEditorUpdateResourceTo(ByVal Index As Long, ByVal ResourceNum As Long)
+    Dim buffer As clsBuffer
+    Dim ResourceSize As Long
+    Dim ResourceData() As Byte
+    
+    Set buffer = New clsBuffer
+    
+    ResourceSize = LenB(Resource(ResourceNum))
+    ReDim ResourceData(ResourceSize - 1)
+    CopyMemory ResourceData(0), ByVal VarPtr(Resource(ResourceNum)), ResourceSize
+    
+    buffer.WriteLong SE_ResourceData
+    buffer.WriteLong ResourceNum
+    buffer.WriteBytes ResourceData
+    
+    SendEditorDataTo Index, buffer.ToArray()
+    Set buffer = Nothing
+End Sub
+
