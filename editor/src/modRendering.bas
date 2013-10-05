@@ -5,7 +5,8 @@ Option Explicit
 
 Public Sub RenderGraphics()
     ' Render Map Editor Components
-    MapEditor_DrawTileSet
+    '  Only render the tile selection if the layer selection is on anything but Attributes.
+    If frmEditor.cmbLayerSelect.ListIndex + 1 < Layer_Count Then MapEditor_DrawTileSet
     MapEditor_DrawMapView
     
 End Sub
@@ -102,7 +103,9 @@ Public Sub MapEditor_DrawTileSet()
 Dim Tileset As Long, X As Long, Y As Long, OY As Long, EY As Long
 Dim srcRect As D3DRECT, destRect As D3DRECT
 Dim X1 As Long, X2 As Long, Y1 As Long, Y2 As Long
-
+    
+    If frmEditor.cmbLayerSelect.ListIndex + 1 > Fringe2 Then Exit Sub
+    
     Tileset = frmEditor.cmbTileSet.ListIndex + 1
     
     ' Let's open clear ourselves a nice clean slate to render on shall we?

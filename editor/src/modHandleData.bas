@@ -77,6 +77,9 @@ Dim buffer As clsBuffer, i As Long, TempName As String, TempRev As Long
     
     Set buffer = Nothing
     
+    If Editor.HasRight(CanEditMap) = 1 Then
+        SendRequestMap 1
+    End If
 End Sub
 
 Private Sub HandleLoginOK(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
@@ -151,7 +154,15 @@ Dim MapNum As Long
     SetStatus "Received map data for Map " & Trim$(CStr(MapNum))
     MapViewTileOffSetX = 0
     MapViewTileOffSetY = 0
+    EditorTileWidth = 1
+    EditorTileHeight = 1
+    EditorTileX = 0
+    EditorTileY = 0
     HasMapChanged = False
+    
+    If CurrentMap > 0 Then ClearAttributeFrames
+    CurrentMap = MapNum
+    frmEditor.optBlocked.value = True
 End Sub
 
 Private Sub HandleUpdateResource(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)

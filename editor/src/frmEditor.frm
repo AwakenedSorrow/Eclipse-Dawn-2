@@ -12,11 +12,384 @@ Begin VB.Form frmEditor
    ScaleMode       =   3  'Pixel
    ScaleWidth      =   800
    StartUpPosition =   3  'Windows Default
+   Begin VB.PictureBox picAttributes 
+      Appearance      =   0  'Flat
+      BackColor       =   &H80000004&
+      BorderStyle     =   0  'None
+      ForeColor       =   &H80000008&
+      Height          =   5295
+      Left            =   120
+      ScaleHeight     =   5295
+      ScaleWidth      =   4095
+      TabIndex        =   16
+      Top             =   840
+      Visible         =   0   'False
+      Width           =   4095
+      Begin VB.Frame fraHeal 
+         Caption         =   "Heal Player"
+         Height          =   1575
+         Left            =   120
+         TabIndex        =   56
+         Top             =   3720
+         Width           =   3855
+         Begin VB.ComboBox cmbHeal 
+            Height          =   315
+            ItemData        =   "frmEditor.frx":0000
+            Left            =   1560
+            List            =   "frmEditor.frx":000A
+            Style           =   2  'Dropdown List
+            TabIndex        =   58
+            Top             =   480
+            Width           =   1335
+         End
+         Begin VB.TextBox txtHealAmount 
+            Height          =   285
+            Left            =   1560
+            TabIndex        =   57
+            Text            =   "0"
+            Top             =   840
+            Width           =   1335
+         End
+         Begin VB.Label Label6 
+            Caption         =   "Restore:"
+            Height          =   255
+            Left            =   720
+            TabIndex        =   60
+            Top             =   530
+            Width           =   615
+         End
+         Begin VB.Label Label7 
+            Caption         =   "Amount:"
+            Height          =   255
+            Left            =   720
+            TabIndex        =   59
+            Top             =   870
+            Width           =   615
+         End
+      End
+      Begin VB.Frame fraDamage 
+         Caption         =   "Damage Player"
+         Height          =   1575
+         Left            =   120
+         TabIndex        =   51
+         Top             =   3720
+         Width           =   3855
+         Begin VB.ComboBox cmbDamage 
+            Height          =   315
+            ItemData        =   "frmEditor.frx":001C
+            Left            =   1560
+            List            =   "frmEditor.frx":0026
+            Style           =   2  'Dropdown List
+            TabIndex        =   53
+            Top             =   480
+            Width           =   1335
+         End
+         Begin VB.TextBox txtDamageAmount 
+            Height          =   285
+            Left            =   1560
+            TabIndex        =   52
+            Text            =   "0"
+            Top             =   840
+            Width           =   1335
+         End
+         Begin VB.Label Label9 
+            Caption         =   "Restore:"
+            Height          =   255
+            Left            =   720
+            TabIndex        =   55
+            Top             =   530
+            Width           =   615
+         End
+         Begin VB.Label Label8 
+            Caption         =   "Amount:"
+            Height          =   255
+            Left            =   720
+            TabIndex        =   54
+            Top             =   870
+            Width           =   615
+         End
+      End
+      Begin VB.Frame fraSlide 
+         Caption         =   "Slide Player"
+         Height          =   1575
+         Left            =   120
+         TabIndex        =   48
+         Top             =   3720
+         Width           =   3855
+         Begin VB.ComboBox cmbSlide 
+            Height          =   315
+            ItemData        =   "frmEditor.frx":0038
+            Left            =   1320
+            List            =   "frmEditor.frx":0048
+            Style           =   2  'Dropdown List
+            TabIndex        =   50
+            Top             =   600
+            Width           =   2295
+         End
+         Begin VB.Label Label5 
+            Caption         =   "Direction:"
+            Height          =   255
+            Left            =   360
+            TabIndex        =   49
+            Top             =   640
+            Width           =   1095
+         End
+      End
+      Begin VB.Frame fraWarp 
+         Caption         =   "Warp Player"
+         Height          =   1575
+         Left            =   120
+         TabIndex        =   41
+         Top             =   3720
+         Width           =   3855
+         Begin VB.TextBox txtWarpY 
+            Height          =   285
+            Left            =   3120
+            TabIndex        =   47
+            Text            =   "0"
+            Top             =   840
+            Width           =   615
+         End
+         Begin VB.TextBox txtWarpX 
+            Height          =   285
+            Left            =   1200
+            TabIndex        =   46
+            Text            =   "0"
+            Top             =   840
+            Width           =   615
+         End
+         Begin VB.ComboBox cmbWarpMap 
+            Height          =   315
+            Left            =   1200
+            Style           =   2  'Dropdown List
+            TabIndex        =   43
+            Top             =   480
+            Width           =   2535
+         End
+         Begin VB.Label Label4 
+            Caption         =   "Location Y:"
+            Height          =   255
+            Left            =   1920
+            TabIndex        =   45
+            Top             =   870
+            Width           =   855
+         End
+         Begin VB.Label Label3 
+            Caption         =   "Location X:"
+            Height          =   255
+            Left            =   120
+            TabIndex        =   44
+            Top             =   870
+            Width           =   855
+         End
+         Begin VB.Label Label2 
+            Caption         =   "Warp to Map:"
+            Height          =   255
+            Left            =   120
+            TabIndex        =   42
+            Top             =   525
+            Width           =   1095
+         End
+      End
+      Begin VB.Frame fraBlock 
+         Caption         =   "Block Player"
+         Height          =   1575
+         Left            =   120
+         TabIndex        =   39
+         Top             =   3720
+         Width           =   3855
+         Begin VB.Label Label1 
+            Alignment       =   2  'Center
+            Caption         =   "No additional information required."
+            Height          =   255
+            Left            =   120
+            TabIndex        =   40
+            Top             =   720
+            Width           =   3615
+         End
+      End
+      Begin VB.Frame Frame2 
+         Caption         =   "Attributes"
+         Height          =   3735
+         Left            =   120
+         TabIndex        =   17
+         Top             =   0
+         Width           =   3855
+         Begin VB.OptionButton optShop 
+            Caption         =   "Open Shop"
+            Height          =   270
+            Left            =   2160
+            TabIndex        =   38
+            Top             =   2520
+            Width           =   1215
+         End
+         Begin VB.OptionButton optBank 
+            Caption         =   "Open Bank"
+            Height          =   270
+            Left            =   2160
+            TabIndex        =   37
+            Top             =   2760
+            Width           =   1215
+         End
+         Begin VB.OptionButton optItem 
+            Caption         =   "Spawn Item"
+            Height          =   255
+            Left            =   2160
+            TabIndex        =   36
+            Top             =   1440
+            Width           =   1550
+         End
+         Begin VB.OptionButton optResource 
+            Caption         =   "Spawn Resource"
+            Height          =   230
+            Left            =   2160
+            TabIndex        =   35
+            Top             =   1680
+            Width           =   1550
+         End
+         Begin VB.OptionButton optNpcSpawn 
+            Caption         =   "Spawn NPC"
+            Height          =   195
+            Left            =   2160
+            TabIndex        =   34
+            Top             =   720
+            Width           =   1215
+         End
+         Begin VB.OptionButton optNpcAvoid 
+            Caption         =   "Avoid Tile"
+            Height          =   195
+            Left            =   2160
+            TabIndex        =   33
+            Top             =   480
+            Width           =   1215
+         End
+         Begin VB.OptionButton optScript 
+            Caption         =   "Script"
+            Height          =   270
+            Left            =   240
+            TabIndex        =   32
+            Top             =   3240
+            Width           =   1215
+         End
+         Begin VB.OptionButton optKey 
+            Caption         =   "Key"
+            Height          =   255
+            Left            =   240
+            TabIndex        =   31
+            Top             =   2760
+            Width           =   1575
+         End
+         Begin VB.OptionButton optKeyOpen 
+            Caption         =   "Key Open"
+            Height          =   255
+            Left            =   240
+            TabIndex        =   30
+            Top             =   3000
+            Width           =   1575
+         End
+         Begin VB.OptionButton optDoor 
+            Caption         =   "Door"
+            Height          =   255
+            Left            =   240
+            TabIndex        =   29
+            Top             =   2520
+            Width           =   1575
+         End
+         Begin VB.OptionButton optTrap 
+            Caption         =   "Damage Player"
+            Height          =   195
+            Left            =   240
+            TabIndex        =   28
+            Top             =   1440
+            Width           =   1455
+         End
+         Begin VB.OptionButton optBlocked 
+            Caption         =   "Block Player"
+            Height          =   195
+            Left            =   240
+            TabIndex        =   27
+            Top             =   480
+            Width           =   1215
+         End
+         Begin VB.OptionButton optWarp 
+            Caption         =   "Warp Player"
+            Height          =   195
+            Left            =   240
+            TabIndex        =   26
+            Top             =   720
+            Width           =   1215
+         End
+         Begin VB.OptionButton optSlide 
+            Caption         =   "Slide Player"
+            Height          =   195
+            Left            =   240
+            TabIndex        =   25
+            Top             =   960
+            Width           =   1335
+         End
+         Begin VB.OptionButton optHeal 
+            Caption         =   "Heal Player"
+            Height          =   195
+            Left            =   240
+            TabIndex        =   24
+            Top             =   1200
+            Width           =   1215
+         End
+         Begin VB.OptionButton optDirBlock 
+            Caption         =   "Directional Block"
+            Height          =   195
+            Left            =   240
+            TabIndex        =   23
+            Top             =   1800
+            Width           =   1575
+         End
+         Begin VB.Frame Frame6 
+            Caption         =   "Player Functions"
+            Height          =   1335
+            Left            =   2040
+            TabIndex        =   22
+            Top             =   2280
+            Width           =   1695
+         End
+         Begin VB.Frame Frame5 
+            Caption         =   "Map Control"
+            Height          =   1335
+            Left            =   120
+            TabIndex        =   21
+            Top             =   2280
+            Width           =   1815
+         End
+         Begin VB.Frame Frame4 
+            Caption         =   "Spawn Objects"
+            Height          =   975
+            Left            =   2040
+            TabIndex        =   20
+            Top             =   1200
+            Width           =   1695
+         End
+         Begin VB.Frame Frame3 
+            Caption         =   "NPC Control"
+            Height          =   855
+            Left            =   2040
+            TabIndex        =   19
+            Top             =   240
+            Width           =   1695
+         End
+         Begin VB.Frame Frame1 
+            Caption         =   "Player Control"
+            Height          =   1935
+            Left            =   120
+            TabIndex        =   18
+            Top             =   240
+            Width           =   1815
+         End
+      End
+   End
    Begin VB.CommandButton cmdOpenChat 
       Caption         =   "Open Chat"
       Height          =   735
       Left            =   8160
-      Picture         =   "frmEditor.frx":0000
+      Picture         =   "frmEditor.frx":0066
       Style           =   1  'Graphical
       TabIndex        =   15
       Top             =   0
@@ -26,7 +399,7 @@ Begin VB.Form frmEditor
       Caption         =   "Edit Database"
       Height          =   735
       Left            =   10200
-      Picture         =   "frmEditor.frx":0573
+      Picture         =   "frmEditor.frx":05D9
       Style           =   1  'Graphical
       TabIndex        =   14
       Top             =   0
@@ -35,9 +408,9 @@ Begin VB.Form frmEditor
    Begin VB.ListBox lstMapList 
       Columns         =   1
       Height          =   2400
-      ItemData        =   "frmEditor.frx":0A0D
+      ItemData        =   "frmEditor.frx":0A73
       Left            =   120
-      List            =   "frmEditor.frx":0A0F
+      List            =   "frmEditor.frx":0A75
       TabIndex        =   13
       Top             =   6240
       Width           =   4095
@@ -76,7 +449,7 @@ Begin VB.Form frmEditor
       Caption         =   "Reload Map"
       Height          =   735
       Left            =   1560
-      Picture         =   "frmEditor.frx":0A11
+      Picture         =   "frmEditor.frx":0A77
       Style           =   1  'Graphical
       TabIndex        =   9
       Top             =   0
@@ -100,9 +473,9 @@ Begin VB.Form frmEditor
    End
    Begin VB.ComboBox cmbLayerSelect 
       Height          =   315
-      ItemData        =   "frmEditor.frx":0E4B
+      ItemData        =   "frmEditor.frx":0EB1
       Left            =   5040
-      List            =   "frmEditor.frx":0E61
+      List            =   "frmEditor.frx":0EC7
       Style           =   2  'Dropdown List
       TabIndex        =   6
       Top             =   240
@@ -115,7 +488,7 @@ Begin VB.Form frmEditor
       ForeColor       =   &H80000008&
       Height          =   495
       Left            =   4440
-      Picture         =   "frmEditor.frx":0EE8
+      Picture         =   "frmEditor.frx":0F4E
       ScaleHeight     =   33
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   33
@@ -127,7 +500,7 @@ Begin VB.Form frmEditor
       Caption         =   "Clear Map"
       Height          =   735
       Left            =   3000
-      Picture         =   "frmEditor.frx":139C
+      Picture         =   "frmEditor.frx":1402
       Style           =   1  'Graphical
       TabIndex        =   4
       Top             =   0
@@ -137,7 +510,7 @@ Begin VB.Form frmEditor
       Caption         =   "Save Map"
       Height          =   735
       Left            =   120
-      Picture         =   "frmEditor.frx":1846
+      Picture         =   "frmEditor.frx":18AC
       Style           =   1  'Graphical
       TabIndex        =   3
       Top             =   0
@@ -195,6 +568,22 @@ Attribute VB_Exposed = False
 Option Explicit
 
 
+Private Sub cmbLayerSelect_Change()
+    If cmbLayerSelect.ListIndex + 1 < Layer_Count Then
+        frmEditor.picAttributes.Visible = False
+    Else
+        frmEditor.picAttributes.Visible = True
+    End If
+End Sub
+
+Private Sub cmbLayerSelect_Click()
+    If cmbLayerSelect.ListIndex + 1 < Layer_Count Then
+        frmEditor.picAttributes.Visible = False
+    Else
+        frmEditor.picAttributes.Visible = True
+    End If
+End Sub
+
 Private Sub cmbTileSet_Change()
     ' Set the scrollbar Max.
     If D3DT_TEXTURE(Tex_TileSet(cmbTileSet.ListIndex + 1)).Height > TileSelectHeight Then
@@ -246,10 +635,6 @@ Private Sub cmdReloadMap_Click()
             If MsgBox("You've made changes to this map that have not been saved, are you sure you want to reload this map?", vbYesNo) = vbNo Then Exit Sub
         End If
             
-        ' Set our current map
-        CurrentMap = lstMapList.ListIndex + 1
-        If CurrentMap = 0 Then Exit Sub
-            
         ' Send out a request for the map we want to edit.
         SendRequestMap CurrentMap
             
@@ -280,6 +665,16 @@ Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y A
         X = X - TileSetWindowOffSetX
         Y = (Y - TileSetWindowOffSetY) + (scrlTileSelect.value * 32)
         MapEditorChooseTile Button, X, Y
+    End If
+    
+    ' Inside the map editor view.
+    If X > MapViewWindow.X1 And X < MapViewWindow.X2 And Y > MapViewWindow.Y1 And Y < MapViewWindow.Y2 Then
+        X = X - 16
+        Y = Y - 16
+        CurX = ((X - MapViewWindowOffSetX) / PIC_X) - (0 + MapViewTileOffSetX)
+        CurY = ((Y - MapViewWindowOffSetY) / PIC_Y) - (0 + MapViewTileOffSetY)
+
+        MapEditorMouseDown Button, X, Y
     End If
 End Sub
 
@@ -316,6 +711,13 @@ Dim OldMouseX As Long, OldMouseY As Long
             ' UpdateCamera
         End If
         
+        ' Tile dragging
+        X = X - 16
+        Y = Y - 16
+        CurX = ((X - MapViewWindowOffSetX) / PIC_X) - (0 + MapViewTileOffSetX)
+        CurY = ((Y - MapViewWindowOffSetY) / PIC_Y) - (0 + MapViewTileOffSetY)
+
+        MapEditorMouseDown Button, X, Y
     Else
         ShowMouse = False
     End If
@@ -338,6 +740,7 @@ Private Sub Form_Resize()
         TileSelectHeight = (.Y2 - .Y1)
     End With
     scrlTileSelect.Height = TileSelectHeight + 1
+    frmEditor.picAttributes.Height = TileSelectHeight + 43
     
     ' Resize the map editor view
     MapViewHeight = frmEditor.ScaleHeight - MapViewWindowOffSetY - 23
@@ -384,10 +787,47 @@ Private Sub lstMapList_Click()
     End If
 End Sub
 
+Private Sub optBlocked_Click()
+    ClearAttributeFrames
+    fraBlock.Visible = True
+End Sub
+
+Private Sub optHeal_Click()
+    ClearAttributeFrames
+    fraHeal.Visible = True
+End Sub
+
+Private Sub optSlide_Click()
+    ClearAttributeFrames
+    fraSlide.Visible = True
+End Sub
+
+Private Sub optTrap_Click()
+    ClearAttributeFrames
+    fraDamage.Visible = True
+End Sub
+
+Private Sub optWarp_Click()
+    ClearAttributeFrames
+    fraWarp.Visible = True
+End Sub
+
 Private Sub scrlTileSelect_Change()
     MapEditor_DrawTileSet
 End Sub
 
 Private Sub scrlTileSelect_Scroll()
     MapEditor_DrawTileSet
+End Sub
+
+Private Sub txtHealAmount_Change()
+    If Val(txtHealAmount.text) < 0 Then txtHealAmount.text = "0"
+End Sub
+
+Private Sub txtWarpX_Change()
+    If Val(txtWarpX.text) < 0 Then txtWarpX.text = "0"
+End Sub
+
+Private Sub txtWarpY_Change()
+    If CLng(txtWarpY.text) < 0 Then txtWarpY.text = "0"
 End Sub

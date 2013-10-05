@@ -86,13 +86,13 @@ Private Sub cmdLogin_Click()
 Dim Wait As Long
     
     ' Check if we need to save our user to the file.
-    If Options.RememberUser = 1 And Options.Username <> Trim(txtUsername.Text) Then
-        Options.Username = Trim(txtUsername.Text)
+    If Options.RememberUser = 1 And Options.Username <> Trim(txtUsername.text) Then
+        Options.Username = Trim(txtUsername.text)
         SaveOptions App.Path & "\" & OPTIONS_FILE
     End If
     
     ' Handle the actual log in sequence from here.
-    If Len(Trim$(txtUsername.Text)) > 0 And Len(Trim$(txtPassword.Text)) > 0 Then
+    If Len(Trim$(txtUsername.text)) > 0 And Len(Trim$(txtPassword.text)) > 0 Then
         SendUserLogin
         frmLogin.Visible = False
         LoggingIn = True
@@ -121,6 +121,10 @@ Dim Wait As Long
         
         ' Hide old forms
         frmLoad.Visible = False
+        
+        '  clear all attribute windows.
+        ClearAttributeFrames
+        frmEditor.optBlocked.value = True
         
         ' Show the map editor screen.
         frmEditor.Show

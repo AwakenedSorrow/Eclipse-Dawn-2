@@ -39,6 +39,8 @@ Public MouseYMove As Long
 Public CurrentMap As Long
 Public HasMapChanged As Boolean
 Public ShowMouse As Boolean
+Public CurX As Long
+Public CurY As Long
 
 ' MAX Globals
 Public MAX_MAPS As Long

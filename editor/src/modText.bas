@@ -265,25 +265,25 @@ Public Sub DrawMapAttributes()
             For Y = 0 To Map.MaxY
                 If IsValidMapPoint(X, Y) Then
                 With Map.Tile(X, Y)
-                    tx = ((MapViewTileOffSetX + X) * 32 + 4) + PIC_X * 0.5
-                    ty = ((MapViewTileOffSetY + Y) * 32) + PIC_Y * 0.5
+                    tx = ((MapViewTileOffSetX + X) * 32) + 10
+                    ty = ((MapViewTileOffSetY + Y) * 32) + 10
                         Select Case .Type
                             Case TileTypeBlocked
-                                RenderText MainFont, "B", tx, ty, BrightRed, 200
+                                RenderText MainFont, "Bl", tx, ty, BrightRed, 200
                             Case TileTypeWarp
-                                RenderText MainFont, "W", tx, ty, BrightBlue, 200
+                                RenderText MainFont, "Wa", tx, ty, BrightBlue, 200
                             Case TileTypeItem
-                                RenderText MainFont, "I", tx, ty, White, 200
+                                RenderText MainFont, "It", tx, ty, White, 200
                             Case TileTypeNPCAvoid
                                 RenderText MainFont, "Na", tx, ty, White, 200
                             Case TileTypeKey
-                                RenderText MainFont, "K", tx, ty, White, 200
+                                RenderText MainFont, "Ke", tx, ty, White, 200
                             Case TileTypeKeyOpen
-                                RenderText MainFont, "O", tx, ty, White, 200
+                                RenderText MainFont, "Op", tx, ty, White, 200
                             Case TileTypeResource
-                                RenderText MainFont, "R", tx, ty, Green, 200
+                                RenderText MainFont, "Re", tx, ty, Green, 200
                             Case TileTypeDoor
-                                RenderText MainFont, "D", tx, ty, Brown, 200
+                                RenderText MainFont, "Do", tx, ty, Brown, 200
                             Case TileTypeNPCSpawn
                                 RenderText MainFont, "Ns", tx, ty, yellow, 200
                             Case TileTypeShop
@@ -291,9 +291,9 @@ Public Sub DrawMapAttributes()
                             Case TileTypeBank
                                 RenderText MainFont, "Ba", tx, ty, Blue, 200
                             Case TileTypeHeal
-                                RenderText MainFont, "H", tx, ty, brightgreen, 200
+                                RenderText MainFont, "He", tx, ty, brightgreen, 200
                             Case TileTypeTrap
-                                RenderText MainFont, "T", tx, ty, BrightRed, 200
+                                RenderText MainFont, "Da", tx, ty, BrightRed, 200
                             Case TileTypeSlide
                                 RenderText MainFont, "Sl", tx, ty, BrightCyan, 200
                             Case TileTypeScripted
