@@ -8,6 +8,7 @@ Public Sub InitMessages()
     HandleDataSub(SE_MapNames) = GetAddress(AddressOf HandleMapNames)
     HandleDataSub(SE_MapData) = GetAddress(AddressOf HandleMapData)
     HandleDataSub(SE_ResourceData) = GetAddress(AddressOf HandleUpdateResource)
+    HandleDataSub(SE_MaxAmounts) = GetAddress(AddressOf Handlemaxamounts)
 End Sub
 
 Public Function GetAddress(FunAddr As Long) As Long
@@ -65,7 +66,6 @@ Dim buffer As clsBuffer, i As Long, TempName As String, TempRev As Long
     Set buffer = New clsBuffer
     buffer.WriteBytes data()
     
-    MAX_MAPS = buffer.ReadLong()
     frmEditor.lstMapList.Clear
     For i = 1 To MAX_MAPS
         TempName = buffer.ReadString()
@@ -188,4 +188,31 @@ Dim ResourceData() As Byte
     
     SetStatus "Received Resource Data."
     
+End Sub
+
+Private Sub Handlemaxamounts(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim buffer As clsBuffer
+        
+    Set buffer = New clsBuffer
+    buffer.WriteBytes data()
+        
+    MAX_MAPS = buffer.ReadLong()
+    MAX_ITEMS = buffer.ReadLong()
+    MAX_NPCS = buffer.ReadLong()
+    MAX_ANIMATIONS = buffer.ReadLong()
+    MAX_INV = buffer.ReadLong()
+    MAX_MAP_ITEMS = buffer.ReadLong()
+    MAX_MAP_NPCS = buffer.ReadLong()
+    MAX_SHOPS = buffer.ReadLong()
+    MAX_PLAYER_SPELLS = buffer.ReadLong()
+    MAX_SPELLS = buffer.ReadLong()
+    MAX_RESOURCES = buffer.ReadLong()
+    MAX_LEVELS = buffer.ReadLong()
+    MAX_BANK = buffer.ReadLong()
+    MAX_HOTBAR = buffer.ReadLong()
+    
+    ReDim Resource(1 To MAX_RESOURCES)
+    ReDim Map.Npc(1 To MAX_MAP_NPCS)
+    
+    Set buffer = Nothing
 End Sub

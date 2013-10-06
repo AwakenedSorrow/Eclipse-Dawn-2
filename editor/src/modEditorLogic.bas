@@ -28,8 +28,6 @@ Public Sub MapEditorChooseTile(Button As Integer, X As Single, Y As Single)
         
         EditorTileX = X \ PIC_X
         EditorTileY = Y \ PIC_Y
-        
-        SetStatus "Selected a tile at location X" & Trim$(CStr(EditorTileX)) & " Y" & Trim$(CStr(EditorTileY))
     End If
     
 End Sub
@@ -44,7 +42,7 @@ Public Sub MapEditorDrag(Button As Integer, X As Single, Y As Single)
         If X < 0 Then X = 0
         If X > TEXTURE_WIDTH / PIC_X Then X = TEXTURE_WIDTH / PIC_X
         If Y < 0 Then Y = 0
-        If Y > TileSelectHeight / PIC_Y Then Y = TileSelectHeight / PIC_Y
+        If Y > (TileSelectHeight / PIC_Y) + frmEditor.scrlTileSelect.value Then Y = (TileSelectHeight / PIC_Y) + frmEditor.scrlTileSelect.value
         ' find out what to set the width + height of map editor to
         If X > EditorTileX Then ' drag right
             EditorTileWidth = X - EditorTileX
@@ -69,7 +67,7 @@ Public Function IsValidMapPoint(ByVal X As Long, ByVal Y As Long) As Boolean
         
 End Function
 
-Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal Y As Long, Optional ByVal movedMouse As Boolean = True)
+Public Sub MapEditorMouseDown(ByVal Button As Integer, ByVal X As Long, ByVal Y As Long)
 Dim i As Long
 Dim CurLayer As Long
 Dim tmpDir As Byte
@@ -123,22 +121,30 @@ Dim tmpDir As Byte
                     .Data3 = 0
                     HasMapChanged = True
                 End If
+                ' Avoid
+                If frmEditor.optNpcAvoid.value Then
+                    .Type = TileTypeNPCAvoid
+                    .Data1 = 0
+                    .Data2 = 0
+                    .Data3 = 0
+                    HasMapChanged = True
+                End If
             End With
-        ElseIf frmEditor.optDirBlock.value Then
-            If movedMouse Then Exit Sub
-            ' find what tile it is
-            X = X - ((X \ 32) * 32)
-            Y = Y - ((Y \ 32) * 32)
-            ' see if it hits an arrow
-            'For i = 1 To 4
-            '    If X >= DirArrowX(i) And X <= DirArrowX(i) + 8 Then
-            '        If Y >= DirArrowY(i) And Y <= DirArrowY(i) + 8 Then
-            '            ' flip the value.
-            '            setDirBlock Map.Tile(CurX, CurY).DirBlock, CByte(i), Not isDirBlocked(Map.Tile(CurX, CurY).DirBlock, CByte(i))
-            '            Exit Sub
-            '        End If
-            '    End If
-            'Next
+            If frmEditor.optDirBlock.value Then
+                ' find what tile section it is
+                X = (X - MapViewWindow.X1) - ((CurX + MapViewTileOffSetX) * PIC_X)
+                Y = (Y - MapViewWindow.Y1) - ((CurY + MapViewTileOffSetY) * PIC_Y)
+                ' see if it hits an arrow
+                For i = 1 To 4
+                    If X >= DirArrowX(i) And X <= DirArrowX(i) + 8 Then
+                        If Y >= DirArrowY(i) And Y <= DirArrowY(i) + 8 Then
+                            ' flip the value.
+                            setDirBlock Map.Tile(CurX, CurY).DirBlock, CByte(i), Not isDirBlocked(Map.Tile(CurX, CurY).DirBlock, CByte(i))
+                            Exit Sub
+                        End If
+                    End If
+                Next
+            End If
         End If
     End If
 
@@ -160,7 +166,6 @@ Dim tmpDir As Byte
                 .Data3 = 0
                 HasMapChanged = True
             End With
-
         End If
     End If
 
@@ -194,6 +199,12 @@ Dim i As Long
     frmEditor.cmbDamage.ListIndex = 0
     frmEditor.txtDamageAmount.text = "0"
     frmEditor.fraDamage.Visible = False
+    
+    ' Directional Blocking
+    frmEditor.fraDirBlock.Visible = False
+    
+    ' NPC Avoid
+    frmEditor.fraNPCAvoid.Visible = False
 End Sub
 
 Public Sub MapEditorSetTile(ByVal X As Long, ByVal Y As Long, ByVal CurLayer As Long, Optional ByVal multitile As Boolean = False)
@@ -226,4 +237,24 @@ Dim X2 As Long, Y2 As Long, CurX As Long, CurY As Long
             Y2 = Y2 + 1
         Next
     End If
+End Sub
+
+Public Function isDirBlocked(ByRef blockvar As Byte, ByRef Dir As Byte) As Boolean
+    
+    If Not blockvar And (2 ^ Dir) Then
+        isDirBlocked = False
+    Else
+        isDirBlocked = True
+    End If
+    
+End Function
+
+Public Sub setDirBlock(ByRef blockvar As Byte, ByRef Dir As Byte, ByVal block As Boolean)
+    
+    If block Then
+        blockvar = blockvar Or (2 ^ Dir)
+    Else
+        blockvar = blockvar And Not (2 ^ Dir)
+    End If
+
 End Sub

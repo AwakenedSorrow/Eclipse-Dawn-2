@@ -38,18 +38,3 @@ Public Const LoadStateCheckDir As String = "Checking Directories"
 Public Const LoadStateAudio As String = "Initializing Audio"
 Public Const LoadStateD3D8 As String = "Initializing D3D8"
 Public Const LoadStateLogin As String = "Logging In"
-
-Public Const MAX_ITEMS As Long = 255
-Public Const MAX_NPCS As Long = 255
-Public Const MAX_ANIMATIONS As Long = 255
-Public Const MAX_INV As Long = 35
-Public Const MAX_MAP_ITEMS As Long = 255
-Public Const MAX_MAP_NPCS As Long = 30
-Public Const MAX_SHOPS As Long = 50
-Public Const MAX_PLAYER_SPELLS As Long = 35
-Public Const MAX_SPELLS As Long = 255
-Public Const MAX_RESOURCES As Long = 100
-Public Const MAX_LEVELS As Long = 100
-Public Const MAX_BANK As Long = 99
-Public Const MAX_HOTBAR As Long = 12
-

@@ -6,6 +6,7 @@ Begin VB.Form frmLogin
    ClientLeft      =   45
    ClientTop       =   390
    ClientWidth     =   3750
+   Icon            =   "frmLogin.frx":0000
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    MinButton       =   0   'False

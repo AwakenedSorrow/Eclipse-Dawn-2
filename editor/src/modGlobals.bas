@@ -18,6 +18,10 @@ Public EditorBuffer As clsBuffer
 Public CheckingVersion As Boolean
 Public LoggingIn As Boolean
 
+' for directional blocking
+Public DirArrowX(1 To 4) As Byte
+Public DirArrowY(1 To 4) As Byte
+
 '  Render Location Globals
 Public RecTileSelectWindow As D3DRECT
 Public TileSelectHeight As Long
@@ -44,4 +48,17 @@ Public CurY As Long
 
 ' MAX Globals
 Public MAX_MAPS As Long
+Public MAX_ITEMS As Long
+Public MAX_NPCS As Long
+Public MAX_ANIMATIONS As Long
+Public MAX_INV As Long
+Public MAX_MAP_ITEMS As Long
+Public MAX_MAP_NPCS As Long
+Public MAX_SHOPS As Long
+Public MAX_PLAYER_SPELLS As Long
+Public MAX_SPELLS As Long
+Public MAX_RESOURCES As Long
+Public MAX_LEVELS As Long
+Public MAX_BANK As Long
+Public MAX_HOTBAR As Long
 

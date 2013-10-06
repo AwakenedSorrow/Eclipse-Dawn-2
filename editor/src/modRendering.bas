@@ -59,7 +59,17 @@ Dim X1 As Long, X2 As Long, Y1 As Long, Y2 As Long
         Next
         
         '  Attribute Labels
-        If frmEditor.cmbLayerSelect.ListIndex + 1 = Layer_Count Then DrawMapAttributes
+        If frmEditor.cmbLayerSelect.ListIndex + 1 = Layer_Count Then
+            If frmEditor.optDirBlock.value <> True Then
+                DrawMapAttributes
+            Else
+                For X = 0 To Map.MaxX
+                    For Y = 0 To Map.MaxY
+                        RenderDirBlock X, Y
+                    Next
+                Next
+            End If
+        End If
     End If
     
     ' Render the mouse outline.
@@ -208,4 +218,26 @@ Public Sub RenderTileOutline(ByVal X As Long, ByVal Y As Long)
     If ShowMouse = False Then Exit Sub
     
     Call RenderGraphic(Tex_Outline, X * PIC_X, Y * PIC_Y, PIC_X, PIC_Y, 0, 0, 0, 0)
+End Sub
+
+Public Sub RenderDirBlock(ByVal X As Long, ByVal Y As Long)
+Dim i As Long, Left As Long, top As Long
+
+    ' Render the Grid Texture.
+    Call RenderGraphic(Tex_DirBlock, (X * PIC_X) + (MapViewTileOffSetX * PIC_X), (Y * PIC_Y) + (MapViewTileOffSetY * PIC_Y), PIC_X, PIC_Y, 0, 0, 0, 24)
+    
+    ' render dir blobs
+    For i = 1 To 4
+        Left = (i - 1) * 8
+        ' find out whether render blocked or not
+        If Not isDirBlocked(Map.Tile(X, Y).DirBlock, CByte(i)) Then
+            top = 8
+        Else
+            top = 16
+        End If
+        'render the actual thing!
+        Call RenderGraphic(Tex_DirBlock, (X * PIC_X) + (MapViewTileOffSetX * PIC_X) + DirArrowX(i), (Y * PIC_Y) + (MapViewTileOffSetY * PIC_Y) + DirArrowY(i), 8, 8, 0, 0, Left, top)
+        
+    Next
+    
 End Sub

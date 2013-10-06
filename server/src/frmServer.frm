@@ -53,7 +53,7 @@ Begin VB.Form frmServer
          Strikethrough   =   0   'False
       EndProperty
       TabCaption(0)   =   "Console"
-      TabPicture(0)   =   "frmServer.frx":1708A
+      TabPicture(0)   =   "frmServer.frx":3A0A
       Tab(0).ControlEnabled=   -1  'True
       Tab(0).Control(0)=   "lblCPS"
       Tab(0).Control(0).Enabled=   0   'False
@@ -65,15 +65,15 @@ Begin VB.Form frmServer
       Tab(0).Control(3).Enabled=   0   'False
       Tab(0).ControlCount=   4
       TabCaption(1)   =   "Players"
-      TabPicture(1)   =   "frmServer.frx":170A6
+      TabPicture(1)   =   "frmServer.frx":3A26
       Tab(1).ControlEnabled=   0   'False
       Tab(1).Control(0)=   "lvwInfo"
       Tab(1).ControlCount=   1
       TabCaption(2)   =   "Control "
-      TabPicture(2)   =   "frmServer.frx":170C2
+      TabPicture(2)   =   "frmServer.frx":3A42
       Tab(2).ControlEnabled=   0   'False
-      Tab(2).Control(0)=   "fraServer"
-      Tab(2).Control(1)=   "fraDatabase"
+      Tab(2).Control(0)=   "fraDatabase"
+      Tab(2).Control(1)=   "fraServer"
       Tab(2).ControlCount=   2
       Begin VB.Frame fraServer 
          Caption         =   "Server"

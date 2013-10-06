@@ -2,7 +2,7 @@ Attribute VB_Name = "modServerEditorTCP"
 Option Explicit
 
 Sub IncomingEditorData(ByVal Index As Long, ByVal DataLength As Long)
-Dim buffer() As Byte
+Dim Buffer() As Byte
 Dim pLength As Long
             
     ' Check if elapsed time has passed
@@ -14,27 +14,27 @@ Dim pLength As Long
     End If
     
     ' Get the data from the socket now
-    frmServer.EditorSocket(Index).GetData buffer(), vbUnicode, DataLength
-    TempEditor(Index).buffer.WriteBytes buffer()
+    frmServer.EditorSocket(Index).GetData Buffer(), vbUnicode, DataLength
+    TempEditor(Index).Buffer.WriteBytes Buffer()
     
-    If TempEditor(Index).buffer.Length >= 4 Then
-        pLength = TempEditor(Index).buffer.ReadLong(False)
+    If TempEditor(Index).Buffer.Length >= 4 Then
+        pLength = TempEditor(Index).Buffer.ReadLong(False)
     
         If pLength < 0 Then
             Exit Sub
         End If
     End If
     
-    Do While pLength > 0 And pLength <= TempEditor(Index).buffer.Length - 4
-        If pLength <= TempEditor(Index).buffer.Length - 4 Then
+    Do While pLength > 0 And pLength <= TempEditor(Index).Buffer.Length - 4
+        If pLength <= TempEditor(Index).Buffer.Length - 4 Then
             TempEditor(Index).DataPackets = TempEditor(Index).DataPackets + 1
-            TempEditor(Index).buffer.ReadLong
-            HandleEditorData Index, TempEditor(Index).buffer.ReadBytes(pLength)
+            TempEditor(Index).Buffer.ReadLong
+            HandleEditorData Index, TempEditor(Index).Buffer.ReadBytes(pLength)
         End If
         
         pLength = 0
-        If TempEditor(Index).buffer.Length >= 4 Then
-            pLength = TempEditor(Index).buffer.ReadLong(False)
+        If TempEditor(Index).Buffer.Length >= 4 Then
+            pLength = TempEditor(Index).Buffer.ReadLong(False)
         
             If pLength < 0 Then
                 Exit Sub
@@ -42,7 +42,7 @@ Dim pLength As Long
         End If
     Loop
             
-    TempEditor(Index).buffer.Trim
+    TempEditor(Index).Buffer.Trim
 End Sub
 
 Sub AcceptEditorConnection(ByVal Index As Long, ByVal SocketId As Long)
@@ -82,101 +82,100 @@ Function IsEditorConnected(ByVal Index As Long) As Boolean
 End Function
 
 Sub SendEditorDataTo(ByVal Index As Long, ByRef Data() As Byte)
-Dim buffer As clsBuffer
+Dim Buffer As clsBuffer
 Dim TempData() As Byte
 
     If IsEditorConnected(Index) Then
-        Set buffer = New clsBuffer
+        Set Buffer = New clsBuffer
         
-        buffer.PreAllocate 4 + (UBound(Data) - LBound(Data)) + 1
-        buffer.WriteLong (UBound(Data) - LBound(Data)) + 1
-        buffer.WriteBytes Data()
+        Buffer.PreAllocate 4 + (UBound(Data) - LBound(Data)) + 1
+        Buffer.WriteLong (UBound(Data) - LBound(Data)) + 1
+        Buffer.WriteBytes Data()
               
-        frmServer.EditorSocket(Index).SendData buffer.ToArray()
+        frmServer.EditorSocket(Index).SendData Buffer.ToArray()
         
         '  Experimental
         DoEvents
         
-        Set buffer = Nothing
+        Set Buffer = Nothing
     End If
 End Sub
 
 Public Sub SendEditorAlertMsg(ByVal Index As Byte, ByVal Message As String, Disconnect As Boolean)
-Dim buffer As clsBuffer
+Dim Buffer As clsBuffer
 
-    Set buffer = New clsBuffer
+    Set Buffer = New clsBuffer
     
-    buffer.WriteLong SE_AlertMsg
-    buffer.WriteString Message
+    Buffer.WriteLong SE_AlertMsg
+    Buffer.WriteString Message
     If Disconnect Then
-        buffer.WriteByte 1
+        Buffer.WriteByte 1
     Else
-        buffer.WriteByte 0
+        Buffer.WriteByte 0
     End If
     
-    SendEditorDataTo Index, buffer.ToArray()
+    SendEditorDataTo Index, Buffer.ToArray()
     
-    Set buffer = Nothing
+    Set Buffer = Nothing
 
 End Sub
 
 Sub SendEditorMap(ByVal Index As Long, ByVal MapNum As Long)
-    Dim buffer As clsBuffer
-    Set buffer = New clsBuffer
+    Dim Buffer As clsBuffer
+    Set Buffer = New clsBuffer
     
-    buffer.PreAllocate (UBound(MapCache(MapNum).Data) - LBound(MapCache(MapNum).Data)) + 5
-    buffer.WriteLong SE_MapData
-    buffer.WriteBytes MapCache(MapNum).Data()
-    SendEditorDataTo Index, buffer.ToArray()
+    Buffer.PreAllocate (UBound(MapCache(MapNum).Data) - LBound(MapCache(MapNum).Data)) + 5
+    Buffer.WriteLong SE_MapData
+    Buffer.WriteBytes MapCache(MapNum).Data()
+    SendEditorDataTo Index, Buffer.ToArray()
     
-    Set buffer = Nothing
+    Set Buffer = Nothing
 End Sub
 
 Public Sub SendEditorVersionOK(ByVal Index As Byte)
-    Dim buffer As clsBuffer
+    Dim Buffer As clsBuffer
 
-    Set buffer = New clsBuffer
+    Set Buffer = New clsBuffer
     
-    buffer.WriteLong SE_VersionOK
+    Buffer.WriteLong SE_VersionOK
     
-    SendEditorDataTo Index, buffer.ToArray()
+    SendEditorDataTo Index, Buffer.ToArray()
     
-    Set buffer = Nothing
+    Set Buffer = Nothing
 End Sub
 
 Public Sub SendEditorLoginOK(ByVal Index As Byte)
-Dim buffer As clsBuffer, i As Long
+Dim Buffer As clsBuffer, i As Long
 
-    Set buffer = New clsBuffer
+    Set Buffer = New clsBuffer
     
-    buffer.WriteLong SE_LoginOK
+    Buffer.WriteLong SE_LoginOK
     
-    buffer.WriteString Editor(Index).Username
+    Buffer.WriteString Editor(Index).Username
     For i = 1 To Editor_MaxRights - 1
-        buffer.WriteByte Editor(Index).HasRight(i)
+        Buffer.WriteByte Editor(Index).HasRight(i)
     Next
     
-    SendEditorDataTo Index, buffer.ToArray()
+    SendEditorDataTo Index, Buffer.ToArray()
     
-    Set buffer = Nothing
+    Set Buffer = Nothing
     
 End Sub
 
 Public Sub SendMapEditorNames(ByVal Index As Byte)
-Dim buffer As clsBuffer, i As Long
+Dim Buffer As clsBuffer, i As Long
     
-    Set buffer = New clsBuffer
-    buffer.WriteLong SE_MapNames
+    Set Buffer = New clsBuffer
+    Buffer.WriteLong SE_MapNames
     
-    buffer.WriteLong MAX_MAPS
     For i = 1 To MAX_MAPS
-        buffer.WriteString Map(i).Name
-        buffer.WriteLong Map(i).Revision
+        Buffer.WriteString Map(i).Name
+        Buffer.WriteLong Map(i).Revision
     Next
     
-    SendEditorDataTo Index, buffer.ToArray()
+    SendEditorDataTo Index, Buffer.ToArray()
     
-    Set buffer = Nothing
+    Set Buffer = Nothing
     
 End Sub
 
@@ -194,21 +193,45 @@ Sub SendEditorResources(ByVal Index As Long)
 End Sub
 
 Sub SendEditorUpdateResourceTo(ByVal Index As Long, ByVal ResourceNum As Long)
-    Dim buffer As clsBuffer
+    Dim Buffer As clsBuffer
     Dim ResourceSize As Long
     Dim ResourceData() As Byte
     
-    Set buffer = New clsBuffer
+    Set Buffer = New clsBuffer
     
     ResourceSize = LenB(Resource(ResourceNum))
     ReDim ResourceData(ResourceSize - 1)
     CopyMemory ResourceData(0), ByVal VarPtr(Resource(ResourceNum)), ResourceSize
     
-    buffer.WriteLong SE_ResourceData
-    buffer.WriteLong ResourceNum
-    buffer.WriteBytes ResourceData
+    Buffer.WriteLong SE_ResourceData
+    Buffer.WriteLong ResourceNum
+    Buffer.WriteBytes ResourceData
     
-    SendEditorDataTo Index, buffer.ToArray()
-    Set buffer = Nothing
+    SendEditorDataTo Index, Buffer.ToArray()
+    Set Buffer = Nothing
 End Sub
 
+Public Sub SendEditorMaxAmounts(ByVal Index As Long)
+Dim Buffer As clsBuffer
+    
+    Set Buffer = New clsBuffer
+    Buffer.WriteLong SE_MaxAmounts
+    
+    Buffer.WriteLong MAX_MAPS
+    Buffer.WriteLong MAX_ITEMS
+    Buffer.WriteLong MAX_NPCS
+    Buffer.WriteLong MAX_ANIMATIONS
+    Buffer.WriteLong MAX_INV
+    Buffer.WriteLong MAX_MAP_ITEMS
+    Buffer.WriteLong MAX_MAP_NPCS
+    Buffer.WriteLong MAX_SHOPS
+    Buffer.WriteLong MAX_PLAYER_SPELLS
+    Buffer.WriteLong MAX_SPELLS
+    Buffer.WriteLong MAX_RESOURCES
+    Buffer.WriteLong MAX_LEVELS
+    Buffer.WriteLong MAX_BANK
+    Buffer.WriteLong MAX_HOTBAR
+    
+    SendEditorDataTo Index, Buffer.ToArray
+    Set Buffer = Nothing
+End Sub

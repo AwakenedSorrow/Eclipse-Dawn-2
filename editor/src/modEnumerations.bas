@@ -8,6 +8,7 @@ Public Enum SE_EditorPackets
     SE_MapNames
     SE_MapData
     SE_ResourceData
+    SE_MaxAmounts
     ' Make sure SE_MSG_COUNT is below everything else
     SE_MSG_COUNT
 End Enum

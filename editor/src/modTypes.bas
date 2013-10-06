@@ -6,7 +6,7 @@ Public Editor As EditorRec
 Public TempEditor As EditorRec
 Public Map As MapRec
 
-Public Resource(1 To MAX_RESOURCES) As ResourceRec
+Public Resource() As ResourceRec
 
 '  **************************************
 '  **************************************
@@ -50,7 +50,7 @@ Public Type TileRec
 End Type
 
 Private Type MapRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     Music As String * NAME_LENGTH
     
     Revision As Long
@@ -69,11 +69,11 @@ Private Type MapRec
     MaxY As Byte
     
     Tile() As TileRec
-    Npc(1 To MAX_MAP_NPCS) As Long
+    Npc() As Long
 End Type
 
 Private Type ResourceRec
-    Name As String * NAME_LENGTH
+    name As String * NAME_LENGTH
     SuccessMessage As String * NAME_LENGTH
     EmptyMessage As String * NAME_LENGTH
     Sound As String * NAME_LENGTH

@@ -7,6 +7,7 @@ Begin VB.Form frmEditor
    ClientLeft      =   225
    ClientTop       =   570
    ClientWidth     =   12000
+   Icon            =   "frmEditor.frx":0000
    LinkTopic       =   "Form1"
    ScaleHeight     =   600
    ScaleMode       =   3  'Pixel
@@ -25,6 +26,40 @@ Begin VB.Form frmEditor
       Top             =   840
       Visible         =   0   'False
       Width           =   4095
+      Begin VB.Frame fraNPCAvoid 
+         Caption         =   "Avoid Tile"
+         Height          =   1575
+         Left            =   120
+         TabIndex        =   63
+         Top             =   3720
+         Width           =   3855
+         Begin VB.Label Label11 
+            Alignment       =   2  'Center
+            Caption         =   "No additional information required."
+            Height          =   255
+            Left            =   120
+            TabIndex        =   64
+            Top             =   720
+            Width           =   3615
+         End
+      End
+      Begin VB.Frame fraDirBlock 
+         Caption         =   "Directional Blocking"
+         Height          =   1575
+         Left            =   120
+         TabIndex        =   61
+         Top             =   3720
+         Width           =   3855
+         Begin VB.Label Label10 
+            Alignment       =   2  'Center
+            Caption         =   "No additional information required."
+            Height          =   255
+            Left            =   120
+            TabIndex        =   62
+            Top             =   720
+            Width           =   3615
+         End
+      End
       Begin VB.Frame fraHeal 
          Caption         =   "Heal Player"
          Height          =   1575
@@ -34,9 +69,9 @@ Begin VB.Form frmEditor
          Width           =   3855
          Begin VB.ComboBox cmbHeal 
             Height          =   315
-            ItemData        =   "frmEditor.frx":0000
+            ItemData        =   "frmEditor.frx":3A0A
             Left            =   1560
-            List            =   "frmEditor.frx":000A
+            List            =   "frmEditor.frx":3A14
             Style           =   2  'Dropdown List
             TabIndex        =   58
             Top             =   480
@@ -76,9 +111,9 @@ Begin VB.Form frmEditor
          Width           =   3855
          Begin VB.ComboBox cmbDamage 
             Height          =   315
-            ItemData        =   "frmEditor.frx":001C
+            ItemData        =   "frmEditor.frx":3A26
             Left            =   1560
-            List            =   "frmEditor.frx":0026
+            List            =   "frmEditor.frx":3A30
             Style           =   2  'Dropdown List
             TabIndex        =   53
             Top             =   480
@@ -118,9 +153,9 @@ Begin VB.Form frmEditor
          Width           =   3855
          Begin VB.ComboBox cmbSlide 
             Height          =   315
-            ItemData        =   "frmEditor.frx":0038
+            ItemData        =   "frmEditor.frx":3A42
             Left            =   1320
-            List            =   "frmEditor.frx":0048
+            List            =   "frmEditor.frx":3A52
             Style           =   2  'Dropdown List
             TabIndex        =   50
             Top             =   600
@@ -389,7 +424,7 @@ Begin VB.Form frmEditor
       Caption         =   "Open Chat"
       Height          =   735
       Left            =   8160
-      Picture         =   "frmEditor.frx":0066
+      Picture         =   "frmEditor.frx":3A70
       Style           =   1  'Graphical
       TabIndex        =   15
       Top             =   0
@@ -399,7 +434,7 @@ Begin VB.Form frmEditor
       Caption         =   "Edit Database"
       Height          =   735
       Left            =   10200
-      Picture         =   "frmEditor.frx":05D9
+      Picture         =   "frmEditor.frx":3FE3
       Style           =   1  'Graphical
       TabIndex        =   14
       Top             =   0
@@ -408,9 +443,9 @@ Begin VB.Form frmEditor
    Begin VB.ListBox lstMapList 
       Columns         =   1
       Height          =   2400
-      ItemData        =   "frmEditor.frx":0A73
+      ItemData        =   "frmEditor.frx":447D
       Left            =   120
-      List            =   "frmEditor.frx":0A75
+      List            =   "frmEditor.frx":447F
       TabIndex        =   13
       Top             =   6240
       Width           =   4095
@@ -449,7 +484,7 @@ Begin VB.Form frmEditor
       Caption         =   "Reload Map"
       Height          =   735
       Left            =   1560
-      Picture         =   "frmEditor.frx":0A77
+      Picture         =   "frmEditor.frx":4481
       Style           =   1  'Graphical
       TabIndex        =   9
       Top             =   0
@@ -473,9 +508,9 @@ Begin VB.Form frmEditor
    End
    Begin VB.ComboBox cmbLayerSelect 
       Height          =   315
-      ItemData        =   "frmEditor.frx":0EB1
+      ItemData        =   "frmEditor.frx":48BB
       Left            =   5040
-      List            =   "frmEditor.frx":0EC7
+      List            =   "frmEditor.frx":48D1
       Style           =   2  'Dropdown List
       TabIndex        =   6
       Top             =   240
@@ -488,7 +523,7 @@ Begin VB.Form frmEditor
       ForeColor       =   &H80000008&
       Height          =   495
       Left            =   4440
-      Picture         =   "frmEditor.frx":0F4E
+      Picture         =   "frmEditor.frx":4958
       ScaleHeight     =   33
       ScaleMode       =   3  'Pixel
       ScaleWidth      =   33
@@ -500,7 +535,7 @@ Begin VB.Form frmEditor
       Caption         =   "Clear Map"
       Height          =   735
       Left            =   3000
-      Picture         =   "frmEditor.frx":1402
+      Picture         =   "frmEditor.frx":4E0C
       Style           =   1  'Graphical
       TabIndex        =   4
       Top             =   0
@@ -510,7 +545,7 @@ Begin VB.Form frmEditor
       Caption         =   "Save Map"
       Height          =   735
       Left            =   120
-      Picture         =   "frmEditor.frx":18AC
+      Picture         =   "frmEditor.frx":52B6
       Style           =   1  'Graphical
       TabIndex        =   3
       Top             =   0
@@ -669,10 +704,8 @@ Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y A
     
     ' Inside the map editor view.
     If X > MapViewWindow.X1 And X < MapViewWindow.X2 And Y > MapViewWindow.Y1 And Y < MapViewWindow.Y2 Then
-        X = X - 16
-        Y = Y - 16
-        CurX = ((X - MapViewWindowOffSetX) / PIC_X) - (0 + MapViewTileOffSetX)
-        CurY = ((Y - MapViewWindowOffSetY) / PIC_Y) - (0 + MapViewTileOffSetY)
+        CurX = (((X - 16) - MapViewWindowOffSetX) / PIC_X) - (0 + MapViewTileOffSetX)
+        CurY = (((Y - 16) - MapViewWindowOffSetY) / PIC_Y) - (0 + MapViewTileOffSetY)
 
         MapEditorMouseDown Button, X, Y
     End If
@@ -792,9 +825,19 @@ Private Sub optBlocked_Click()
     fraBlock.Visible = True
 End Sub
 
+Private Sub optDirBlock_Click()
+    ClearAttributeFrames
+    fraDirBlock.Visible = True
+End Sub
+
 Private Sub optHeal_Click()
     ClearAttributeFrames
     fraHeal.Visible = True
+End Sub
+
+Private Sub optNpcAvoid_Click()
+    ClearAttributeFrames
+    fraNPCAvoid.Visible = True
 End Sub
 
 Private Sub optSlide_Click()
