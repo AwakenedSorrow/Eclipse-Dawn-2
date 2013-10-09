@@ -186,6 +186,9 @@ Public Enum SE_EditorPackets
     SE_MapData
     SE_ResourceData
     SE_MaxAmounts
+    SE_AnimationData
+    SE_SpellData
+    SE_ShopData
     ' Make sure SE_MSG_COUNT is below everything else
     SE_MSG_COUNT
 End Enum

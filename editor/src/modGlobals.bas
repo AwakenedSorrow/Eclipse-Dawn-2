@@ -61,4 +61,5 @@ Public MAX_RESOURCES As Long
 Public MAX_LEVELS As Long
 Public MAX_BANK As Long
 Public MAX_HOTBAR As Long
+Public MAX_TRADES As Long
 

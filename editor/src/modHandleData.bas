@@ -8,7 +8,10 @@ Public Sub InitMessages()
     HandleDataSub(SE_MapNames) = GetAddress(AddressOf HandleMapNames)
     HandleDataSub(SE_MapData) = GetAddress(AddressOf HandleMapData)
     HandleDataSub(SE_ResourceData) = GetAddress(AddressOf HandleUpdateResource)
-    HandleDataSub(SE_MaxAmounts) = GetAddress(AddressOf Handlemaxamounts)
+    HandleDataSub(SE_MaxAmounts) = GetAddress(AddressOf HandleMaxAmounts)
+    HandleDataSub(SE_AnimationData) = GetAddress(AddressOf HandleUpdateAnimation)
+    HandleDataSub(SE_SpellData) = GetAddress(AddressOf HandleUpdateSpell)
+    HandleDataSub(SE_ShopData) = GetAddress(AddressOf HandleUpdateShop)
 End Sub
 
 Public Function GetAddress(FunAddr As Long) As Long
@@ -113,7 +116,7 @@ Dim MapNum As Long
     buffer.WriteBytes data()
 
     MapNum = buffer.ReadLong
-    Map.name = buffer.ReadString
+    Map.Name = buffer.ReadString
     Map.Music = buffer.ReadString
     Map.Revision = buffer.ReadLong
     Map.Moral = buffer.ReadByte
@@ -190,8 +193,83 @@ Dim ResourceData() As Byte
     
 End Sub
 
-Private Sub Handlemaxamounts(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Private Sub HandleUpdateAnimation(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim AnimationNum As Long
 Dim buffer As clsBuffer
+Dim AnimationSize As Long
+Dim AnimationData() As Byte
+        
+    Set buffer = New clsBuffer
+    buffer.WriteBytes data()
+    
+    AnimationNum = buffer.ReadLong
+    
+    AnimationSize = LenB(Animation(AnimationNum))
+    ReDim AnimationData(AnimationSize - 1)
+    AnimationData = buffer.ReadBytes(AnimationSize)
+    
+    ClearAnimation AnimationNum
+    
+    CopyMemory ByVal VarPtr(Animation(AnimationNum)), ByVal VarPtr(AnimationData(0)), AnimationSize
+    
+    Set buffer = Nothing
+    
+    SetStatus "Received Animation Data."
+    
+End Sub
+
+Private Sub HandleUpdateSpell(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim SpellNum As Long
+Dim buffer As clsBuffer
+Dim SpellSize As Long
+Dim SpellData() As Byte
+        
+    Set buffer = New clsBuffer
+    buffer.WriteBytes data()
+    
+    SpellNum = buffer.ReadLong
+    
+    SpellSize = LenB(Spell(SpellNum))
+    ReDim SpellData(SpellSize - 1)
+    SpellData = buffer.ReadBytes(SpellSize)
+    
+    ClearSpell SpellNum
+    
+    CopyMemory ByVal VarPtr(Spell(SpellNum)), ByVal VarPtr(SpellData(0)), SpellSize
+    
+    Set buffer = Nothing
+    
+    SetStatus "Received Spell Data."
+    
+End Sub
+
+Private Sub HandleUpdateShop(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim ShopNum As Long
+Dim buffer As clsBuffer
+Dim ShopSize As Long
+Dim ShopData() As Byte
+        
+    Set buffer = New clsBuffer
+    buffer.WriteBytes data()
+    
+    ShopNum = buffer.ReadLong
+    
+    ShopSize = LenB(Shop(ShopNum))
+    ReDim ShopData(ShopSize - 1)
+    ShopData = buffer.ReadBytes(ShopSize)
+    
+    ClearShop ShopNum
+    
+    CopyMemory ByVal VarPtr(Shop(ShopNum)), ByVal VarPtr(ShopData(0)), ShopSize
+    
+    Set buffer = Nothing
+    
+    SetStatus "Received Shop Data."
+    
+End Sub
+
+Private Sub HandleMaxAmounts(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim buffer As clsBuffer, i As Long
         
     Set buffer = New clsBuffer
     buffer.WriteBytes data()
@@ -210,8 +288,15 @@ Dim buffer As clsBuffer
     MAX_LEVELS = buffer.ReadLong()
     MAX_BANK = buffer.ReadLong()
     MAX_HOTBAR = buffer.ReadLong()
+    MAX_TRADES = buffer.ReadLong()
     
     ReDim Resource(1 To MAX_RESOURCES)
+    ReDim Animation(1 To MAX_ANIMATIONS)
+    ReDim Spell(1 To MAX_SPELLS)
+    ReDim Shop(1 To MAX_SHOPS)
+    For i = 1 To MAX_SHOPS
+        ReDim Shop(i).TradeItem(1 To MAX_TRADES)
+    Next
     ReDim Map.Npc(1 To MAX_MAP_NPCS)
     
     Set buffer = Nothing

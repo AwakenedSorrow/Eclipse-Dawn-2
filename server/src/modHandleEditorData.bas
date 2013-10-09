@@ -59,6 +59,9 @@ Dim Buffer As clsBuffer, Username As String, Password As String, i As Long
             SendEditorMaxAmounts Index
             SendMapEditorNames Index
             SendEditorResources Index
+            SendEditorAnimations Index
+            SendEditorSpells Index
+            SendEditorShops Index
         Else
             ClearEditor (Index)
             SendEditorAlertMsg Index, "This password is incorrect, you are not authorized to access this editor.", True

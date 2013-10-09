@@ -231,7 +231,95 @@ Dim Buffer As clsBuffer
     Buffer.WriteLong MAX_LEVELS
     Buffer.WriteLong MAX_BANK
     Buffer.WriteLong MAX_HOTBAR
+    Buffer.WriteLong MAX_TRADES
     
     SendEditorDataTo Index, Buffer.ToArray
+    Set Buffer = Nothing
+End Sub
+
+Sub SendEditorAnimations(ByVal Index As Long)
+    Dim i As Long
+
+    For i = 1 To MAX_ANIMATIONS
+
+        If LenB(Trim$(Animation(i).Name)) > 0 Then
+            Call SendEditorUpdateAnimationTo(Index, i)
+        End If
+
+    Next
+
+End Sub
+
+Sub SendEditorUpdateAnimationTo(ByVal Index As Long, ByVal AnimationNum As Long)
+    Dim packet As String
+    Dim Buffer As clsBuffer
+    Dim AnimationSize As Long
+    Dim AnimationData() As Byte
+    Set Buffer = New clsBuffer
+    AnimationSize = LenB(Animation(AnimationNum))
+    ReDim AnimationData(AnimationSize - 1)
+    CopyMemory AnimationData(0), ByVal VarPtr(Animation(AnimationNum)), AnimationSize
+    Buffer.WriteLong SE_AnimationData
+    Buffer.WriteLong AnimationNum
+    Buffer.WriteBytes AnimationData
+    SendDataTo Index, Buffer.ToArray()
+    Set Buffer = Nothing
+End Sub
+
+Sub SendEditorSpells(ByVal Index As Long)
+    Dim i As Long
+
+    For i = 1 To MAX_SPELLS
+
+        If LenB(Trim$(Spell(i).Name)) > 0 Then
+            Call SendEditorUpdateSpellTo(Index, i)
+        End If
+
+    Next
+
+End Sub
+
+Sub SendEditorUpdateSpellTo(ByVal Index As Long, ByVal SpellNum As Long)
+    Dim packet As String
+    Dim Buffer As clsBuffer
+    Dim SpellSize As Long
+    Dim SpellData() As Byte
+    Set Buffer = New clsBuffer
+    SpellSize = LenB(Spell(SpellNum))
+    ReDim SpellData(SpellSize - 1)
+    CopyMemory SpellData(0), ByVal VarPtr(Spell(SpellNum)), SpellSize
+    Buffer.WriteLong SE_SpellData
+    Buffer.WriteLong SpellNum
+    Buffer.WriteBytes SpellData
+    SendDataTo Index, Buffer.ToArray()
+    Set Buffer = Nothing
+End Sub
+
+Sub SendEditorShops(ByVal Index As Long)
+    Dim i As Long
+
+    For i = 1 To MAX_SHOPS
+
+        If LenB(Trim$(Shop(i).Name)) > 0 Then
+            Call SendEditorUpdateShopTo(Index, i)
+        End If
+
+    Next
+
+End Sub
+
+Sub SendEditorUpdateShopTo(ByVal Index As Long, ByVal ShopNum As Long)
+    Dim packet As String
+    Dim Buffer As clsBuffer
+    Dim ShopSize As Long
+    Dim ShopData() As Byte
+    Set Buffer = New clsBuffer
+    ShopSize = LenB(Shop(ShopNum))
+    ReDim ShopData(ShopSize - 1)
+    CopyMemory ShopData(0), ByVal VarPtr(Shop(ShopNum)), ShopSize
+    Buffer.WriteLong SE_ShopData
+    Buffer.WriteLong ShopNum
+    Buffer.WriteBytes ShopData
+    SendDataTo Index, Buffer.ToArray()
     Set Buffer = Nothing
 End Sub
