@@ -189,6 +189,7 @@ Public Enum SE_EditorPackets
     SE_AnimationData
     SE_SpellData
     SE_ShopData
+    SE_MapSaved
     ' Make sure SE_MSG_COUNT is below everything else
     SE_MSG_COUNT
 End Enum
@@ -198,6 +199,7 @@ Public Enum CE_EditorPackets
     CE_VersionCheck
     CE_SaveDeveloper
     CE_RequestMap
+    CE_SaveMap
     ' Make sure CE_MSG_COUNT is below everything else
     CE_MSG_COUNT
 End Enum

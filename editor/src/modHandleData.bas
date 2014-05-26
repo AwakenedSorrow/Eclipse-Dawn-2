@@ -12,6 +12,7 @@ Public Sub InitMessages()
     HandleDataSub(SE_AnimationData) = GetAddress(AddressOf HandleUpdateAnimation)
     HandleDataSub(SE_SpellData) = GetAddress(AddressOf HandleUpdateSpell)
     HandleDataSub(SE_ShopData) = GetAddress(AddressOf HandleUpdateShop)
+    HandleDataSub(SE_MapSaved) = GetAddress(AddressOf HandleMapSaved)
 End Sub
 
 Public Function GetAddress(FunAddr As Long) As Long
@@ -116,7 +117,7 @@ Dim MapNum As Long
     buffer.WriteBytes data()
 
     MapNum = buffer.ReadLong
-    Map.Name = buffer.ReadString
+    Map.name = buffer.ReadString
     Map.Music = buffer.ReadString
     Map.Revision = buffer.ReadLong
     Map.Moral = buffer.ReadByte
@@ -300,4 +301,29 @@ Dim buffer As clsBuffer, i As Long
     ReDim Map.Npc(1 To MAX_MAP_NPCS)
     
     Set buffer = Nothing
+End Sub
+
+Private Sub HandleMapSaved(ByVal index As Long, ByRef data() As Byte, ByVal StartAddr As Long, ByVal ExtraVar As Long)
+Dim buffer As clsBuffer
+Dim TempNum As Long, TempName As String, TempRev As Long
+    
+    Set buffer = New clsBuffer
+    buffer.WriteBytes data()
+    
+    TempNum = buffer.ReadLong
+    TempName = buffer.ReadString
+    TempRev = buffer.ReadLong
+    
+    frmEditor.lstMapList.RemoveItem TempNum - 1
+    frmEditor.lstMapList.AddItem CStr(TempNum) & ": " & Trim$(TempName) & " | Rev." & Trim(CStr(TempRev)), TempNum - 1
+    
+    SetStatus "Map " & CStr(TempNum) & " has been saved on the server."
+    
+    If TempNum = CurrentMap Then
+        MsgBox "The map you are currently editing has been saved on the server by you or someone else, and will now be reloaded to prevent inconsistencies."
+        SendRequestMap TempNum
+    End If
+    
+    Set buffer = Nothing
+    
 End Sub

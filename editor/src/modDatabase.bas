@@ -27,20 +27,46 @@ Public Function FileExist(ByVal FileName As String, Optional RAW As Boolean = Fa
     
 End Function
 
-Sub ClearResource(ByVal Index As Long)
-    Call ZeroMemory(ByVal VarPtr(Resource(Index)), LenB(Resource(Index)))
-    Resource(Index).Name = vbNullString
-    Resource(Index).SuccessMessage = vbNullString
-    Resource(Index).EmptyMessage = vbNullString
-    Resource(Index).Sound = "None."
-    Resource(Index).Red(0) = 255
-    Resource(Index).Red(1) = 255
-    Resource(Index).Green(0) = 255
-    Resource(Index).Green(1) = 255
-    Resource(Index).Blue(0) = 255
-    Resource(Index).Blue(1) = 255
-    Resource(Index).Alpha(0) = 255
-    Resource(Index).Alpha(1) = 255
+Sub ClearResource(ByVal index As Long)
+    Call ZeroMemory(ByVal VarPtr(Resource(index)), LenB(Resource(index)))
+    Resource(index).name = vbNullString
+    Resource(index).SuccessMessage = vbNullString
+    Resource(index).EmptyMessage = vbNullString
+    Resource(index).Sound = "None."
+    Resource(index).Red(0) = 255
+    Resource(index).Red(1) = 255
+    Resource(index).Green(0) = 255
+    Resource(index).Green(1) = 255
+    Resource(index).Blue(0) = 255
+    Resource(index).Blue(1) = 255
+    Resource(index).Alpha(0) = 255
+    Resource(index).Alpha(1) = 255
+End Sub
+
+Sub ClearAnimation(ByVal index As Long)
+    Call ZeroMemory(ByVal VarPtr(Animation(index)), LenB(Animation(index)))
+    Animation(index).name = vbNullString
+    Animation(index).Sound = "None."
+    Animation(index).Red(0) = 255
+    Animation(index).Green(0) = 255
+    Animation(index).Blue(0) = 255
+    Animation(index).Alpha(0) = 255
+    Animation(index).Red(1) = 255
+    Animation(index).Green(1) = 255
+    Animation(index).Blue(1) = 255
+    Animation(index).Alpha(1) = 255
+End Sub
+
+Sub ClearSpell(ByVal index As Long)
+    Call ZeroMemory(ByVal VarPtr(Spell(index)), LenB(Spell(index)))
+    Spell(index).name = vbNullString
+    Spell(index).Desc = vbNullString
+    Spell(index).Sound = "None."
+End Sub
+
+Sub ClearShop(ByVal index As Long)
+    Call ZeroMemory(ByVal VarPtr(Shop(index)), LenB(Shop(index)))
+    Shop(index).name = vbNullString
 End Sub
 
 ' gets a string from a text file

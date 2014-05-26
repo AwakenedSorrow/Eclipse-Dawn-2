@@ -1,4 +1,5 @@
 VERSION 5.00
+Object = "{3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0"; "Richtx32.ocx"
 Begin VB.Form frmMenu 
    BackColor       =   &H00E0E0E0&
    BorderStyle     =   1  'Fixed Single
@@ -579,6 +580,19 @@ Begin VB.Form frmMenu
          Top             =   1200
          Width           =   3135
       End
+   End
+   Begin RichTextLib.RichTextBox RichTextBox1 
+      Height          =   855
+      Left            =   0
+      TabIndex        =   29
+      Top             =   0
+      Width           =   1335
+      _ExtentX        =   2355
+      _ExtentY        =   1508
+      _Version        =   393217
+      Enabled         =   -1  'True
+      ReadOnly        =   -1  'True
+      TextRTF         =   $"frmMenu.frx":3A0A
    End
    Begin VB.Image imgButton 
       Height          =   435

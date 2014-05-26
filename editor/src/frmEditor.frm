@@ -423,22 +423,22 @@ Begin VB.Form frmEditor
    Begin VB.CommandButton cmdOpenChat 
       Caption         =   "Open Chat"
       Height          =   735
-      Left            =   8160
+      Left            =   9120
       Picture         =   "frmEditor.frx":3A70
       Style           =   1  'Graphical
       TabIndex        =   15
       Top             =   0
-      Width           =   1695
+      Width           =   1215
    End
    Begin VB.CommandButton cmdEditDatabase 
       Caption         =   "Edit Database"
       Height          =   735
-      Left            =   10200
+      Left            =   10560
       Picture         =   "frmEditor.frx":3FE3
       Style           =   1  'Graphical
       TabIndex        =   14
       Top             =   0
-      Width           =   1695
+      Width           =   1215
    End
    Begin VB.ListBox lstMapList 
       Columns         =   1
@@ -514,7 +514,7 @@ Begin VB.Form frmEditor
       Style           =   2  'Dropdown List
       TabIndex        =   6
       Top             =   240
-      Width           =   2175
+      Width           =   2295
    End
    Begin VB.PictureBox picLayerSelect 
       Appearance      =   0  'Flat
@@ -619,6 +619,10 @@ Private Sub cmbLayerSelect_Click()
     End If
 End Sub
 
+Private Sub cmbMapMoral_Change()
+    Map.Moral = cmbMapMoral.ListIndex + 1
+End Sub
+
 Private Sub cmbTileSet_Change()
     ' Set the scrollbar Max.
     If D3DT_TEXTURE(Tex_TileSet(cmbTileSet.ListIndex + 1)).Height > TileSelectHeight Then
@@ -692,6 +696,19 @@ Dim TempIndex As Long
     Options.TileSetName(TempIndex + 1) = Trim$(txtTileName.text)
     SaveOptions App.Path & "\" & OPTIONS_FILE
     picRenameTile.Visible = False
+End Sub
+
+Private Sub cmdSaveMap_Click()
+     If Editor.HasRight(CanEditMap) <> 1 Then
+        ' No permissions
+        MsgBox "Insufficient permissions, you are not allowed to edit maps.", vbInformation
+        Exit Sub
+    Else
+        If HasMapChanged = True Then
+            ' Only save the map when it has actually been changed.
+            SendSaveMap
+        End If
+    End If
 End Sub
 
 Private Sub Form_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
@@ -787,7 +804,7 @@ Private Sub Form_Resize()
     
     ' Relocate a few buttons
     cmdEditDatabase.Left = frmEditor.ScaleWidth - cmdEditDatabase.Width - 8
-    cmdOpenChat.Left = cmdEditDatabase.Left - 136
+    cmdOpenChat.Left = cmdEditDatabase.Left - 96
     
     '  update render view
     '

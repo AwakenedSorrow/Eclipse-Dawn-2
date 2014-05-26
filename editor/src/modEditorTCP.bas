@@ -105,7 +105,7 @@ Public Sub SendSaveDeveloper()
 Dim buffer As clsBuffer, i As Long, Hash As String
     
     ' Do we have permissions to do this?
-    If LCase(Trim$(frmDatabase.txtUsername.Text)) = Trim$(Editor.Username) Then
+    If LCase(Trim$(frmDatabase.txtUsername.text)) = Trim$(Editor.Username) Then
         If Editor.HasRight(CanEditOwnDetails) <> 1 Then
             MsgBox "Insufficient Permissions, can not change own details.", vbInformation
             Exit Sub
@@ -120,12 +120,12 @@ Dim buffer As clsBuffer, i As Long, Hash As String
     Set buffer = New clsBuffer
     buffer.WriteLong CE_SaveDeveloper
     
-    buffer.WriteString LCase(Trim$(frmDatabase.txtUsername.Text))
+    buffer.WriteString LCase(Trim$(frmDatabase.txtUsername.text))
     
     i = InitCrc32()
-    i = AddCrc32(frmDatabase.txtPassword.Text, i)
+    i = AddCrc32(frmDatabase.txtPassword.text, i)
     Hash = CStr(i)
-    frmDatabase.txtPassword.Text = Hash
+    frmDatabase.txtPassword.text = Hash
     
     buffer.WriteString Hash
     
@@ -144,12 +144,12 @@ Dim buffer As clsBuffer, i As Long, Hash As String
     Set buffer = New clsBuffer
     buffer.WriteLong CE_LoginUser
     
-    buffer.WriteString LCase(Trim$(frmLogin.txtUsername.Text))
+    buffer.WriteString LCase(Trim$(frmLogin.txtUsername.text))
     
     i = InitCrc32()
-    i = AddCrc32(frmLogin.txtPassword.Text, i)
+    i = AddCrc32(frmLogin.txtPassword.text, i)
     Hash = CStr(i)
-    frmLogin.txtPassword.Text = vbNullString
+    frmLogin.txtPassword.text = vbNullString
     
     buffer.WriteString Hash
     
@@ -171,4 +171,61 @@ Dim buffer As clsBuffer
     SetStatus "Sent out a request for data on Map " & Trim$(CStr(MapNum))
     Set buffer = Nothing
 
+End Sub
+
+Public Sub SendSaveMap()
+Dim X As Long
+Dim Y As Long
+Dim i As Long
+Dim buffer As clsBuffer
+
+    Set buffer = New clsBuffer
+
+    With Map
+        buffer.WriteLong CE_SaveMap
+        buffer.WriteLong CurrentMap
+        buffer.WriteString Trim$(.name)
+        buffer.WriteString Trim$(.Music)
+        buffer.WriteByte .Moral
+        buffer.WriteLong .Up
+        buffer.WriteLong .Down
+        buffer.WriteLong .Left
+        buffer.WriteLong .Right
+        buffer.WriteLong .BootMap
+        buffer.WriteByte .BootX
+        buffer.WriteByte .BootY
+        buffer.WriteByte .MaxX
+        buffer.WriteByte .MaxY
+    End With
+
+    For X = 0 To Map.MaxX
+        For Y = 0 To Map.MaxY
+
+            With Map.Tile(X, Y)
+                For i = 1 To MapLayer.Layer_Count - 1
+                    buffer.WriteLong .Layer(i).X
+                    buffer.WriteLong .Layer(i).Y
+                    buffer.WriteLong .Layer(i).Tileset
+                Next
+                buffer.WriteByte .Type
+                buffer.WriteLong .Data1
+                buffer.WriteLong .Data2
+                buffer.WriteLong .Data3
+                buffer.WriteByte .DirBlock
+            End With
+
+        Next
+    Next
+
+    With Map
+        For X = 1 To MAX_MAP_NPCS
+            buffer.WriteLong .Npc(X)
+        Next
+    End With
+
+    SendData buffer.ToArray()
+    Set buffer = Nothing
+    
+    SetStatus "Attempting to save Map " & Trim$(CStr(CurrentMap))
+    
 End Sub
